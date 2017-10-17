@@ -103,7 +103,12 @@ class MainHandler(BaseHandler):
             os.mkdir(newfolder)
         kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': loc_db}
         dsn = cx_Oracle.makedsn(**kwargs)
-        dbh = cx_Oracle.connect(loc_user, loc_passw, dsn=dsn)
+        with open('config/user_manager.yaml', 'r') as cfile:
+            conf = yaml.load(cfile)['oracle']
+        user_manager = conf['user']
+        pass_manager = conf['passwd']
+        del conf
+        dbh = cx_Oracle.connect(user_manager, pass_manager, dsn=dsn)
         cursor = dbh.cursor()
         try:
             cc = cursor.execute('select firstname,lastname,email from des_admin.des_users where '
