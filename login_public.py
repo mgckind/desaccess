@@ -55,7 +55,7 @@ class ResetHandler(BaseHandler):
         print('Reset Password')
         check, url = db_utils.create_reset_url(email)
         print(url)
-        time.sleep(5)
+        time.sleep(2)
         print('5 secs passed')
         if check:
             self.write(json.dumps({'msg': 'Activation email sent! {}'.format(url), 'errno': '0'}))

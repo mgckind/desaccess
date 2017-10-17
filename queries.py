@@ -85,7 +85,7 @@ class QueryHandler(BaseHandler):
             with open('config/mysqlconfig.yaml', 'r') as cfile:
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
-            tup = tuple([loc_user, jobid, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
+            tup = tuple([loc_user, jobid, 'None', 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                          original_query, '', ''])
             cur = con.cursor()
             try:
