@@ -1,0 +1,48 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="author" content="Matias Carrasco Kind, Ruiqi Li & Francisco Paz">
+
+<title>DES Easyaccess Web</title>
+<link rel="shortcut icon" href="{{ static_url('favicon.ico') }}">
+<script src="/easyweb/static/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<link rel="import" href="/easyweb/static/elements/elements.html">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<link rel="stylesheet" href="/easyweb/static/scripts/codemirror/lib/codemirror.css">
+<style is="custom-style">
+
+
+app-drawer-layout:not([narrow]) [drawer-toggle] {
+          display: none;
+    }
+</style>
+</head>
+<body unresolved>
+<template is="dom-bind" id="app">
+
+<app-drawer-layout id="drawerLayout" responsive-width="1000px">
+<!-- SIDE PANEL -->
+<app-drawer id="drawer" swipe-open slot="drawer">
+      <des-side-toolbar name={{name}} email={{email}}></des-side-toolbar>
+
+</app-drawer>
+
+<!-- MAIn PANEL -->
+<app-header-layout style="margin:-8px;">
+<app-header condenses>
+      <des-toolbar  class="paper-header" name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-toolbar>
+      <des-mainpages name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-mainpages>
+ </app-header>
+</app-header-layout>
+</app-drawer-layout>
+
+</template>
+  <script src="/easyweb/static/scripts/codemirror/lib/codemirror.js"></script>
+ <script src="/easyweb/static/scripts/codemirror/mode/sql/sql.js"></script>
+  <script src="/easyweb/static/scripts/app.js"></script>
+</body>
+</html>

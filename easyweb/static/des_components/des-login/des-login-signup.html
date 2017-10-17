@@ -1,0 +1,169 @@
+<dom-module id="des-login-signup">
+<template>
+  <style include="shared-styles">
+  </style>
+
+
+<iron-ajax id="SignupForm"
+    url="/easyweb/signup/"
+    method="POST"
+    handle-as="json"
+    content-type="application/x-www-form-urlencoded"
+    on-response="afterForm"
+    debounce-duration="300">
+</iron-ajax>
+
+
+<paper-dialog id="TermsDialog" modal>
+  <h2>Terms of Service</h2>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="buttons">
+  <paper-button class="custom indigo" dialog-confirm autofocus>Accept</paper-button>
+
+</div>
+</paper-dialog>
+
+
+  <div style="cursor:default;" class="container">
+    <!-- https://elements.polymer-project.org/guides/flex-layout -->
+    <paper-card style="cursor:default;" heading="Registration form" class="temp">
+
+      <div style="cursor:default;" class="box-watermark-logo"></div>
+
+      <div class="card-content">
+
+        <span>Please fill and submit this form. <br />You would need to read and accept the Terms of Services</span><br>
+
+         <iron-form id="signUser">
+         <form action="/easyweb/signup/" method="post">
+          <div class="container2">
+          <paper-input id="form_first" name="firstname" label="First" ></paper-input> &nbsp; &nbsp;
+          <paper-input id="form_last" name="lastname" label="Last" ></paper-input>
+          </div>
+          <paper-input id="form_email" name="email" label="Email" on-change="_enable" required auto-validate></paper-input><br>
+          <paper-input  id="form_user" name="username" label="Username" on-change="_enable" required auto-validate></paper-input><br>
+
+          <match-passwords-validator id="match-passwords-validator"
+            password="[[password]]">
+          </match-passwords-validator>
+          <paper-password-input label="Password"
+            value="{{password}}"
+             required>
+          </paper-password-input>
+          <paper-password-input id="form_password" on-invalid-changed="_enable" id="NewPass" name="password" label="Confirm Password"
+            auto-validate
+            validator="match-passwords-validator"
+            error-message="Passwords need to match"
+            required>
+          </paper-password-input>
+          <br>
+          <paper-checkbox id="readTerms" name="read" on-change="_enable" required>I read the </paper-checkbox> <a href="javascript:;" on-click="_readT">Terms of Service</a><br>
+          <div class="container">
+            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerSignup" class="big"></paper-spinner>
+            <paper-button class="custom indigo" id="SignButton"
+            on-tap="_clickSubmit" raised disabled>
+              Submit
+            </paper-button>
+          </div>
+
+        </form>
+        </iron-form>
+
+        <div id="divError2" class="errormessage">
+          <b>{{error}}</b>
+        </div>
+      </div>
+
+      <div  style="cursor:pointer;" on-tap="home" class="box-upper-image"></div> <!-- TODO: ADD link to home page to the box -->
+
+
+    </paper-card>
+  </div>
+<paper-toast class="toast-position" id="toastSignUp" text="Form Submitted!" duration="2000"> </paper-toast>
+</template>
+
+<script>
+  Polymer({
+    is: "des-login-signup",
+
+    behaviors: [
+      Polymer.IronA11yKeysBehavior
+    ],
+
+    properties : {
+      error :{
+        type: String,
+        value: '',
+      },
+      errno :{
+        type: String,
+        value: '',
+      },
+      toastpass: {
+        type: String,
+        value: false,
+        //observer: "_updateToast"
+    },
+    },
+
+    keyBindings:{
+      'enter:keydown':'_clickSubmit',
+    },
+
+    _readT: function(){
+            termd = document.getElementById('TermsDialog');
+            termd.open();
+    },
+      _enable: function(e){
+          var form = document.getElementById('signUser');
+          var valid_form = form.validate();
+          var invalid = true;
+          var button = document.getElementById('SignButton');
+          if (valid_form) {
+              button.disabled = false;
+                }
+            else button.disabled = true;
+           },
+    _clickSubmit: function(e) {
+      var button = document.getElementById('SignButton');
+      button.disabled = true;
+      document.getElementById('LoginSpinnerSignup').active = true;
+      var form2 = document.getElementById('SignupForm');
+      form2.body = {
+          'username': document.getElementById('form_user').value,
+          'firstname': document.getElementById('form_first').value,
+          'lastname': document.getElementById('form_last').value,
+          'password': document.getElementById('form_password').value,
+          'email': document.getElementById('form_email').value,
+      };
+      form2.generateRequest();
+      document.getElementById("toastSignUp").show();
+    },
+    afterForm: function(e){
+
+     var _self = this;
+     _self.data = e.detail.response;
+     document.getElementById('readTerms').checked= false;
+     this._enable();
+     document.getElementById('LoginSpinnerSignup').active = false;
+     //document.getElementById("toastSignUp").show();
+     this.error = _self.data.msg;
+     this.errno = _self.data.errno;
+     if (this.errno=='1') document.getElementById('form_user').value = '';
+
+    },
+    _updateToast: function(e) {
+      if (this.toastpass=='yes'){
+        document.getElementById("toastSignUp").show();
+      }
+  },
+      home: function(event){
+        window.open('/easyweb/','_self',false);
+      },
+
+  });
+
+
+</script>
+</dom-module>

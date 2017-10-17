@@ -1,0 +1,134 @@
+<dom-module id="des-login-update">
+<template>
+    <style include="shared-styles">
+    </style>
+
+<iron-ajax id="ChangePasswordForm"
+    url="/easyweb/changepass/"
+    method="POST"
+    handle-as="json"
+    content-type="application/x-www-form-urlencoded"
+    on-response="afterChangePasswordForm"
+    debounce-duration="300">
+</iron-ajax>
+
+    <des-card class="insetUpdate" heading="Change  password."  class="temp">
+      <div class="card-content">
+      <span>Please enter your old and new passwords </span>
+
+         <iron-form id="ChangePassForm">
+        <form>
+          <input type="hidden" id="Changedatabase" name="database" value="{{db}}">
+          <paper-input  id="Changeusername" name="username" label="Username" value = "{{username}}"
+            required></paper-input>
+          <br>
+          <paper-password-input  id="Changeoldpassword" name="oldpassword" label="OLD Password"
+            value="{{oldpassword}}"
+             required
+             auto-validate error-message="needs some text"
+             >
+          </paper-password-input>
+          <br>
+          <match-passwords-validator id="match-passwords-validator"
+            password="[[password]]">
+          </match-passwords-validator>
+          <paper-password-input label="NEW Password"
+            value="{{password}}"
+             required>
+          </paper-password-input>
+          <paper-password-input on-invalid-changed="_enable" id="NewPass" name="password" label="Confirm NEW Password"
+            auto-validate
+            validator="match-passwords-validator"
+            error-message="Passwords need to match"
+            required>
+          </paper-password-input>
+          <br>
+          <div class="container">
+          <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerChange" class="big"></paper-spinner>
+          <paper-button raised disabled  class="custom indigo"
+            id="SendNewPassword"
+            on-tap="_clickSubmitChange">Accept</paper-button>
+          <paper-button raised class="custom indigo"
+         dialog-dismiss>Cancel</paper-button>
+          </div>
+
+
+        </form>
+        </iron-form>
+        <br />
+        <div id="divError" class="errormessage"><b>{{error}}</b></div>
+
+        </div>
+
+    </des-card>
+
+<paper-toast class="toast-position" id="toastChange" text="Password Changed!" duration="3000"> </paper-toast>
+</template>
+
+<script>
+      Polymer({
+      is: "des-login-update",
+
+      behaviors: [
+        Polymer.IronA11yKeysBehavior
+      ],
+
+      properties : {
+        error :{
+        type: String,
+          value: '',
+        },
+        db :{
+        type: String,
+          value: '',
+      },
+        username :{
+        type: String,
+          value: '',
+        }
+      },
+      keyBindings:{
+        'enter:keydown':'_clickSubmit',
+      },
+
+      _enable: function(e){
+          var invalid = true;
+          try {invalid = document.getElementById('NewPass').invalid;
+          var button = document.getElementById('SendNewPassword');
+          if (!invalid)  button.disabled = false;
+            else button.disabled = true;
+          }
+          catch(err) {}
+           },
+
+    _clickSubmitChange: function(e) {
+      var button = document.getElementById('SendNewPassword');
+      button.disabled = true;
+      document.getElementById('LoginSpinnerChange').active = true;
+      var form2 = document.getElementById('ChangePasswordForm');
+      form2.body = {
+          'username': document.getElementById('Changeusername').value,
+          'oldpassword': document.getElementById('Changeoldpassword').value,
+          'password': document.getElementById('NewPass').value,
+          'database': document.getElementById('Changedatabase').value
+      };
+      form2.generateRequest();
+    },
+      afterChangePasswordForm: function(e) {
+
+         var _self = this;
+         _self.data = e.detail.response;
+         this.error = _self.data.msg;
+         document.getElementById('LoginSpinnerChange').active = false;
+
+         if (_self.data.errno == '0') {
+
+         document.getElementById("toastChange").show();
+         window.location.href = "/easyweb/logout/";
+       }
+      }
+    });
+
+
+</script>
+</dom-module>

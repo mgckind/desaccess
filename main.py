@@ -1,0 +1,87 @@
+"""Easyaccess Web application."""
+import tornado.ioloop
+import tornado.web
+import os
+import pusher
+import queries
+import login
+import api
+import MySQLdb as mydb
+from tornado.options import define, options
+import Settings
+import yaml
+import backup
+
+define("port", default=8080, help="run on the given port", type=int)
+
+
+def create_db(delete=False):
+    dirname = os.path.dirname(Settings.DBFILE)
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+    with open('config/mysqlconfig.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['mysql']
+    conf.pop('db', None)
+    con = mydb.connect(**conf)
+    try:
+        con.select_db('des')
+    except:
+        backup.restore()
+        con.commit()
+        con.select_db('des')
+    cur = con.cursor()
+    if delete:
+        cur.execute("DROP TABLE IF EXISTS Jobs")
+    cur.execute("CREATE TABLE IF NOT EXISTS  \
+        Jobs(user text, job text, status text, time datetime, query mediumtext, files text, sizes text)")
+    con.commit()
+    con.close()
+
+
+class Application(tornado.web.Application):
+    """
+    The tornado application  class
+    """
+
+    def __init__(self):
+        handlers = [
+            (r"/", login.MainHandler),
+            (r"/easyweb/?", login.MainHandler),
+            (r"/easyweb/login/", login.AuthLoginHandler),
+            (r"/easyweb/changepass/", login.ChangeAuthHandler),
+            (r"/easyweb/logout/", login.AuthLogoutHandler),
+            (r"/easyweb/myjobs/", api.MyJobsHandler),
+            (r"/easyweb/myresponse/", api.MyResponseHandler),
+            (r"/easyweb/mytables/", api.MyTablesHandler),
+            (r"/easyweb/desctables/", api.DescTablesHandler),
+            (r"/easyweb/alltables/", api.AllTablesHandler),
+            (r'/easyweb/websocket/', pusher.WebSocketHandler),
+            (r'/easyweb/pusher/', pusher.PusherHandler),
+            (r"/easyweb/query/", queries.QueryHandler),
+        ]
+        settings = {
+            "template_path": Settings.TEMPLATE_PATH,
+            "static_path": Settings.STATIC_PATH,
+            "debug": Settings.DEBUG,
+            "cookie_secret": Settings.COOKIE_SECRET,
+            "login_url": "/easyweb/login/",
+            "static_url_prefix": "/easyweb/static/",
+        }
+        tornado.web.Application.__init__(self, handlers, **settings)
+
+
+def main():
+    """
+    The main function
+    """
+    if not os.path.exists(Settings.WORKDIR):
+        os.mkdir(Settings.WORKDIR)
+    create_db()
+    tornado.options.parse_command_line()
+    http_server = tornado.httpserver.HTTPServer(Application())
+    http_server.listen(options.port)
+    tornado.ioloop.IOLoop.instance().start()
+
+
+if __name__ == "__main__":
+    main()

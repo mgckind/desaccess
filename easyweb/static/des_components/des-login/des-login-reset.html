@@ -1,0 +1,145 @@
+<dom-module id="des-login-reset">
+<template>
+  <style include="shared-styles">
+  </style>
+
+
+<iron-ajax id="NewPasswordForm"
+    url="/easyweb/reset/"
+    method="PUT"
+    handle-as="json"
+    content-type="application/x-www-form-urlencoded"
+    on-response="afterNewPasswordForm"
+    debounce-duration="300">
+</iron-ajax>
+
+
+  <div style="cursor:default;" class="container">
+    <paper-card style="cursor:default;" heading="Reset Password for {{username}}" class="temp">
+
+      <div style="cursor:default;" class="box-watermark-logo"></div>
+      <div class="card-content">
+        <span>Please fill and submit this form. <br />You would need to read and accept the Terms of Services</span><br>
+         <iron-form id="NewPassform">
+         <form>
+          <match-passwords-validator id="match-passwords-validator"
+            password="[[password]]">
+          </match-passwords-validator>
+          <paper-password-input label="New Password"
+            value="{{password}}"
+             required>
+          </paper-password-input>
+          <paper-password-input id="form_newpassword" on-invalid-changed="_enable"  name="password" label="Confirm New Password"
+            auto-validate
+            validator="match-passwords-validator"
+            error-message="Passwords need to match"
+            required>
+          </paper-password-input>
+          <br>
+          <div class="container">
+            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerReset" class="big"></paper-spinner>
+            <paper-button class="custom indigo" id="NewPassButton"
+            on-tap="_clickSubmitNew" raised disabled>
+              Submit
+            </paper-button>
+          </div>
+
+        </form>
+        </iron-form>
+
+        <div id="divError2" class="errormessage">
+          <b>{{error}}</b>
+        </div>
+      </div>
+
+      <div  style="cursor:pointer;" on-tap="home" class="box-upper-image"></div> <!-- TODO: ADD link to home page to the box -->
+
+
+    </paper-card>
+  </div>
+<paper-toast class="toast-position" id="toastSignUp" text="Form Submitted!" duration="2000"> </paper-toast>
+</template>
+
+<script>
+  Polymer({
+    is: "des-login-reset",
+
+    behaviors: [
+      Polymer.IronA11yKeysBehavior
+    ],
+
+    properties : {
+      error :{
+        type: String,
+        value: '',
+      },
+      errno :{
+        type: String,
+        value: '',
+      },
+      username :{
+        type: String,
+        value: '',
+      },
+      randomurl :{
+        type: String,
+        value: '',
+      },
+      toastpass: {
+        type: String,
+        value: false,
+        //observer: "_updateToast"
+    },
+    },
+
+    keyBindings:{
+      'enter:keydown':'_clickSubmit',
+    },
+
+    _readT: function(){
+            termd = document.getElementById('TermsDialog');
+            termd.open();
+    },
+      _enable: function(e){
+          var form = document.getElementById('NewPassform');
+          var valid_form = form.validate();
+          var invalid = true;
+          var button = document.getElementById('NewPassButton');
+          if (valid_form) {
+              button.disabled = false;
+                }
+            else button.disabled = true;
+           },
+    _clickSubmitNew: function(e) {
+      var button = document.getElementById('NewPassButton');
+      button.disabled = true;
+      document.getElementById('LoginSpinnerReset').active = true;
+      var form2 = document.getElementById('NewPasswordForm');
+      form2.body = {
+          'username': this.username,
+          'password': document.getElementById('form_newpassword').value,
+          'url': this.randomurl
+      };
+      form2.generateRequest();
+      document.getElementById("toastSignUp").show();
+    },
+    afterNewPasswordForm: function(e){
+     var _self = this;
+     document.getElementById('LoginSpinnerReset').active = false;
+     window.location.href = "/";
+
+    },
+    _updateToast: function(e) {
+      if (this.toastpass=='yes'){
+        document.getElementById("toastSignUp").show();
+      }
+  },
+      home: function(event){
+        window.open('/easyweb/','_self',false);
+      },
+
+  });
+
+
+</script>
+</dom-module>

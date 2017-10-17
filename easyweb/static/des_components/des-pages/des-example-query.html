@@ -1,0 +1,128 @@
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<dom-module id="des-example-query">
+<template>
+<style include="shared-styles">
+</style>
+    <iron-ajax id="getMyJobs"
+    auto
+    url="/easyweb/myexamples/"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+
+    <paper-dialog class="dialog-position" id="ExampleQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <h2>{{jobid}}</h2>
+              <div class="insideDialog">
+                  <textarea id="exampleQueryBox" autofocus></textarea>
+              </div>
+              <div class="buttons" on-iron-overlay-opened="patchOverlay">
+                  <paper-button class="indigo" raised dialog-confirm on-tap="_copyQuery">Copy query</paper-button>
+                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+              </div>
+    </paper-dialog>
+
+
+<paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
+
+
+<vaadin-grid items="{{data}}" id ="material">
+
+      <vaadin-grid-column width="50px" flex-grow="0">
+        <template class="header">#</template>
+        <template>{{index}}</template>
+        <!-- If necessary, the footer could be set using <template class="footer"> -->
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="2">
+        <template class="header">Job id</template>
+        <template>{{item.job}}
+        </template>
+      </vaadin-grid-column>
+
+        <vaadin-grid-column flex-grow="1">
+              <template class="header">Queries</template>
+              <template>
+                <paper-button class="SeeFilesButton" raised on-click="_seeQuery">See query</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+    </vaadin-grid>
+</paper-button>
+</template>
+
+<script>
+function keysrt(key,desc) {
+  return function(a,b){
+   return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
+  }
+}
+
+</script>
+
+<script>
+      Polymer({
+      is: "des-example-query",
+      properties: {
+        username: {
+            type: String,
+            value: '',
+        },
+        jobid: {
+            type: String,
+            value: '',
+        },
+        examplequery: {
+            type: String,
+            value: '',
+        },
+      },
+      _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
+      attached: function() {
+        myExampleQuery = document.getElementById("exampleQueryBox");
+        },
+      _handleResponse: function(e){
+        var _self = this;
+        _self.data = e.detail.response;
+        _self.count = _self.data.length;
+    },
+      _handleTermination: function(e){
+      document.getElementById("getMyJobs").generateRequest();
+    },
+    _copyQuery: function(){
+        document.querySelector('#toastCopy').show();
+        app.editor.setValue(app.examplequerybox.getValue());
+        console.log("-> line number: ", app.editor.lineCount());
+        setTimeout(function() {
+            app.editor.refresh();
+            app.editor.focus();
+        },20);
+
+    },
+     _seeQuery: function(e){
+        console.log('seeexamples')
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.examplequery = e.model.item.jquery;
+        document.getElementById('ExampleQuery').open();
+        app.examplequerybox.setValue(this.examplequery);
+        setTimeout(function() {
+            app.examplequerybox.refresh();
+//            app.jobquerybox.focus();
+        },10);
+     },
+     patchOverlay: function (e) {
+         if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         }
+     },
+
+
+    });
+
+
+</script>
+</dom-module>

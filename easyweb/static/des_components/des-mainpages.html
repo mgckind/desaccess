@@ -1,0 +1,44 @@
+<link rel="import" href="../styles/shared-styles.html">
+<dom-module id="des-mainpages">
+<template>
+   <style include="shared-styles"></style>
+
+    <iron-pages  id="mainPages" selected=[[selection]]>
+        <des-home name={{name}} db={{db}}></des-home>
+        <des-query name={{name}} db={{db}}></des-query>
+        <des-my-jobs></des-my-jobs>
+        <des-all-tables></des-all-tables>
+        <des-example-query></des-example-query>
+
+    </iron-pages>
+
+</template>
+
+<script>
+      Polymer({
+      is: "des-mainpages",
+      properties: {
+        name : {
+            type: String,
+            value:''
+        },
+        lastname : {
+            type: String,
+            value:''
+        },
+        db : {
+            type: String,
+            value:''
+        },
+        email: {
+            type: String,
+            value:''
+        },
+        username:{
+            type:String,
+            value:''
+        }
+      },
+    });
+</script>
+</dom-module>

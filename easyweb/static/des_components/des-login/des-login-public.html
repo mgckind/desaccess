@@ -1,0 +1,168 @@
+<dom-module id="des-login-public">
+<template>
+  <style include="shared-styles">
+  </style>
+
+
+<iron-ajax id="ResetForm"
+    url="/easyweb/reset/"
+    method="POST"
+    handle-as="json"
+    content-type="application/x-www-form-urlencoded"
+    on-response="afterResetForm"
+    debounce-duration="300">
+</iron-ajax>
+
+<paper-dialog id="resetDialog" modal>
+  <h2>Reset Password request</h2>
+  <p> Please enter a valid email and a reset link will be sent</p>
+  <paper-input id="reset_email" name="email" label="Email"  required auto-validate></paper-input>
+    <div class="buttons">
+  <paper-spinner id="ResetSpinner" class="big"></paper-spinner>
+  <paper-button dialog-dismiss class="custom indigo">Cancel</paper-button>
+  <paper-button id="ResetFormButton" class="custom indigo" autofocus on-click="_submitReset">Reset Password</paper-button><br />
+</div>
+        <div id="divError2" class="errormessage">
+          <b>{{error2}}</b>
+          <br>
+        </div>
+</paper-dialog>
+
+  <paper-dialog class="new" id="updateDialog" modal>
+    <des-login-update error="{{error}}" db="{{db}}"></des-login-update>
+  </paper-dialog>
+
+
+
+  <div style="cursor:default;" class="container">
+    <!-- https://elements.polymer-project.org/guides/flex-layout -->
+    <paper-card style="cursor:default;" heading="The content of these pages are restricted."
+    class="temp">
+
+      <div style="cursor:default;" class="box-watermark-logo"></div>
+      <div class="card-content">
+        <span>Use your DESDM DB credentials</span><br>
+        <span> Fill this <a href='https://deslogin.wufoo.com/forms/help-me-with-my-desdm-account/' target="_blank">form</a>
+             if you have trouble accessing the server</span>
+
+        <form id="userpass" action="/easyweb/login/" method="post">
+          <input type="hidden" id="hiddenDB" name="database" value="test">
+          <paper-input name="username" label="Username"
+          required></paper-input><br>
+          <paper-password-input name="password" label="Password"
+            value="{{password}}" required></paper-password-input>
+
+          <br>
+          <div class="container">
+            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinner1" class="big"></paper-spinner>
+            <paper-button class="custom indigo" id="LoginButton1"
+            on-tap="_clickSubmit1" raised>
+              Log in
+            </paper-button>
+          </div>
+
+          <div >
+          </div>
+        </form>
+
+        <div id="divError" class="errormessage">
+          <b>{{error}}</b>
+          <br>
+          <span> <a href="/easyweb/signup/">Sign In</a></span>
+        </div>
+            <a href="javascript:;" on-click="_resetForm" style="font-size: 11px; margin-left: 5px;"> Forgot Password? </a>
+      </div>
+
+      <div  style="cursor:pointer;" on-tap="home" class="box-upper-image"></div> <!-- TODO: ADD link to home page to the box -->
+
+    </paper-card>
+  </div>
+<paper-toast class="toast-position" id="toastPass" text="Reset password link was sent!" duration="5000"> </paper-toast>
+</template>
+
+<script>
+  Polymer({
+    is: "des-login-public",
+
+    behaviors: [
+      Polymer.IronA11yKeysBehavior
+    ],
+
+    properties : {
+      error :{
+        type: String,
+        value: '',
+      },
+      error2 :{
+        type: String,
+        value: '',
+      },
+      toastpass: {
+        type: String,
+        value: false,
+        observer: "_updateToast"
+    },
+      db: {
+        type: String,
+        value: '',
+      }
+    },
+
+    keyBindings:{
+      'enter:keydown':'_clickSubmit1',
+    },
+
+    _resetForm: function(){
+        document.getElementById('resetDialog').open();
+    },
+    afterResetForm: function(e){
+     var _self = this;
+     _self.data = e.detail.response;
+      document.getElementById('ResetSpinner').active = false;
+     if (_self.data.errno == '0'){
+          document.getElementById('toastPass').show();
+          document.getElementById('resetDialog').close();
+          document.getElementById('ResetFormButton').disabled = false;
+             }
+      else {
+          this.error2 = _self.data.msg;
+           document.getElementById('ResetFormButton').disabled = false;
+      }
+     //document.getElementById('LoginSpinner').active = false;
+     //document.getElementById("toastSignUp").show();
+    },
+    _submitReset: function() {
+        var form = document.getElementById('ResetForm');
+        form.body = {
+          'email': document.getElementById('reset_email').value
+          };
+      form.generateRequest();
+      document.getElementById('ResetFormButton').disabled = true;
+      document.getElementById('ResetSpinner').active = true;
+    },
+
+    _clickSubmit1: function(e) {
+      document.getElementById('hiddenDB').value = 'desdr';
+      var button1 = document.getElementById('LoginButton1');
+      document.getElementById('LoginSpinner1').active = true;
+      document.getElementById('userpass').submit();
+      button1.disabled = true;
+      var errm = document.getElementById('divError');
+      errm.style.display = "none";
+    },
+
+    _updateToast: function(e) {
+      if (this.toastpass=='yes'){
+        console.log('password changed');
+        document.getElementById("toastPass").show();
+      }
+  },
+      home: function(event){
+        window.open('/easyweb/','_self',false);
+      },
+
+  });
+
+
+</script>
+</dom-module>

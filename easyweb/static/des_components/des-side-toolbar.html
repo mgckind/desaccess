@@ -1,0 +1,82 @@
+<link rel="import" href="../styles/shared-styles.html">
+<dom-module id="des-side-toolbar">
+<template>
+   <style include="shared-styles">
+
+   .info-container {
+               position: relative;
+               border: 2px solid #ccc;
+               border-radius: 50%;
+               height: 90px;
+               padding: 2px;
+               width: 90px;
+               margin: 20px auto;
+           }
+           .info-container .image {
+               background-image: url('/easyweb/static/images/user.png');
+               background-size: contain;
+               border-radius: 50%;
+               height: 100%;
+               width: 100%;
+               background-repeat: no-repeat;
+               background-position: center;
+           }
+           .self-info {
+               margin: 0 20px;
+               padding-bottom: 20px;
+               border-bottom: 1px solid #CCC;
+               text-align: center;
+           }
+           .self-info .name {
+               font-weight: bold;
+           }
+           .self-info .email {
+               color: #999;
+           }
+
+   </style>
+  <app-header fixed>
+    <app-toolbar id="drawerToolbar" class="black">
+        <iron-image
+        style="width:60px; height:60px;"
+        sizing="cover"
+        src="/easyweb/static/images/DESDM_logo.png"></iron-image>
+    </app-toolbar>
+
+                <div class="info-container">
+                    <div class="image"></div>
+                </div>
+                <div class="self-info">
+                    <div class="name">{{name}}</div>
+                    <div class="email">{{email}}</div>
+                </div>
+
+    <paper-menu id="bigmenu"  selected="[[selection]]">
+        <!-- Order is important, it needs to match des-mainpages -->
+        <paper-item> Home              </paper-item>
+        <paper-item> SQL Box             </paper-item>
+        <paper-item> My Jobs           </paper-item>
+        <paper-item> DR1 Tables        </paper-item>
+        <paper-item> Example Queries     </paper-item>
+    </paper-menu>
+</app-header>
+</template>
+
+<script>
+      Polymer({
+      is: "des-side-toolbar",
+      properties: {
+          name : {
+                type: String,
+                value:''
+            },
+          email : {
+                type: String,
+                value:''
+            },
+      }
+    });
+
+
+</script>
+</dom-module>

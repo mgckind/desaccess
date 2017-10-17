@@ -1,0 +1,117 @@
+<dom-module id="des-login-update-info">
+<template>
+    <style include="shared-styles">
+    </style>
+
+<iron-ajax id="UpdateInfoForm"
+    url="/easyweb/changeinfo/"
+    method="POST"
+    handle-as="json"
+    content-type="application/x-www-form-urlencoded"
+    on-response="afterUpdateInfoForm"
+    debounce-duration="300">
+</iron-ajax>
+
+    <des-card class="insetUpdate" heading="Update personal profile"  class="temp">
+      <div class="card-content">
+      <span>Please enter your information </span>
+
+         <iron-form >
+        <form>
+          <input type="hidden" id="Changedatabase" name="database" value="{{db}}">
+          <paper-input  placeholder= "[[username]]" disabled label="Username"></paper-input>
+          <paper-input  id="Changefirstname" name="firstname" value= "{{name}}" label="Firstname"></paper-input>
+          <paper-input  id="Changelastname" name="lastname" value= "{{lastname}}" label="Lastname"></paper-input>
+          <paper-input  id="Changeemail" name="email" value= "{{email}}" label="Email"></paper-input>
+          <br>
+          <div class="container">
+          <paper-spinner style="position: fixed; z-index:1000;" id="SpinnerUpdate" class="big"></paper-spinner>
+          <paper-button raised   class="custom indigo"
+            id="UpdateInfoButton"
+            on-tap="_clickUpdateInfo">Accept</paper-button>
+          <paper-button raised class="custom indigo"
+         dialog-dismiss>Cancel</paper-button>
+          </div>
+
+
+        </form>
+        </iron-form>
+        <br />
+        <div id="divError" class="errormessage"><b>{{error}}</b></div>
+
+        </div>
+
+    </des-card>
+
+<paper-toast class="toast-position" id="toastUpdateInfo" text="Information Updated!" duration="3000"> </paper-toast>
+</template>
+
+<script>
+      Polymer({
+      is: "des-login-update-info",
+
+      behaviors: [
+        Polymer.IronA11yKeysBehavior
+      ],
+
+      properties : {
+        error :{
+        type: String,
+          value: '',
+        },
+        db :{
+        type: String,
+          value: '',
+      },
+        username :{
+        type: String,
+          value: '',
+      },
+        lastname :{
+        type: String,
+          value: '',
+      },
+        email :{
+        type: String,
+          value: '',
+      },
+        name :{
+        type: String,
+          value: '',
+        }
+      },
+      keyBindings:{
+        'enter:keydown':'_clickSubmitChange',
+      },
+
+    _clickUpdateInfo: function(e) {
+      var button = document.getElementById("UpdateInfoButton");
+      button.disabled = true;
+      document.getElementById('SpinnerUpdate').active = true;
+      var form2 = document.getElementById('UpdateInfoForm');
+      form2.body = {
+          'username': this.username,
+          'firstname': document.getElementById('Changefirstname').value,
+          'lastname': document.getElementById('Changelastname').value,
+          'email': document.getElementById('Changeemail').value,
+      };
+      form2.generateRequest();
+    },
+      afterUpdateInfoForm: function(e) {
+
+         var _self = this;
+         _self.data = e.detail.response;
+         this.error = _self.data.msg;
+         document.getElementById('SpinnerUpdate').active = false;
+
+         if (_self.data.errno == '0') {
+
+         document.getElementById("toastUpdateInfo").show();
+         window.location.href = "/easyweb/logout/";
+       }
+      }
+    });
+
+
+</script>
+</dom-module>

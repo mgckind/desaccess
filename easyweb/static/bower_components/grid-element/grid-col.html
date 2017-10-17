@@ -1,0 +1,64 @@
+<!--
+@license
+Copyright (c) 2015-2016 Charbel Rami. All rights reserved.
+MIT
+-->
+<dom-module id="grid-col">
+  <template>
+    <style>
+      :host([match]) {
+        min-width: 0;
+        -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+      }
+      :host([center][match]) {
+        -ms-flex-item-align: center;
+        align-self: center;
+      }
+      :host([start][match]) {
+        -ms-flex-item-align: start;
+        align-self: flex-start;
+      }
+      :host([end][match]) {
+        -ms-flex-item-align: end;
+        align-self: flex-end;
+      }
+      :host([stretch][match]) {
+        -ms-flex-item-align: stretch;
+        align-self: stretch;
+      }
+    </style>
+    <content></content>
+  </template>
+  <script>
+    Polymer({
+      is: 'grid-col',
+      properties: {
+        /**
+         * column stretching factor
+         *
+         * @default '1'
+         */
+        s: {
+          type: Number,
+          value: 1
+        }
+      },
+      ready: function() {
+        this.style.WebkitBoxFlex = this.s;
+        this.style.MsFlexPositive = this.s;
+        this.style.flexGrow = this.s;
+        var self = this;
+        Polymer.dom(this).parentNode.addEventListener('mq-match', function(e) {
+          if (e.detail.match) {
+            Polymer.dom(self).setAttribute('match', '');
+          } else {
+            Polymer.dom(self).removeAttribute('match');
+          }
+        })
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+static/workdir/*
+easyweb/static/workdir/*
+celeryconfig.py
+supervisord.conf
+config/*
+kubernetes/redis/redis.conf
+kubernetes/easyweb/*
+start.sh
+start_worker.sh
+logs/*
+.idea/
+versions/
+venv/
+dump.rdb

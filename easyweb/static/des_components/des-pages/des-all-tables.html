@@ -1,0 +1,152 @@
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<dom-module id="des-all-tables">
+<template>
+<style include="shared-styles"></style>
+    <iron-ajax id="getAllTables"
+    auto
+    method="POST"
+    url="/easyweb/alltables/"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getDescAllTable"
+    method="POST"
+    url="/easyweb/desctables/"
+    params='{{_getPar(owner,tablename)}}'
+    handle-as="json"
+    on-request="_requestDescription"
+    on-response="_handleDescription"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <des-card heading="DR1 Tables">
+    <div class="content">
+    See all the tables schema
+    </div>
+    </des-card>
+    <paper-dialog class="dialog-position" id="scrollingAll" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <h2>{{tablename}}</h2>
+
+              <paper-spinner id="descSpinnerAll" class="big" active></paper-spinner>
+     <vaadin-grid style="height: 70%;" id="material" items="{{description}}" >
+
+      <vaadin-grid-column flex-grow="2">
+        <template class="header">Column name</template>
+        <template>{{item.COLUMN_NAME}}</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="1">
+        <template class="header">Data Type</template>
+        <template>{{item.DATA_TYPE}}</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="1">
+        <template class="header">Data Format</template>
+        <template>{{item.DATA_FORMAT}}</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="8">
+        <template class="header">Comments</template>
+        <template>{{item.COMMENTS}}</template>
+      </vaadin-grid-column>
+    </vaadin-grid>
+
+      <div class="buttons" on-iron-overlay-opened="patchOverlay">
+        <paper-button class="indigo" style="color: white;" dialog-confirm autofocus >OK</paper-button>
+      </div>
+    </paper-dialog>
+
+
+
+<vaadin-grid id="material" items="{{data}}">
+
+      <vaadin-grid-column width="50px" flex-grow="0">
+        <template class="header">#</template>
+        <template>{{index}}</template>
+        <!-- If necessary, the footer could be set using <template class="footer"> -->
+      </vaadin-grid-column>
+
+      <vaadin-grid-column>
+        <template class="header">
+            <vaadin-grid-filter aria-label="Table Name" path="TABLE_NAME" value="[[_filterTableName]]">
+            <input placeholder="Table Name" value="{{_filterTableName::input}}" focus-target>
+
+            <vaadin-grid-sorter path="TABLE_NAME"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                      </vaadin-grid-filter>
+        </template>
+        <template>{{item.TABLE_NAME}}</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column>
+        <template class="header">
+            <vaadin-grid-sorter path="NROWS">ROWS<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+        </template>
+        <template>{{item.NROWS}}</template>
+      </vaadin-grid-column>
+
+        <vaadin-grid-column>
+              <template class="header">Description </template>
+              <template>
+                <paper-button class="describeButton" raised on-click="_describe">See description</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+    </vaadin-grid>
+
+
+</template>
+
+<script>
+      Polymer({
+      is: "des-all-tables",
+      properties: {
+        username: {
+            type: String,
+            value: '',
+        },
+        owner:{
+            type: String,
+            value: 'nobody',
+        },
+        tablename:{
+            type: String,
+            value: '',
+        }
+      },
+      _handleResponse: function(e){
+        var _self = this;
+        _self.data = e.detail.response;
+    },
+      _getPar: function(owner,tablename){return {owner:owner, tablename:tablename};},
+      _handleDescription: function(e){
+        var _self = this;
+        document.getElementById('descSpinnerAll').active = false;
+        _self.description = e.detail.response;
+    },
+      _requestDescription: function(e){
+        document.getElementById('descSpinnerAll').active = true;
+        var _self = this;
+        _self.description = [];
+    },
+     _describe: function(e){
+        e.preventDefault();
+        this.tablename = e.path[3].__data__.item.TABLE_NAME;
+        console.log(this.tablename);
+        document.getElementById('scrollingAll').open();
+        document.getElementById('getDescAllTable').generateRequest();
+     },
+     patchOverlay: function (e) {
+         if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         }
+     },
+    });
+
+</script>
+</dom-module>

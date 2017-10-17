@@ -1,0 +1,272 @@
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<dom-module id="des-my-jobs">
+<template>
+<style include="shared-styles">
+
+
+
+</style>
+    <iron-ajax id="getMyJobs"
+    auto
+    url="/easyweb/myjobs/"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="killJob"
+    method="DELETE"
+    url="/easyweb/myjobs/"
+    params='{{_getJobId(username,jobid)}}'
+    handle-as="json"
+    on-response="_handleTermination"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <paper-dialog class="dialog-position" id="JobQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <h2>Job id: {{jobid}}</h2>
+              <div class="insideDialog">
+                  <textarea id="jobQueryBox" autofocus></textarea>
+              </div>
+              <div class="buttons" on-iron-overlay-opened="patchOverlay">
+                  <paper-button class="indigo" raised dialog-confirm on-tap="_copyQuery">Copy query</paper-button>
+                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+              </div>
+    </paper-dialog>
+
+    <paper-dialog class="dialog-position" id="JobFiles" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <h2>Job id: {{jobid}}</h2>
+              <div>
+
+        <vaadin-grid items="{{myfiles}}" id="material">
+
+
+              <vaadin-grid-column flex-grow="1">
+                <template class="header">Filename</template>
+                <template>{{item.file}}</template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column flex-grow="1">
+                <template class="header">Size</template>
+                <template>{{item.size}}</template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column flex-grow="1">
+              <template class="header">Download Files</template>
+              <template>
+                <paper-button class="SeeFilesButton" raised on-click="_downloadFile">Download</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+            </vaadin-grid>
+              </div>
+
+              <div class="buttons" on-iron-overlay-opened="patchOverlay">
+                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+              </div>
+    </paper-dialog>
+
+
+<paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
+
+
+<vaadin-grid items="{{data}}" id ="material">
+
+      <vaadin-grid-column width="50px" flex-grow="0">
+        <template class="header">#</template>
+        <template>{{index}}</template>
+        <!-- If necessary, the footer could be set using <template class="footer"> -->
+      </vaadin-grid-column>
+
+      <vaadin-grid-column width="80px" flex-grow="0">
+        <template class="header">Status</template>
+
+          <template>
+              <template is="dom-if" if="{{_completed(item.status)}}">
+                  <div class="status green size" item-icon></div>
+              </template>
+
+              <template is="dom-if" if="{{_pending(item.status)}}">
+                  <div class="status yellow size" item-icon></div>
+              </template>
+
+              <template is="dom-if" if="{{_stop(item.status)}}">
+                  <div class="status red size" item-icon></div>
+              </template>
+          </template>
+      </vaadin-grid-column>
+    <!--<vaadin-grid-column flex-grow="2">-->
+        <!--<template class="header">Check</template>-->
+        <!--<template>{{item.status}}<br />-->
+            <!--&lt;!&ndash;<span style="font-size: 0.7em;">{{item.elapsed}}</span>&ndash;&gt;-->
+        <!--</template>-->
+    <!--</vaadin-grid-column>-->
+
+      <vaadin-grid-column flex-grow="2">
+        <template class="header">Job id</template>
+        <template>{{item.job}}<br />
+            <span style="font-size: 0.7em;">{{item.elapsed}}</span>
+        </template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="1">
+        <template class="header">Cancel</template>
+          <template>
+
+            		<paper-button class="SeeFilesButton" disabled$="{{!_pending(item.status)}}" raised on-click="_killQuery">Cancel</paper-button>
+              </template>
+      </vaadin-grid-column>
+
+        <vaadin-grid-column flex-grow="1">
+              <template class="header">Queries</template>
+              <template>
+                <paper-button class="SeeFilesButton" raised on-click="_seeQuery">See query</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+        <vaadin-grid-column flex-grow="1">
+              <template class="header">Files</template>
+              <template>
+
+                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles">See Files</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+    </vaadin-grid>
+    <paper-button onclick="getMyJobs.generateRequest()"> refresh <iron-icon icon="icons:refresh"></iron-icon>
+</paper-button>
+</template>
+
+<script>
+function keysrt(key,desc) {
+  return function(a,b){
+   return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
+  }
+}
+
+</script>
+
+<script>
+      Polymer({
+      is: "des-my-jobs",
+      properties: {
+        username: {
+            type: String,
+            value: '',
+        },
+        jobid: {
+            type: String,
+            value: '',
+        },
+        jobquery: {
+            type: String,
+            value: '',
+        },
+      },
+      _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
+      attached: function() {
+        myJobQuery = document.getElementById("jobQueryBox");
+        },
+      _handleResponse: function(e){
+        var _self = this;
+        _self.data = e.detail.response;
+        _self.count = _self.data.length;
+    },
+      _handleTermination: function(e){
+      document.getElementById("getMyJobs").generateRequest();
+    },
+      _completed: function(status) {
+          if (status === "SUCCESS") {
+              return true;
+          }
+      },
+      _pending: function(status) {
+          if (status === "PENDING") {
+              return true;
+          }
+      },
+      _stop: function(status) {
+          if (status != "PENDING" && status != "SUCCESS" ) {
+              return true;
+          }
+      },
+    _copyQuery: function(){
+        document.querySelector('#toastCopy').show();
+        app.editor.setValue(app.jobquerybox.getValue());
+        console.log("-> line number: ", app.editor.lineCount());
+        setTimeout(function() {
+            app.editor.refresh();
+            app.editor.focus();
+        },20);
+
+    },
+    _checkFiles: function(jfiles){
+        if (jfiles != '') {return true;}
+        else {return false;}
+    },
+    _downloadFile: function(e){
+        e.preventDefault();
+        var filename =  e.model.item.file;
+        var jobid = this.jobid;
+        var user = this.username;
+        var link = document.createElement('a');
+        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
+              if (link.download !== undefined){
+                  //Set HTML5 download attribute. This will prevent file from opening if supported.
+                  var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+                  link.download = fileName;
+                }
+                if (document.createEvent) {
+                  var e = document.createEvent('MouseEvents');
+                  e.initEvent('click' ,true ,true);
+                  link.dispatchEvent(e);
+                  return true;
+                }
+                  var query = '?download';
+                  window.open(link.href + query);
+
+    },
+     _seeQuery: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.jobquery = e.model.item.jquery;
+        document.getElementById('JobQuery').open();
+        app.jobquerybox.setValue(this.jobquery);
+        setTimeout(function() {
+            app.jobquerybox.refresh();
+//            app.jobquerybox.focus();
+        },10);
+     },
+     _killQuery: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.username = e.model.item.user;
+        document.getElementById("killJob").generateRequest();
+     },
+     _seeFiles: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.username = e.model.item.user;
+        this.jobfiles = JSON.parse(e.model.item.jfiles);
+        this.jobsizes = JSON.parse(e.model.item.jsizes);
+        this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
+        for (i=0; i< this.jobfiles.length; i++){
+            this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
+            }
+        this.myfiles=this.jobs.sort(keysrt('file'));
+        document.getElementById('JobFiles').open();
+     },
+     patchOverlay: function (e) {
+         if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         }
+     },
+
+
+    });
+
+
+</script>
+</dom-module>

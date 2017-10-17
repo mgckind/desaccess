@@ -1,0 +1,375 @@
+<dom-module id="shared-styles">
+<template>
+<style>
+
+/** TOOLBAR **/
+   paper-listbox {
+    color: black;
+    width: 300px;
+  }
+
+  paper-item.profileiTem {
+    font-size: 12px;
+  }
+    .profile{
+            margin-left: -23px;
+            width: 15px;
+    }
+
+app-toolbar.black {
+    background-color: black;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-style: : normal;
+    color: white;
+    }
+
+
+/** DES LOGIN **/
+
+
+    .insetUpdate {
+        margin: 20px;
+    }
+
+    paper-dialog.new {
+      width: 80%;
+      height: 80%;
+    }
+    .errormessage{
+      display: block;
+      color : red;
+      text-align: center;
+    }
+    .temp {
+      border: 1px solid grey;
+      }
+    .container {
+      position: relative;
+      top: 25%;
+      transform: translateY(+25%);
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
+    }
+    .container2 {
+        position: relative;
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+    }
+    .container3 {
+        width: 50%;
+        position: relative;
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+    }
+
+    .dbname {
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
+    }
+    paper-button.indigo {
+      background-color: var(--paper-indigo-500);
+      color: white;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: var(--paper-indigo-a250) !important;
+        color: white !important;
+      };
+    }
+    paper-button[disabled] {
+        background: #eaeaea;
+        color: #a8a8a8;
+        cursor: auto;
+        pointer-events: none;
+    }
+
+    paper-button.nocapitals {
+      text-transform: none;
+    }
+    .box-upper-image {
+      position: absolute;
+      top: -100;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 98px;
+      background: url('/easyweb/static/images/cut3.png');
+      background-size: cover;
+    }
+    .box-lower-image {
+      position: absolute;
+      top: 101%;
+      right: 0;
+      bottom: -100;
+      width: 100%;
+      height: 98px;
+      background: url('/easyweb/static/images/cut3.png');
+      background-size: cover;
+    }
+    .box-mini-logo {
+      position: absolute;
+      top: 22%;
+      right: 50%;
+      bottom: 0;
+      width: 20px;
+      height: 19px;
+      background: url('/easyweb/static/images/DESDM_logo.png');
+      background-size: 101%;
+    }
+    .box-watermark-logo {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.05;
+      background: url('/easyweb/static/images/DESDM_logo.png');
+      background-size: cover;
+    }
+
+/* MY JOBS **/
+
+
+.insideDialog {
+    border: 1px solid black;
+    padding: 0px;
+    margin: 10px;
+}
+
+
+    .queryButton {
+
+
+    }
+
+
+    .green {
+        background: var(--paper-green-500);
+    }
+    .red {
+        background: var(--paper-red-500);
+    }
+    .yellow {
+        background: var(--paper-yellow-500);
+    }
+    .status {
+        display: inline-block;
+        box-sizing: border-box;
+        border-radius: 50%;
+    }
+    .size {
+        width: 40px;
+        height: 40px;
+    }
+
+    .describeButton {
+        width: 100px;
+        text-transform: none;
+        --paper-button: {
+            width: 70px;
+        }
+    }
+
+
+.SeeFilesButton {
+    width: 100px;
+    text-transform: none;
+    --paper-button: {
+        width: 70px;
+    }
+}
+
+.queryMsg {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.scrollTable {
+    height: 200px;
+    overflow: scroll;
+}
+
+    .query-box {
+        margin: 10px;
+        width: auto;
+        height: auto;
+        font-size: 20px;
+        color: red;
+        border: 1px solid black;
+    }
+    .results {
+        font-size:  10px;
+        color:black;
+        width: 100%;
+        text-align: left;
+    }
+    table, th, td {
+        font-size:  10px;
+    border: 1px solid black;
+    border-collapse: collapse;
+        text-align: left;
+}
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color:#fff;
+}
+table#t01 th {
+    background-color: black;
+    color: white;
+    border: solid white;
+
+}
+
+vaadin-grid#material {
+
+         height: 80%;
+         font-family: Roboto, sans-serif;
+         --divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
+
+         --vaadin-grid-cell: {
+           padding: 0;
+         };
+
+
+
+         --vaadin-grid-header-cell: {
+           height: 64px;
+           color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+           font-size: 12px;
+         };
+
+         --vaadin-grid-body-cell: {
+           height: 48px;
+           color: rgba(0, 0, 0, var(--dark-primary-opacity));
+           font-size: 13px;
+         };
+
+         --vaadin-grid-body-row-hover-cell: {
+           background-color: var(--paper-grey-200);
+         };
+
+         --vaadin-grid-body-row-selected-cell: {
+           background-color: var(--paper-grey-100);
+         };
+
+         --vaadin-grid-focused-cell: {
+           box-shadow: none;
+           font-weight: bold;
+         };
+       }
+
+       vaadin-grid#material .cell {
+         overflow: hidden;
+         text-overflow: ellipsis;
+         padding-right: 56px;
+       }
+
+       vaadin-grid#material .cell.last {
+         padding-right: 24px;
+       }
+
+       vaadin-grid#material .cell.numeric {
+         text-align: right;
+       }
+
+       vaadin-grid#material paper-checkbox {
+         --primary-color: var(--paper-indigo-500);
+         margin: 0 24px;
+       }
+
+       vaadin-grid#material vaadin-grid-sorter {
+         --vaadin-grid-sorter-arrow: {
+           display: none !important;
+         };
+       }
+
+       vaadin-grid#material vaadin-grid-sorter .cell {
+         flex: 1;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+       }
+
+       vaadin-grid#material vaadin-grid-sorter iron-icon {
+         transform: scale(0.8);
+       }
+
+       vaadin-grid#material vaadin-grid-sorter:not([direction]) iron-icon {
+         color: rgba(0, 0, 0, var(--dark-disabled-opacity));
+       }
+
+       vaadin-grid#material vaadin-grid-sorter[direction] {
+         color: rgba(0, 0, 0, var(--dark-primary-opacity));
+       }
+
+       vaadin-grid#material vaadin-grid-sorter[direction=desc] iron-icon {
+         transform: scale(0.8) rotate(180deg);
+       }
+
+.toast-position {
+    margin-left: 268px;
+}
+.dialog-position {
+    width: 100%;
+    height: 80%;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 20px;
+    position: absolute;
+}
+.dialog-position-narrow {
+    width: 60%;
+    height: 80%;
+    max-width: 600px;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 20px;
+    position: absolute;
+}
+
+.paper-header {
+      top: 0;
+      position: fixed;
+      width: 100%;
+      color: red;
+    }
+
+paper-menu{
+    --paper-menu-background-color: var(--primary-background-color);
+    --paper-menu-color: var(--primary-text-color);
+    --paper-menu-focused-item: {
+        background: white;
+        };
+    --paper-menu-focused-item-after: {
+        background:blue;
+        };
+    }
+paper-item {
+    --paper-item-focused: {
+        font-weight: bold;
+        };
+    --paper-item-selected: {
+        background: var(--paper-green-100) ;
+        };
+    --paper-item-focused-before: {
+        opacity:0.0;
+        };
+    }
+    :hover {
+        cursor: pointer;
+    }
+
+@media all and (max-width: 1000px) {
+    .wideScreen {
+        display: none;
+        }
+        .toast-position {
+            margin-left: 12px;
+        }
+    }
+</style>
+</template>
+</dom-module>

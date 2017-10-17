@@ -1,0 +1,80 @@
+<link rel="import" href="../styles/shared-styles.html">
+<dom-module id="des-toolbar">
+<template>
+   <style include="shared-styles">
+   </style>
+   <app-toolbar sticky id="mainToolbar" class="black">
+        <paper-icon-button icon="menu" onclick="drawer.toggle()" drawer-toggle ></paper-icon-button>
+        <div main-title class="wideScreen">DARK ENERGY SURVEY desaccess  </div>
+        <div main-title drawer-toggle>DES desaccess</div>
+
+            <paper-menu-button id="profileMenu" no-overlap horizontal-offset="-100" no-animations close-on-activate>
+              <paper-icon-button icon="social:person" slot="dropdown-trigger" alt="menu"></paper-icon-button>
+              <paper-listbox slot="dropdown-content">
+                <paper-item class="profileItem" on-tap="reset">Change Password</paper-item>
+                <paper-item  class="profileItem" on-tap="profile">Update Profile</paper-item>
+                <paper-item  class="profileItem" on-tap="logout">Log out</paper-item>
+              </paper-listbox>
+            </paper-menu-button>
+              <iron-icon icon="arrow-drop-down" class="profile" ></iron-icon>
+    </app-toolbar>
+
+
+  <paper-dialog class="dialog-position-narrow" id="updatePassDialog"  with-backdrop on-iron-overlay-opened="patchOverlay" >
+    <des-login-update error="{{error}}" db="{{db}}" username={{username}}></des-login-update>
+  </paper-dialog>
+
+  <paper-dialog class="dialog-position-narrow" id="updateInfoDialog"  with-backdrop on-iron-overlay-opened="patchOverlay">
+    <des-login-update-info  name={{name}} lastname={{lastname}} email={{email}} username={{username}} error="{{error}}" db="{{db}}"></des-login-update-info>
+  </paper-dialog>
+</template>
+
+<script>
+      Polymer({
+      is: "des-toolbar",
+      properties:{
+          db:{
+              type: String,
+              value: '',
+          },
+          name:{
+              type: String,
+              value: '',
+          },
+          lastname:{
+              type: String,
+              value: '',
+          },
+          username:{
+              type: String,
+              value: '',
+          },
+          email:{
+              type: String,
+              value: '',
+          },
+      },
+      logout: function(event){
+        window.open('/easyweb/logout/','_self',false);
+      },
+      home: function(event){
+        window.open('/easyweb/','_self',false);
+      },
+      reset: function(event){
+          document.getElementById("profileMenu").close();
+          document.getElementById('updatePassDialog').open();
+      },
+      profile: function(event){
+          document.getElementById("profileMenu").close();
+          document.getElementById('updateInfoDialog').open();
+      },
+     patchOverlay: function (e) {
+         if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         }
+     },
+    });
+
+
+</script>
+</dom-module>
