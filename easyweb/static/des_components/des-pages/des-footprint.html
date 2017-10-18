@@ -1,21 +1,9 @@
 <dom-module id="des-footprint">
     <style include="shared-styles">
 
-
-        .tiletitle {
-            /*visibility: hidden;*/
-            border: 1px solid #ccc;
-            /*position: absolute;*/
-            margin-top: 100px;
-            margin-right: 100px;
-            vertical-align: middle;
-            width: 50%;
-            height: 50%;
-        }
-
         .box {
             background-color: white;
-            border: none;
+            border: 1px solid gray;
         }
 
         .box:focus {
@@ -25,11 +13,13 @@
         .box:input {
             outline: none;
         }
+        .flex {
+      @apply --layout-horizontal;
+        }
 
     </style>
 
     <template>
-        <!--<des-footprint-help class="helpB" style="float: right; max-width:18%; height: auto;"></des-footprint-help>-->
 
         <section>
 
@@ -37,24 +27,18 @@
                 <des-card heading=[[header]]>
                     <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px;"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
-                <div id="tiletitleHelp">
-                </div>
-                    <div class="card-content">
+                    <div class="card-content" >
+                 <div class="flex">
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
+                        <des-card heading="Tilename properties">
+                            <div id="tiletitleHelp"></div>
+
+                        </des-card>
+                </div>
                     </div>
                 </des-card>
-                <!--<div class="card-actions">-->
-                <!--<paper-button class="desbutton" icon="maps:near-me" on-tap="_toCoadds">Export to Coadds Images</paper-button>-->
-                <!--<paper-button class="desbutton" icon="maps:near-me" on-tap="_toSingle">Export to Single Epoch</paper-button>-->
-                <!--&lt;!&ndash;<paper-button on-tap="_editComment" autofocus>Confirm</paper-button>&ndash;&gt;-->
-                <!--<paper-button class="desbutton" icon="clear" on-tap="_clear">Clear</paper-button>-->
-                <!--</div>-->
-                <!--</des-card>-->
-                <!--<paper-card id="tiletitle" class="tiletitle" heading="[[header]]">  </paper-card>-->
             </div>
         </section>
-        <paper-toast class="toast-position" id="toast-ft-good" text="Value copied." duration="5000"> </paper-toast>
-        <paper-toast class="toast-position" id="toast-ft-bad" text="Please choose a position." duration="5000"> </paper-toast>
 
     </template>
 
@@ -111,6 +95,10 @@
                 },
                 tiledata:{
                     value: {},
+                },
+                tilename: {
+                    type: String,
+                    value: 'test'
                 },
                 xvalue:{
                     type:Number,
@@ -237,6 +225,7 @@
 
 
                     var PositionZoom = function(ra,dec) {
+                        var _self = this;
                         var geojsonFeature = {
                             "type": "Feature",
                             "properties": {},
@@ -262,6 +251,30 @@
                         tempLayer.visible(true);
                         globe.addLayer( tempLayer );
                         window.tempLayer = tempLayer;
+                            var max_d = Number.POSITIVE_INFINITY;
+                            var tile = -1
+                            for (i=0; i < all_tiles.features.length-1; i++){
+                                var ra0 = checkRA(all_tiles.features[i].properties.RA_C);
+                                var dec0 = all_tiles.features[i].properties.DEC_C;
+                                var dist = Math.pow(( ra0 - checkRA(ra)),2) + Math.pow((dec0 - dec),2);
+                                if (dist < max_d){
+                                    max_d = dist;
+                                    var tile = i;
+                                };
+                            }
+                            var tilename = all_tiles.features[tile].properties.tilename;
+                            _self.tilename = tilename;
+                            console.log(this.tilename);
+                            var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
+                            var dec_t = all_tiles.features[tile].properties.DEC_C;
+                            var titleHelp =document.getElementById("tiletitleHelp");
+                            this.xvalue = restoreRA(ra_t);
+                            this.yvalue = dec_t;
+                            this.data = restoreRA(ra_t)+", "+dec_t;
+                            var x_part = this.xvalue.toFixed(5);
+                            var y_part = this.yvalue.toFixed(5);
+                            titleHelp.innerHTML = "TILENAME: " + tilename  + " ( "  +x_part+", "+y_part+" )";
+
 //                    var title =document.getElementById("tiletitleHelp");
 //                    title.style.visibility = 'hidde   n';
 
@@ -271,6 +284,7 @@
                     var _handleMouseDblClick = function(event) {
                         event.stopImmediatePropagation();
                         event.preventDefault();
+                        document.getElementById("zoomto").value='';
                         clearSelection();
                         if (event.button == 0) {
                             var pos = navigation.globe.renderContext.getXYRelativeToCanvas(event);
@@ -296,11 +310,11 @@
                                 this.xvalue = restoreRA(ra_t);
                                 this.yvalue = dec_t;
                                 this.data = restoreRA(ra_t)+", "+dec_t;
-                                var x_part = this.xvalue.toFixed(4);
-                                var y_part = this.yvalue.toFixed(4);
+                                var x_part = this.xvalue.toFixed(5);
+                                var y_part = this.yvalue.toFixed(5);
 //                            console.log(this.data);
 //                            title.innerHTML = tilename + "( " +restoreRA(ra_t)+", "+dec_t+" )";
-                                titleHelp.innerHTML = tilename  + "( "  +x_part+", "+y_part+" )";
+                                titleHelp.innerHTML = "TILENAME: " + tilename  + " ( "  +x_part+", "+y_part+" )";
 //                            title.style.visibility = 'visible';
                                 if (window.tempLayer === undefined){
                                     var ju = 0;

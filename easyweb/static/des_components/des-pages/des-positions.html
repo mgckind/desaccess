@@ -1,0 +1,46 @@
+<dom-module id="des-positions">
+<template>
+    <style include="shared-styles">
+
+    </style>
+
+
+    <paper-dialog id="inputValuesDialog"  >
+        <paper-card heading="Enter positions below" elevation="0">
+        <div class="card-content">
+       <iron-autogrow-textarea id="enteredPositions" max-rows="10" rows=8 placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
+
+      </div>
+        <div class="card-actions">
+        <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
+        <paper-button on-tap="_submitPositions" raised class="indigo"> Accept</paper-button>
+      </div>
+      </paper-card>
+    </paper-dialog>
+
+</template>
+
+<script>
+      Polymer({
+      is: "des-positions",
+      properties : {
+        place_holder: {
+            type: String,
+            value: "RA , DEC \nRA , DEC\n... , ..."
+        },
+      },
+      _submitPositions: function(){
+        document.getElementById("inputValuesDialog").close();
+        document.getElementById("submitJobButton").disabled=false;
+        document.getElementById("uploadFile").disabled=true;
+        document.getElementById("keyboardicon").style.display='none';
+        document.getElementById("desCoadds").enter_values = "Values Entered";
+        },
+        clear: function(){
+            document.getElementById("enteredPositions").value="";
+        },
+    });
+
+
+</script>
+</dom-module>

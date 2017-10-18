@@ -45,7 +45,8 @@
     "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#^2.0.0",
     "paper-password-input": "Collaborne/paper-password-input#^2.2.0",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.0",
-    "iron-form": "PolymerElements/iron-form#^2.0.1"
+    "iron-form": "PolymerElements/iron-form#^2.0.1",
+    "paper-slider": "PolymerElements/paper-slider#^2.0.2"
   },
   "resolutions": {
     "polymer": "^1.9.0",

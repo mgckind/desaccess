@@ -52,6 +52,17 @@
         app.examplequerybox.setValue('\n\n\n\n\n\n\n\n\n\n');
         app.examplequerybox.focus();
 
+        var xsize = document.getElementById("xsizeSlider");
+               xsize.addEventListener('value-change', function() {
+                   document.getElementById("xsizeLabel").textContent = xsize.value;
+               });
+               var ysize = document.getElementById("ysizeSlider");
+               ysize.addEventListener('value-change', function() {
+                   document.getElementById("ysizeLabel").textContent = ysize.value;
+               });
+
+
+
   });
 
 
