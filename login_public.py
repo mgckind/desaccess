@@ -35,6 +35,7 @@ class SignupHandler(BaseHandler):
         if db_utils.check_username(username):
             db_utils.create_user(username, password, firstname, lastname, email, '', '')
             check, url = db_utils.create_reset_url(email)
+            ### TBD: SEND EMAIL
             print('localhost:8080/easyweb/activate/{}'.format(url))
             self.write(json.dumps({'msg': 'Activation email sent! {}'.format(url), 'errno': '0'}))
         else:
@@ -54,6 +55,7 @@ class ResetHandler(BaseHandler):
         print(email)
         print('Reset Password')
         check, url = db_utils.create_reset_url(email)
+        ### TBD: SEND EMAIL
         print(url)
         time.sleep(2)
         print('5 secs passed')

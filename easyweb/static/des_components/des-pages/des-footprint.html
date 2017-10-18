@@ -1,0 +1,338 @@
+<dom-module id="des-footprint">
+    <style include="shared-styles">
+
+
+        .tiletitle {
+            /*visibility: hidden;*/
+            border: 1px solid #ccc;
+            /*position: absolute;*/
+            margin-top: 100px;
+            margin-right: 100px;
+            vertical-align: middle;
+            width: 50%;
+            height: 50%;
+        }
+
+        .box {
+            background-color: white;
+            border: none;
+        }
+
+        .box:focus {
+            outline: none;
+        }
+
+        .box:input {
+            outline: none;
+        }
+
+    </style>
+
+    <template>
+        <!--<des-footprint-help class="helpB" style="float: right; max-width:18%; height: auto;"></des-footprint-help>-->
+
+        <section>
+
+            <div class="horizontal layout around justified">
+                <des-card heading=[[header]]>
+                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px;"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                </paper-input>
+                <div id="tiletitleHelp">
+                </div>
+                    <div class="card-content">
+                        <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
+                    </div>
+                </des-card>
+                <!--<div class="card-actions">-->
+                <!--<paper-button class="desbutton" icon="maps:near-me" on-tap="_toCoadds">Export to Coadds Images</paper-button>-->
+                <!--<paper-button class="desbutton" icon="maps:near-me" on-tap="_toSingle">Export to Single Epoch</paper-button>-->
+                <!--&lt;!&ndash;<paper-button on-tap="_editComment" autofocus>Confirm</paper-button>&ndash;&gt;-->
+                <!--<paper-button class="desbutton" icon="clear" on-tap="_clear">Clear</paper-button>-->
+                <!--</div>-->
+                <!--</des-card>-->
+                <!--<paper-card id="tiletitle" class="tiletitle" heading="[[header]]">  </paper-card>-->
+            </div>
+        </section>
+        <paper-toast class="toast-position" id="toast-ft-good" text="Value copied." duration="5000"> </paper-toast>
+        <paper-toast class="toast-position" id="toast-ft-bad" text="Please choose a position." duration="5000"> </paper-toast>
+
+    </template>
+
+
+
+    <script>
+
+        function loadTiles(filename,color,callback) {
+            var xobj = new XMLHttpRequest();
+            xobj.overrideMimeType("application/json");
+            xobj.open('GET', filename, true);
+            xobj.onreadystatechange = function () {
+                if (xobj.readyState == 4 && xobj.status == "200") {
+                    callback(color,xobj.responseText);
+                }
+            };
+            xobj.send(null);
+        }
+
+        function checkRA(ra) {
+            if (ra > 180.) {
+                ra = ra - 360.;
+            };
+            return ra;
+        }
+
+        function restoreRA(ra) {
+            if (ra < 0) {
+                ra = ra + 360.;
+            };
+            return ra;
+        }
+
+        function clearSelection() {
+            if(document.selection && document.selection.empty) {
+                document.selection.empty();
+            }
+            else if(window.getSelection) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+            }
+        }
+
+        Polymer({
+            is: "des-footprint",
+            properties:{
+                name :{
+                    type: String,
+                    value:''
+                },
+                header:{
+                    type: String,
+                    value:'DES Footprint',
+                },
+                tiledata:{
+                    value: {},
+                },
+                xvalue:{
+                    type:Number,
+                },
+                yvalue:{
+                    type:Number,
+                },
+                data: {
+                    type: String,
+                    value:''
+                }
+            },
+            checkForEnter: function (e) {
+             if (e.keyCode === 13) {
+               this.gotoposition();
+             }
+            },
+            gotoposition: function(){
+                var position = document.getElementById("zoomto").value.split(",");
+                var ra1 = parseFloat(position[0]);
+                var dec1 = parseFloat(position[1]);
+                if (ra1 > 180.) {
+                    ra1 = ra1 - 360.;
+                };
+                //navigation.zoomTo([ra1,dec1],500000,1000);
+                PositionZoom(ra1,dec1);
+            },
+            _clear: function() {
+                var title =document.getElementById("tiletitleHelp");
+                title.innerHTML = '';
+            },
+            attached: function(){
+                require.config({
+                    baseUrl: '/easyweb/static/scripts/src/'
+                });
+                require(['GlobWeb'], function (GlobWeb) {
+                    var cvs = document.getElementById("GlobWebCanvas");
+                    //cvs.width = window.innerWidth;
+                    //cvs.height = window.innerHeight;
+                    var globe = new GlobWeb.Globe({
+                        canvas: cvs,
+                        lighting: false,
+                        tileErrorTreshold: 3,
+                        backgroundColor : "#000",
+                        continuousRendering: false,
+                        defaultColor: [220.,220.,220.,255.]
+                    } );
+                    var navigation = new GlobWeb.Navigation(globe, {
+                        inertia: false, minDistance: 100000
+                    });
+                    var canvas = navigation.renderContext.canvas;
+                    loadTiles('/easyweb/static/tiles/grid.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : mycolor,
+                                fill: false,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(true);
+                        vectorLayer.opacity(0.5);
+                        globe.addLayer(vectorLayer);
+                    });
+
+                    loadTiles('/easyweb/static/tiles/plane.json',[1.0,0.0,0.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : mycolor,
+                                strokeWidth: 2.0,
+                                fill: false,
+                                label: 'footprint',
+                                zIndex: 1000,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(true);
+                        globe.addLayer(vectorLayer);
+                    });
+
+                    loadTiles('/easyweb/static/tiles/footprint.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : mycolor,
+                                strokeWidth: 5.0,
+                                fill: false,
+                                label: 'footprint',
+                                zIndex: 100,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(true);
+                        globe.addLayer(vectorLayer);
+                    });
+
+                    loadTiles('/easyweb/static/tiles/all_tiles.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : mycolor,
+                                strokeWidth: 0.0,
+                                fill: false,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.all_tiles = vectorLayer;
+                    });
+
+
+                    loadTiles('/easyweb/static/tiles/y3a2_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : [0.2980392156862745, 0.4470588235294118, 0.6901960784313725,1.0],
+                                strokeWidth: 1.0,
+                                fill: false,
+                                zIndex: 0,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(true);
+                        globe.addLayer(vectorLayer);
+                        window.y3_tiles = vectorLayer;
+                    });
+
+
+                    var PositionZoom = function(ra,dec) {
+                        var geojsonFeature = {
+                            "type": "Feature",
+                            "properties": {},
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [ra,dec]
+                            }
+                        };
+                        navigation.zoomTo([ra,dec],500000,1000);
+                        if (window.tempLayer === undefined){
+                            var ju = 0;
+                        }
+                        else{
+                            globe.removeLayer( window.tempLayer );
+                        }
+                        var tempLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 1000
+                            })
+                        });
+                        tempLayer.addFeature(geojsonFeature);
+                        tempLayer.visible(true);
+                        globe.addLayer( tempLayer );
+                        window.tempLayer = tempLayer;
+//                    var title =document.getElementById("tiletitleHelp");
+//                    title.style.visibility = 'hidde   n';
+
+                    };
+                    window.PositionZoom = PositionZoom;
+
+                    var _handleMouseDblClick = function(event) {
+                        event.stopImmediatePropagation();
+                        event.preventDefault();
+                        clearSelection();
+                        if (event.button == 0) {
+                            var pos = navigation.globe.renderContext.getXYRelativeToCanvas(event);
+                            var geo = navigation.globe.getLonLatFromPixel( pos[0], pos[1] );
+                            var max_d = Number.POSITIVE_INFINITY;
+                            var tile = -1
+                            if (geo){
+                                for (i=0; i < all_tiles.features.length-1; i++){
+                                    var ra = checkRA(all_tiles.features[i].properties.RA_C);
+                                    var dec = all_tiles.features[i].properties.DEC_C;
+                                    var dist = Math.pow(( ra - geo[0]),2) + Math.pow((dec - geo[1]),2);
+                                    if (dist < max_d){
+                                        max_d = dist;
+                                        var tile = i;
+                                    };
+                                }
+                                var tilename = all_tiles.features[tile].properties.tilename;
+                                var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
+                                var dec_t = all_tiles.features[tile].properties.DEC_C;
+                                navigation.zoomTo([ra_t,dec_t],500000,1000);
+//                            var title =document.getElementById("tiletitle");
+                                var titleHelp =document.getElementById("tiletitleHelp");
+                                this.xvalue = restoreRA(ra_t);
+                                this.yvalue = dec_t;
+                                this.data = restoreRA(ra_t)+", "+dec_t;
+                                var x_part = this.xvalue.toFixed(4);
+                                var y_part = this.yvalue.toFixed(4);
+//                            console.log(this.data);
+//                            title.innerHTML = tilename + "( " +restoreRA(ra_t)+", "+dec_t+" )";
+                                titleHelp.innerHTML = tilename  + "( "  +x_part+", "+y_part+" )";
+//                            title.style.visibility = 'visible';
+                                if (window.tempLayer === undefined){
+                                    var ju = 0;
+                                }
+                                else{
+                                    globe.removeLayer( window.tempLayer );
+                                }
+                                var tempLayer = new GlobWeb.VectorLayer({
+                                    style : new GlobWeb.FeatureStyle({
+                                        fillColor: [1.,1.,0.,1.],
+                                        strokeColor : [0.0,0.0,0.0,1.0],
+                                        strokeWidth: 3.5,
+                                        fill: false,
+                                        zIndex: 90,
+                                    })
+                                });
+                                tempLayer.addFeature(all_tiles.features[tile]);
+                                tempLayer.visible(true);
+                                globe.addLayer( tempLayer );
+                                window.tempLayer = tempLayer;
+                            }
+                        }
+                    };
+
+                    canvas.addEventListener("dblclick", _handleMouseDblClick);
+                    window.globe = globe;
+                    window.navigation = navigation;
+
+                });
+            },
+        });
+
+
+    </script>
+</dom-module>
