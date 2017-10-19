@@ -62,12 +62,11 @@ class MyLogsHandler(BaseHandler):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
         jobid = self.get_argument('jobid')
         print(loc_user, jobid)
-        log_path = os.path.join(Settings.WORKDIR, loc_user, 'results', jobid, 'log.log')
+        log_path = os.path.join(Settings.WORKDIR, loc_user, jobid, 'log.log')
         log = ''
         with open(log_path, 'r') as logFile:
             for line in logFile:
                 log += line+'<br>'
-        print(log)
         temp = json.dumps(log)
         self.write(temp)
 

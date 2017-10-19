@@ -12,7 +12,7 @@
 
     <iron-ajax id="getTiles"
         auto
-        url=/easyweb/static/workdir/{{username}}/results/{{jobid}}/list.json
+        url=/easyweb/static/workdir/{{username}}/{{jobid}}/list.json
         handle-as="json"
         last-response="{{jsondata}}"
         on-response="_getTilesResponse">
@@ -36,7 +36,7 @@
                    <br>
                    <des-html html={{logdata}}></des-html>
        <div class="buttons">
-           <paper-button  class="indigo" raise on-tap="_gobackdialog" >Dismiss</paper-button>
+           <paper-button  class="indigo" raise autofocus on-tap="_gobackdialog" >Dismiss</paper-button>
        </div>
 
     </paper-dialog>
@@ -96,7 +96,7 @@
                 var siid = this.jobid;
                 var user = this.username;
 
-                link.href = "/easyweb/static/workdir/"+user+"/results/"+siid+"/"+siid+".tar.gz";
+                link.href = "/easyweb/static/workdir/"+user+"/"+siid+"/"+siid+".tar.gz";
 
                 if (link.download !== undefined){
                     //Set HTML5 download attribute. This will prevent file from opening if supported.

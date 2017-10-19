@@ -3,16 +3,17 @@ import easyaccess as ea
 import requests
 from Crypto.Cipher import AES
 import base64
-import sqlite3 as lite
 import Settings
 import os
 import threading
 import time
 import json
-import glob
 import MySQLdb as mydb
 import yaml
-#import config.mysqlconfig as ms
+import time
+import subprocess
+from celery.exceptions import SoftTimeLimitExceeded
+import glob
 
 app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
@@ -41,14 +42,20 @@ class CustomTask(Task):
         con = mydb.connect(**conf)
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('REVOKE', task_id)
         cur = con.cursor()
+        print('FAILED')
+        print(exc)
+        print(einfo)
         cur.execute(q0)
         con.commit()
         con.close()
-        requests.post(url, data={}, verify=False)
-
-
+        requests.post(url, data={'jobid':task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
+        print('Done?')
+        try:
+            test = retval['status']
+        except:
+            return
         url = 'http://localhost:8080/easyweb/pusher/'
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
@@ -57,12 +64,16 @@ class CustomTask(Task):
         size_list = json.dumps(retval['sizes'])
         if retval['status'] == 'ok':
             temp_status = 'SUCCESS'
+            if retval['email'] != 'no':
+                print('SEND EMAIL TO: ', retval['email'])
+            else:
+                print('NO EMAIL')
+
         else:
             temp_status = 'FAIL'
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format(temp_status, task_id)
         q1 = "UPDATE Jobs SET files='{0}' where job = '{1}'".format(file_list, task_id)
         q2 = "UPDATE Jobs SET sizes='{0}' where job = '{1}'".format(size_list, task_id)
-        #with con:
         cur = con.cursor()
         cur.execute(q0)
         if retval['files'] is not None:
@@ -141,6 +152,7 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
     response['jobid'] = jid
     response['files'] = None
     response['sizes'] = None
+    response['email'] = 'no'
     user_folder = os.path.join(Settings.WORKDIR, username)+'/'
     if filename is not None:
         if not os.path.exists(os.path.join(user_folder, jid)):
@@ -214,4 +226,80 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
         json.dump(response, fp)
     cursor.close()
     connection.close()
+    return response
+
+
+@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)
+def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email):
+    response = {}
+    response['user'] = uu
+    response['elapsed'] = 0
+    response['jobid'] = jobid
+    response['files'] = None
+    response['sizes'] = None
+    response['email'] = 'no'
+    if send_email:
+        response['email'] = email
+    t1 = time.time()
+    cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
+    dlp = cipher.decrypt(base64.b64decode(pp)).strip()
+    pp = dlp.decode()
+    user_folder = Settings.WORKDIR+uu+"/"
+    jsonfile = os.path.join(user_folder, jobid+'.json')
+    mypath = user_folder+jobid+'/'
+    with open(mypath+'log.log', 'w') as logfile:
+        logfile.write('Running...')
+    com = "makeDESthumbs {0} --user {1} --password {2} --MP --outdir={3}".format(inputs, uu, pp,
+                                                                                 outputs)
+    if xs != "":
+        com += ' --xsize %s ' % xs
+    if ys != "":
+        com += ' --ysize %s ' % ys
+    com += " --logfile %s" % (outputs + 'log.log')
+    com += " --tag Y3A2_COADD"
+    print(com)
+    time.sleep(40)
+    # oo = subprocess.check_output([com], shell=True)
+    if listonly:
+        if os.path.exists(mypath+"list.json"):
+            os.remove(mypath+"list.json")
+        with open(mypath+"list.json", "w") as outfile:
+            json.dump('', outfile, indent=4)
+    else:
+        tiffiles = glob.glob(mypath+'*.tif')
+        titles = []
+        pngfiles = []
+        Ntiles = len(tiffiles)
+        for f in tiffiles:
+            title = f.split('/')[-1][:-4]
+            # subprocess.check_output(["convert %s %s.png" % (f, f)], shell=True)
+            titles.append(title)
+            pngfiles.append(mypath+title+'.tif.png')
+
+        for ij in range(Ntiles):
+            pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/static'):]
+        os.chdir(user_folder)
+        # os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+        os.chdir(os.path.dirname(__file__))
+        if os.path.exists(mypath+"list.json"):
+            os.remove(mypath+"list.json")
+        with open(mypath+"list.json", "w") as outfile:
+            json.dump([dict(name=pngfiles[i], title=titles[i],
+                            size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
+
+    # writing files for wget
+    allfiles = glob.glob(mypath+'*.*')
+    response['files'] = [os.path.basename(i) for i in allfiles]
+    response['sizes'] = [get_filesize(i) for i in allfiles]
+    Fall = open(mypath+'list_all.txt', 'w')
+    prefix = 'URLPATH'+'/static'
+    for ff in allfiles:
+        if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
+            Fall.write(prefix+ff.split('static')[-1]+'\n')
+    Fall.close()
+    response['status'] = 'ok'
+    t2 = time.time()
+    response['elapsed'] = t2-t1
+    with open(jsonfile, 'w') as fp:
+        json.dump(response, fp)
     return response
