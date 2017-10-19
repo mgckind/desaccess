@@ -1,5 +1,5 @@
-"""Easyaccess Web application."""
 import tornado.ioloop
+"""Easyaccess Web application."""
 import tornado.web
 import os
 import pusher
@@ -11,13 +11,11 @@ from tornado.options import define, options
 import Settings
 import yaml
 import backup
+import cutout
 
 define("port", default=8080, help="run on the given port", type=int)
 
 def create_db(delete=False):
-    #dirname = os.path.dirname(Settings.DBFILE)
-    #if not os.path.exists(dirname):
-    #     os.mkdir(dirname)
     with open('config/mysqlconfig.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['mysql']
     conf.pop('db', None)
@@ -31,8 +29,18 @@ def create_db(delete=False):
     cur = con.cursor()
     if delete:
         cur.execute("DROP TABLE IF EXISTS Jobs")
-    cur.execute("CREATE TABLE IF NOT EXISTS  \
-        Jobs(user text, job text, name mediumtext, status text, time datetime, query mediumtext, files text, sizes text)")
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS Jobs(
+    user text,
+    job text,
+    name mediumtext,
+    status text,
+    time datetime,
+    type text,
+    query mediumtext,
+    files text,
+    sizes text
+    )""")
     con.commit()
     con.close()
 
@@ -50,6 +58,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/changeinfo/?", login.UpdateInfoHandler),
             (r"/easyweb/logout/?", login.AuthLogoutHandler),
             (r"/easyweb/myjobs/?", api.MyJobsHandler),
+            (r"/easyweb/mylogs/?", api.MyLogsHandler),
             (r"/easyweb/myexamples/?", api.MyExamplesHandler),
             (r"/easyweb/myresponse/?", api.MyResponseHandler),
             (r"/easyweb/mytables/?", api.MyTablesHandler),
@@ -62,6 +71,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/reset/", login.ResetHandler),
             (r"/easyweb/activate/(\w+)", login.ActivateHandler),
             (r"/easyweb/signup/?", login.SignupHandler),
+            (r"/easyweb/cutout/", cutout.FileHandler),
         ]
         settings = {
             "template_path": Settings.TEMPLATE_PATH,

@@ -17,6 +17,10 @@
       @apply --layout-horizontal;
         }
 
+        .downloadTile {
+            visibility: hidden;
+        }
+
     </style>
 
     <template>
@@ -30,8 +34,9 @@
                     <div class="card-content" >
                  <div class="flex">
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
-                        <des-card heading="Tilename properties">
+                        <des-card heading="Tile properties">
                             <div id="tiletitleHelp"></div>
+                            <paper-button class="indigo downloadTile" raised disabled id ="downloadTile"> Download</paper-button>
 
                         </des-card>
                 </div>
@@ -267,16 +272,20 @@
                             console.log(this.tilename);
                             var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                             var dec_t = all_tiles.features[tile].properties.DEC_C;
-                            var titleHelp =document.getElementById("tiletitleHelp");
+                            var titleHelp = document.getElementById("tiletitleHelp");
                             this.xvalue = restoreRA(ra_t);
                             this.yvalue = dec_t;
                             this.data = restoreRA(ra_t)+", "+dec_t;
                             var x_part = this.xvalue.toFixed(5);
                             var y_part = this.yvalue.toFixed(5);
-                            titleHelp.innerHTML = "TILENAME: " + tilename  + " ( "  +x_part+", "+y_part+" )";
+                            titleHelp.innerHTML =
+                            "Name       : " + tilename  + "<br />" +
+                            "Tile Center : " + x_part +", "+y_part + "<br />" +
+                            "No Objects   : " + "<br />" +
+                            "RA Corners   : " + "<br />" +
+                            "DEC Corners  : " + "<br /> <br /> <br />";
+                             document.getElementById('downloadTile').style.visibility = 'visible';
 
-//                    var title =document.getElementById("tiletitleHelp");
-//                    title.style.visibility = 'hidde   n';
 
                     };
                     window.PositionZoom = PositionZoom;
@@ -312,10 +321,13 @@
                                 this.data = restoreRA(ra_t)+", "+dec_t;
                                 var x_part = this.xvalue.toFixed(5);
                                 var y_part = this.yvalue.toFixed(5);
-//                            console.log(this.data);
-//                            title.innerHTML = tilename + "( " +restoreRA(ra_t)+", "+dec_t+" )";
-                                titleHelp.innerHTML = "TILENAME: " + tilename  + " ( "  +x_part+", "+y_part+" )";
-//                            title.style.visibility = 'visible';
+                                titleHelp.innerHTML =
+                                "Name       : " + tilename  + "<br />" +
+                                "Tile Center : " + x_part +", "+y_part + "<br />" +
+                                "No Objects   : " + "<br />" +
+                                "RA Corners   : " + "<br />" +
+                                "DEC Corners  : " + "<br /> <br /> <br />";
+                                 document.getElementById('downloadTile').style.visibility = 'visible';
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }

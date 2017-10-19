@@ -1,0 +1,26 @@
+<dom-module id="des-html">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+  </template>
+</dom-module>
+
+<script>
+  (function () {
+    Polymer({
+      is: 'des-html',
+      properties: {
+        html: {
+          type: String,
+          observer: '_htmlChanged'
+        }
+      },
+      _htmlChanged: function (temp) {
+        this.innerHTML = temp;
+      }
+    });
+  })();
+</script>

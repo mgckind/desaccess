@@ -56,6 +56,25 @@ SELECT RA, DEC, MAG_AUTO_G from DR1_MAIN sample(0.0001)
         self.write(temp)
 
 
+class MyLogsHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
+        jobid = self.get_argument('jobid')
+        print(loc_user, jobid)
+        log_path = os.path.join(Settings.WORKDIR, loc_user, 'results', jobid, 'log.log')
+        log = ''
+        with open(log_path, 'r') as logFile:
+            for line in logFile:
+                log += line+'<br>'
+        print(log)
+        temp = json.dumps(log)
+        self.write(temp)
+
+
+
+
+
 class MyJobsHandler(BaseHandler):
 
     @tornado.web.authenticated
@@ -91,31 +110,41 @@ class MyJobsHandler(BaseHandler):
         cc = list(cc)
         jjob = []
         jstatus = []
+        jobtype = []
         jtime = []
+        jname = []
         jelapsed = []
         jquery = []
         jfiles = []
         jsizes = []
         jfiles_bool = []
+        jquery_bool = []
 
         for i in range(len(cc)):
             #dd = datetime.datetime.strptime(cc[i][3], '%Y-%m-%d %H:%M:%S')
-            dd = cc[i][3]
+            dd = cc[i][4]
             ctime = dd.strftime('%a %b %d %H:%M:%S %Y')
             jjob.append(cc[i][1])
-            jstatus.append(cc[i][2])
+            jname.append(cc[i][2])
+            jstatus.append(cc[i][3])
+            jobtype.append(cc[i][5])
             jtime.append(ctime)
-            jquery.append(cc[i][4])
-            jfiles.append(cc[i][5])
-            jsizes.append(cc[i][6])
-            if cc[i][5] == '':
+            jquery.append(cc[i][6])
+            jfiles.append(cc[i][7])
+            jsizes.append(cc[i][8])
+            if cc[i][7] == '':
                 jfiles_bool.append(False)
             else:
                 jfiles_bool.append(True)
+            if cc[i][6] == '':
+                jquery_bool.append(False)
+            else:
+                jquery_bool.append(True)
             jelapsed.append(humantime((datetime.datetime.now()-dd).total_seconds())+" ago")
         out_dict = [dict(job=jjob[i], status=jstatus[i], time=jtime[i], elapsed=jelapsed[i],
                     jquery=jquery[i], jfiles=jfiles[i], jbool=jfiles_bool[i], user=loc_user,
-                    jsizes=jsizes[i]) for i in range(len(jjob))]
+                    jsizes=jsizes[i], jname=jname[i], jobtype=jobtype[i],
+                    jquerybool=jquery_bool[i]) for i in range(len(jjob))]
         temp = json.dumps(out_dict, indent=4)
         self.write(temp)
 

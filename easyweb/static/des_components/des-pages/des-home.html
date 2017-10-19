@@ -129,11 +129,19 @@
             <div class="horizontal layout around justified">
             <des-card heading="Welcome [[name]]!" class="welcome">
 
-
-                <div class="gallery" id="desjobs" on-click="change">
-                    <des-card-intro member="Jobs" ></des-card-intro>
-
+                <div class="gallery" id="query" on-click="change">
+                    <des-card-intro member="Query"></des-card-intro>
                 </div>
+
+                <div class="gallery" id="allTables" on-click="change">
+                    <des-card-intro member="DR1 Tables"></des-card-intro>
+                </div>
+
+                <div class="gallery" id="example" on-click="change">
+                    <des-card-intro member="Example Query"></des-card-intro>
+                </div>
+
+
 
                 <div class="gallery" id="coadd" on-click="change">
                     <des-card-intro member="Coadds Images" ></des-card-intro>
@@ -143,22 +151,11 @@
                     <des-card-intro member="Footprint"></des-card-intro>
                 </div>
 
+                <div class="gallery" id="desjobs" on-click="change">
+                    <des-card-intro member="Jobs" ></des-card-intro>
 
-                <div class="gallery" id="query" on-click="change">
-                    <des-card-intro member="Query"></des-card-intro>
                 </div>
 
-                <!--<div class="gallery" id="easyjobs">-->
-                    <!--<des-card-intro member="Easyweb Jobs"></des-card-intro>-->
-                <!--</div>-->
-
-                <div class="gallery" id="allTables" on-click="change">
-                    <des-card-intro member="DR1 Tables"></des-card-intro>
-                </div>
-
-                <div class="gallery" id="example" on-click="change">
-                    <des-card-intro member="Example Query"></des-card-intro>
-                </div>
 
 
             </des-card>
@@ -186,9 +183,12 @@
            var tid = e.target.id;
            var sel = 0;
            if (tid == 'query') sel = 1;
-           if (tid == 'allTables') sel = 3;
-           if (tid == 'example') sel = 4;
-           if (tid == 'desjobs') sel = 2;
+           if (tid == 'allTables') sel = 2;
+           if (tid == 'example') sel = 3;
+           if (tid == 'coadd') sel = 4;
+           if (tid == 'footprint') sel = 5;
+           if (tid == 'desjobs') sel = 6;
+
            var app = document.querySelector('#app');
            var pages = document.getElementById("mainPages");
            var menu = document.querySelector('paper-menu');

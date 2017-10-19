@@ -4,14 +4,12 @@ import json
 import ea_tasks
 import uuid
 import os
-import sqlite3 as lite
 import Settings
 import base64
 from Crypto.Cipher import AES
 import datetime
 import requests
 import MySQLdb as mydb
-#import config.mysqlconfig as ms
 import yaml
 
 def after_return(retval):
@@ -86,27 +84,25 @@ class QueryHandler(BaseHandler):
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             tup = tuple([loc_user, jobid, 'None', 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
-                         original_query, '', ''])
+                         'query', original_query, '', ''])
             cur = con.cursor()
             try:
                 cur.execute("SELECT * from Jobs where user = '%s' order "
                                  "by time DESC limit 1" % loc_user)
                 cc = cur.fetchone()
                 #last = datetime.datetime.strptime(cc[3], '%Y-%m-%d %H:%M:%S')
-                last = cc[3]
+                last = cc[4]
             except:
                 last = now - datetime.timedelta(seconds=60)
             if (now-last).total_seconds() < 30:
-                print(cc[4] == query)
-                print(cc[4], query)
+                print(cc[6] == query)
+                print(cc[6], query)
                 response['data'] = 'ERROR: You submitted the same query less than 30s ago'
                 response['kind'] = 'query'
                 self.flush()
                 self.write(response)
                 self.finish()
                 return
-
-            #cur.execute("INSERT INTO Jobs VALUES(?, ?, ? , ?, ?, ?, ?)", tup)
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
             con.commit()
             try:

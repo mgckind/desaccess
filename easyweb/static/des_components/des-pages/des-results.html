@@ -1,0 +1,138 @@
+<dom-module id="des-results">
+<template>
+    <style include="shared-styles">
+
+    paper-dialog {
+        height: 60%;
+        width: 70%;
+        overflow-y: scroll;
+
+    }
+    </style>
+
+    <iron-ajax id="getTiles"
+        auto
+        url=/easyweb/static/workdir/{{username}}/results/{{jobid}}/list.json
+        handle-as="json"
+        last-response="{{jsondata}}"
+        on-response="_getTilesResponse">
+    </iron-ajax>
+
+    <iron-ajax id="getLogHelp"
+               url="/easyweb/mylogs/"
+               method="POST"
+               handle-as="json"
+               content-type="application/x-www-form-urlencoded"
+               last-response="{{logdata}}"
+               debounce-duration="300">
+    </iron-ajax>
+
+
+
+
+    <paper-dialog id="logDialogHelp" with-backdrop modal on-iron-overlay-opened="patchOverlay">
+        <h2>Log</h2>
+                   Job : {{jobid}}
+                   <br>
+                   <des-html html={{logdata}}></des-html>
+       <div class="buttons">
+           <paper-button  class="indigo" raise on-tap="_gobackdialog" >Dismiss</paper-button>
+       </div>
+
+    </paper-dialog>
+
+    <des-card heading="Job : [[jobid]] ( [[jsondata.length]] objects)">
+        <!--<br>-->
+        <!--<b>Comment:</b> {{jobcomment}}-->
+        <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
+        <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
+        <hr class="des-hr">
+
+    <template is="dom-if" if="{{jsondata}}">
+        <template is="dom-repeat" items="{{jsondata}}">
+            <des-thumb imtitle={{item.title}} imdisplay={{item.name}}>
+            </des-thumb>
+        </template>
+    </template>
+
+
+    <template is="dom-if" if="{{!jsondata}}">
+         <h3> There are no outputs for this job. Check logfile for details.</h3>
+    </template>
+    </des-card>
+
+
+</template>
+
+<script>
+    Polymer({
+          is: "des-results",
+          properties : {
+            jsondata: {
+                type: Array,
+            },
+            jobid: {
+                value : '',
+                type : String,
+                notify: true,
+            },
+            username:{
+                type: String,
+                value: '',
+            },
+          },
+          _seeLog: function(e) {
+            e.stopPropagation();
+            console.log('Log!');
+            logform = document.getElementById('getLogHelp');
+             logform.body = {
+                  'jobid': this.jobid,
+              };
+              logform.generateRequest();
+              document.getElementById('logDialogHelp').open();
+          },
+          _getAll: function(){
+                var link = document.createElement('a');
+                var siid = this.jobid;
+                var user = this.username;
+
+                link.href = "/easyweb/static/workdir/"+user+"/results/"+siid+"/"+siid+".tar.gz";
+
+                if (link.download !== undefined){
+                    //Set HTML5 download attribute. This will prevent file from opening if supported.
+                    var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+                    link.download = fileName;
+                }
+                if (document.createEvent) {
+                    var e = document.createEvent('MouseEvents');
+                    e.initEvent('click' ,true ,true);
+                    link.dispatchEvent(e);
+                    return true;
+                }
+                var query = '?download';
+                window.open(link.href + query);
+            },
+              _gobackdialog: function(event){
+                  document.getElementById('logDialogHelp').close();
+                  document.getElementById('JobTiles').close();
+                  document.getElementById('JobTiles').open();
+              },
+
+             patchOverlay: function (e) {
+                 if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                 }
+             },
+          _getTilesResponse: function() {
+            if (this.jsondata.length == 0 ) {
+              //document.getElementById('getAllIcon').disabled=true;
+              console.log('==0');
+               }
+            else {
+              console.log('!=0');
+              //document.getElementById('getAllIcon').disabled=false;
+              }
+        },
+    });
+</script>
+</dom-module>

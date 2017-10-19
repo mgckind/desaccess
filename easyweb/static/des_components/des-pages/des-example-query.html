@@ -4,7 +4,7 @@
 <template>
 <style include="shared-styles">
 </style>
-    <iron-ajax id="getMyJobs"
+    <iron-ajax id="getMyExamples"
     auto
     url="/easyweb/myexamples/"
     params='{"part":"fff"}'
@@ -91,7 +91,7 @@ function keysrt(key,desc) {
         _self.count = _self.data.length;
     },
       _handleTermination: function(e){
-      document.getElementById("getMyJobs").generateRequest();
+      document.getElementById("getMyExamples").generateRequest();
     },
     _copyQuery: function(){
         document.querySelector('#toastCopy').show();

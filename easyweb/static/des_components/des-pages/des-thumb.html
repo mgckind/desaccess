@@ -1,0 +1,209 @@
+<dom-module id="des-thumb">
+
+      <style>
+
+
+            :host {
+                  display: block;
+                  height : 220px;
+                  width: 220px;
+                  margin: 10px;
+                  float : left;
+                  background-color: white;
+            }
+
+
+            paper-card {
+                  width: 200px;
+                  height: 200px;
+                  margin-bottom: 0px;
+            }
+            .mycard{
+                  width: 200px;
+                  height: 200px;
+                  margin-bottom: 0px;
+                  font-size: 15px;
+                  color : var(--paper-pink-500);
+            }
+            .pink {
+
+                  --paper-card-header-color: var(--paper-green-500);
+            }
+            paper-material{
+                  height: 100%;
+                  width: 100%;
+                  background-color: white;
+                  border-radius: 5px;
+                  padding: 10px;
+            }
+            paper-material:hover .mycolors{
+                  visibility: visible;
+            }
+            .mycolors{
+                  color: pink;
+                  visibility: hidden;
+            }
+
+            .mycolors:hover{
+                  color:green;
+            }
+            paper-dialog {
+                  position: fixed;
+                  max-width: 90%;
+                  top: 16px;
+            }
+            paper-spinner.big{width:60px;height:60px;position:absolute;top:70px;left:70px;}
+
+
+            paper-dialog.centered {
+                  position: fixed;
+                  top: 20px;
+                  left: 20px;
+                  max-width: 90%;
+                  max-height: 90%;
+                  overflow: auto;
+            }
+
+      </style>
+
+      <template>
+            <paper-material  elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="openBig">
+                  <div class="mycard"> <div style="position:absolute;">
+                        <span>{{imtitle}}</span> </div>
+                        <paper-spinner class="big" ></paper-spinner>
+                        <img src={{imdisplay}} height="200px" width="200px" />
+                        <div style="position:absolute; right:10px; bottom:10px">
+                              <paper-icon-button  icon="file-download" class="mycolors" >
+                              </paper-icon-button>
+                        </div>
+                        <div style="position:absolute; left:10px; bottom:10px">
+                              <paper-icon-button id="infoid" icon="info" class="mycolors">
+                              </paper-icon-button>
+                        </div>
+                  </div>
+            </paper-material>
+
+            <!-- DIALOG -->
+            <paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay">
+                  <h2>[[imtitle]]</h2>
+                  <img class = "Image" src=[[imdisplay]] />
+                  <div class="buttons horizontal layout left-justified">
+                        <paper-button on-tap="_gobackdialog" raised>Close</paper-button>
+                        <paper-button raised> Download</paper-button>
+                  </div>
+            </paper-dialog>
+
+      </template>
+
+      <script>
+          var singlepath = "";
+          var singletitle = "";
+          (function(){
+              Polymer({
+                  is: "des-thumb",
+                  properties: {
+                      _elevation:{
+                          type: Number,
+                          value: 0,
+                      },
+                      imdisplay:{
+                          type: String,
+                          value: "",
+                      },
+                      imtitle:{
+                          type: String,
+                          value: "",
+                      },
+                      jobid : {
+                          type: String,
+
+                      },
+                  },
+
+                  _mouseout: function(){
+                      this._elevation = 0;
+                  },
+                  _mouseover: function(){
+                      this._elevation = 5;
+                  },
+                  openBig: function(event){
+                      document.getElementById('SingleTileDialog').open();
+                  },
+                  _gobackdialog: function(event){
+                      document.getElementById('SingleTileDialog').close();
+                      document.getElementById('JobTiles').close();
+                      document.getElementById('JobTiles').open();
+                  },
+                  completeHandler: function(){
+                      var wrap = document.getElementById(singletitle+"_wrap");
+                      wrap.disabled=false;
+                      var diag = document.getElementById(singletitle+"_diag");
+                      diag.disabled=false;
+                      var spin = document.getElementById(singletitle+"_spin");
+                      spin.active=false;
+                      //console.log(singlepath.replace('.tif.png','.tar.gz'));
+                      var link = document.createElement('a');
+                      var pathL = singlepath.replace('.tif.png','.tar.gz');
+                      link.href = pathL; //pathL.replace(".tif.png",".tar.gz");
+                      console.log(link.href);
+
+                      if (link.download !== undefined){
+                          //Set HTML5 download attribute. This will prevent file from opening if supported.
+                          var fileName = pathL.substring(pathL.lastIndexOf('/') + 1, pathL.length);
+                          link.download = fileName;
+                      }
+                      if (document.createEvent) {
+                          var e = document.createEvent('MouseEvents');
+                          e.initEvent('click' ,true ,true);
+                          link.dispatchEvent(e);
+                          return true;
+                      }
+                      var query = '?download';
+                      window.open(pathL + query);
+                      //window.open(this.imdisplay,'_self');
+                  },
+                  errorHandler: function(){
+                      console.log('Oh no!');
+                  },
+                 patchOverlay: function (e) {
+                     if (e.target.withBackdrop) {
+                        e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                     }
+                 },
+                  download: function(event){
+                      var n1=this.jobid.search("__");
+                      var n2=this.jobid.search("{");
+                      var siid = this.jobid.substring(n1+2,n2-1);
+                      console.log(siid);
+                      event.stopPropagation();
+                      var dialog = document.getElementById(this.imtitle);
+                      var wrap = document.getElementById(this.imtitle+"_wrap");
+                      wrap.disabled=true;
+                      var diag = document.getElementById(this.imtitle+"_diag");
+                      diag.disabled=true;
+                      wrap = document.getElementById(this.imtitle+"_spin");
+                      wrap.active=true;
+                      dialog.close();
+                      var data = new FormData();
+                      singlepath = this.imdisplay;
+                      singletitle = this.imtitle;
+                      data.append('title', this.imtitle);
+                      data.append('siid', siid);
+                      $.ajax({
+                          url: '/single/',  //Server script to process data
+                          type: 'POST',
+                          data: data,
+                          success: this.completeHandler,
+                          error: this.errorHandler,
+                          //Options to tell jQuery not to process data or worry about content-type.
+                          cache: false,
+                          contentType: false,
+                          processData: false
+                      });
+                  },
+
+              });
+          })();
+      </script>
+
+</dom-module>

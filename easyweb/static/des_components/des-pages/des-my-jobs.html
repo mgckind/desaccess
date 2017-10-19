@@ -36,6 +36,10 @@
               </div>
     </paper-dialog>
 
+    <paper-dialog class="dialog-position" id="JobTiles" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <des-results id="desTiles" username={{username}} jobid={{jobid}}></des-results>
+    </paper-dialog>
+
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>Job id: {{jobid}}</h2>
               <div>
@@ -114,6 +118,12 @@
       </vaadin-grid-column>
 
       <vaadin-grid-column flex-grow="1">
+        <template class="header">Job type</template>
+        <template>{{item.jobtype}}<br />
+        </template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="1">
         <template class="header">Cancel</template>
           <template>
 
@@ -124,7 +134,14 @@
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
-                <paper-button class="SeeFilesButton" raised on-click="_seeQuery">See query</paper-button>
+                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+        <vaadin-grid-column flex-grow="1">
+              <template class="header">Results</template>
+              <template>
+                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">See Tiles</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -137,7 +154,7 @@
             </vaadin-grid-column>
 
     </vaadin-grid>
-    <paper-button onclick="getMyJobs.generateRequest()"> refresh <iron-icon icon="icons:refresh"></iron-icon>
+    <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon>
 </paper-button>
 </template>
 
@@ -177,6 +194,9 @@ function keysrt(key,desc) {
         _self.count = _self.data.length;
     },
       _handleTermination: function(e){
+      document.getElementById("getMyJobs").generateRequest();
+    },
+      _refreshJobs: function(e){
       document.getElementById("getMyJobs").generateRequest();
     },
       _completed: function(status) {
@@ -259,6 +279,15 @@ function keysrt(key,desc) {
             }
         this.myfiles=this.jobs.sort(keysrt('file'));
         document.getElementById('JobFiles').open();
+     },
+     _seeTiles: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.username = e.model.item.user;
+        console.log(this.jobid + 'Tiles');
+        //document.getElementById('desTiles').username = this.username;
+        //document.getElementById('desTiles').jobid = this.jobid;
+        document.getElementById('JobTiles').open();
      },
      patchOverlay: function (e) {
          if (e.target.withBackdrop) {
