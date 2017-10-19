@@ -262,6 +262,7 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     com += " --tag Y3A1_COADD"
     #print(com)
     #time.sleep(40)
+    os.chdir(mypath)
     oo = subprocess.check_output([com], shell=True)
     if listonly:
         if os.path.exists(mypath+"list.json"):
