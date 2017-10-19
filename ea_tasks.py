@@ -229,7 +229,8 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
     return response
 
 
-@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)
+#@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)
+@app.task(base=CustomTask)
 def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email):
     response = {}
     response['user'] = uu
@@ -244,12 +245,13 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
-    user_folder = Settings.WORKDIR+uu+"/    "
-    jsonfile = os.path.join(user_folder, jobid+'.json')
-    open(jsonfile, 'a').close()
+    user_folder = Settings.WORKDIR+uu+"/"
+    jsonfile = user_folder+jobid+'.json'
     mypath = user_folder+jobid+'/'
     with open(mypath+'log.log', 'w') as logfile:
         logfile.write('Running...')
+    uu = 'demo_user'
+    pp = 'demo_pass'
     com = "makeDESthumbs {0} --user {1} --password {2} --MP --outdir={3}".format(inputs, uu, pp,
                                                                                  outputs)
     if xs != "":
@@ -257,10 +259,10 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     if ys != "":
         com += ' --ysize %s ' % ys
     com += " --logfile %s" % (outputs + 'log.log')
-    com += " --tag Y3A2_COADD"
-    print(com)
-    time.sleep(40)
-    # oo = subprocess.check_output([com], shell=True)
+    com += " --tag Y3A1_COADD"
+    #print(com)
+    #time.sleep(40)
+    oo = subprocess.check_output([com], shell=True)
     if listonly:
         if os.path.exists(mypath+"list.json"):
             os.remove(mypath+"list.json")
@@ -273,14 +275,14 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
         Ntiles = len(tiffiles)
         for f in tiffiles:
             title = f.split('/')[-1][:-4]
-            # subprocess.check_output(["convert %s %s.png" % (f, f)], shell=True)
+            subprocess.check_output(["convert %s %s.png" % (f, f)], shell=True)
             titles.append(title)
             pngfiles.append(mypath+title+'.tif.png')
 
         for ij in range(Ntiles):
             pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/static'):]
         os.chdir(user_folder)
-        # os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+        os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
         os.chdir(os.path.dirname(__file__))
         if os.path.exists(mypath+"list.json"):
             os.remove(mypath+"list.json")
