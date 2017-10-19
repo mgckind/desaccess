@@ -281,7 +281,7 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
             pngfiles.append(mypath+title+'.tif.png')
 
         for ij in range(Ntiles):
-            pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/static'):]
+            pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/easyweb'):]
         os.chdir(user_folder)
         os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
         os.chdir(os.path.dirname(__file__))
