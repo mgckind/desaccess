@@ -6,6 +6,7 @@ import tornado.options
 import tornado.web
 import Settings
 from oracle import db_utils
+from smtp import email_utils
 import cx_Oracle
 import os
 import time
@@ -30,18 +31,21 @@ class SignupHandler(BaseHandler):
         password = self.get_argument("password", "")
         firstname = self.get_argument("firstname", "")
         lastname = self.get_argument("lastname", "")
-        email = self.get_argument("email", "")
-        ## SHOULD CHECK username and email
+        email = self.get_argument("email", "").lower()
         if db_utils.check_username(username):
-            db_utils.create_user(username, password, firstname, lastname, email, '', '')
-            check, url = db_utils.create_reset_url(email)
-            ### TBD: SEND EMAIL
-            print('localhost:8080/easyweb/activate/{}'.format(url))
-            self.write(json.dumps({'msg': 'Activation email sent! {}'.format(url), 'errno': '0'}))
+            if db_utils.check_email(email):
+                db_utils.create_user(username, password, firstname, lastname, email, '', '')
+                check, url = db_utils.create_reset_url(email)
+                email_utils.send_activation(firstname, username, email, url)
+                msg = 'Activation email sent!'
+                err = '0'
+            else:
+                msg = 'Email address already exists in our database.'
+                err = '1'
         else:
-            print('Username already exists')
-            self.write(json.dumps({'msg': '{0} already exists.'
-                                          'Try a differnt one'.format(username), 'errno': '1'}))
+            msg = '{0} already exists. Try a different one'.format(username)
+            err = '1'
+        self.write(json.dumps({'msg': msg, 'errno': err}))
 
 class ResetHandler(BaseHandler):
     def get(self, slug):
@@ -51,18 +55,16 @@ class ResetHandler(BaseHandler):
         else:
             self.write(msg)
     def post(self):
-        email = self.get_argument("email", "")
+        email = self.get_argument("email", "").lower()
         print(email)
         print('Reset Password')
         check, url = db_utils.create_reset_url(email)
-        ### TBD: SEND EMAIL
-        print(url)
-        time.sleep(2)
-        print('5 secs passed')
         if check:
-            self.write(json.dumps({'msg': 'Activation email sent! {}'.format(url), 'errno': '0'}))
+            email_utils.send_reset(email, url)
+            self.write(json.dumps({'msg': 'Reset email sent!', 'errno': '0'}))
         else:
             self.write(json.dumps({'msg': '{}'.format(url), 'errno': '1'}))
+
     def put(self):
         username = self.get_argument("username", "")
         password = self.get_argument("password", "")
@@ -88,10 +90,11 @@ class ActivateHandler(BaseHandler):
     def get(self, slug):
         username, msg = db_utils.valid_url(slug, 9000)
         if username is not None:
-            self.write('<h1> Thanks for activate {}<h1> <br> <a href="/"> Home </a> '.format(username))
             db_utils.unlock_user(username)
+            msg = 'Thanks for activate your account'
+            self.render('activate.html', errormessage=msg, username='')
         else:
-            self.write(msg)
+            self.render('activate.html', errormessage=msg, username='')
 
 class MainHandler(BaseHandler):
     @tornado.web.authenticated

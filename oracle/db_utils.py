@@ -14,10 +14,11 @@ def check_username(username):
     else:
         return False
 
+
 def check_email(email):
     email = email.lower()
     con = ea.connect('oldoper')
-    check_email =  "SELECT * from DES_ADMIN.DES_USERS where EMAIL = '{}'".format(email)
+    check_email = "SELECT * from DES_ADMIN.DES_USERS where EMAIL = '{}'".format(email)
     df = con.query_to_pandas(check_email)
     con.close()
     if len(df) == 0:
@@ -144,16 +145,15 @@ def valid_url(url, timeout = 6000):
     select_url = "SELECT * FROM DES_ADMIN.RESET_URL WHERE URL = '{0}'".format(url)
     df = con.query_to_pandas(select_url)
     if len(df) == 0 :
-        print('url does not exist')
         con.close()
-        return None, 'does not exist'
+        return None, ' URL does not exist!'
     created = df.CREATED.ix[0]
     username = df.USERNAME.ix[0]
     diff = (dt.datetime.now() - created).seconds
     if diff > timeout:
         print('url is not longer valid')
         con.close()
-        return None, 'not valid'
+        return None, 'URL is not longer valid!'
     else:
     	#delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
     	#con.query_and_print(delete_old, suc_arg='Delete old Url')
