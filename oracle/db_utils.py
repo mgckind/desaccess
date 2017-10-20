@@ -92,7 +92,7 @@ def unlock_user(username):
     con = ea.connect('oldoper')
     qlock = "ALTER USER {0} account unlock".format(username)
     con.query_and_print(qlock, suc_arg='Account unlocked')
-    grant_role = "GRANT DES_READER to {0}".format(usernmae)
+    grant_role = "GRANT DES_READER to {0}".format(username)
     con.query_and_print(grant_session.format(**dict), suc_arg='Granted DES_READER role')
     con.close()
 
