@@ -73,7 +73,7 @@ def create_user(username, password, first, last, email, country, institution, lo
     """.format(**dict)
     con.query_and_print(insert_des.format(**dict), suc_arg='{user} added to DES_USERS'.format(**dict))
     grant_role = "GRANT DES_READER to {user}".format(**dict)
-    con.query_and_print(grant_session.format(**dict), suc_arg='Granted DES_READER role')
+    con.query_and_print(grant_role.format(**dict), suc_arg='Granted DES_READER role')
     if lock:
         qlock = "ALTER USER {user} account lock".format(**dict)
         con.query_and_print(qlock, suc_arg='Account locked')
@@ -92,8 +92,6 @@ def unlock_user(username):
     con = ea.connect('oldoper')
     qlock = "ALTER USER {0} account unlock".format(username)
     con.query_and_print(qlock, suc_arg='Account unlocked')
-    grant_role = "GRANT DES_READER to {0}".format(username)
-    con.query_and_print(grant_session.format(**dict), suc_arg='Granted DES_READER role')
     con.close()
 
 def create_reset_url(email):
