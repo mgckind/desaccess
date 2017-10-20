@@ -174,8 +174,11 @@ class MyResponseHandler(BaseHandler):
         jobid = self.get_argument('jobid')
         user_folder = os.path.join(Settings.WORKDIR, loc_user)+'/'
         jsonfile = os.path.join(user_folder, jobid+'.json')
-        with open(jsonfile, 'r') as data_file:
-            tmp = json.load(data_file)
+        try:
+            with open(jsonfile, 'r') as data_file:
+                tmp = json.load(data_file)
+        except:
+            tmp = ''
         self.flush()
         self.write(tmp)
         self.finish()

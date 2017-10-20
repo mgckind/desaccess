@@ -244,8 +244,9 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
-    user_folder = Settings.WORKDIR+uu+"/"
+    user_folder = Settings.WORKDIR+uu+"/    "
     jsonfile = os.path.join(user_folder, jobid+'.json')
+    open(jsonfile, 'a').close()
     mypath = user_folder+jobid+'/'
     with open(mypath+'log.log', 'w') as logfile:
         logfile.write('Running...')
