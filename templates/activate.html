@@ -4,7 +4,6 @@
 <meta name="viewport" content="minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="author" content="Matias Carrasco Kind, Ruiqi Li & Francisco Paz">
 
 <title>DES Easyaccess Web</title>
 <link rel="shortcut icon" href="{{ static_url('favicon.ico') }}">
@@ -15,6 +14,8 @@
 </style>
 </head>
 <body>
-<des-login-public error="{{errormessage}}" update="{{update}}" toastpass="{{toast}}" db="{{db}}"></des-login-public>
+
+<des-login-activate error="{{errormessage}}" username="{{username}}"></des-login-activate>
+
 </body>
 </html>
