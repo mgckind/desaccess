@@ -136,8 +136,7 @@
     },
      _describe: function(e){
         e.preventDefault();
-        this.tablename = e.path[3].__data__.item.TABLE_NAME;
-        console.log(this.tablename);
+        this.tablename = e.model.item.TABLE_NAME;
         document.getElementById('scrollingAll').open();
         document.getElementById('getDescAllTable').generateRequest();
      },
