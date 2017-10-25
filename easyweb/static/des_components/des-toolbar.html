@@ -16,7 +16,8 @@
                 <paper-item  class="profileItem" on-tap="logout">Log out</paper-item>
               </paper-listbox>
             </paper-menu-button>
-              <iron-icon icon="arrow-drop-down" class="profile" ></iron-icon>
+              <iron-icon icon="arrow-drop-down" class="profile"
+              on-tap="_openmenu" ></iron-icon>
     </app-toolbar>
 
 
@@ -56,6 +57,17 @@
       },
       logout: function(event){
         window.open('/easyweb/logout/','_self',false);
+      },
+      _openmenu: function(event) {
+          var dmenu = document.getElementById("profileMenu");
+          if (dmenu.opened) {
+              dmenu.close();
+              dmenu.opened = false;
+          }
+          else {
+              dmenu.open();
+              dmenu.opened = true;
+          }
       },
       home: function(event){
         window.open('/easyweb/','_self',false);

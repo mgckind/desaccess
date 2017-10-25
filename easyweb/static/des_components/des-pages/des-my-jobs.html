@@ -127,7 +127,7 @@
         <template class="header">Cancel</template>
           <template>
 
-            		<paper-button class="SeeFilesButton" disabled$="{{!_pending(item.status)}}" raised on-click="_killQuery">Cancel</paper-button>
+              <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}"  on-click="_killQuery"  ></paper-icon-button>
               </template>
       </vaadin-grid-column>
 
