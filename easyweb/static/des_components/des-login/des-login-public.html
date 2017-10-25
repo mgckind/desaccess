@@ -41,8 +41,9 @@
 
       <div style="cursor:default;" class="box-watermark-logo"></div>
       <div class="card-content">
-        <span>Use your DESDM DB credentials</span><br>
-        <span> Fill this <a href='https://deslogin.wufoo.com/forms/help-me-with-my-desdm-account/' target="_blank">form</a>
+        <span>Use your DES Public DB credentials. <br />
+            Click <a href="/easyweb/signup/">here</a> to create a new account.</span><br>
+        <span> Fill this <a href='http://desrelease.cosmology.illinois.edu:8888/help' target="_blank">form</a>
              if you have trouble accessing the server</span>
 
         <form id="userpass" action="/easyweb/login/" method="post">
@@ -68,7 +69,7 @@
         <div id="divError" class="errormessage">
           <b>{{error}}</b>
           <br>
-          <span> <a href="/easyweb/signup/">Sign In</a></span>
+          <span> <a href="/easyweb/signup/">Sign Up</a></span>
         </div>
             <a href="javascript:;" on-click="_resetForm" style="font-size: 11px; margin-left: 5px;"> Forgot Password? </a>
       </div>
@@ -142,6 +143,10 @@
     },
 
     _clickSubmit1: function(e) {
+        var dd= document.getElementById('resetDialog').opened;
+        if (dd) {
+            return this._submitReset();
+        };
       document.getElementById('hiddenDB').value = 'desdr';
       var button1 = document.getElementById('LoginButton1');
       document.getElementById('LoginSpinner1').active = true;

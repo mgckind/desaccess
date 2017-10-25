@@ -33,7 +33,7 @@
 
       <div class="card-content">
 
-        <span>Please fill and submit this form. <br />You would need to read and accept the Terms of Services</span><br>
+        <span>Please complete and submit this form. <br />You need to read and accept the Terms of Services to continue.</span><br>
 
          <iron-form id="signUser">
          <form action="/easyweb/signup/" method="post">
@@ -151,6 +151,7 @@
      this.error = _self.data.msg;
      this.errno = _self.data.errno;
      if (this.errno=='1') document.getElementById('form_user').value = '';
+     window.location.href = "/";
 
     },
     _updateToast: function(e) {
