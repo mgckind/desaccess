@@ -37062,7 +37062,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   }
 
   paper-item.profileiTem {
-    font-size: 12px;
+    font-size: 13px;
+    --paper-item-focused: {
+        font-weight: normal;
+    --paper-item-selected-weight: normal;
+        };
   }
     .profile{
             margin-left: -23px;
@@ -37402,10 +37406,11 @@ paper-menu{
     }
 paper-item {
     --paper-item-focused: {
-        font-weight: bold;
+        font-weight: normal;
         };
     --paper-item-selected: {
-        background: var(--paper-green-100) ;
+        /*background: var(--paper-blue-100) ;*/
+        background: white;
         };
     --paper-item-focused-before: {
         opacity:0.0;
@@ -37701,7 +37706,7 @@ Polymer({
                 <paper-item class="profileItem" on-tap="logout">Log out</paper-item>
               </paper-listbox>
             </paper-menu-button>
-              <iron-icon icon="arrow-drop-down" class="profile"></iron-icon>
+              <iron-icon icon="arrow-drop-down" class="profile" on-tap="_openmenu"></iron-icon>
     </app-toolbar>
 
 
@@ -37741,6 +37746,17 @@ Polymer({
       },
       logout: function(event){
         window.open('/easyweb/logout/','_self',false);
+      },
+      _openmenu: function(event) {
+          var dmenu = document.getElementById("profileMenu");
+          if (dmenu.opened) {
+              dmenu.close();
+              dmenu.opened = false;
+          }
+          else {
+              dmenu.open();
+              dmenu.opened = true;
+          }
       },
       home: function(event){
         window.open('/easyweb/','_self',false);
@@ -43411,7 +43427,7 @@ This program is available under Apache License Version 2.0, available at https:/
         <template class="header">Cancel</template>
           <template>
 
-            		<paper-button class="SeeFilesButton" disabled$="{{!_pending(item.status)}}" raised="" on-click="_killQuery">Cancel</paper-button>
+              <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}" on-click="_killQuery"></paper-icon-button>
               </template>
       </vaadin-grid-column>
 
@@ -44009,8 +44025,7 @@ This program is available under Apache License Version 2.0, available at https:/
     },
      _describe: function(e){
         e.preventDefault();
-        this.tablename = e.path[3].__data__.item.TABLE_NAME;
-        console.log(this.tablename);
+        this.tablename = e.model.item.TABLE_NAME;
         document.getElementById('scrollingAll').open();
         document.getElementById('getDescAllTable').generateRequest();
      },
@@ -44059,8 +44074,9 @@ This program is available under Apache License Version 2.0, available at https:/
 
       <div style="cursor:default;" class="box-watermark-logo"></div>
       <div class="card-content">
-        <span>Use your DESDM DB credentials</span><br>
-        <span> Fill this <a href="https://deslogin.wufoo.com/forms/help-me-with-my-desdm-account/" target="_blank">form</a>
+        <span>Use your DES Public DB credentials. <br>
+            Click <a href="/easyweb/signup/">here</a> to create a new account.</span><br>
+        <span> Fill this <a href="http://desrelease.cosmology.illinois.edu:8888/help" target="_blank">form</a>
              if you have trouble accessing the server</span>
 
         <form id="userpass" action="/easyweb/login/" method="post">
@@ -44083,7 +44099,7 @@ This program is available under Apache License Version 2.0, available at https:/
         <div id="divError" class="errormessage">
           <b>{{error}}</b>
           <br>
-          <span> <a href="/easyweb/signup/">Sign In</a></span>
+          <span> <a href="/easyweb/signup/">Sign Up</a></span>
         </div>
             <a href="javascript:;" on-click="_resetForm" style="font-size: 11px; margin-left: 5px;"> Forgot Password? </a>
       </div>
@@ -44157,6 +44173,10 @@ This program is available under Apache License Version 2.0, available at https:/
     },
 
     _clickSubmit1: function(e) {
+        var dd= document.getElementById('resetDialog').opened;
+        if (dd) {
+            return this._submitReset();
+        };
       document.getElementById('hiddenDB').value = 'desdr';
       var button1 = document.getElementById('LoginButton1');
       document.getElementById('LoginSpinner1').active = true;
@@ -44349,8 +44369,8 @@ This program is available under Apache License Version 2.0, available at https:/
         <form>
           <input type="hidden" id="Changedatabase" name="database" value="{{db}}">
           <paper-input placeholder="[[username]]" disabled="" label="Username"></paper-input>
-          <paper-input id="Changefirstname" name="firstname" value="{{name}}" label="Firstname"></paper-input>
-          <paper-input id="Changelastname" name="lastname" value="{{lastname}}" label="Lastname"></paper-input>
+          <paper-input id="Changefirstname" name="firstname" value="{{name}}" label="First Name"></paper-input>
+          <paper-input id="Changelastname" name="lastname" value="{{lastname}}" label="Last Name"></paper-input>
           <paper-input id="Changeemail" name="email" value="{{email}}" label="Email"></paper-input>
           <br>
           <div class="container">
@@ -44470,7 +44490,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
       <div class="card-content">
 
-        <span>Please fill and submit this form. <br>You would need to read and accept the Terms of Services</span><br>
+        <span>Please complete and submit this form. <br>You need to read and accept the Terms of Services to continue.</span><br>
 
          <iron-form id="signUser">
          <form action="/easyweb/signup/" method="post">
@@ -44580,6 +44600,7 @@ This program is available under Apache License Version 2.0, available at https:/
      this.error = _self.data.msg;
      this.errno = _self.data.errno;
      if (this.errno=='1') document.getElementById('form_user').value = '';
+     window.location.href = "/";
 
     },
     _updateToast: function(e) {
@@ -44611,7 +44632,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
       <div style="cursor:default;" class="box-watermark-logo"></div>
       <div class="card-content">
-        <span>Please fill and submit this form. <br>You would need to read and accept the Terms of Services</span><br>
+        <span>Please complete and submit this form.</span><br>
          <iron-form id="NewPassform">
          <form>
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
@@ -44722,6 +44743,46 @@ This program is available under Apache License Version 2.0, available at https:/
         window.open('/easyweb/','_self',false);
       },
 
+  });
+
+
+</script>
+</dom-module>
+<dom-module id="des-login-down" assetpath="../des_components/des-login/">
+<template>
+  <style include="shared-styles">
+
+  .centerim {
+      @apply --layout-horizontal;
+   @apply --layout-center-justified;
+  }
+  </style>
+
+
+  <div style="cursor:default; height:400px;" class="container">
+    <paper-card style="cursor:default;" heading="{{error}}" class="temp">
+
+      <div style="cursor:default;" class="box-watermark-logo"></div>
+      <div class="card-content">
+        <span>We apologize for the inconvenience</span><br>
+        <div class="centerim">
+        <img src="/easyweb/static/images/sorry.jpg">
+        </div>
+      </div>
+      <div style="cursor:pointer;" on-tap="home" class="box-upper-image"></div>
+    </paper-card>
+  </div>
+</template>
+
+<script>
+  Polymer({
+    is: "des-login-down",
+    properties : {
+      error :{
+        type: String,
+        value: '',
+      },
+    },
   });
 
 
