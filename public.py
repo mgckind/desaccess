@@ -44,6 +44,12 @@ def create_db(delete=False):
     con.commit()
     con.close()
 
+class My404Handler(tornado.web.RequestHandler):
+    def prepare(self):
+        self.set_status(404)
+        self.render('404.html', errormessage='404: Page Not Found', username='')
+
+
 class Application(tornado.web.Application):
     """
     The tornado application  class
@@ -80,6 +86,7 @@ class Application(tornado.web.Application):
             "cookie_secret": Settings.COOKIE_SECRET,
             "login_url": "/easyweb/login/",
             "static_url_prefix": "/easyweb/static/",
+            "default_handler_class": My404Handler,
         }
         tornado.web.Application.__init__(self, handlers, **settings)
 

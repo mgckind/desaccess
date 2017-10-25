@@ -1,0 +1,41 @@
+<dom-module id="des-login-down">
+<template>
+  <style include="shared-styles">
+
+  .centerim {
+      @apply --layout-horizontal;
+   @apply --layout-center-justified;
+  }
+  </style>
+
+
+  <div style="cursor:default; height:400px;" class="container" >
+    <paper-card style="cursor:default;" heading="{{error}}"
+    class="temp">
+
+      <div style="cursor:default;" class="box-watermark-logo"></div>
+      <div class="card-content">
+        <span>We apologize for the inconvenience</span><br>
+        <div class="centerim">
+        <img src=/easyweb/static/images/sorry.jpg />
+        </div>
+      </div>
+      <div  style="cursor:pointer;" on-tap="home" class="box-upper-image"></div>
+    </paper-card>
+  </div>
+</template>
+
+<script>
+  Polymer({
+    is: "des-login-down",
+    properties : {
+      error :{
+        type: String,
+        value: '',
+      },
+    },
+  });
+
+
+</script>
+</dom-module>
