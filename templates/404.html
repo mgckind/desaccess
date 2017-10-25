@@ -11,16 +11,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <link rel="import" href="/easyweb/static/elements/elements.html">
 <style is="custom-style">
-
-
-app-drawer-layout:not([narrow]) [drawer-toggle] {
-          display: none;
-    }
 </style>
 </head>
 <body>
 
-<des-login-signup error="{{errormessage}}" toastpass="{{toast}}"></des-login-signup>
-
+<des-login-activate error="{{errormessage}}" username="{{username}}"></des-login-activate>
 </body>
 </html>
