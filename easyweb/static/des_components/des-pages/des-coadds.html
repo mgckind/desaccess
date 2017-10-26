@@ -13,7 +13,7 @@
             right: 0;
         }
         .flex2 {
-            @apply(--layout-horizontal);
+            @apply(--layout-vertical);
         }
 
         paper-slider {
@@ -67,12 +67,12 @@
                     <hr>
 
                     <div class="flex2" >
-                        <paper-checkbox style="font-size:14px;" id="sendemail" on-change="emailcheck">Send email after job completion </paper-checkbox>
-                                &nbsp;  &nbsp; &nbsp;  &nbsp;<paper-input  id="validemail" name="email" label="Email" value=""></paper-input>
+                        <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
+            &nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>
+                        <br>
                     </div>
 
-                    <hr>
-                    <div  >
+                    <div>
 
                         <paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">
                             <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
@@ -81,7 +81,6 @@
                         <paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">
                         <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
                         </paper-button>
-
                     </div>
                 </div>
 
