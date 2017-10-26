@@ -9,7 +9,7 @@ import base64
 from Crypto.Cipher import AES
 import datetime
 import requests
-#import MySQLdb as mydb
+import MySQLdb as mydb
 import yaml
 
 def after_return(retval):
