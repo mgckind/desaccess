@@ -95,14 +95,13 @@ class QueryHandler(BaseHandler):
             except:
                 last = now - datetime.timedelta(seconds=60)
             if (now-last).total_seconds() < 30:
-                print(cc[6] == query)
-                print(cc[6], query)
-                response['data'] = 'ERROR: You submitted the same query less than 30s ago'
-                response['kind'] = 'query'
-                self.flush()
-                self.write(response)
-                self.finish()
-                return
+                if cc[6] == original_query:
+                    response['data'] = 'ERROR: You submitted the same query less than 30s ago'
+                    response['kind'] = 'query'
+                    self.flush()
+                    self.write(response)
+                    self.finish()
+                    return
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
             con.commit()
             try:
