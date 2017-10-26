@@ -7,3 +7,6 @@
 ## start server
 
 	python3 public.py
+
+
+Please note that this version of the desaccess is not currently using vulcanization
