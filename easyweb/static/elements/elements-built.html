@@ -37451,7 +37451,7 @@ paper-item {
 </paper-textarea>-->
 <textarea id="queryBox" autofocus="" placeholder="Query box"></textarea>
 <br>
-<paper-button class="indigo" raised="" on-tap="_submitQuery">Submit Job</paper-button>
+<paper-button id="subQuery" class="indigo" raised="" disabled="" on-tap="_submitQuery">Submit Job</paper-button>
 <paper-button class="indigo" raised="" on-tap="clearQueryBox">Clear</paper-button>
 <paper-button class="indigo" raised="" on-tap="_checkSyntax">Check</paper-button>
 <paper-button class="indigo" raised="" on-tap="_quickSubmit">Quick</paper-button>
@@ -37571,9 +37571,11 @@ Polymer({
     _enableOutputFile: function(){
         if (document.getElementById('inputOutputCheck').checked){
             document.getElementById('inputOutputFile').disabled=false;
+            document.getElementById('subQuery').disabled=false;
         }
         else {
             document.getElementById('inputOutputFile').disabled=true;
+            document.getElementById('subQuery').disabled=true;
         }
     },
     _complete: function(e){
@@ -37635,6 +37637,7 @@ Polymer({
         document.getElementById('inputOutputFile').disabled = true;
         document.getElementById('inputOutputCheck').checked = false;
         document.getElementById('inputOutputFile').value = '';
+        document.getElementById('subQuery').disabled=true;
         this.outputfile = 'nofile';
         this.mydata = [];
         this.msg = '';
@@ -37656,10 +37659,12 @@ Polymer({
         if (valid) {document.getElementById("getQuery").generateRequest();}
     },
     _quickSubmit: function(event){
+        document.getElementById('inputOutputCheck').checked = false;
+        document.getElementById('inputOutputFile').disabled = true;
+        document.getElementById('subQuery').disabled=true;
         this.querystr = app.editor.getValue();
         this.querykind = 'quick';
-        if (document.getElementById('inputOutputCheck').checked){
-            this.outputfile = document.getElementById('inputOutputFile').value;}
+        this.outputfile = 'nofile';
         this.mydata = [];
         this.keys = [];
         this.idx = '';
@@ -44600,7 +44605,7 @@ This program is available under Apache License Version 2.0, available at https:/
      this.error = _self.data.msg;
      this.errno = _self.data.errno;
      if (this.errno=='1') document.getElementById('form_user').value = '';
-     window.location.href = "/";
+     window.location.href = "/easyweb/logout/";
 
     },
     _updateToast: function(e) {
@@ -44731,7 +44736,7 @@ This program is available under Apache License Version 2.0, available at https:/
     afterNewPasswordForm: function(e){
      var _self = this;
      document.getElementById('LoginSpinnerReset').active = false;
-     window.location.href = "/";
+     window.location.href = "/easyweb/logout/";
 
     },
     _updateToast: function(e) {

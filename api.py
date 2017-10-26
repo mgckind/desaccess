@@ -75,7 +75,6 @@ class MyLogsHandler(BaseHandler):
 
 
 class MyJobsHandler(BaseHandler):
-
     @tornado.web.authenticated
     def delete(self):
         user = self.get_argument('username')
@@ -170,7 +169,6 @@ class MyResponseHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
-        loc_passw = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
         jobid = self.get_argument('jobid')
         user_folder = os.path.join(Settings.WORKDIR, loc_user)+'/'
         jsonfile = os.path.join(user_folder, jobid+'.json')
