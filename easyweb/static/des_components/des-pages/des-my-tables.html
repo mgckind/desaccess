@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
@@ -29,7 +30,7 @@
               <h2>{{tablename}}</h2>
 
               <paper-spinner id="descSpinner" class="big" active></paper-spinner>
-     <vaadin-grid id="material" items="{{description}}" >
+     <vaadin-grid id="material" items="{{description}}">
 
       <vaadin-grid-column flex-grow="2">
         <template class="header">Column name</template>
@@ -59,6 +60,12 @@
     <paper-button onclick="getMyTables.generateRequest()"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
 
 <vaadin-grid id="material" items="{{data}}">
+
+     <vaadin-grid-column width="20px" flex-grow="0">
+        <template class="header"></template>
+         <template></template>
+    </vaadin-grid-column>
+
 
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>

@@ -1,5 +1,8 @@
+<!DOCTYPE html>
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 <dom-module id="des-my-jobs">
 <template>
 <style include="shared-styles">
@@ -78,7 +81,12 @@
 
 <des-card heading = "My Jobs"></des-card>
 
+<div  style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id ="material">
+    <vaadin-grid-column width="20px" flex-grow="0">
+        <template class="header"></template>
+        <template></template>
+    </vaadin-grid-column>
 
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
@@ -110,21 +118,22 @@
         <!--</template>-->
     <!--</vaadin-grid-column>-->
 
-      <vaadin-grid-column flex-grow="2">
-        <template class="header">Job id</template>
+      <vaadin-grid-column flex-grow="2" width = 140px>
+        <template class="header">Job ID</template>
         <template>{{item.job}}<br />
             <span style="font-size: 0.7em;">{{item.elapsed}}</span>
         </template>
       </vaadin-grid-column>
 
       <vaadin-grid-column flex-grow="1">
-        <template class="header">Job type</template>
+        <template class="header" style="padding-left: 5px">Job type</template>
         <template>{{item.jobtype}}<br />
         </template>
       </vaadin-grid-column>
 
+    <!--Cancel job button-->
       <vaadin-grid-column flex-grow="1">
-        <template class="header">Cancel</template>
+        <template class="header">Cancel Job</template>
           <template>
 
               <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}"  on-click="_killQuery"  ></paper-icon-button>
@@ -154,8 +163,11 @@
             </vaadin-grid-column>
 
     </vaadin-grid>
+    </div>
+    <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
     <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon>
 </paper-button>
+    </div>
 </template>
 
 <script>

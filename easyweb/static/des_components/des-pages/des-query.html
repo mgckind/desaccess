@@ -26,28 +26,28 @@
 </iron-ajax>
     <des-card heading=" Query box">
     <div class="content">
-    Insert your query in the box below
+    Insert your query in the box below. Prelimary data results will be displayed below "Output File".
     </div>
     </des-card>
-<div class="query-box">
+<div class="query-box" style="padding-right:20px">
 <!--
 <paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
 </paper-textarea>-->
 <textarea id="queryBox" autofocus placeholder="Query box"></textarea>
-<br />
+<br>
 <paper-button id="subQuery" class="indigo" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
 <paper-button class="indigo" raised on-tap="clearQueryBox">Clear</paper-button>
 <paper-button class="indigo" raised on-tap="_checkSyntax">Check</paper-button>
 <paper-button class="indigo" raised on-tap="_quickSubmit">Quick</paper-button>
 <paper-spinner id="querySpinner" class="big"></paper-spinner>
-<br />
-<br />
+<br>
+<br>
 <div class="container3">
 <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file
 </paper-toggle-button>
 <paper-input id="inputOutputFile" disabled required auto-validate label="Output file"></paper-input>
 </div>
-<hr /><br / >
+<hr /><br>
 <div id="response" class="results">
 <template is="dom-if" if={{isQuery}} >
     <template is="dom-if" if={{isOk}} >

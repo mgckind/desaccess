@@ -27,8 +27,9 @@
 
     <des-card heading="DR1 Tables">
     <div class="content">
-    See all the tables schema
+    See all table schema
     </div>
+        <br>
     </des-card>
     <paper-dialog class="dialog-position" id="scrollingAll" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>{{tablename}}</h2>
@@ -63,8 +64,13 @@
     </paper-dialog>
 
 
-
+<div style="padding-right: 20px">
 <vaadin-grid id="material" items="{{data}}">
+
+     <vaadin-grid-column width="20px" flex-grow="0">
+        <template class="header"></template>
+        <template></template>
+    </vaadin-grid-column>
 
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
@@ -99,7 +105,7 @@
 
     </vaadin-grid>
 
-
+</div>
 </template>
 
 <script>

@@ -29,10 +29,10 @@
 
             <div class="horizontal layout around justified">
                 <des-card heading=[[header]]>
-                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px;"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
-                    <div class="card-content" >
-                 <div class="flex">
+                    <div class="card-content">
+                 <div class="flex" >
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
                         <des-card heading="Tile properties">
                             <div id="tiletitleHelp"></div>

@@ -1,17 +1,19 @@
 <dom-module id="des-card">
     <style>
         paper-card {
-            margin-top: 10px;
+            margin-top: 8px;
             width: 100%;
             max-width: 2000px;
+
         }
         .headc {
             --paper-card-header-color: var(--paper-red-500);
+
         }
     </style>
 
     <template>
-        <div class="horizontal layout center-justified" style = "padding-left:30px; padding-right:30px;">
+        <div class="horizontal layout center-justified" style = "padding-left:10px; padding-right:30px;">
             <paper-card  elevation="0" heading={{heading}} class="headc">
                 <content></content>
             </paper-card>

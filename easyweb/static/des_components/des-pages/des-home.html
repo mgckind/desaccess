@@ -8,11 +8,12 @@
 
         div.gallery {
             display: inline-block;
-            margin: 5px;
+            margin:5px;
             border: 1px solid #CCCCCC;
             /*float: left;*/
             width: 100%;
             max-height: 95%;
+            padding-bottom:50px;
         }
 
         div#desjobs {
@@ -107,16 +108,52 @@
             font-size: 0.5em;
         }
 
-        @media screen and (max-width: 1300px){
+        @media screen and (max-width: 1300px) {
             .helpB {
                 display: none;
             }
+
             .visual {
                 display: inherit;
             }
+
             vaadin-grid {
                 height: auto;
                 width: 100%;
+            }
+
+            .foobar {
+                padding: 18px;
+                margin: 60px 0;
+                line-height: inherit;
+                font-size: 20px;
+                text-transform: uppercase;
+                /*color: black;*/
+                font-family: 'Roboto', 'Noto', sans-serif;
+                /*visibility: hidden;*/
+                /*color: transparent;*  /
+            /*display: none;*/
+                color: black;
+                background-color: rgba(211, 211, 211, 0.7);
+            }
+
+            paper-item#coadd1 {
+                padding-left: 40px;
+            }
+             paper-item#query1 {
+                padding-left: 90px;
+            }
+              paper-item#allTables1 {
+                padding-left: 60px;
+            }
+              paper-item#footprint1 {
+                padding-left: 65px;
+            }
+              paper-item#example1 {
+                padding-left: 40px;
+            }
+               paper-item#desjobs1 {
+                padding-left: 95px;
             }
         }
 
@@ -130,29 +167,29 @@
             <des-card heading="Welcome [[name]]!" class="welcome">
 
                 <div class="gallery" id="query" on-click="change">
-                    <des-card-intro member="Query"></des-card-intro>
+                <paper-item class="foobar" id="query1">QUERY</paper-item>
                 </div>
 
                 <div class="gallery" id="allTables" on-click="change">
-                    <des-card-intro member="DR1 Tables"></des-card-intro>
+                    <paper-item class="foobar" id="allTables1">DR1 TABLES</paper-item>
                 </div>
 
                 <div class="gallery" id="example" on-click="change">
-                    <des-card-intro member="Example Query"></des-card-intro>
+                     <paper-item class="foobar" id="example1">EXAMPLE QUERY</paper-item>
                 </div>
 
 
 
                 <div class="gallery" id="coadd" on-click="change">
-                    <des-card-intro member="Coadds Images" ></des-card-intro>
+                     <paper-item class="foobar" id="coadd1">COADDS IMAGES</paper-item>
                 </div>
 
                 <div class="gallery" id="footprint" on-click="change">
-                    <des-card-intro member="Footprint"></des-card-intro>
+                     <paper-item class="foobar" id="footprint1">FOOTPRINT</paper-item>
                 </div>
 
                 <div class="gallery" id="desjobs" on-click="change">
-                    <des-card-intro member="Jobs" ></des-card-intro>
+                    <paper-item class="foobar" id="desjobs1">JOBS</paper-item>
 
                 </div>
 
@@ -182,6 +219,31 @@
         change: function(e){
            var tid = e.target.id;
            var sel = 0;
+           if (tid == 'query1') sel = 1;
+           if (tid == 'allTables1') sel = 2;
+           if (tid == 'example1') sel = 3;
+           if (tid == 'coadd1') sel = 4;
+           if (tid == 'footprint1') sel = 5;
+           if (tid == 'desjobs1') sel = 6;
+
+           var app = document.querySelector('#app');
+           var pages = document.getElementById("mainPages");
+           var menu = document.querySelector('paper-menu');
+          app.selection=sel;
+          pages.selected=sel;
+          menu.selected=sel;
+
+        }
+
+
+
+
+
+    });
+
+('.foobar').on('click', function(e) {
+           var tid = e.target.id;
+           var sel = 0;
            if (tid == 'query') sel = 1;
            if (tid == 'allTables') sel = 2;
            if (tid == 'example') sel = 3;
@@ -195,11 +257,6 @@
           app.selection=sel;
           pages.selected=sel;
           menu.selected=sel;
-
-        },
-
-    });
-
-
+});
 
 </script>
