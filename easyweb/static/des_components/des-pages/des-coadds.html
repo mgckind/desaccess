@@ -69,6 +69,7 @@
                     <div class="flex2" >
                         <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
             &nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>
+                        <paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>
                         <br>
                     </div>
 
@@ -203,6 +204,7 @@
             formdata.append('list_only', document.getElementById("onlyreturnlist").checked);
             formdata.append('send_email', document.getElementById("sendemail").checked);
             formdata.append('email', document.getElementById("validemail").value);
+            formdata.append('name', document.getElementById("validname").value);
             formdata.append('submit_type', this.submit_type);
             formdata.append('values',document.getElementById("enteredPositions").value);
 

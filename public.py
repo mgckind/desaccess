@@ -78,6 +78,8 @@ class Application(tornado.web.Application):
             (r"/easyweb/activate/(\w+)", login.ActivateHandler),
             (r"/easyweb/signup/?", login.SignupHandler),
             (r"/easyweb/cutout/", cutout.FileHandler),
+            (r"/easyweb/delete/", api.DeleteHandler),
+            (r"/easyweb/change/?", api.ChangeHandler),
         ]
         settings = {
             "template_path": Settings.TEMPLATE_PATH,
