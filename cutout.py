@@ -41,6 +41,8 @@ class FileHandler(BaseHandler):
         list_only = self.get_argument("list_only") == 'true'
         send_email = self.get_argument("send_email") == 'true'
         email = self.get_argument("email")
+        name = self.get_argument("name")
+
         stype = self.get_argument("submit_type")
         print('**************')
         print(xs, ys, 'sizes')
@@ -48,6 +50,8 @@ class FileHandler(BaseHandler):
         print(list_only, 'list_only')
         print(send_email, 'send_email')
         print(email, 'email')
+        print(name, 'name')
+
         jobid = str(uuid.uuid4())
         if xs == 0.0:
             xs = ''
@@ -82,7 +86,7 @@ class FileHandler(BaseHandler):
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
-        tup = tuple([loc_user, jobid, 'None', 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
+        tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                      'cutout', '', '', ''])
         with con:
             cur = con.cursor()

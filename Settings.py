@@ -11,6 +11,7 @@ if not os.path.exists(LOG_PATH):
     os.mkdir(LOG_PATH)
 TEMPLATE_PATH = os.path.join(DIRNAME, 'templates')
 WORKDIR = os.path.join(STATIC_PATH, "workdir/")
+DBFILE = os.path.join(STATIC_PATH, "workdir/admin/users.db")
 ROOT_URL = 'http://desrelease.cosmology.illinois.edu:8080'
 #ROOT_URL = 'http://localhost:8080'
 LOGFILE = os.path.join(LOG_PATH, "access.log")

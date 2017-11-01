@@ -14,3 +14,4 @@ logs/*
 versions/
 venv/
 dump.rdb
+setup.sh
