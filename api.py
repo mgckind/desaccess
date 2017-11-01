@@ -239,25 +239,25 @@ class DeleteHandler(BaseHandler):
     def delete(self):
         response = {k: self.get_argument(k) for k in self.request.arguments}
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
-        loc_passw = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
-        loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
-        print(loc_db)
-        #con = ea.connect(loc_db, user=loc_user, passwd=loc_passw)
 
         user_folder = os.path.join(Settings.WORKDIR, loc_user)+'/'
-        Nd=len(response)
+        Nd = len(response)
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             cur = con.cursor()
             for j in range(Nd):
-                jid=response[str(j)]
+                jid = response[str(j)]
                 q = "DELETE from Jobs where job = '%s' and user = '%s'" % (jid, loc_user)
                 cc = cur.execute(q)
-                folder = os.path.join(user_folder,'results/' + jid)
+                folder = os.path.join(user_folder, jid)
+                print(folder)
                 try:
                     os.system('rm -rf ' + folder)
-                    os.system('rm -f ' + os.path.join(user_folder,jid+'.csv'))
+                except:
+                    pass
+                try:
+                    os.system('rm -f ' + user_folder + jid + '.*')
                 except:
                     pass
             con.commit()
