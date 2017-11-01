@@ -167,29 +167,29 @@
             <des-card heading="Welcome [[name]]!" class="welcome">
 
                 <div class="gallery" id="query" on-click="change">
-                <paper-item class="foobar" id="query1">QUERY</paper-item>
+                <paper-item class="foobar" id="query">QUERY</paper-item>
                 </div>
 
                 <div class="gallery" id="allTables" on-click="change">
-                    <paper-item class="foobar" id="allTables1">DR1 TABLES</paper-item>
+                    <paper-item class="foobar" id="allTables">DR1 TABLES</paper-item>
                 </div>
 
                 <div class="gallery" id="example" on-click="change">
-                     <paper-item class="foobar" id="example1">EXAMPLE QUERY</paper-item>
+                     <paper-item class="foobar" id="example">EXAMPLE QUERY</paper-item>
                 </div>
 
 
 
                 <div class="gallery" id="coadd" on-click="change">
-                     <paper-item class="foobar" id="coadd1">COADDS IMAGES</paper-item>
+                     <paper-item class="foobar" id="coadd">COADDS IMAGES</paper-item>
                 </div>
 
                 <div class="gallery" id="footprint" on-click="change">
-                     <paper-item class="foobar" id="footprint1">FOOTPRINT</paper-item>
+                     <paper-item class="foobar" id="footprint">FOOTPRINT</paper-item>
                 </div>
 
                 <div class="gallery" id="desjobs" on-click="change">
-                    <paper-item class="foobar" id="desjobs1">JOBS</paper-item>
+                    <paper-item class="foobar" id="desjobs">JOBS</paper-item>
 
                 </div>
 
@@ -217,31 +217,7 @@
             },
         },
         change: function(e){
-           var tid = e.target.id;
-           var sel = 0;
-           if (tid == 'query1') sel = 1;
-           if (tid == 'allTables1') sel = 2;
-           if (tid == 'example1') sel = 3;
-           if (tid == 'coadd1') sel = 4;
-           if (tid == 'footprint1') sel = 5;
-           if (tid == 'desjobs1') sel = 6;
 
-           var app = document.querySelector('#app');
-           var pages = document.getElementById("mainPages");
-           var menu = document.querySelector('paper-menu');
-          app.selection=sel;
-          pages.selected=sel;
-          menu.selected=sel;
-
-        }
-
-
-
-
-
-    });
-
-('.foobar').on('click', function(e) {
            var tid = e.target.id;
            var sel = 0;
            if (tid == 'query') sel = 1;
@@ -257,6 +233,8 @@
           app.selection=sel;
           pages.selected=sel;
           menu.selected=sel;
-});
 
+        }
+
+    });
 </script>
