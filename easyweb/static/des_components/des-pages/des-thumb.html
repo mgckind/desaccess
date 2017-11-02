@@ -102,6 +102,11 @@
                         <paper-button raised disabled> Download</paper-button>
                   </div>
             </paper-dialog>
+          <paper-dialog class="dialog-position" id="jobHelpThumbs" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <p>Help goes here</p>
+          </paper-dialog>
+          <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
 
       </template>
 
@@ -184,6 +189,10 @@
                         e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
                      }
                  },
+                  _seeHelp: function(e){
+                      e.preventDefault();
+                      document.getElementById('jobHelpThumbs').open();
+                  },
                   download: function(event){
                       var n1=this.jobid.search("__");
                       var n2=this.jobid.search("{");

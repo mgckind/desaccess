@@ -48,6 +48,7 @@ class QueryHandler(BaseHandler):
         original_query = query
         query_kind = self.get_argument("querykind", "")
         filename = self.get_argument("filename", "")
+        query_name = self.get_argument("queryname", "")
         if query == "":
             print('No query string')
             return
@@ -63,6 +64,7 @@ class QueryHandler(BaseHandler):
         print(query)
         print('*******')
         print(query_kind)
+        print(query_name)
         file_error = False
         if filename == "nofile":
             filename = None
@@ -88,7 +90,9 @@ class QueryHandler(BaseHandler):
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             # copy the jobid to initial name
-            tup = tuple([loc_user, jobid, jobid, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
+            if query_name == "":
+                query_name = jobid
+            tup = tuple([loc_user, jobid, query_name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                          'query', original_query, '', ''])
             cur = con.cursor()
             try:

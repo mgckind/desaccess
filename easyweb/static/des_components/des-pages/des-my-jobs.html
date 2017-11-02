@@ -108,9 +108,10 @@
     </paper-dialog>
 
 
-    <paper-dialog class="dialog-position" id="jobHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
+    <paper-dialog class="dialog-position" id="jobHelpMyJobs" with-backdrop on-iron-overlay-opened="patchOverlay">
         <p>Help goes here</p>
     </paper-dialog>
+
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
@@ -403,7 +404,7 @@ function keysrt(key,desc) {
      },
       _seeHelp: function(e){
           e.preventDefault();
-          document.getElementById('jobHelp').open();
+          document.getElementById('jobHelpMyJobs').open();
       },
 
       _seeName: function(e){

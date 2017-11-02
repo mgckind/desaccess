@@ -24,6 +24,9 @@
                   <paper-button class="indigo" raised dialog-confirm>Done</paper-button><br />
               </div>
     </paper-dialog>
+    <paper-dialog class="dialog-position" id="jobHelpExampleQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
 
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
@@ -58,6 +61,8 @@
 
     </vaadin-grid>
 </div>
+    <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
 </template>
 
 <script>
@@ -125,6 +130,10 @@ function keysrt(key,desc) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
      },
+      _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelpExampleQuery').open();
+      },
 
 
     });
