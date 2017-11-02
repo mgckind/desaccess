@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-behavior.html">
 <dom-module id="des-my-jobs">
 <template>
 <style include="shared-styles">
@@ -118,13 +119,14 @@
 <div  style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id ="material">
 
-    <vaadin-grid-selection-column id="auto" auto-select>
-    </vaadin-grid-selection-column>
 
-    <vaadin-grid-column width="20px" flex-grow="0">
+    <vaadin-grid-column width="10px" flex-grow="0">
         <template class="header"></template>
         <template></template>
     </vaadin-grid-column>
+
+    <vaadin-grid-selection-column id="auto" auto-select>
+    </vaadin-grid-selection-column>
 
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
@@ -156,7 +158,7 @@
         <!--</template>-->
     <!--</vaadin-grid-column>-->
 
-      <vaadin-grid-column flex-grow="2" width = 140px>
+      <vaadin-grid-column flex-grow="2" width = 200px>
         <template class="header">Job Name</template>
           <template>
           <paper-item-body two-line>

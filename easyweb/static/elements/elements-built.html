@@ -37061,7 +37061,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     width: 300px;
   }
 
-  paper-item.profileiTem {
+  paper-item.profileItem {
     font-size: 13px;
     --paper-item-focused: {
         font-weight: normal;
@@ -37077,7 +37077,7 @@ app-toolbar.black {
     background-color: black;
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: normal;
-    font-style: : normal;
+    font-style: normal;
     color: white;
     }
 
@@ -37145,7 +37145,7 @@ app-toolbar.black {
     }
     .box-upper-image {
       position: absolute;
-      top: -100;
+      top: -100%;
       right: 0;
       bottom: 0;
       width: 100%;
@@ -37157,7 +37157,7 @@ app-toolbar.black {
       position: absolute;
       top: 101%;
       right: 0;
-      bottom: -100;
+      bottom: -100%;
       width: 100%;
       height: 98px;
       background: url("/easyweb/static/images/cut3.png");
@@ -37442,10 +37442,10 @@ paper-item {
 </iron-ajax>
     <des-card heading=" Query box">
     <div class="content">
-    Insert your query in the box below
+    Insert your query in the box below. Prelimary data results will be displayed below "Output File".
     </div>
     </des-card>
-<div class="query-box">
+<div class="query-box" style="padding-right:20px">
 <!--
 <paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
 </paper-textarea>-->
@@ -37698,21 +37698,23 @@ Polymer({
 <template>
    <style include="shared-styles">
    </style>
+
    <app-toolbar sticky="" id="mainToolbar" class="black">
         <paper-icon-button icon="menu" onclick="drawer.toggle()" drawer-toggle=""></paper-icon-button>
-        <div main-title="" class="wideScreen">DARK ENERGY SURVEY desaccess  </div>
-        <div main-title="" drawer-toggle="">DES desaccess</div>
+      <div main-title="" class="wideScreen">DARK ENERGY SURVEY desaccess </div>
+      <div main-title="" drawer-toggle="">DES desaccess </div>
 
             <paper-menu-button id="profileMenu" no-overlap="" horizontal-offset="-100" no-animations="" close-on-activate="">
               <paper-icon-button icon="social:person" slot="dropdown-trigger" alt="menu"></paper-icon-button>
+             <iron-icon style="margin-left:-15px;" icon="arrow-drop-down" slot="dropdown-trigger" alt="menu"></iron-icon>
               <paper-listbox slot="dropdown-content">
                 <paper-item class="profileItem" on-tap="reset">Change Password</paper-item>
                 <paper-item class="profileItem" on-tap="profile">Update Profile</paper-item>
                 <paper-item class="profileItem" on-tap="logout">Log out</paper-item>
               </paper-listbox>
             </paper-menu-button>
-              <iron-icon icon="arrow-drop-down" class="profile" on-tap="_openmenu"></iron-icon>
     </app-toolbar>
+
 
 
   <paper-dialog class="dialog-position-narrow" id="updatePassDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
@@ -37778,7 +37780,7 @@ Polymer({
          if (e.target.withBackdrop) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
-     },
+     }
     });
 
 
@@ -37818,12 +37820,17 @@ Polymer({
            .self-info .email {
                color: #999;
            }
+       paper-item{
+           font-size: 18px;
+       }
 
    </style>
-  <app-header fixed="">
+  <app-header>
     <app-toolbar id="drawerToolbar" class="black">
+
         <iron-image style="width:60px; height:60px;" sizing="cover" src="/easyweb/static/images/DESDM_logo.png"></iron-image>
     </app-toolbar>
+      <div style="height: 100%; overflow: auto;">
 
                 <div class="info-container">
                     <div class="image"></div>
@@ -37834,6 +37841,7 @@ Polymer({
                 </div>
 
     <paper-menu id="bigmenu" selected="[[selection]]">
+
         <!-- Order is important, it needs to match des-mainpages -->
         <paper-item> Home              </paper-item>
         <paper-item> DB access           </paper-item>
@@ -37842,8 +37850,11 @@ Polymer({
         <paper-item> Cutout Service     </paper-item>
         <paper-item> Footprint     </paper-item>
         <paper-item> My Jobs           </paper-item>
+
     </paper-menu>
+      </div>
 </app-header>
+
 </template>
 
 <script>
@@ -43317,295 +43328,6 @@ This program is available under Apache License Version 2.0, available at https:/
     }
   });
 </script>
-<dom-module id="des-my-jobs" assetpath="../des_components/des-pages/">
-<template>
-<style include="shared-styles">
-
-
-
-</style>
-    <iron-ajax id="getMyJobs" auto="" url="/easyweb/myjobs/" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
-    </iron-ajax>
-
-    <iron-ajax id="killJob" method="DELETE" url="/easyweb/myjobs/" params="{{_getJobId(username,jobid)}}" handle-as="json" on-response="_handleTermination" debounce-duration="300">
-    </iron-ajax>
-
-    <paper-dialog class="dialog-position" id="JobQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <h2>Job id: {{jobid}}</h2>
-              <div class="insideDialog">
-                  <textarea id="jobQueryBox" autofocus=""></textarea>
-              </div>
-              <div class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised="" dialog-confirm="" on-tap="_copyQuery">Copy query</paper-button>
-                  <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
-              </div>
-    </paper-dialog>
-
-    <paper-dialog class="dialog-position" id="JobTiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <des-results id="desTiles" username="{{username}}" jobid="{{jobid}}"></des-results>
-    </paper-dialog>
-
-    <paper-dialog class="dialog-position" id="JobFiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <h2>Job id: {{jobid}}</h2>
-              <div>
-
-
-        <vaadin-grid items="{{myfiles}}" id="material">
-
-
-              <vaadin-grid-column flex-grow="1">
-                <template class="header">Filename</template>
-                <template>{{item.file}}</template>
-              </vaadin-grid-column>
-
-              <vaadin-grid-column flex-grow="1">
-                <template class="header">Size</template>
-                <template>{{item.size}}</template>
-              </vaadin-grid-column>
-
-              <vaadin-grid-column flex-grow="1">
-              <template class="header">Download Files</template>
-              <template>
-                <paper-button class="SeeFilesButton" raised="" on-click="_downloadFile">Download</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-            </vaadin-grid>
-              </div>
-
-              <div class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
-              </div>
-    </paper-dialog>
-
-
-<paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
-
-<des-card heading="My Jobs"></des-card>
-
-<vaadin-grid items="{{data}}" id="material">
-
-      <vaadin-grid-column width="50px" flex-grow="0">
-        <template class="header">#</template>
-        <template>{{index}}</template>
-        <!-- If necessary, the footer could be set using <template class="footer"> -->
-      </vaadin-grid-column>
-
-      <vaadin-grid-column width="80px" flex-grow="0">
-        <template class="header">Status</template>
-
-          <template>
-              <template is="dom-if" if="{{_completed(item.status)}}">
-                  <div class="status green size" item-icon=""></div>
-              </template>
-
-              <template is="dom-if" if="{{_pending(item.status)}}">
-                  <div class="status yellow size" item-icon=""></div>
-              </template>
-
-              <template is="dom-if" if="{{_stop(item.status)}}">
-                  <div class="status red size" item-icon=""></div>
-              </template>
-          </template>
-      </vaadin-grid-column>
-    <!--<vaadin-grid-column flex-grow="2">-->
-        <!--<template class="header">Check</template>-->
-        <!--<template>{{item.status}}<br />-->
-            <!--&lt;!&ndash;<span style="font-size: 0.7em;">{{item.elapsed}}</span>&ndash;&gt;-->
-        <!--</template>-->
-    <!--</vaadin-grid-column>-->
-
-      <vaadin-grid-column flex-grow="2">
-        <template class="header">Job id</template>
-        <template>{{item.job}}<br>
-            <span style="font-size: 0.7em;">{{item.elapsed}}</span>
-        </template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="1">
-        <template class="header">Job type</template>
-        <template>{{item.jobtype}}<br>
-        </template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="1">
-        <template class="header">Cancel</template>
-          <template>
-
-              <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}" on-click="_killQuery"></paper-icon-button>
-              </template>
-      </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Queries</template>
-              <template>
-                <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Results</template>
-              <template>
-                <paper-button class="SeeFilesButton" raised="" disabled$="{{item.jquerybool}}" on-click="_seeTiles">See Tiles</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Files</template>
-              <template>
-
-                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised="" on-click="_seeFiles">See Files</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-    </vaadin-grid>
-    <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon>
-</paper-button>
-</template>
-
-<script>
-function keysrt(key,desc) {
-  return function(a,b){
-   return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
-  }
-}
-
-</script>
-
-<script>
-      Polymer({
-      is: "des-my-jobs",
-      properties: {
-        username: {
-            type: String,
-            value: '',
-        },
-        jobid: {
-            type: String,
-            value: '',
-        },
-        jobquery: {
-            type: String,
-            value: '',
-        },
-      },
-      _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
-      attached: function() {
-        myJobQuery = document.getElementById("jobQueryBox");
-        },
-      _handleResponse: function(e){
-        var _self = this;
-        _self.data = e.detail.response;
-        _self.count = _self.data.length;
-    },
-      _handleTermination: function(e){
-      document.getElementById("getMyJobs").generateRequest();
-    },
-      _refreshJobs: function(e){
-      document.getElementById("getMyJobs").generateRequest();
-    },
-      _completed: function(status) {
-          if (status === "SUCCESS") {
-              return true;
-          }
-      },
-      _pending: function(status) {
-          if (status === "PENDING") {
-              return true;
-          }
-      },
-      _stop: function(status) {
-          if (status != "PENDING" && status != "SUCCESS" ) {
-              return true;
-          }
-      },
-    _copyQuery: function(){
-        document.querySelector('#toastCopy').show();
-        app.editor.setValue(app.jobquerybox.getValue());
-        console.log("-> line number: ", app.editor.lineCount());
-        setTimeout(function() {
-            app.editor.refresh();
-            app.editor.focus();
-        },20);
-
-    },
-    _checkFiles: function(jfiles){
-        if (jfiles != '') {return true;}
-        else {return false;}
-    },
-    _downloadFile: function(e){
-        e.preventDefault();
-        var filename =  e.model.item.file;
-        var jobid = this.jobid;
-        var user = this.username;
-        var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
-              if (link.download !== undefined){
-                  //Set HTML5 download attribute. This will prevent file from opening if supported.
-                  var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
-                  link.download = fileName;
-                }
-                if (document.createEvent) {
-                  var e = document.createEvent('MouseEvents');
-                  e.initEvent('click' ,true ,true);
-                  link.dispatchEvent(e);
-                  return true;
-                }
-                  var query = '?download';
-                  window.open(link.href + query);
-
-    },
-     _seeQuery: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.jobquery = e.model.item.jquery;
-        document.getElementById('JobQuery').open();
-        app.jobquerybox.setValue(this.jobquery);
-        setTimeout(function() {
-            app.jobquerybox.refresh();
-//            app.jobquerybox.focus();
-        },10);
-     },
-     _killQuery: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        document.getElementById("killJob").generateRequest();
-     },
-     _seeFiles: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        this.jobfiles = JSON.parse(e.model.item.jfiles);
-        this.jobsizes = JSON.parse(e.model.item.jsizes);
-        this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
-        for (i=0; i< this.jobfiles.length; i++){
-            this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
-            }
-        this.myfiles=this.jobs.sort(keysrt('file'));
-        document.getElementById('JobFiles').open();
-     },
-     _seeTiles: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        console.log(this.jobid + 'Tiles');
-        //document.getElementById('desTiles').username = this.username;
-        //document.getElementById('desTiles').jobid = this.jobid;
-        document.getElementById('JobTiles').open();
-     },
-     patchOverlay: function (e) {
-         if (e.target.withBackdrop) {
-            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-         }
-     },
-
-
-    });
-
-
-</script>
-</dom-module>
 <!--
 @license
 Copyright (c) 2017 Vaadin Ltd.
@@ -43910,6 +43632,304 @@ This program is available under Apache License Version 2.0, available at https:/
     });
   </script>
 </dom-module>
+<dom-module id="des-my-jobs" assetpath="../des_components/des-pages/">
+<template>
+<style include="shared-styles">
+
+
+
+</style>
+    <iron-ajax id="getMyJobs" auto="" url="/easyweb/myjobs/" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="killJob" method="DELETE" url="/easyweb/myjobs/" params="{{_getJobId(username,jobid)}}" handle-as="json" on-response="_handleTermination" debounce-duration="300">
+    </iron-ajax>
+
+    <paper-dialog class="dialog-position" id="JobQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+              <h2>Job id: {{jobid}}</h2>
+              <div class="insideDialog">
+                  <textarea id="jobQueryBox" autofocus=""></textarea>
+              </div>
+              <div class="buttons" on-iron-overlay-opened="patchOverlay">
+                  <paper-button class="indigo" raised="" dialog-confirm="" on-tap="_copyQuery">Copy query</paper-button>
+                  <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
+              </div>
+    </paper-dialog>
+
+    <paper-dialog class="dialog-position" id="JobTiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+              <des-results id="desTiles" username="{{username}}" jobid="{{jobid}}"></des-results>
+    </paper-dialog>
+
+    <paper-dialog class="dialog-position" id="JobFiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+              <h2>Job id: {{jobid}}</h2>
+              <div>
+
+
+        <vaadin-grid items="{{myfiles}}" id="material">
+
+
+              <vaadin-grid-column flex-grow="1">
+                <template class="header">Filename</template>
+                <template>{{item.file}}</template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column flex-grow="1">
+                <template class="header">Size</template>
+                <template>{{item.size}}</template>
+              </vaadin-grid-column>
+
+              <vaadin-grid-column flex-grow="1">
+              <template class="header">Download Files</template>
+              <template>
+                <paper-button class="SeeFilesButton" raised="" on-click="_downloadFile">Download</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+            </vaadin-grid>
+              </div>
+
+              <div class="buttons" on-iron-overlay-opened="patchOverlay">
+                  <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
+              </div>
+    </paper-dialog>
+
+
+<paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
+
+<des-card heading="My Jobs"></des-card>
+
+<div style="padding-right: 20px">
+<vaadin-grid items="{{data}}" id="material">
+    <vaadin-grid-column width="20px" flex-grow="0">
+        <template class="header"></template>
+        <template></template>
+    </vaadin-grid-column>
+
+      <vaadin-grid-column width="50px" flex-grow="0">
+        <template class="header">#</template>
+        <template>{{index}}</template>
+        <!-- If necessary, the footer could be set using <template class="footer"> -->
+      </vaadin-grid-column>
+
+      <vaadin-grid-column width="80px" flex-grow="0">
+        <template class="header">Status</template>
+
+          <template>
+              <template is="dom-if" if="{{_completed(item.status)}}">
+                  <div class="status green size" item-icon=""></div>
+              </template>
+
+              <template is="dom-if" if="{{_pending(item.status)}}">
+                  <div class="status yellow size" item-icon=""></div>
+              </template>
+
+              <template is="dom-if" if="{{_stop(item.status)}}">
+                  <div class="status red size" item-icon=""></div>
+              </template>
+          </template>
+      </vaadin-grid-column>
+    <!--<vaadin-grid-column flex-grow="2">-->
+        <!--<template class="header">Check</template>-->
+        <!--<template>{{item.status}}<br />-->
+            <!--&lt;!&ndash;<span style="font-size: 0.7em;">{{item.elapsed}}</span>&ndash;&gt;-->
+        <!--</template>-->
+    <!--</vaadin-grid-column>-->
+
+      <vaadin-grid-column flex-grow="2" width="140px">
+        <template class="header">Job ID</template>
+        <template>{{item.job}}<br>
+            <span style="font-size: 0.7em;">{{item.elapsed}}</span>
+        </template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="1">
+        <template class="header" style="padding-left: 5px">Job type</template>
+        <template>{{item.jobtype}}<br>
+        </template>
+      </vaadin-grid-column>
+
+    <!--Cancel job button-->
+      <vaadin-grid-column flex-grow="1">
+        <template class="header">Cancel Job</template>
+          <template>
+
+              <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}" on-click="_killQuery"></paper-icon-button>
+              </template>
+      </vaadin-grid-column>
+
+        <vaadin-grid-column flex-grow="1">
+              <template class="header">Queries</template>
+              <template>
+                <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+        <vaadin-grid-column flex-grow="1">
+              <template class="header">Results</template>
+              <template>
+                <paper-button class="SeeFilesButton" raised="" disabled$="{{item.jquerybool}}" on-click="_seeTiles">See Tiles</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+        <vaadin-grid-column flex-grow="1">
+              <template class="header">Files</template>
+              <template>
+
+                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised="" on-click="_seeFiles">See Files</paper-button>
+              </template>
+            </vaadin-grid-column>
+
+    </vaadin-grid>
+    </div>
+    <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
+    <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon>
+</paper-button>
+    </div>
+</template>
+
+<script>
+function keysrt(key,desc) {
+  return function(a,b){
+   return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
+  }
+}
+
+</script>
+
+<script>
+      Polymer({
+      is: "des-my-jobs",
+      properties: {
+        username: {
+            type: String,
+            value: '',
+        },
+        jobid: {
+            type: String,
+            value: '',
+        },
+        jobquery: {
+            type: String,
+            value: '',
+        },
+      },
+      _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
+      attached: function() {
+        myJobQuery = document.getElementById("jobQueryBox");
+        },
+      _handleResponse: function(e){
+        var _self = this;
+        _self.data = e.detail.response;
+        _self.count = _self.data.length;
+    },
+      _handleTermination: function(e){
+      document.getElementById("getMyJobs").generateRequest();
+    },
+      _refreshJobs: function(e){
+      document.getElementById("getMyJobs").generateRequest();
+    },
+      _completed: function(status) {
+          if (status === "SUCCESS") {
+              return true;
+          }
+      },
+      _pending: function(status) {
+          if (status === "PENDING") {
+              return true;
+          }
+      },
+      _stop: function(status) {
+          if (status != "PENDING" && status != "SUCCESS" ) {
+              return true;
+          }
+      },
+    _copyQuery: function(){
+        document.querySelector('#toastCopy').show();
+        app.editor.setValue(app.jobquerybox.getValue());
+        console.log("-> line number: ", app.editor.lineCount());
+        setTimeout(function() {
+            app.editor.refresh();
+            app.editor.focus();
+        },20);
+
+    },
+    _checkFiles: function(jfiles){
+        if (jfiles != '') {return true;}
+        else {return false;}
+    },
+    _downloadFile: function(e){
+        e.preventDefault();
+        var filename =  e.model.item.file;
+        var jobid = this.jobid;
+        var user = this.username;
+        var link = document.createElement('a');
+        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
+              if (link.download !== undefined){
+                  //Set HTML5 download attribute. This will prevent file from opening if supported.
+                  var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+                  link.download = fileName;
+                }
+                if (document.createEvent) {
+                  var e = document.createEvent('MouseEvents');
+                  e.initEvent('click' ,true ,true);
+                  link.dispatchEvent(e);
+                  return true;
+                }
+                  var query = '?download';
+                  window.open(link.href + query);
+
+    },
+     _seeQuery: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.jobquery = e.model.item.jquery;
+        document.getElementById('JobQuery').open();
+        app.jobquerybox.setValue(this.jobquery);
+        setTimeout(function() {
+            app.jobquerybox.refresh();
+//            app.jobquerybox.focus();
+        },10);
+     },
+     _killQuery: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.username = e.model.item.user;
+        document.getElementById("killJob").generateRequest();
+     },
+     _seeFiles: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.username = e.model.item.user;
+        this.jobfiles = JSON.parse(e.model.item.jfiles);
+        this.jobsizes = JSON.parse(e.model.item.jsizes);
+        this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
+        for (i=0; i< this.jobfiles.length; i++){
+            this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
+            }
+        this.myfiles=this.jobs.sort(keysrt('file'));
+        document.getElementById('JobFiles').open();
+     },
+     _seeTiles: function(e){
+        e.preventDefault();
+        this.jobid = e.model.item.job;
+        this.username = e.model.item.user;
+        console.log(this.jobid + 'Tiles');
+        //document.getElementById('desTiles').username = this.username;
+        //document.getElementById('desTiles').jobid = this.jobid;
+        document.getElementById('JobTiles').open();
+     },
+     patchOverlay: function (e) {
+         if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         }
+     },
+
+
+    });
+
+
+</script>
+</dom-module>
 <dom-module id="des-all-tables" assetpath="../des_components/des-pages/">
 <template>
 <style include="shared-styles"></style>
@@ -43921,8 +43941,9 @@ This program is available under Apache License Version 2.0, available at https:/
 
     <des-card heading="DR1 Tables">
     <div class="content">
-    See all the tables schema
+    See all table schema
     </div>
+        <br>
     </des-card>
     <paper-dialog class="dialog-position" id="scrollingAll" with-backdrop="" on-iron-overlay-opened="patchOverlay">
               <h2>{{tablename}}</h2>
@@ -43957,8 +43978,13 @@ This program is available under Apache License Version 2.0, available at https:/
     </paper-dialog>
 
 
-
+<div style="padding-right: 20px">
 <vaadin-grid id="material" items="{{data}}">
+
+     <vaadin-grid-column width="20px" flex-grow="0">
+        <template class="header"></template>
+        <template></template>
+    </vaadin-grid-column>
 
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
@@ -43993,7 +44019,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
     </vaadin-grid>
 
-
+</div>
 </template>
 
 <script>
@@ -44808,7 +44834,7 @@ This program is available under Apache License Version 2.0, available at https:/
               </div>
               <div class="buttons" on-iron-overlay-opened="patchOverlay">
                   <paper-button class="indigo" raised="" dialog-confirm="" on-tap="_copyQuery">Copy query</paper-button>
-                  <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
+                  <paper-button class="indigo" raised="" dialog-confirm="">Done</paper-button><br>
               </div>
     </paper-dialog>
 
@@ -44816,8 +44842,13 @@ This program is available under Apache License Version 2.0, available at https:/
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
 <des-card heading="Example queries"></des-card>
-
+<div style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id="material">
+
+    <vaadin-grid-column width="20px" flex-grow="0">
+        <template class="header"></template>
+        <template></template>
+    </vaadin-grid-column>
 
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
@@ -44839,7 +44870,7 @@ This program is available under Apache License Version 2.0, available at https:/
             </vaadin-grid-column>
 
     </vaadin-grid>
-
+</div>
 </template>
 
 <script>
@@ -44924,11 +44955,12 @@ function keysrt(key,desc) {
 
         div.gallery {
             display: inline-block;
-            margin: 5px;
+            margin:5px;
             border: 1px solid #CCCCCC;
             /*float: left;*/
             width: 100%;
             max-height: 95%;
+            padding-bottom:50px;
         }
 
         div#desjobs {
@@ -45023,16 +45055,52 @@ function keysrt(key,desc) {
             font-size: 0.5em;
         }
 
-        @media screen and (max-width: 1300px){
+        @media screen and (max-width: 1300px) {
             .helpB {
                 display: none;
             }
+
             .visual {
                 display: inherit;
             }
+
             vaadin-grid {
                 height: auto;
                 width: 100%;
+            }
+
+            .foobar {
+                padding: 18px;
+                margin: 60px 0;
+                line-height: inherit;
+                font-size: 20px;
+                text-transform: uppercase;
+                /*color: black;*/
+                font-family: 'Roboto', 'Noto', sans-serif;
+                /*visibility: hidden;*/
+                /*color: transparent;*  /
+            /*display: none;*/
+                color: black;
+                background-color: rgba(211, 211, 211, 0.7);
+            }
+
+            paper-item#coadd1 {
+                padding-left: 40px;
+            }
+             paper-item#query1 {
+                padding-left: 90px;
+            }
+              paper-item#allTables1 {
+                padding-left: 60px;
+            }
+              paper-item#footprint1 {
+                padding-left: 65px;
+            }
+              paper-item#example1 {
+                padding-left: 40px;
+            }
+               paper-item#desjobs1 {
+                padding-left: 95px;
             }
         }
 
@@ -45046,29 +45114,29 @@ function keysrt(key,desc) {
             <des-card heading="Welcome [[name]]!" class="welcome">
 
                 <div class="gallery" id="query" on-click="change">
-                    <des-card-intro member="Query"></des-card-intro>
+                <paper-item class="foobar" id="query1">QUERY</paper-item>
                 </div>
 
                 <div class="gallery" id="allTables" on-click="change">
-                    <des-card-intro member="DR1 Tables"></des-card-intro>
+                    <paper-item class="foobar" id="allTables1">DR1 TABLES</paper-item>
                 </div>
 
                 <div class="gallery" id="example" on-click="change">
-                    <des-card-intro member="Example Query"></des-card-intro>
+                     <paper-item class="foobar" id="example1">EXAMPLE QUERY</paper-item>
                 </div>
 
 
 
                 <div class="gallery" id="coadd" on-click="change">
-                    <des-card-intro member="Coadds Images"></des-card-intro>
+                     <paper-item class="foobar" id="coadd1">COADDS IMAGES</paper-item>
                 </div>
 
                 <div class="gallery" id="footprint" on-click="change">
-                    <des-card-intro member="Footprint"></des-card-intro>
+                     <paper-item class="foobar" id="footprint1">FOOTPRINT</paper-item>
                 </div>
 
                 <div class="gallery" id="desjobs" on-click="change">
-                    <des-card-intro member="Jobs"></des-card-intro>
+                    <paper-item class="foobar" id="desjobs1">JOBS</paper-item>
 
                 </div>
 
@@ -45098,6 +45166,30 @@ function keysrt(key,desc) {
         change: function(e){
            var tid = e.target.id;
            var sel = 0;
+           if (tid == 'query1') sel = 1;
+           if (tid == 'allTables1') sel = 2;
+           if (tid == 'example1') sel = 3;
+           if (tid == 'coadd1') sel = 4;
+           if (tid == 'footprint1') sel = 5;
+           if (tid == 'desjobs1') sel = 6;
+
+           var app = document.querySelector('#app');
+           var pages = document.getElementById("mainPages");
+           var menu = document.querySelector('paper-menu');
+          app.selection=sel;
+          pages.selected=sel;
+          menu.selected=sel;
+
+        }
+
+    });
+</script>
+
+<script>
+/*
+('.foobar').on('click', function(e) {
+           var tid = e.target.id;
+           var sel = 0;
            if (tid == 'query') sel = 1;
            if (tid == 'allTables') sel = 2;
            if (tid == 'example') sel = 3;
@@ -45111,13 +45203,8 @@ function keysrt(key,desc) {
           app.selection=sel;
           pages.selected=sel;
           menu.selected=sel;
-
-        },
-
-    });
-
-
-
+});
+*/
 </script>
 <dom-module id="des-footprint" assetpath="../des_components/des-pages/">
     <style include="shared-styles">
@@ -45150,7 +45237,7 @@ function keysrt(key,desc) {
 
             <div class="horizontal layout around justified">
                 <des-card heading="[[header]]">
-                    <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px;"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                    <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
                     <div class="card-content">
                  <div class="flex">
@@ -45498,7 +45585,7 @@ function keysrt(key,desc) {
             right: 0;
         }
         .flex2 {
-            @apply(--layout-horizontal);
+            @apply(--layout-vertical);
         }
 
         paper-slider {
@@ -45552,11 +45639,11 @@ function keysrt(key,desc) {
                     <hr>
 
                     <div class="flex2">
-                        <paper-checkbox style="font-size:14px;" id="sendemail" on-change="emailcheck">Send email after job completion </paper-checkbox>
-                                &nbsp;  &nbsp; &nbsp;  &nbsp;<paper-input id="validemail" name="email" label="Email" value=""></paper-input>
+                        <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
+            &nbsp;  &nbsp;        <paper-input id="validemail" name="email" label="Email" value=""></paper-input>
+                        <br>
                     </div>
 
-                    <hr>
                     <div>
 
                         <paper-button raised="" class="indigo" id="clearFormButton" on-tap="_clearForm">
@@ -45566,7 +45653,6 @@ function keysrt(key,desc) {
                         <paper-button raised="" class="indigo" id="submitJobButton" disabled="" on-tap="_submitJob">
                         <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
                         </paper-button>
-
                     </div>
                 </div>
 
@@ -46127,8 +46213,6 @@ function keysrt(key,desc) {
             background-color: rgba(211, 211, 211, 0.7);
         }
 
-
-
         div:hover {
             /*background: black;*/
             /*visibility: visible;*/
@@ -46162,7 +46246,7 @@ function keysrt(key,desc) {
 
         @media screen and (max-width: 600px){
             div.intro {
-                margin: 0px;
+                margin: 0;
                 padding: 15px 10px;
 
             }
@@ -46186,26 +46270,28 @@ function keysrt(key,desc) {
             member :{
                 type: String,
                 value:''
-            },
+            }
 
-        },
+        }
     });
 
 </script>
 <dom-module id="des-card" assetpath="../des_components/">
     <style>
         paper-card {
-            margin-top: 10px;
+            margin-top: 8px;
             width: 100%;
             max-width: 2000px;
+
         }
         .headc {
             --paper-card-header-color: var(--paper-red-500);
+
         }
     </style>
 
     <template>
-        <div class="horizontal layout center-justified" style="padding-left:30px; padding-right:30px;">
+        <div class="horizontal layout center-justified" style="padding-left:10px; padding-right:30px;">
             <paper-card elevation="0" heading="{{heading}}" class="headc">
                 <content></content>
             </paper-card>

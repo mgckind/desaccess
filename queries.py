@@ -64,6 +64,8 @@ class QueryHandler(BaseHandler):
         file_error = False
         if filename == "nofile":
             filename = None
+            if query_kind == "submit":
+                file_error = True
         elif filename == "":
             file_error = True
         elif not filename.endswith('.csv') and not filename.endswith('.fits'):
