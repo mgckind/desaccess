@@ -14,6 +14,7 @@ import time
 import subprocess
 from celery.exceptions import SoftTimeLimitExceeded
 import glob
+from smtp import email_utils
 
 app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
@@ -65,7 +66,10 @@ class CustomTask(Task):
         if retval['status'] == 'ok':
             temp_status = 'SUCCESS'
             if retval['email'] != 'no':
-                print('SEND EMAIL TO: ', retval['email'])
+                user = retval['user']
+                email = retval['email']
+                print('SEND EMAIL TO: ', email)
+                email_utils.send_note(user, task_id, email)
             else:
                 print('NO EMAIL')
 

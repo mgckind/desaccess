@@ -117,8 +117,12 @@ class MainHandler(BaseHandler):
             cc = ('', '', '')
         cursor.close()
         dbh.close()
-        self.render("main-public.html", name=cc[0], lastname=cc[1],
-                    email=cc[2], username=loc_user, db=loc_db)
+        try:
+            self.render("main-public.html", name=cc[0], lastname=cc[1],
+                        email=cc[2], username=loc_user, db=loc_db)
+        except:
+            self.render("login-public.html", errormessage='',
+                        version=__version__, update='no', toast='no', db='')
 
 
 class AuthLoginHandler(BaseHandler):
