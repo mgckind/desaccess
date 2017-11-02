@@ -28,7 +28,9 @@
     </iron-ajax>
 
 
-
+    <!--<paper-dialog class="dialog-position" id="jobHelpResults" with-backdrop on-iron-overlay-opened="patchOverlay">-->
+        <!--<p>Help goes here</p>-->
+    <!--</paper-dialog>-->
 
     <paper-dialog id="logDialogHelp" with-backdrop modal on-iron-overlay-opened="patchOverlay">
         <h2>Log</h2>
@@ -40,9 +42,7 @@
        </div>
 
     </paper-dialog>
-    <paper-dialog class="dialog-position" id="jobHelpResults" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <p>Help goes here</p>
-    </paper-dialog>
+
 
     <des-card heading="Job : [[jobid]] ( [[jsondata.length]] objects)">
         <!--<br>-->
@@ -63,7 +63,7 @@
          <h3> There are no outputs for this job. Check logfile for details.</h3>
     </template>
     </des-card>
-    <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+    <!--<paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>-->
 
 
 
@@ -138,10 +138,15 @@
               //document.getElementById('getAllIcon').disabled=false;
               }
         },
-        _seeHelp: function(e){
-            e.preventDefault();
-            document.getElementById('jobHelpResults').open();
-        },
+//        patchOverlay: function (e) {
+//            if (e.target.withBackdrop) {
+//                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+//            }
+//        },
+//        _seeHelp: function(e){
+//            e.preventDefault();
+//            document.getElementById('jobHelpResults').open();
+//        },
     });
 </script>
 </dom-module>
