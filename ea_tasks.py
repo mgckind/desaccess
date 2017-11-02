@@ -183,7 +183,7 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
                 files = glob.glob(job_folder+'*')
                 response['files'] = [os.path.basename(i) for i in files]
                 response['sizes'] = [get_filesize(i) for i in files]
-                data = 'File {0} written'.format(outfile)
+                data = 'Job {0} done'.format(jid)
                 response['kind'] = 'query'
             else:
                 df = connection.query_to_pandas(query)
