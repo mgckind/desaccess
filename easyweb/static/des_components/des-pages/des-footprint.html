@@ -1,33 +1,67 @@
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
 <dom-module id="des-footprint">
+    <template>
     <style include="shared-styles">
-
         .box {
             background-color: white;
             border: 1px solid gray;
         }
-
         .box:focus {
             outline: none;
         }
-
         .box:input {
             outline: none;
         }
         .flex {
       @apply --layout-horizontal;
         }
-
         .downloadTile {
             visibility: hidden;
         }
-
     </style>
 
-    <template>
+    <iron-ajax id="getFilesTile"
+    method="POST"
+    url="/easyweb/gettile/"
+    params='{{_getTilename(tilename)}}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
 
-        <section>
+    <paper-dialog class="dialog-position" id="GetTiles" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <h2>TILE: {{tilename}}</h2>
+              <div class="insideDialog">
+        <vaadin-grid id="material" items="{{data}}">
 
-            <div class="horizontal layout around justified">
+             <vaadin-grid-column width="20px" flex-grow="0">
+                <template class="header"></template>
+                <template></template>
+            </vaadin-grid-column>
+
+
+              <vaadin-grid-column>
+                <template class="header"> Name
+                </template>
+                <template>{{item.name}}</template>
+              </vaadin-grid-column>
+
+                <vaadin-grid-column>
+                      <template class="header">Download </template>
+                      <template>
+                      <a style="text-decoration: none;" href="{{item.path}}" target="_blank"><paper-button raised >Download</paper-button></a>
+                      </template>
+                    </vaadin-grid-column>
+
+            </vaadin-grid>
+              </div>
+              <div class="buttons">
+                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+              </div>
+    </paper-dialog>
+
                 <des-card heading=[[header]]>
                     <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
@@ -36,15 +70,12 @@
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
                         <des-card heading="Tile properties">
                             <div id="tiletitleHelp"></div>
-                            <paper-button class="indigo downloadTile" raised disabled id ="downloadTile"> Download</paper-button>
+                            <paper-button class="indigo downloadTile" raised on-tap="_getTiles" id ="downloadTile"> Get Files</paper-button>
 
                         </des-card>
                 </div>
                     </div>
                 </des-card>
-            </div>
-        </section>
-
     </template>
 
 
@@ -135,6 +166,24 @@
                 var title =document.getElementById("tiletitleHelp");
                 title.innerHTML = '';
             },
+
+             patchOverlay: function (e) {
+                 if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                 }
+             },
+             _getTiles: function(e){
+                 document.getElementById('getFilesTile').generateRequest();
+                 document.getElementById('GetTiles').open();
+             },
+              _handleResponse: function(e){
+                var _self = this;
+                _self.data = e.detail.response;
+            },
+            _getTilename: function(tilename){return {tilename};},
+             updateTile: function(tile){
+                 this.tilename = tile;
+             },
             attached: function(){
                 require.config({
                     baseUrl: '/easyweb/static/scripts/src/'
@@ -270,6 +319,7 @@
                             var tilename = all_tiles.features[tile].properties.tilename;
                             _self.tilename = tilename;
                             console.log(this.tilename);
+                            document.getElementById('FootprintPage').updateTile(tilename);
                             var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                             var dec_t = all_tiles.features[tile].properties.DEC_C;
                             var titleHelp = document.getElementById("tiletitleHelp");
@@ -311,6 +361,7 @@
                                     };
                                 }
                                 var tilename = all_tiles.features[tile].properties.tilename;
+                                document.getElementById('FootprintPage').updateTile(tilename);
                                 var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                                 var dec_t = all_tiles.features[tile].properties.DEC_C;
                                 navigation.zoomTo([ra_t,dec_t],500000,1000);

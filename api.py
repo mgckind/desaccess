@@ -56,6 +56,23 @@ SELECT RA, DEC, MAG_AUTO_G from DR1_MAIN sample(0.0001)
         self.write(temp)
 
 
+class GetTileHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        tilename = self.get_argument('tilename', '')
+        print(tilename)
+        loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
+        loc_passw = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
+        loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
+        con = ea.connect(loc_db, user=loc_user, passwd=loc_passw)
+        query = """select FITS_IMAGE_G, FITS_IMAGE_R, FITS_IMAGE_I, FITS_IMAGE_Z, FITS_IMAGE_Y
+                   from DR1_TILE_INFO where tilename = '{0}'""".format(tilename)
+        temp_df = con.query_to_pandas(query)
+        new = temp_df.transpose().reset_index()
+        new.columns = ['name', 'path']
+        con.close()
+        self.write(new.to_json(orient='records'))
+
 class MyLogsHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
