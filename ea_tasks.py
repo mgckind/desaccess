@@ -14,6 +14,7 @@ import time
 import subprocess
 from celery.exceptions import SoftTimeLimitExceeded
 import glob
+from smtp import email_utils
 
 app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
@@ -48,7 +49,7 @@ class CustomTask(Task):
         cur.execute(q0)
         con.commit()
         con.close()
-        requests.post(url, data={'jobid':task_id}, verify=False)
+        requests.post(url, data={'jobid': task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         print('Done?')
@@ -65,7 +66,10 @@ class CustomTask(Task):
         if retval['status'] == 'ok':
             temp_status = 'SUCCESS'
             if retval['email'] != 'no':
-                print('SEND EMAIL TO: ', retval['email'])
+                user = retval['user']
+                email = retval['email']
+                print('SEND EMAIL TO: ', email)
+                email_utils.send_note(user, task_id, email)
             else:
                 print('NO EMAIL')
 
@@ -109,10 +113,6 @@ def check_query(query, db, username, lp):
     cursor.close()
     connection.close()
     return response
-
-
-
-
 
 
 @app.task(base=CustomTask)
@@ -187,7 +187,7 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
                 files = glob.glob(job_folder+'*')
                 response['files'] = [os.path.basename(i) for i in files]
                 response['sizes'] = [get_filesize(i) for i in files]
-                data = 'File {0} written'.format(outfile)
+                data = 'Job {0} done'.format(jid)
                 response['kind'] = 'query'
             else:
                 df = connection.query_to_pandas(query)
@@ -260,8 +260,8 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
         com += ' --ysize %s ' % ys
     com += " --logfile %s" % (outputs + 'log.log')
     com += " --tag Y3A1_COADD"
-    #print(com)
-    #time.sleep(40)
+    # print(com)
+    # time.sleep(40)
     os.chdir(mypath)
     oo = subprocess.check_output([com], shell=True)
     if listonly:

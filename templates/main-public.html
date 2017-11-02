@@ -11,7 +11,7 @@
 <script src="/easyweb/static/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="import" href="/easyweb/static/elements/elements.html">
+<link rel="import" href="/easyweb/static/elements/elements-built.html">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
 <link rel="stylesheet" href="/easyweb/static/scripts/codemirror/lib/codemirror.css">
 <style is="custom-style">
@@ -42,9 +42,10 @@ app-drawer-layout:not([narrow]) [drawer-toggle] {
 </app-drawer-layout>
 
 </template>
+<des-credit-line version="{{version}}"></des-credit-line>
   <script src="/easyweb/static/scripts/codemirror/lib/codemirror.js"></script>
  <script src="/easyweb/static/scripts/codemirror/mode/sql/sql.js"></script>
-  <script src="/easyweb/static/scripts/app.js"></script>
+  <script src="/easyweb/static/scripts/app.min.js"></script>
  <script src="/easyweb/static/scripts/require.js"></script>
 </body>
 </html>

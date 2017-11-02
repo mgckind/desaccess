@@ -38,7 +38,15 @@
      <vaadin-grid style="height: 70%;" id="material" items="{{description}}" >
 
       <vaadin-grid-column flex-grow="2">
-        <template class="header">Column name</template>
+        <template class="header">
+            <vaadin-grid-filter aria-label="Column Name" path="COLUMN_NAME" value="[[_filterColumnName]]">
+            <input placeholder="Column Name" value="{{_filterColumnName::input}}" focus-target>
+
+            <vaadin-grid-sorter path="COLUMN_NAME"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+          </vaadin-grid-filter>
+
+
+        </template>
         <template>{{item.COLUMN_NAME}}</template>
       </vaadin-grid-column>
 
@@ -72,11 +80,6 @@
         <template></template>
     </vaadin-grid-column>
 
-      <vaadin-grid-column width="50px" flex-grow="0">
-        <template class="header">#</template>
-        <template>{{index}}</template>
-        <!-- If necessary, the footer could be set using <template class="footer"> -->
-      </vaadin-grid-column>
 
       <vaadin-grid-column>
         <template class="header">

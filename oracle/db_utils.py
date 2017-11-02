@@ -5,7 +5,7 @@ import uuid
 
 def check_username(username):
     username = username.lower()
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     check_username = "SELECT * from DES_ADMIN.DES_USERS where USERNAME = '{}'".format(username)
     df = con.query_to_pandas(check_username)
     con.close()
@@ -17,7 +17,7 @@ def check_username(username):
 
 def check_email(email):
     email = email.lower()
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     check_email = "SELECT * from DES_ADMIN.DES_USERS where EMAIL = '{}'".format(email)
     df = con.query_to_pandas(check_email)
     con.close()
@@ -27,9 +27,8 @@ def check_email(email):
         return False
 
 
-
 def create_user_manager(username, password):
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     dict = {}
     dict['user'] = username.lower()
     dict['passwd'] = password
@@ -46,7 +45,7 @@ def create_user_manager(username, password):
 
 
 def create_user(username, password, first, last, email, country, institution, lock=True):
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     dict = {}
     dict['user'] = username
     dict['passwd'] = password
@@ -81,21 +80,23 @@ def create_user(username, password, first, last, email, country, institution, lo
 
 
 def delete_user(username):
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     delete_des = "DELETE FROM DES_ADMIN.DES_USERS where username = '{}'"
     con.query_and_print(delete_des.format(username), suc_arg='{} removed from DES_USERS'.format(username))
     delete_user = "DROP USER {} CASCADE".format(username)
     con.query_and_print(delete_user, suc_arg='{} Dropped'.format(username))
     con.close()
 
+
 def unlock_user(username):
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     qlock = "ALTER USER {0} account unlock".format(username)
     con.query_and_print(qlock, suc_arg='Account unlocked')
     con.close()
 
+
 def create_reset_url(email):
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     check = "SELECT * from DES_ADMIN.DES_USERS where EMAIL = '{}'".format(email)
     df = con.query_to_pandas(check)
     if len(df) == 0:
@@ -110,15 +111,17 @@ def create_reset_url(email):
     con.close()
     return True, url
 
+
 def delete_url(url):
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE URL = '{0}'".format(url)
     con.query_and_print(delete_old, suc_arg='Delete Url')
     con.close()
     return
 
+
 def update_password(username, password):
-    con = ea.connect('oldoper')
+    con = ea.connect('desdr')
     qlock = "ALTER USER {0} IDENTIFIED BY {1}".format(username, password)
     con.query_and_print(qlock, suc_arg='Password Change')
     con.close()
@@ -128,7 +131,7 @@ def update_password(username, password):
 def update_info(username, firstname, lastname, email, user_manager='', pass_manager=''):
     username = username.lower()
     email = email.lower()
-    con = ea.connect('oldoper', user=user_manager, passwd=pass_manager)
+    con = ea.connect('desdr', user=user_manager, passwd=pass_manager)
     qupdate = """
         UPDATE  DES_ADMIN.DES_USERS SET
         firstname = '{first}',
@@ -140,11 +143,12 @@ def update_info(username, firstname, lastname, email, user_manager='', pass_mana
     con.close()
     return True
 
-def valid_url(url, timeout = 6000):
-    con = ea.connect('oldoper')
+
+def valid_url(url, timeout=6000):
+    con = ea.connect('desdr')
     select_url = "SELECT * FROM DES_ADMIN.RESET_URL WHERE URL = '{0}'".format(url)
     df = con.query_to_pandas(select_url)
-    if len(df) == 0 :
+    if len(df) == 0:
         con.close()
         return None, ' URL does not exist!'
     created = df.CREATED.ix[0]
@@ -155,7 +159,5 @@ def valid_url(url, timeout = 6000):
         con.close()
         return None, 'URL is not longer valid!'
     else:
-    	#delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
-    	#con.query_and_print(delete_old, suc_arg='Delete old Url')
         con.close()
         return username, 'valid'

@@ -27566,6 +27566,203 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 --><!--
+Material design: [Floating Action Button](https://www.google.com/design/spec/components/buttons-floating-action-button.html)
+
+`paper-fab` is a floating action button. It contains an image placed in the center and
+comes in two sizes: regular size and a smaller size by applying the attribute `mini`. When
+the user touches the button, a ripple effect emanates from the center of the button.
+
+You may import `iron-icons` to use with this element, or provide a URL to a custom icon.
+See `iron-iconset` for more information about how to use a custom icon set.
+
+Example:
+
+    <link href="path/to/iron-icons/iron-icons.html" rel="import">
+
+    <paper-fab icon="add"></paper-fab>
+    <paper-fab mini icon="favorite"></paper-fab>
+    <paper-fab src="star.png"></paper-fab>
+
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-fab-background` | The background color of the button | `--accent-color`
+`--paper-fab-keyboard-focus-background` | The background color of the button when focused | `--paper-pink-900`
+`--paper-fab-disabled-background` | The background color of the button when it's disabled | `--paper-grey-300`
+`--paper-fab-disabled-text` | The text color of the button when it's disabled | `--paper-grey-500`
+`--paper-fab` | Mixin applied to the button | `{}`
+`--paper-fab-mini` | Mixin applied to a mini button | `{}`
+`--paper-fab-disabled` | Mixin applied to a disabled button | `{}`
+`--paper-fab-iron-icon` | Mixin applied to the iron-icon within the button | `{}`
+`--paper-fab-label` | Mixin applied to the label within the button | `{}`
+
+@group Paper Elements
+@demo demo/index.html
+-->
+
+<dom-module id="paper-fab" assetpath="../bower_components/paper-fab/">
+  <template strip-whitespace="">
+    <style include="paper-material-styles">
+      :host {
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+
+        background: var(--paper-fab-background, var(--accent-color));
+        border-radius: 50%;
+        box-sizing: border-box;
+        color: var(--text-primary-color);
+        cursor: pointer;
+        height: 56px;
+        min-width: 0;
+        outline: none;
+        padding: 16px;
+        position: relative;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        width: 56px;
+        z-index: 0;
+
+        /* NOTE: Both values are needed, since some phones require the value `transparent`. */
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-tap-highlight-color: transparent;
+
+        @apply --paper-fab;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      :host([mini]) {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+
+        @apply --paper-fab-mini;
+      }
+
+      :host([disabled]) {
+        color: var(--paper-fab-disabled-text, var(--paper-grey-500));
+        background: var(--paper-fab-disabled-background, var(--paper-grey-300));
+
+        @apply --paper-fab-disabled;
+      }
+
+      iron-icon {
+        @apply --paper-fab-iron-icon;
+      }
+
+      span {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+
+        @apply --paper-fab-label;
+      }
+
+      :host(.keyboard-focus) {
+        background: var(--paper-fab-keyboard-focus-background, var(--paper-pink-900));
+      }
+
+      :host([elevation="1"]) {
+        @apply --paper-material-elevation-1;
+      }
+
+      :host([elevation="2"]) {
+        @apply --paper-material-elevation-2;
+      }
+
+      :host([elevation="3"]) {
+        @apply --paper-material-elevation-3;
+      }
+
+      :host([elevation="4"]) {
+        @apply --paper-material-elevation-4;
+      }
+
+      :host([elevation="5"]) {
+        @apply --paper-material-elevation-5;
+      }
+    </style>
+
+    <iron-icon id="icon" hidden$="{{!_computeIsIconFab(icon, src)}}" src="[[src]]" icon="[[icon]]"></iron-icon>
+    <span hidden$="{{_computeIsIconFab(icon, src)}}">{{label}}</span>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-fab',
+
+      behaviors: [
+        Polymer.PaperButtonBehavior
+      ],
+
+      properties: {
+        /**
+         * The URL of an image for the icon. If the src property is specified,
+         * the icon property should not be.
+         */
+        src: {
+          type: String,
+          value: ''
+        },
+
+        /**
+         * Specifies the icon name or index in the set of icons available in
+         * the icon's icon set. If the icon property is specified,
+         * the src property should not be.
+         */
+        icon: {
+          type: String,
+          value: ''
+        },
+
+        /**
+         * Set this to true to style this is a "mini" FAB.
+         */
+        mini: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        /**
+         * The label displayed in the badge. The label is centered, and ideally
+         * should have very few characters.
+         */
+        label: {
+          type: String,
+          observer: '_labelChanged'
+        }
+      },
+
+      _labelChanged: function() {
+        this.setAttribute('aria-label', this.label);
+      },
+
+      _computeIsIconFab: function(icon, src) {
+        return (icon.length > 0) || (src.length > 0);
+      }
+    });
+  </script>
+</dom-module>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
 app-drawer-layout is a wrapper element that positions an app-drawer and other content. When
 the viewport width is smaller than `responsiveWidth`, this element changes to narrow layout.
 In narrow layout, the drawer will be stacked on top of the main content. The drawer will slide
@@ -37145,7 +37342,7 @@ app-toolbar.black {
     }
     .box-upper-image {
       position: absolute;
-      top: -100%;
+      top: -100;
       right: 0;
       bottom: 0;
       width: 100%;
@@ -37157,7 +37354,7 @@ app-toolbar.black {
       position: absolute;
       top: 101%;
       right: 0;
-      bottom: -100%;
+      bottom: -100;
       width: 100%;
       height: 98px;
       background: url("/easyweb/static/images/cut3.png");
@@ -37885,7 +38082,7 @@ Polymer({
         <des-all-tables></des-all-tables>
         <des-example-query></des-example-query>
         <des-coadds id="desCoadds" email="{{email}}"></des-coadds>
-        <des-footprint></des-footprint>
+        <des-footprint id="FootprintPage"></des-footprint>
         <des-my-jobs></des-my-jobs>
 
     </iron-pages>
@@ -43632,6 +43829,173 @@ This program is available under Apache License Version 2.0, available at https:/
     });
   </script>
 </dom-module>
+<!--
+@license
+Copyright (c) 2017 Vaadin Ltd.
+This program is available under Apache License Version 2.0, available at https://vaadin.com/license/
+--><dom-module id="vaadin-grid-selection-column" assetpath="../bower_components/vaadin-grid/">
+  <template>
+    <template class="header" id="defaultHeaderTemplate">
+      <input aria-label="Select All" hidden$="[[_selectAllHidden]]" type="checkbox" on-click="_onSelectAll" checked="[[_isChecked(selectAll, _indeterminate)]]" indeterminate="[[_indeterminate]]">
+    </template>
+    <template>
+      <input aria-label="Select Row" type="checkbox" checked="{{selected::change}}">
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'vaadin-grid-selection-column',
+
+    behaviors: [vaadin.elements.grid.ColumnBehavior],
+
+    properties: {
+      /**
+       * Width of the cells for this column.
+       */
+      width: {
+        type: String,
+        value: '52px'
+      },
+
+      /**
+       * Flex grow ratio for the cell widths. When set to 0, cell width is fixed.
+       */
+      flexGrow: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * When true it selects all the items.
+       */
+      selectAll: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+
+      /**
+       * When true it adds the active item to selectedItems.
+       */
+      autoSelect: {
+        type: Boolean,
+        value: false,
+      },
+
+      _grid: Object,
+
+      _indeterminate: Boolean,
+
+      /*
+       * The previous state of activeItem. When activeItem turns to `null`,
+       * previousActiveItem will have an Object with just unselected activeItem
+       */
+      _previousActiveItem: Object,
+
+      _selectAllHidden: Boolean
+    },
+
+    observers: [
+      '_onSelectAllChanged(selectAll, _grid)'
+    ],
+
+    detached: function() {
+      if (this._grid) {
+        this.unlisten(this._grid, 'active-item-changed', '_onActiveItemChanged');
+        this.unlisten(this._grid, 'data-provider-changed', '_onDataProviderChanged');
+        this.unlisten(this._grid, 'filter-changed', '_onSelectedItemsChanged');
+        this.unlisten(this._grid, 'selected-items-changed', '_onSelectedItemsChanged');
+      }
+    },
+
+    attached: function() {
+      this._grid = this._findGrid(this);
+      if (this._grid) {
+        this.listen(this._grid, 'active-item-changed', '_onActiveItemChanged');
+        this.listen(this._grid, 'data-provider-changed', '_onDataProviderChanged');
+        this.listen(this._grid, 'filter-changed', '_onSelectedItemsChanged');
+        this.listen(this._grid, 'selected-items-changed', '_onSelectedItemsChanged');
+      }
+    },
+
+    _headerTemplateChanged: function(headerTemplate) {
+      // needed to override the dataHost correctly in case internal template is used.
+      var templatizer = new vaadin.elements.grid.Templatizer(headerTemplate === this.$.defaultHeaderTemplate ? this : this.dataHost);
+      templatizer._instanceProps = {};
+      templatizer.template = headerTemplate;
+
+      this.fire('property-changed', {path: 'headerTemplate', value: headerTemplate});
+    },
+
+    _findGrid: function(elm) {
+      while (elm && elm.localName != 'vaadin-grid') {
+        elm = elm.parentElement;
+      }
+      return elm || undefined;
+    },
+
+    _selectFirstTemplate: function(selector) {
+      return Polymer.dom(this).querySelectorAll(selector)[0]
+          || Polymer.dom(this.root).querySelectorAll(selector)[0];
+    },
+
+    _onSelectAllChanged: function(selectAll, grid) {
+      if (this._selectAllChangeLock) {
+        return;
+      }
+
+      grid.selectedItems = selectAll && grid.items ? grid._filter(grid.items) : [];
+    },
+
+    // Return true if array `a` contains all the items in `b`
+    // We need this when sorting or to preserve selection after filtering.
+    _arrayContains: function(a, b) {
+      for (var i = 0; a && b && b[i] && a.indexOf(b[i]) >= 0; i++);
+      return i == b.length;
+    },
+
+    _onSelectAll: function(e) {
+      this.selectAll = this._indeterminate || !this.selectAll;
+    },
+
+    // iOS needs indeterminated + checked at the same time
+    _isChecked: function(selectAll, indeterminate) {
+      return indeterminate || selectAll;
+    },
+
+    _onActiveItemChanged: function(e) {
+      var activeItem = e.detail.value;
+      if (this.autoSelect) {
+        var item = activeItem || this._previousActiveItem;
+        this._grid._toggleItem(item);
+      }
+      this._previousActiveItem = activeItem;
+    },
+
+    _onSelectedItemsChanged: function(e) {
+      this._selectAllChangeLock = true;
+      if (this._grid.items) {
+        if (!this._grid.selectedItems.length) {
+          this.selectAll = false;
+          this._indeterminate = false;
+        } else if (this._arrayContains(this._grid.selectedItems, this._grid._filter(this._grid.items))) {
+          this.selectAll = true;
+          this._indeterminate = false;
+        } else {
+          this.selectAll = false;
+          this._indeterminate = true;
+        }
+      }
+      this._selectAllChangeLock = false;
+    },
+
+    _onDataProviderChanged: function(e) {
+      this._selectAllHidden = !this._grid.items;
+    }
+  });
+</script>
 <dom-module id="des-my-jobs" assetpath="../des_components/des-pages/">
 <template>
 <style include="shared-styles">
@@ -43643,6 +44007,12 @@ This program is available under Apache License Version 2.0, available at https:/
     </iron-ajax>
 
     <iron-ajax id="killJob" method="DELETE" url="/easyweb/myjobs/" params="{{_getJobId(username,jobid)}}" handle-as="json" on-response="_handleTermination" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="DeleteReq" url="/easyweb/delete/" method="DELETE" params="[1,2,3]" on-response="_afterDelete" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="ChangeNameReq" url="/easyweb/change/" method="POST" params="{&quot;part&quot;:&quot;fff&quot;}" on-response="_afterChange" handle-as="json" debounce-duration="300">
     </iron-ajax>
 
     <paper-dialog class="dialog-position" id="JobQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
@@ -43659,6 +44029,17 @@ This program is available under Apache License Version 2.0, available at https:/
     <paper-dialog class="dialog-position" id="JobTiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
               <des-results id="desTiles" username="{{username}}" jobid="{{jobid}}"></des-results>
     </paper-dialog>
+
+    <paper-dialog class="dialog-position" id="JobName" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <h2>{{jobname}}</h2>
+        <p>{{jobid}}</p>
+        <paper-input id="newname" name="name" label="New Name" value=""></paper-input>
+        <div class="buttons" on-iron-overlay-opened="patchOverlay">
+            <paper-button class="indigo" raised="" dialog-confirm="" on-tap="_genChangeReq">Change Name</paper-button>
+            <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
+        </div>
+    </paper-dialog>
+
 
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
               <h2>Job id: {{jobid}}</h2>
@@ -43683,7 +44064,8 @@ This program is available under Apache License Version 2.0, available at https:/
               <template>
                 <paper-button class="SeeFilesButton" raised="" on-click="_downloadFile">Download</paper-button>
               </template>
-            </vaadin-grid-column>
+              </vaadin-grid-column>
+
 
             </vaadin-grid>
               </div>
@@ -43694,16 +44076,25 @@ This program is available under Apache License Version 2.0, available at https:/
     </paper-dialog>
 
 
+    <paper-dialog class="dialog-position" id="jobHelp" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
+
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
 <des-card heading="My Jobs"></des-card>
 
 <div style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id="material">
-    <vaadin-grid-column width="20px" flex-grow="0">
+
+
+    <vaadin-grid-column width="10px" flex-grow="0">
         <template class="header"></template>
         <template></template>
     </vaadin-grid-column>
+
+    <vaadin-grid-selection-column id="auto" auto-select="">
+    </vaadin-grid-selection-column>
 
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
@@ -43735,11 +44126,24 @@ This program is available under Apache License Version 2.0, available at https:/
         <!--</template>-->
     <!--</vaadin-grid-column>-->
 
-      <vaadin-grid-column flex-grow="2" width="140px">
-        <template class="header">Job ID</template>
-        <template>{{item.job}}<br>
-            <span style="font-size: 0.7em;">{{item.elapsed}}</span>
-        </template>
+      <vaadin-grid-column flex-grow="2" width="200px">
+        <template class="header">Job Name</template>
+          <template>
+          <paper-item-body two-line="">
+              <div>
+                  <!--{{returnName(item.job)}}-->
+                  <!--it can be changed in api.py-->
+                  {{item.jname}}
+                  <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
+
+              </div>
+              <div secondary="">
+                  <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
+                  {{item.elapsed}}
+              </div>
+          </paper-item-body>
+          </template>
+
       </vaadin-grid-column>
 
       <vaadin-grid-column flex-grow="1">
@@ -43782,9 +44186,15 @@ This program is available under Apache License Version 2.0, available at https:/
     </vaadin-grid>
     </div>
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
-    <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon>
-</paper-button>
+        <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
+        <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
+        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
     </div>
+
+    <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
+    <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+
 </template>
 
 <script>
@@ -43812,6 +44222,10 @@ function keysrt(key,desc) {
             type: String,
             value: '',
         },
+        jobname: {
+            type: String,
+            value: '',
+        }
       },
       _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
       attached: function() {
@@ -43896,6 +44310,42 @@ function keysrt(key,desc) {
         this.username = e.model.item.user;
         document.getElementById("killJob").generateRequest();
      },
+
+      _genDeleteReq: function(){
+          var list = document.getElementById("material");
+          var listAll = this.$.material.selectedItems;
+          this.mytemp = JSON.parse(JSON.stringify(listAll));
+          if(this.$.material.selectedItems.length === 0) {
+              alert("Invalid number of jobs.");
+          }
+          else {
+              var result = confirm("Do you want to delete these "+this.$.material.selectedItems.length+" jobs? They will be also erased from disk storage");
+              var toDel=[];
+              if (result){
+                  for (i = 0; i < this.mytemp.length ; i++) {
+                      toDel.push(listAll[i].job);
+                  }
+                  req = document.getElementById("DeleteReq");
+                  req.params = toDel;
+                  req.generateRequest();
+                  this._resetSelection();
+              }
+          }
+      },
+
+      _afterDelete: function(e){
+          var list = document.getElementById("material");
+          req = document.getElementById("getMyJobs");
+          req.generateRequest();
+          this._resetSelection();
+      },
+
+
+      _resetSelection: function() {
+          this.$.material.selectedItems = [];
+          this.updateStyles();
+      },
+
      _seeFiles: function(e){
         e.preventDefault();
         this.jobid = e.model.item.job;
@@ -43909,6 +44359,7 @@ function keysrt(key,desc) {
         this.myfiles=this.jobs.sort(keysrt('file'));
         document.getElementById('JobFiles').open();
      },
+
      _seeTiles: function(e){
         e.preventDefault();
         this.jobid = e.model.item.job;
@@ -43918,6 +44369,60 @@ function keysrt(key,desc) {
         //document.getElementById('desTiles').jobid = this.jobid;
         document.getElementById('JobTiles').open();
      },
+      _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelp').open();
+      },
+
+      _seeName: function(e){
+          e.preventDefault();
+          this.jobid = e.model.item.job;
+          this.jobname = e.model.item.jname;
+          this.username = e.model.item.user;
+          //document.getElementById('desTiles').username = this.username;
+          //document.getElementById('desTiles').jobid = this.jobid;
+          document.getElementById('JobName').open();
+      },
+
+      _genChangeReq: function() {
+          var newjname = document.getElementById("newname").value;
+          console.log('New name: ', newjname);
+          if(newjname === "") {
+              console.log("No new name entered");
+          }
+          else {
+              var formdata = new FormData();
+              formdata.append('username', this.username);
+              formdata.append('jobid', this.jobid);
+              formdata.append('jobname', newjname);
+
+              $.ajax({
+                  url: '/easyweb/change/',
+                  type: 'POST',
+                  //beforeSend: this.beforeSendHandler,
+                  success: this.completeHandler,
+                  error: this.errorHandler,
+                  data: formdata,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+              });
+          }
+
+      },
+
+          completeHandler: function(){
+              console.log('YESSSSS');
+              var req = document.getElementById("getMyJobs");
+              req.generateRequest();
+              document.querySelector('#toast-nm-good').show();
+              document.getElementById("newname").value = "";
+
+          },
+          errorHandler: function(){
+              console.log('NOOOO');
+              document.querySelector('#toast-nm-bad').show();
+          },
      patchOverlay: function (e) {
          if (e.target.withBackdrop) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
@@ -43952,7 +44457,15 @@ function keysrt(key,desc) {
      <vaadin-grid style="height: 70%;" id="material" items="{{description}}">
 
       <vaadin-grid-column flex-grow="2">
-        <template class="header">Column name</template>
+        <template class="header">
+            <vaadin-grid-filter aria-label="Column Name" path="COLUMN_NAME" value="[[_filterColumnName]]">
+            <input placeholder="Column Name" value="{{_filterColumnName::input}}" focus-target="">
+
+            <vaadin-grid-sorter path="COLUMN_NAME"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+          </vaadin-grid-filter>
+
+
+        </template>
         <template>{{item.COLUMN_NAME}}</template>
       </vaadin-grid-column>
 
@@ -43986,11 +44499,6 @@ function keysrt(key,desc) {
         <template></template>
     </vaadin-grid-column>
 
-      <vaadin-grid-column width="50px" flex-grow="0">
-        <template class="header">#</template>
-        <template>{{index}}</template>
-        <!-- If necessary, the footer could be set using <template class="footer"> -->
-      </vaadin-grid-column>
 
       <vaadin-grid-column>
         <template class="header">
@@ -45114,29 +45622,29 @@ function keysrt(key,desc) {
             <des-card heading="Welcome [[name]]!" class="welcome">
 
                 <div class="gallery" id="query" on-click="change">
-                <paper-item class="foobar" id="query1">QUERY</paper-item>
+                <paper-item class="foobar" id="query">QUERY</paper-item>
                 </div>
 
                 <div class="gallery" id="allTables" on-click="change">
-                    <paper-item class="foobar" id="allTables1">DR1 TABLES</paper-item>
+                    <paper-item class="foobar" id="allTables">DR1 TABLES</paper-item>
                 </div>
 
                 <div class="gallery" id="example" on-click="change">
-                     <paper-item class="foobar" id="example1">EXAMPLE QUERY</paper-item>
+                     <paper-item class="foobar" id="example">EXAMPLE QUERY</paper-item>
                 </div>
 
 
 
                 <div class="gallery" id="coadd" on-click="change">
-                     <paper-item class="foobar" id="coadd1">COADDS IMAGES</paper-item>
+                     <paper-item class="foobar" id="coadd">COADDS IMAGES</paper-item>
                 </div>
 
                 <div class="gallery" id="footprint" on-click="change">
-                     <paper-item class="foobar" id="footprint1">FOOTPRINT</paper-item>
+                     <paper-item class="foobar" id="footprint">FOOTPRINT</paper-item>
                 </div>
 
                 <div class="gallery" id="desjobs" on-click="change">
-                    <paper-item class="foobar" id="desjobs1">JOBS</paper-item>
+                    <paper-item class="foobar" id="desjobs">JOBS</paper-item>
 
                 </div>
 
@@ -45164,30 +45672,7 @@ function keysrt(key,desc) {
             },
         },
         change: function(e){
-           var tid = e.target.id;
-           var sel = 0;
-           if (tid == 'query1') sel = 1;
-           if (tid == 'allTables1') sel = 2;
-           if (tid == 'example1') sel = 3;
-           if (tid == 'coadd1') sel = 4;
-           if (tid == 'footprint1') sel = 5;
-           if (tid == 'desjobs1') sel = 6;
 
-           var app = document.querySelector('#app');
-           var pages = document.getElementById("mainPages");
-           var menu = document.querySelector('paper-menu');
-          app.selection=sel;
-          pages.selected=sel;
-          menu.selected=sel;
-
-        }
-
-    });
-</script>
-
-<script>
-/*
-('.foobar').on('click', function(e) {
            var tid = e.target.id;
            var sel = 0;
            if (tid == 'query') sel = 1;
@@ -45203,39 +45688,66 @@ function keysrt(key,desc) {
           app.selection=sel;
           pages.selected=sel;
           menu.selected=sel;
-});
-*/
+
+        }
+
+    });
 </script>
 <dom-module id="des-footprint" assetpath="../des_components/des-pages/">
+    <template>
     <style include="shared-styles">
-
         .box {
             background-color: white;
             border: 1px solid gray;
         }
-
         .box:focus {
             outline: none;
         }
-
         .box:input {
             outline: none;
         }
         .flex {
       @apply --layout-horizontal;
         }
-
         .downloadTile {
             visibility: hidden;
         }
-
     </style>
 
-    <template>
+    <iron-ajax id="getFilesTile" method="POST" url="/easyweb/gettile/" params="{{_getTilename(tilename)}}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
 
-        <section>
+    <paper-dialog class="dialog-position" id="GetTiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+              <h2>TILE: {{tilename}}</h2>
+              <div class="insideDialog">
+        <vaadin-grid id="material" items="{{data}}">
 
-            <div class="horizontal layout around justified">
+             <vaadin-grid-column width="20px" flex-grow="0">
+                <template class="header"></template>
+                <template></template>
+            </vaadin-grid-column>
+
+
+              <vaadin-grid-column>
+                <template class="header"> Name
+                </template>
+                <template>{{item.name}}</template>
+              </vaadin-grid-column>
+
+                <vaadin-grid-column>
+                      <template class="header">Download </template>
+                      <template>
+                      <a style="text-decoration: none;" href="{{item.path}}" target="_blank"><paper-button raised="">Download</paper-button></a>
+                      </template>
+                    </vaadin-grid-column>
+
+            </vaadin-grid>
+              </div>
+              <div class="buttons">
+                  <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
+              </div>
+    </paper-dialog>
+
                 <des-card heading="[[header]]">
                     <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
@@ -45244,15 +45756,12 @@ function keysrt(key,desc) {
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
                         <des-card heading="Tile properties">
                             <div id="tiletitleHelp"></div>
-                            <paper-button class="indigo downloadTile" raised="" disabled="" id="downloadTile"> Download</paper-button>
+                            <paper-button class="indigo downloadTile" raised="" on-tap="_getTiles" id="downloadTile"> Get Files</paper-button>
 
                         </des-card>
                 </div>
                     </div>
                 </des-card>
-            </div>
-        </section>
-
     </template>
 
 
@@ -45343,6 +45852,24 @@ function keysrt(key,desc) {
                 var title =document.getElementById("tiletitleHelp");
                 title.innerHTML = '';
             },
+
+             patchOverlay: function (e) {
+                 if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                 }
+             },
+             _getTiles: function(e){
+                 document.getElementById('getFilesTile').generateRequest();
+                 document.getElementById('GetTiles').open();
+             },
+              _handleResponse: function(e){
+                var _self = this;
+                _self.data = e.detail.response;
+            },
+            _getTilename: function(tilename){return {tilename};},
+             updateTile: function(tile){
+                 this.tilename = tile;
+             },
             attached: function(){
                 require.config({
                     baseUrl: '/easyweb/static/scripts/src/'
@@ -45478,6 +46005,7 @@ function keysrt(key,desc) {
                             var tilename = all_tiles.features[tile].properties.tilename;
                             _self.tilename = tilename;
                             console.log(this.tilename);
+                            document.getElementById('FootprintPage').updateTile(tilename);
                             var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                             var dec_t = all_tiles.features[tile].properties.DEC_C;
                             var titleHelp = document.getElementById("tiletitleHelp");
@@ -45519,6 +46047,7 @@ function keysrt(key,desc) {
                                     };
                                 }
                                 var tilename = all_tiles.features[tile].properties.tilename;
+                                document.getElementById('FootprintPage').updateTile(tilename);
                                 var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                                 var dec_t = all_tiles.features[tile].properties.DEC_C;
                                 navigation.zoomTo([ra_t,dec_t],500000,1000);
@@ -45641,6 +46170,7 @@ function keysrt(key,desc) {
                     <div class="flex2">
                         <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
             &nbsp;  &nbsp;        <paper-input id="validemail" name="email" label="Email" value=""></paper-input>
+                        <paper-input id="validname" name="name" label="Job Name" value=""></paper-input>
                         <br>
                     </div>
 
@@ -45775,6 +46305,7 @@ function keysrt(key,desc) {
             formdata.append('list_only', document.getElementById("onlyreturnlist").checked);
             formdata.append('send_email', document.getElementById("sendemail").checked);
             formdata.append('email', document.getElementById("validemail").value);
+            formdata.append('name', document.getElementById("validname").value);
             formdata.append('submit_type', this.submit_type);
             formdata.append('values',document.getElementById("enteredPositions").value);
 
@@ -46006,22 +46537,32 @@ function keysrt(key,desc) {
             .mycard{
                   width: 200px;
                   height: 200px;
+                  padding: 10px;
+                  border-radius: 5px;
                   margin-bottom: 0px;
                   font-size: 15px;
                   color : var(--paper-pink-500);
+            }
+            .mycard:hover {
+                @apply(--shadow-elevation-16dp);
+                visibility: visible;
+            }
+
+            .mycard:hover .mycolors{
+                visibility: visible;
             }
             .pink {
 
                   --paper-card-header-color: var(--paper-green-500);
             }
-            paper-material{
-                  height: 100%;
-                  width: 100%;
+            .thumb{
+                  height: 300px;
+                  width: 300px;
                   background-color: white;
                   border-radius: 5px;
                   padding: 10px;
             }
-            paper-material:hover .mycolors{
+            .thumb:hover .mycolors{
                   visibility: visible;
             }
             .mycolors{
@@ -46052,29 +46593,29 @@ function keysrt(key,desc) {
       </style>
 
       <template>
-            <paper-material elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="openBig">
-                  <div class="mycard"> <div style="position:absolute;">
+          <!--
+            <paper-material class="thumb" elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="openBig">
+            -->
+                  <div class="mycard" on-click="openBig"> <div style="position:absolute;">
                         <span>{{imtitle}}</span> </div>
                         <paper-spinner class="big"></paper-spinner>
                         <img src="{{imdisplay}}" height="200px" width="200px">
-                        <div style="position:absolute; right:10px; bottom:10px">
-                              <paper-icon-button icon="file-download" class="mycolors">
-                              </paper-icon-button>
-                        </div>
-                        <div style="position:absolute; left:10px; bottom:10px">
+                        <div style="position:relative; left:-8px; top:-32px;">
                               <paper-icon-button id="infoid" icon="info" class="mycolors">
                               </paper-icon-button>
                         </div>
                   </div>
+                  <!--
             </paper-material>
+             -->
 
             <!-- DIALOG -->
             <paper-dialog id="SingleTileDialog" class="centered" with-backdrop="" modal="" on-iron-overlay-opened="patchOverlay">
-                  <h2>[[imtitle]]</h2>
-                  <img class="Image" src="[[imdisplay]]">
+                  <h2 id="SingleTileTitle">{{imtitle}}</h2>
+                  <img id="SingleTileImg" class="Image">
                   <div class="buttons horizontal layout left-justified">
                         <paper-button on-tap="_gobackdialog" raised="">Close</paper-button>
-                        <paper-button raised=""> Download</paper-button>
+                        <paper-button raised="" disabled=""> Download</paper-button>
                   </div>
             </paper-dialog>
 
@@ -46112,7 +46653,11 @@ function keysrt(key,desc) {
                       this._elevation = 5;
                   },
                   openBig: function(event){
+                      document.getElementById('SingleTileImg').src=this.imdisplay;
+                      document.getElementById('SingleTileTitle').innerHTML=this.imtitle;
                       document.getElementById('SingleTileDialog').open();
+
+
                   },
                   _gobackdialog: function(event){
                       document.getElementById('SingleTileDialog').close();
@@ -46291,7 +46836,7 @@ function keysrt(key,desc) {
     </style>
 
     <template>
-        <div class="horizontal layout center-justified" style="padding-left:10px; padding-right:30px;">
+        <div class="horizontal layout center-justified" style="padding-left:30px; padding-right:30px;">
             <paper-card elevation="0" heading="{{heading}}" class="headc">
                 <content></content>
             </paper-card>
@@ -46312,7 +46857,40 @@ function keysrt(key,desc) {
         });
     </script>
 </dom-module>
-<dom-module id="des-html" assetpath="../des_components/">
+<dom-module id="des-credit-line" assetpath="../des_components/">
+
+<style is="custom-style" include="shared-style">
+    footer {
+        position: absolute;
+        left: 44%;
+        bottom: 20px;
+        margin-top: 0px; /* negative value of footer height */
+        height: 10px;
+        clear:both;
+        color:grey;
+        padding-top:20px;
+        font-size: 9px;
+    }
+</style>
+
+
+<template>
+    <footer> © 2017; DESDM Release Team (NCSA) version : {{version}}  </footer>
+</template>
+
+<script>
+    Polymer({
+        is: "des-credit-line",
+        properties: {
+            version:{
+                value: '1.0.a',
+            }
+        },
+    });
+</script>
+
+
+</dom-module><dom-module id="des-html" assetpath="../des_components/">
   <style>
     :host {
       display: block;

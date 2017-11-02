@@ -109,35 +109,29 @@ def send_note(user, jobid, toemail):
     #link2 = urllib.quote(link.encode('utf8'),safe="%/:=&?~#+!$,;'@()*[]")
     #jobid2=jobid[jobid.find('__')+2:jobid.find('{')-1]
 
-
-
     html = """\
     <html>
     <head></head>
     <body>
          <b> Please do not reply to this email</b> <br><br>
+        <p> Dear User, <p> 
         <p>The job %s was completed, <br>
         the results can be retrieved from this <a href="%s">link</a> under My Jobs Tab.
         </p><br>
-        <p> DESDM Thumbs generator</p><br>
+        <p> DESDM Release Team</p><br>
         <p> PS: This is the full link to the results: <br>
         %s </p>
     </body>
     </html>
     """ % (jobid, link, link)
 
-
     MP1 = MIMEText(html, 'html')
-
     msg = MIMEMultipart('alternative')
     msg['Subject'] = 'Job %s is completed' % jobid
-    #msg['From'] = fromemail
-    msg['From'] = formataddr((str(Header('DESDM Thumbs', 'utf-8')), fromemail))
+    # msg['From'] = fromemail
+    msg['From'] = formataddr((str(Header('DESDM Release Team', 'utf-8')), fromemail))
     msg['To'] = toemail
-
     msg.attach(MP1)
-
-
     s.sendmail(fromemail, toemail, msg.as_string())
     s.quit()
     return "Email Sent to %s" % toemail

@@ -9,7 +9,6 @@ from oracle import db_utils
 from smtp import email_utils
 import cx_Oracle
 import os
-import time
 import json
 import yaml
 from version import __version__
@@ -47,6 +46,7 @@ class SignupHandler(BaseHandler):
             err = '1'
         self.write(json.dumps({'msg': msg, 'errno': err}))
 
+
 class ResetHandler(BaseHandler):
     def get(self, slug):
         username, msg = db_utils.valid_url(slug, 3600)
@@ -54,6 +54,7 @@ class ResetHandler(BaseHandler):
             self.render('reset.html', errormessage='', toast='no', url=slug, user=username)
         else:
             self.write(msg)
+
     def post(self):
         email = self.get_argument("email", "").lower()
         print(email)
@@ -81,11 +82,6 @@ class ResetHandler(BaseHandler):
             self.write(json.dumps({'msg': 'Something went wrong', 'errno': '1'}))
 
 
-
-
-
-
-
 class ActivateHandler(BaseHandler):
     def get(self, slug):
         username, msg = db_utils.valid_url(slug, 9000)
@@ -96,11 +92,10 @@ class ActivateHandler(BaseHandler):
         else:
             self.render('activate.html', errormessage=msg, username='')
 
+
 class MainHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        #self.render("main.html", name='Matias', email='', username='mcarras2') #TODO
-        loc_passw = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
         loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
         newfolder = os.path.join(Settings.WORKDIR, loc_user)
@@ -122,7 +117,12 @@ class MainHandler(BaseHandler):
             cc = ('', '', '')
         cursor.close()
         dbh.close()
-        self.render("main-public.html", name=cc[0], lastname=cc[1], email=cc[2], username=loc_user, db=loc_db)
+        try:
+            self.render("main-public.html", name=cc[0], lastname=cc[1],
+                        email=cc[2], username=loc_user, version=__version__, db=loc_db)
+        except:
+            self.render("login-public.html", errormessage='',
+                        version=__version__, update='no', toast='no', db='')
 
 
 class AuthLoginHandler(BaseHandler):
@@ -142,11 +142,10 @@ class AuthLoginHandler(BaseHandler):
             print(db)
         except:
             db = ""
-        self.render("login-public.html", errormessage=errormessage, version=__version__, update=update,
-                    toast=toast, db=db)
+        self.render("login-public.html", errormessage=errormessage, version=__version__,
+                    update=update, toast=toast, db=db)
 
     def check_permission(self, password, username, db):
-        #return True, "" #TODO
         kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': db}
         dsn = cx_Oracle.makedsn(**kwargs)
         try:
@@ -196,18 +195,14 @@ class UpdateInfoHandler(BaseHandler):
         firstname = self.get_argument("firstname", "")
         lastname = self.get_argument("lastname", "")
         email = self.get_argument("email", "")
-        err=''
+        err = ''
         db_utils.update_info(username, firstname, lastname, email, user_manager, pass_manager)
         return self.write(json.dumps({'msg': err, 'errno': '0'}))
-
-
-
 
 
 class ChangeAuthHandler(BaseHandler):
 
     def check_permission_new(self, oldpassword, password, username, db):
-        #return True, "" #TODO
         kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': db}
         dsn = cx_Oracle.makedsn(**kwargs)
         try:

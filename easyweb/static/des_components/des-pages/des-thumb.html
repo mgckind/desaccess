@@ -21,22 +21,32 @@
             .mycard{
                   width: 200px;
                   height: 200px;
+                  padding: 10px;
+                  border-radius: 5px;
                   margin-bottom: 0px;
                   font-size: 15px;
                   color : var(--paper-pink-500);
+            }
+            .mycard:hover {
+                @apply(--shadow-elevation-16dp);
+                visibility: visible;
+            }
+
+            .mycard:hover .mycolors{
+                visibility: visible;
             }
             .pink {
 
                   --paper-card-header-color: var(--paper-green-500);
             }
-            paper-material{
-                  height: 100%;
-                  width: 100%;
+            .thumb{
+                  height: 300px;
+                  width: 300px;
                   background-color: white;
                   border-radius: 5px;
                   padding: 10px;
             }
-            paper-material:hover .mycolors{
+            .thumb:hover .mycolors{
                   visibility: visible;
             }
             .mycolors{
@@ -67,29 +77,29 @@
       </style>
 
       <template>
-            <paper-material  elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="openBig">
-                  <div class="mycard"> <div style="position:absolute;">
+          <!--
+            <paper-material class="thumb" elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="openBig">
+            -->
+                  <div class="mycard" on-click="openBig"> <div style="position:absolute;">
                         <span>{{imtitle}}</span> </div>
                         <paper-spinner class="big" ></paper-spinner>
                         <img src={{imdisplay}} height="200px" width="200px" />
-                        <div style="position:absolute; right:10px; bottom:10px">
-                              <paper-icon-button  icon="file-download" class="mycolors" >
-                              </paper-icon-button>
-                        </div>
-                        <div style="position:absolute; left:10px; bottom:10px">
+                        <div style="position:relative; left:-8px; top:-32px;">
                               <paper-icon-button id="infoid" icon="info" class="mycolors">
                               </paper-icon-button>
                         </div>
                   </div>
+                  <!--
             </paper-material>
+             -->
 
             <!-- DIALOG -->
             <paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay">
-                  <h2>[[imtitle]]</h2>
-                  <img class = "Image" src=[[imdisplay]] />
+                  <h2 id="SingleTileTitle">{{imtitle}}</h2>
+                  <img id="SingleTileImg" class = "Image" />
                   <div class="buttons horizontal layout left-justified">
                         <paper-button on-tap="_gobackdialog" raised>Close</paper-button>
-                        <paper-button raised> Download</paper-button>
+                        <paper-button raised disabled> Download</paper-button>
                   </div>
             </paper-dialog>
 
@@ -127,7 +137,11 @@
                       this._elevation = 5;
                   },
                   openBig: function(event){
+                      document.getElementById('SingleTileImg').src=this.imdisplay;
+                      document.getElementById('SingleTileTitle').innerHTML=this.imtitle;
                       document.getElementById('SingleTileDialog').open();
+
+
                   },
                   _gobackdialog: function(event){
                       document.getElementById('SingleTileDialog').close();

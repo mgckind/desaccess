@@ -10,11 +10,12 @@
 <link rel="shortcut icon" href="{{ static_url('favicon.ico') }}">
 <script src="/easyweb/static/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<link rel="import" href="/easyweb/static/elements/elements.html">
+<link rel="import" href="/easyweb/static/elements/elements-built.html">
 <style is="custom-style">
 </style>
 </head>
 <body>
 <des-login-public error="{{errormessage}}" update="{{update}}" toastpass="{{toast}}" db="{{db}}"></des-login-public>
+<des-credit-line version="{{version}}"></des-credit-line>
 </body>
 </html>
