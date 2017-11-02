@@ -1,0 +1,33 @@
+<dom-module id="des-credit-line">
+
+<style is="custom-style" include="shared-style">
+    footer {
+        position: absolute;
+        left: 44%;
+        bottom: 20px;
+        margin-top: 0px; /* negative value of footer height */
+        height: 10px;
+        clear:both;
+        color:grey;
+        padding-top:20px;
+        font-size: 9px;
+    }
+</style>
+
+
+<template>
+    <footer > &copy; 2017; DESDM Release Team (NCSA) version : {{version}}  </footer>
+</template>
+
+<script>
+    Polymer({
+        is: "des-credit-line",
+        properties: {
+            version:{
+                value: '1.0.a',
+            }
+        },
+    });
+</script>
+
+</dom>
