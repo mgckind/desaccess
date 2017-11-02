@@ -48,7 +48,7 @@ class CustomTask(Task):
         cur.execute(q0)
         con.commit()
         con.close()
-        requests.post(url, data={'jobid':task_id}, verify=False)
+        requests.post(url, data={'jobid': task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         print('Done?')
@@ -109,10 +109,6 @@ def check_query(query, db, username, lp):
     cursor.close()
     connection.close()
     return response
-
-
-
-
 
 
 @app.task(base=CustomTask)
@@ -260,8 +256,8 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
         com += ' --ysize %s ' % ys
     com += " --logfile %s" % (outputs + 'log.log')
     com += " --tag Y3A1_COADD"
-    #print(com)
-    #time.sleep(40)
+    # print(com)
+    # time.sleep(40)
     os.chdir(mypath)
     oo = subprocess.check_output([com], shell=True)
     if listonly:

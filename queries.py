@@ -12,6 +12,7 @@ import requests
 import MySQLdb as mydb
 import yaml
 
+
 def after_return(retval):
     url = 'http://localhost:8080/easyweb/pusher/'
     data = {'username': retval['user'], 'result': retval['data'], 'status': retval['status']}
@@ -22,6 +23,7 @@ def after_return(retval):
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("usera")
+
 
 class QueryHandler(BaseHandler):
     """Main query handler."""
@@ -91,9 +93,8 @@ class QueryHandler(BaseHandler):
             cur = con.cursor()
             try:
                 cur.execute("SELECT * from Jobs where user = '%s' order "
-                                 "by time DESC limit 1" % loc_user)
+                            "by time DESC limit 1" % loc_user)
                 cc = cur.fetchone()
-                #last = datetime.datetime.strptime(cc[3], '%Y-%m-%d %H:%M:%S')
                 last = cc[4]
             except:
                 last = now - datetime.timedelta(seconds=60)
