@@ -21,11 +21,11 @@ define( ["./Globe", "./GeoBound",
 		"./WMSLayer", "./WMTSLayer", "./WCSElevationLayer", "./OSMLayer", "./BingLayer", "./VectorLayer", "./AtmosphereLayer", "./GroundOverlayLayer", "./TileWireframeLayer", // Layers
 		"./AitoffCoordinateSystem", "./MercatorCoordinateSystem", "./PlateCoordinateSystem", "./AugustCoordinateSystem", "./MollweideCoordinateSystem", // CoordinateSystems
 		"./Navigation", "./FlatNavigation", "./FeatureStyle", "./Stats", "./KMLParser", "./PathAnimation", "./Numeric", "./SegmentedAnimation", // Others
-		"./PointRenderer", "./LineStringRenderable", "./PolygonRenderer", "./LineRenderer" ], // Renderers
+		"./PointRenderer", "./LineStringRenderable", "./PolygonRenderer", "./LineRenderer", "./CoordinateGridLayer" ], // Renderers
 	function(Globe, GeoBound, WMSLayer, WMTSLayer, WCSElevationLayer, OSMLayer, BingLayer, VectorLayer, AtmosphereLayer, GroundOverlayLayer, TileWireframeLayer,
 			AitoffCoordinateSystem, MercatorCoordinateSystem, PlateCoordinateSystem, AugustCoordinateSystem, MollweideCoordinateSystem,
 		 	Navigation, FlatNavigation, FeatureStyle, Stats, KMLParser, PathAnimation, Numeric, SegmentedAnimation,
-		  	PointRenderer) {
+		  	PointRenderer,CoordinateGridLayer) {
 
 // Declare GlobWeb 
 var GlobWeb = {};
@@ -37,6 +37,7 @@ GlobWeb.WMTSLayer = WMTSLayer;
 GlobWeb.WCSElevationLayer = WCSElevationLayer;
 GlobWeb.OSMLayer = OSMLayer;
 GlobWeb.BingLayer = BingLayer;
+GlobWeb.CoordinateGridLayer = CoordinateGridLayer;
 GlobWeb.VectorLayer = VectorLayer;
 GlobWeb.TileWireframeLayer = TileWireframeLayer;
 GlobWeb.FeatureStyle = FeatureStyle;

@@ -209,6 +209,7 @@
                         inertia: false, minDistance: 100000
                     });
                     var canvas = navigation.renderContext.canvas;
+
                     loadTiles('/easyweb/static/tiles/grid.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -287,7 +288,7 @@
                         var _self = this;
                         var geojsonFeature = {
                             "type": "Feature",
-                            "properties": {},
+                            "properties": {"name": "hola"},
                             "geometry": {
                                 "type": "Point",
                                 "coordinates": [ra,dec]
@@ -303,7 +304,8 @@
                         var tempLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
-                                pointMaxSize : 1000
+                                pointMaxSize : 1000,
+                                //label: true,
                             })
                         });
                         tempLayer.addFeature(geojsonFeature);
