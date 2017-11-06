@@ -1,6 +1,6 @@
 """easyweb version"""
 
-version_tag = (1, 0, 0, 'dev-abc6b67')
+version_tag = (1, 0, 0, 'dev-d758af8')
 __version__ = '.'.join(map(str, version_tag[:3]))
 
 if len(version_tag) > 3:
