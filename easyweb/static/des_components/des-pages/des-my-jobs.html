@@ -197,14 +197,14 @@
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
-                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
+                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">query</paper-button>
               </template>
             </vaadin-grid-column>
 
         <vaadin-grid-column flex-grow="1">
               <template class="header">Results</template>
               <template>
-                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">See Tiles</paper-button>
+                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -212,7 +212,7 @@
               <template class="header">Files</template>
               <template>
 
-                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles">See Files</paper-button>
+                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles"> Files</paper-button>
               </template>
             </vaadin-grid-column>
 
