@@ -1,5 +1,5 @@
 <dom-module id="des-home">
-    <style>
+    <style include="shared-styles">
         :hover {
             cursor: pointer;
         }
@@ -203,7 +203,7 @@
 
         </section>
 
-        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
     </template>
 
 </dom-module>

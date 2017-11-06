@@ -31,7 +31,7 @@
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
-<des-card heading = "Example queries"></des-card>
+<des-card heading = "Example queries">
 <div style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id ="material">
 
@@ -39,7 +39,6 @@
         <template class="header"></template>
         <template></template>
     </vaadin-grid-column>
-
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
         <template>{{index}}</template>
@@ -61,8 +60,8 @@
 
     </vaadin-grid>
 </div>
-    <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+</des-card>
 </template>
 
 <script>

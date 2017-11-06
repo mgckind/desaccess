@@ -25,12 +25,6 @@
     debounce-duration="300">
     </iron-ajax>
 
-    <des-card heading="DR1 Tables">
-    <div class="content">
-    See all table schema
-    </div>
-        <br>
-    </des-card>
     <paper-dialog class="dialog-position" id="jobHelpAllTables" with-backdrop on-iron-overlay-opened="patchOverlay">
         <p>Help goes here</p>
     </paper-dialog>
@@ -76,6 +70,11 @@
     </paper-dialog>
 
 
+    <des-card heading="DR1 Tables">
+    <div class="content">
+    See all table schema
+    </div>
+        <br>
 
 <div style="padding-right: 20px">
 <vaadin-grid id="material" items="{{data}}">
@@ -112,9 +111,10 @@
             </vaadin-grid-column>
 
     </vaadin-grid>
-    <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 </div>
+    </des-card>
 
 </template>
 
