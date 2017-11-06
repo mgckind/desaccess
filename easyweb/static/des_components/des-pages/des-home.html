@@ -161,7 +161,9 @@
     </style>
 
     <template>
-
+        <paper-dialog class="dialog-position" id="jobHelpHome" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <p>Help goes here</p>
+        </paper-dialog>
         <section>
             <div class="horizontal layout around justified">
             <des-card heading="Welcome [[name]]!" class="welcome">
@@ -201,6 +203,7 @@
 
         </section>
 
+        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
     </template>
 
 </dom-module>
@@ -234,7 +237,17 @@
           pages.selected=sel;
           menu.selected=sel;
 
-        }
+        },
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        },
+
+        _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpHome').open();
+        },
 
     });
 </script>

@@ -29,19 +29,21 @@ app-drawer-layout:not([narrow]) [drawer-toggle] {
 <template is="dom-bind" id="app">
 
 <app-drawer-layout id="drawerLayout" responsive-width="1000px">
+
 <!-- SIDE PANEL -->
+
 <app-drawer id="drawer" swipe-open slot="drawer">
       <des-side-toolbar name={{username}} email={{email}}></des-side-toolbar>
-
 </app-drawer>
 
-<!-- MAIn PANEL -->
+<!-- MAIN PANEL -->
 <app-header-layout style="margin:-8px;">
-<app-header condenses>
+<app-header condenses slot="header">
       <des-toolbar  class="paper-header" name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-toolbar>
       <des-mainpages name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-mainpages>
  </app-header>
 </app-header-layout>
+
 </app-drawer-layout>
 
 </template>

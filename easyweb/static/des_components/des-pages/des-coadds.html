@@ -27,7 +27,9 @@
         }
     </style>
     <template>
-
+        <paper-dialog class="dialog-position" id="jobHelpCoadds" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <p>Help goes here</p>
+        </paper-dialog>
         <section>
             <des-card heading = "Coadds Images Cutout Form" >
                 <div class="card-content">
@@ -100,6 +102,8 @@
                 </paper-card>
             </paper-dialog>
         </section>
+        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
     </template>
 
 </dom-module>
@@ -164,7 +168,9 @@
             document.getElementById("onlyreturnlist").checked=false;
             document.getElementById("desPositions").clear();
             document.getElementById("validemail").value='';
-//            document.getElementById("coaddTag").selected="0";
+            document.getElementById("validname").value='';
+
+            //            document.getElementById("coaddTag").selected="0";
             this.file_name = "Upload File";
             this.job_comment = "";
 //            document.getElementById("jobcommentcoadds").value="";
@@ -182,14 +188,8 @@
         completeHandler: function(){
             console.log('YESSSSS');
             document.getElementById('desCoadds').clear();
-            //document.getElementById("getData").generateRequest();
             document.querySelector('#toast1').show();
-//            document.querySelector('des-my-jobs').show();
             document.querySelector('des-my-jobs')._refreshJobs();
-
-
-//            req = document.getElementById("getData");
-//            req.generateRequest();
         },
         errorHandler: function(){
             console.log('NOOOO');
@@ -230,6 +230,10 @@
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
              }
          },
+        _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpCoadds').open();
+        },
     });
 
 

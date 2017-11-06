@@ -17,6 +17,9 @@
       </div>
       </paper-card>
     </paper-dialog>
+    <paper-dialog class="dialog-position" id="jobHelpPositions" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
 
 </template>
 
@@ -44,6 +47,11 @@
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
              }
          },
+
+          _seeHelp: function(e){
+              e.preventDefault();
+              document.getElementById('jobHelpPositions').open();
+          },
     });
 
 
