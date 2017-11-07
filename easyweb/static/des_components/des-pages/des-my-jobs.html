@@ -8,10 +8,12 @@
 <dom-module id="des-my-jobs">
 <template>
 <style include="shared-styles">
-
-
-
+paper-fab.pink{
+      --paper-fab-background: var(--paper-blue-500);
+      --paper-fab-keyboard-focus-background: var(--paper-light-blue-500);
+}
 </style>
+
     <iron-ajax id="getMyJobs"
     auto
     url="/easyweb/myjobs/"
@@ -220,7 +222,7 @@
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class='pink'icon="help" on-tap="_seeHelp" style="float: right"></paper-fab>
 
     </div>
 
