@@ -62,6 +62,10 @@
               </div>
     </paper-dialog>
 
+         <paper-dialog class="dialog-position" id="jobHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <p>Footprint help</p>
+        </paper-dialog>
+
                 <des-card heading=[[header]]>
                     <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
@@ -76,6 +80,8 @@
                 </div>
                     </div>
                 </des-card>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;">
+        </paper-fab>
     </template>
 
 
@@ -184,6 +190,12 @@
              updateTile: function(tile){
                  this.tilename = tile;
              },
+
+             _seeHelp: function(e){
+             e.preventDefault();
+            document.getElementById('jobHelp').open();
+                },
+
             attached: function(){
                 require.config({
                     baseUrl: '/easyweb/static/scripts/src/'

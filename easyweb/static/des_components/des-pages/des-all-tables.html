@@ -25,6 +25,11 @@
     debounce-duration="300">
     </iron-ajax>
 
+
+     <paper-dialog class="dialog-position" id="jobHelpAllTables" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
+
     <des-card heading="DR1 Tables">
     <div class="content">
     See all table schema
@@ -108,6 +113,10 @@
 
     </vaadin-grid>
 
+      <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;">
+          <P>Help for Tables page </P>
+      </paper-fab>
+
 </div>
 </template>
 
@@ -154,6 +163,10 @@
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
      },
+           _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelpAllTables').open();
+      },
     });
 
 </script>
