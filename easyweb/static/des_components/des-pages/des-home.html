@@ -1,11 +1,15 @@
 <dom-module id="des-home">
-    <style include="shared-styles">
+    <style >
         :hover {
             cursor: pointer;
         }
 
-
-
+        .fabHelp {
+            --paper-fab-background: var(--paper-light-blue-500);
+            position: fixed;
+            top: 85px;
+            right:5px;
+            }
         div.gallery {
             display: inline-block;
             margin:5px;
@@ -127,7 +131,7 @@
             }
 
             .foobar {
-                padding: 18px;
+                padding: 16px;
                 margin: 60px 0;
                 line-height: inherit;
                 font-size: 20px;
@@ -192,7 +196,7 @@
 
         </section>
 
-         <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+         <!-- <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab> -->
 
     </template>
 
