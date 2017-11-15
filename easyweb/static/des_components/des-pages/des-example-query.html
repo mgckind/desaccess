@@ -13,7 +13,6 @@
     debounce-duration="300">
     </iron-ajax>
 
-
     <paper-dialog class="dialog-position" id="ExampleQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>{{jobid}}</h2>
               <div class="insideDialog">
@@ -25,10 +24,16 @@
               </div>
     </paper-dialog>
 
+    <paper-dialog class="dialog-position" id="jobHelpExampleQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
+
+
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
 <des-card heading = "Example queries"></des-card>
+    <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 <div style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id ="material">
 
@@ -125,6 +130,10 @@ function keysrt(key,desc) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
      },
+       _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelpExampleQuery').open();
+      },
 
 
     });

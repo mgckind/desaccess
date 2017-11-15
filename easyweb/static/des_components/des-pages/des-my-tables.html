@@ -57,6 +57,10 @@
         <paper-button class="indigo" style="color: white;" dialog-confirm autofocus>OKA</paper-button>
     </paper-dialog>
 
+    <paper-dialog class="dialog-position" id="jobHelpMyTables" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
+
     <paper-button onclick="getMyTables.generateRequest()"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
 
 <vaadin-grid id="material" items="{{data}}">
@@ -99,6 +103,8 @@
             </vaadin-grid-column>
 
     </vaadin-grid>
+
+     <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 
 </template>
@@ -148,7 +154,7 @@
      },
            _seeHelp: function(e){
           e.preventDefault();
-          document.getElementById('jobHelp').open();
+          document.getElementById('jobHelpMyTables').open();
       },
     });
 

@@ -7,7 +7,7 @@
    url="/easyweb/query/"
    method="POST"
    contentType="application/json"
-   params='{{_getQuery(querystr,querykind,outputfile)}}'
+   params='{{_getQuery(querystr,querykind,outputfile,queryname)}}'
    handle-as="json"
    on-response="_complete"
    on-request="_request"
@@ -24,6 +24,11 @@
    on-response="_complete"
    debounce-duration="300">
 </iron-ajax>
+
+     <paper-dialog class="dialog-position" id="jobHelpQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
+
     <des-card heading=" Query box">
     <div class="content">
     Insert your query in the box below. Prelimary data results will be displayed below "Output File".
@@ -43,9 +48,13 @@
 <br>
 <br>
 <div class="container3">
+
+<paper-input  id="queryname" name="name" label="Query Name" value=""></paper-input>
 <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file
 </paper-toggle-button>
-<paper-input id="inputOutputFile" disabled required auto-validate label="Output file"></paper-input>
+<paper-input id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
+
+
 </div>
 <hr /><br>
 <div id="response" class="results">
@@ -91,7 +100,10 @@
 <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
 <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
 </div>
+    </des-card>
 </template>
 
 <script>
@@ -118,6 +130,10 @@ Polymer({
             // current job id
             type: String,
             value: 'nojob',
+        },
+        queryname :{
+            type: String,
+            value: ''
         }
     },
     attached: function() {
@@ -128,7 +144,6 @@ Polymer({
         },20);
     },
     ready: function (){
-
         var _self = this;
         loc = window.location.host;
         var ws = new WebSocket("ws://"+loc+"/easyweb/websocket/");
@@ -147,7 +162,7 @@ Polymer({
             }
     },
     _returnVal: function(item,key) {return item[key];},
-    _getQuery: function(querystr,querykind,outputfile){return {query:querystr, querykind:querykind, filename:outputfile};},
+    _getQuery: function(querystr,querykind,outputfile, queryname){return {query:querystr, querykind:querykind, filename:outputfile, queryname: queryname};},
     _getJobid: function(jobid){return {jobid:jobid};},
     _queryChanged: function(){
         console.log('query  changed to: ' , this.querystr);
@@ -205,7 +220,6 @@ Polymer({
         for (var i = 0; i< cbbs; i++){
             bbs[i].disabled = true;
         };
-
         if (this.querykind == 'quick') {
             document.getElementById("querySpinner").active = true;
         }
@@ -221,6 +235,7 @@ Polymer({
         document.getElementById('inputOutputFile').disabled = true;
         document.getElementById('inputOutputCheck').checked = false;
         document.getElementById('inputOutputFile').value = '';
+        document.getElementById('queryname').value = '';
         document.getElementById('subQuery').disabled=true;
         this.outputfile = 'nofile';
         this.mydata = [];
@@ -231,6 +246,7 @@ Polymer({
     _submitQuery: function(event){
         this.querystr = app.editor.getValue();
         this.querykind = 'submit';
+        this.queryname = document.getElementById('queryname').value;
         if (document.getElementById('inputOutputCheck').checked){
             this.outputfile = document.getElementById('inputOutputFile').value;}
         this.mydata = [];
@@ -249,6 +265,7 @@ Polymer({
         this.querystr = app.editor.getValue();
         this.querykind = 'quick';
         this.outputfile = 'nofile';
+        this.queryname = document.getElementById('queryname').value;
         this.mydata = [];
         this.keys = [];
         this.idx = '';
@@ -262,8 +279,10 @@ Polymer({
     _checkSyntax: function(event){
         this.querystr = app.editor.getValue();
         this.querykind = 'check';
+        this.queryname = document.getElementById('queryname').value;
         if (document.getElementById('inputOutputCheck').checked){
-            this.outputfile = document.getElementById('inputOutputFile').value;}
+            this.outputfile = document.getElementById('inputOutputFile').value;
+        }
         this.mydata = [];
         this.keys = [];
         this.idx = '';
@@ -274,7 +293,15 @@ Polymer({
         //var valid = document.getElementById("queryBox").validate();
         if (valid) {document.getElementById("getQuery").generateRequest();}
     },
-
+    patchOverlay: function (e) {
+        if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+        }
+    },
+    _seeHelp: function(e){
+        e.preventDefault();
+        document.getElementById('jobHelpQuery').open();
+    },
 });
 </script>
 </dom-module>

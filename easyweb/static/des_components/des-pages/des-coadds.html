@@ -27,7 +27,9 @@
         }
     </style>
     <template>
-
+        <paper-dialog class="dialog-position" id="jobHelpCoadds" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <p>Help goes here</p>
+        </paper-dialog>
         <section>
             <des-card heading = "Coadds Images Cutout Form" >
                 <div class="card-content">
@@ -100,6 +102,9 @@
                 </paper-card>
             </paper-dialog>
         </section>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
+
     </template>
 
 </dom-module>
@@ -230,6 +235,10 @@
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
              }
          },
+         _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpCoadds').open();
+        },
     });
 
 

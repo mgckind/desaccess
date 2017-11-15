@@ -107,7 +107,7 @@
     </paper-dialog>
 
 
-    <paper-dialog class="dialog-position" id="jobHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
+    <paper-dialog class="dialog-position" id="jobHelpMyJobs" with-backdrop on-iron-overlay-opened="patchOverlay">
         <p style="text-align: center; padding-top: 20px; font-size: 16px;">This page contains the jobs you've run from Easyaccess Web  along with additional information</p>
     </paper-dialog>
 
@@ -219,7 +219,7 @@
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-        <paper-fab class='fabHelp' icon="help"  title='Help' on-tap="_seeHelp" style="float: right"></paper-fab>
+        <paper-fab class='fabHelp' icon="help"  title='Help' on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </div>
 
@@ -400,10 +400,6 @@ function keysrt(key,desc) {
         //document.getElementById('desTiles').jobid = this.jobid;
         document.getElementById('JobTiles').open();
      },
-      _seeHelp: function(e){
-          e.preventDefault();
-          document.getElementById('jobHelp').open();
-      },
 
       _seeName: function(e){
           e.preventDefault();
@@ -454,11 +450,19 @@ function keysrt(key,desc) {
               console.log('NOOOO');
               document.querySelector('#toast-nm-bad').show();
           },
+
+          _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelpMyJobs').open();
+      },
+
      patchOverlay: function (e) {
          if (e.target.withBackdrop) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
-     }
+
+     },
+
     });
 
 

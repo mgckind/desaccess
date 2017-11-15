@@ -1,7 +1,7 @@
 <dom-module id="des-positions">
+
 <template>
     <style include="shared-styles">
-
     </style>
 
 
@@ -17,8 +17,12 @@
       </div>
       </paper-card>
     </paper-dialog>
+    <paper-dialog class="dialog-position" id="jobHelpPositions" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
 
 </template>
+
 
 <script>
       Polymer({
@@ -44,6 +48,10 @@
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
              }
          },
+          _seeHelp: function(e){
+              e.preventDefault();
+              document.getElementById('jobHelpPositions').open();
+          },
     });
 
 
