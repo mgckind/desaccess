@@ -37577,7 +37577,7 @@ vaadin-grid#material {
 }
 .dialog-position {
     width: 100%;
-    height: 80%;
+    height: 90%;
     margin-left: 30px;
     margin-right: 30px;
     margin-top: 20px;
@@ -46515,19 +46515,20 @@ function keysrt(key,desc) {
     </paper-dialog>
 
 
-    <des-card heading="Job : [[jobid]] ( [[jsondata.length]] objects)">
+    <des-card heading="Job1 : [[jobid]] ( [[jsondata.length]] objects)">
         <!--<br>-->
         <!--<b>Comment:</b> {{jobcomment}}-->
         <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
         <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
         <hr class="des-hr">
-
+    <div class="card-content" style="height: 70%; overflow-y: scroll;">
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle="{{item.title}}" imdisplay="{{item.name}}">
             </des-thumb>
         </template>
     </template>
+    </div>
 
 
     <template is="dom-if" if="{{!jsondata}}">
