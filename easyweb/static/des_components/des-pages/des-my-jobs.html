@@ -115,7 +115,7 @@
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
-<des-card heading = "My Jobs"></des-card>
+<des-card heading = "My Jobs">
 
 <div  style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id ="material">
@@ -197,14 +197,14 @@
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
-                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
+                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">query</paper-button>
               </template>
             </vaadin-grid-column>
 
         <vaadin-grid-column flex-grow="1">
               <template class="header">Results</template>
               <template>
-                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">See Tiles</paper-button>
+                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -212,7 +212,7 @@
               <template class="header">Files</template>
               <template>
 
-                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles">See Files</paper-button>
+                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles"> Files</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -221,13 +221,13 @@
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </div>
 
     <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
     <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-
+</des-card>
 </template>
 
 <script>

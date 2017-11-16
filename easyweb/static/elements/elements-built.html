@@ -37382,6 +37382,14 @@ app-toolbar.black {
       background-size: cover;
     }
 
+
+.fabHelp {
+   --paper-fab-background: var(--paper-light-blue-500);
+   position: fixed;
+   top: 67px;
+   right:3px;
+}
+
 /* MY JOBS **/
 
 
@@ -37418,19 +37426,20 @@ app-toolbar.black {
     }
 
     .describeButton {
-        width: 100px;
+        width: 80px;
         text-transform: none;
+        text-decoration: none;
         --paper-button: {
-            width: 70px;
+            width: 50px;
         }
     }
 
 
 .SeeFilesButton {
-    width: 100px;
+    width: 80px;
     text-transform: none;
     --paper-button: {
-        width: 70px;
+        width: 50px;
     }
 }
 
@@ -37445,7 +37454,7 @@ app-toolbar.black {
 }
 
     .query-box {
-        margin: 10px;
+        margin: 0px;
         width: auto;
         height: auto;
         font-size: 20px;
@@ -37568,7 +37577,7 @@ vaadin-grid#material {
 }
 .dialog-position {
     width: 100%;
-    height: 80%;
+    height: 90%;
     margin-left: 30px;
     margin-right: 30px;
     margin-top: 20px;
@@ -37632,17 +37641,19 @@ paper-item {
 <template>
 <style include="shared-styles"></style>
 
-<iron-ajax id="getQuery" url="/easyweb/query/" method="POST" contenttype="application/json" params="{{_getQuery(querystr,querykind,outputfile)}}" handle-as="json" on-response="_complete" on-request="_request" on-error="_error" debounce-duration="300">
+<iron-ajax id="getQuery" url="/easyweb/query/" method="POST" contenttype="application/json" params="{{_getQuery(querystr,querykind,outputfile, queryname)}}" handle-as="json" on-response="_complete" on-request="_request" on-error="_error" debounce-duration="300">
 </iron-ajax>
 
 <iron-ajax id="getMyResponse" url="/easyweb/myresponse/" method="POST" contenttype="application/json" params="{{_getJobid(jobid)}}" handle-as="json" on-response="_complete" debounce-duration="300">
 </iron-ajax>
+    <paper-dialog class="dialog-position" id="jobHelpQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
     <des-card heading=" Query box">
     <div class="content">
     Insert your query in the box below. Prelimary data results will be displayed below "Output File".
     </div>
-    </des-card>
-<div class="query-box" style="padding-right:20px">
+<div class="query-box" style="padding-right:0px">
 <!--
 <paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
 </paper-textarea>-->
@@ -37656,9 +37667,12 @@ paper-item {
 <br>
 <br>
 <div class="container3">
-<paper-toggle-button class="queryButton" id="inputOutputCheck" noink="" on-tap="_enableOutputFile"> Output file
-</paper-toggle-button>
-<paper-input id="inputOutputFile" disabled="" required="" auto-validate="" label="Output file"></paper-input>
+
+    <paper-input id="queryname" name="name" label="Query Name" value=""></paper-input>
+    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink="" on-tap="_enableOutputFile"> Output file
+    </paper-toggle-button>
+    <paper-input id="inputOutputFile" disabled="" required="" auto-validate="" label="Output file"></paper-input>
+
 </div>
 <hr><br>
 <div id="response" class="results">
@@ -37704,7 +37718,10 @@ paper-item {
 <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
 <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
 </div>
+    </des-card>
 </template>
 
 <script>
@@ -37731,6 +37748,10 @@ Polymer({
             // current job id
             type: String,
             value: 'nojob',
+        },
+        queryname :{
+            type: String,
+            value: ''
         }
     },
     attached: function() {
@@ -37760,7 +37781,7 @@ Polymer({
             }
     },
     _returnVal: function(item,key) {return item[key];},
-    _getQuery: function(querystr,querykind,outputfile){return {query:querystr, querykind:querykind, filename:outputfile};},
+    _getQuery: function(querystr,querykind,outputfile, queryname){return {query:querystr, querykind:querykind, filename:outputfile, queryname: queryname};},
     _getJobid: function(jobid){return {jobid:jobid};},
     _queryChanged: function(){
         console.log('query  changed to: ' , this.querystr);
@@ -37834,6 +37855,7 @@ Polymer({
         document.getElementById('inputOutputFile').disabled = true;
         document.getElementById('inputOutputCheck').checked = false;
         document.getElementById('inputOutputFile').value = '';
+        document.getElementById('queryname').value = '';
         document.getElementById('subQuery').disabled=true;
         this.outputfile = 'nofile';
         this.mydata = [];
@@ -37844,6 +37866,7 @@ Polymer({
     _submitQuery: function(event){
         this.querystr = app.editor.getValue();
         this.querykind = 'submit';
+        this.queryname = document.getElementById('queryname').value;
         if (document.getElementById('inputOutputCheck').checked){
             this.outputfile = document.getElementById('inputOutputFile').value;}
         this.mydata = [];
@@ -37862,6 +37885,7 @@ Polymer({
         this.querystr = app.editor.getValue();
         this.querykind = 'quick';
         this.outputfile = 'nofile';
+        this.queryname = document.getElementById('queryname').value;
         this.mydata = [];
         this.keys = [];
         this.idx = '';
@@ -37875,8 +37899,10 @@ Polymer({
     _checkSyntax: function(event){
         this.querystr = app.editor.getValue();
         this.querykind = 'check';
+        this.queryname = document.getElementById('queryname').value;
         if (document.getElementById('inputOutputCheck').checked){
-            this.outputfile = document.getElementById('inputOutputFile').value;}
+            this.outputfile = document.getElementById('inputOutputFile').value;
+        }
         this.mydata = [];
         this.keys = [];
         this.idx = '';
@@ -37887,7 +37913,15 @@ Polymer({
         //var valid = document.getElementById("queryBox").validate();
         if (valid) {document.getElementById("getQuery").generateRequest();}
     },
-
+    patchOverlay: function (e) {
+        if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+        }
+    },
+    _seeHelp: function(e){
+        e.preventDefault();
+        document.getElementById('jobHelpQuery').open();
+    },
 });
 </script>
 </dom-module>
@@ -38076,6 +38110,7 @@ Polymer({
 <template>
    <style include="shared-styles"></style>
 
+      <div style="height: 85%; overflow: auto;">
     <iron-pages id="mainPages" selected="[[selection]]">
         <des-home name="{{name}}" db="{{db}}"></des-home>
         <des-query name="{{name}}" db="{{db}}"></des-query>
@@ -38086,6 +38121,7 @@ Polymer({
         <des-my-jobs></des-my-jobs>
 
     </iron-pages>
+</div>
 
 </template>
 
@@ -44076,13 +44112,14 @@ This program is available under Apache License Version 2.0, available at https:/
     </paper-dialog>
 
 
-    <paper-dialog class="dialog-position" id="jobHelp" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+    <paper-dialog class="dialog-position" id="jobHelpMyJobs" with-backdrop="" on-iron-overlay-opened="patchOverlay">
         <p>Help goes here</p>
     </paper-dialog>
 
+
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
-<des-card heading="My Jobs"></des-card>
+<des-card heading="My Jobs">
 
 <div style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id="material">
@@ -44164,14 +44201,14 @@ This program is available under Apache License Version 2.0, available at https:/
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
-                <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
+                <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">query</paper-button>
               </template>
             </vaadin-grid-column>
 
         <vaadin-grid-column flex-grow="1">
               <template class="header">Results</template>
               <template>
-                <paper-button class="SeeFilesButton" raised="" disabled$="{{item.jquerybool}}" on-click="_seeTiles">See Tiles</paper-button>
+                <paper-button class="SeeFilesButton" raised="" disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -44179,7 +44216,7 @@ This program is available under Apache License Version 2.0, available at https:/
               <template class="header">Files</template>
               <template>
 
-                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised="" on-click="_seeFiles">See Files</paper-button>
+                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised="" on-click="_seeFiles"> Files</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -44188,13 +44225,13 @@ This program is available under Apache License Version 2.0, available at https:/
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </div>
 
     <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
     <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-
+</des-card>
 </template>
 
 <script>
@@ -44371,7 +44408,7 @@ function keysrt(key,desc) {
      },
       _seeHelp: function(e){
           e.preventDefault();
-          document.getElementById('jobHelp').open();
+          document.getElementById('jobHelpMyJobs').open();
       },
 
       _seeName: function(e){
@@ -44444,12 +44481,10 @@ function keysrt(key,desc) {
     <iron-ajax id="getDescAllTable" method="POST" url="/easyweb/desctables/" params="{{_getPar(owner,tablename)}}" handle-as="json" on-request="_requestDescription" on-response="_handleDescription" debounce-duration="300">
     </iron-ajax>
 
-    <des-card heading="DR1 Tables">
-    <div class="content">
-    See all table schema
-    </div>
-        <br>
-    </des-card>
+    <paper-dialog class="dialog-position" id="jobHelpAllTables" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
+
     <paper-dialog class="dialog-position" id="scrollingAll" with-backdrop="" on-iron-overlay-opened="patchOverlay">
               <h2>{{tablename}}</h2>
 
@@ -44491,6 +44526,12 @@ function keysrt(key,desc) {
     </paper-dialog>
 
 
+    <des-card heading="DR1 Tables">
+    <div class="content">
+    See all table schema
+    </div>
+        <br>
+
 <div style="padding-right: 20px">
 <vaadin-grid id="material" items="{{data}}">
 
@@ -44521,13 +44562,16 @@ function keysrt(key,desc) {
         <vaadin-grid-column>
               <template class="header">Description </template>
               <template>
-                <paper-button class="describeButton" raised="" on-click="_describe">See description</paper-button>
+                <paper-button class="describeButton" raised="" on-click="_describe">Description</paper-button>
               </template>
             </vaadin-grid-column>
 
     </vaadin-grid>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 </div>
+    </des-card>
+
 </template>
 
 <script>
@@ -44573,6 +44617,11 @@ function keysrt(key,desc) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
      },
+
+      _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelpAllTables').open();
+      },
     });
 
 </script>
@@ -45345,11 +45394,14 @@ function keysrt(key,desc) {
                   <paper-button class="indigo" raised="" dialog-confirm="">Done</paper-button><br>
               </div>
     </paper-dialog>
+    <paper-dialog class="dialog-position" id="jobHelpExampleQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
 
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
-<des-card heading="Example queries"></des-card>
+<des-card heading="Example queries">
 <div style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id="material">
 
@@ -45357,7 +45409,6 @@ function keysrt(key,desc) {
         <template class="header"></template>
         <template></template>
     </vaadin-grid-column>
-
       <vaadin-grid-column width="50px" flex-grow="0">
         <template class="header">#</template>
         <template>{{index}}</template>
@@ -45379,6 +45430,8 @@ function keysrt(key,desc) {
 
     </vaadin-grid>
 </div>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+</des-card>
 </template>
 
 <script>
@@ -45446,6 +45499,10 @@ function keysrt(key,desc) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
      },
+      _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelpExampleQuery').open();
+      },
 
 
     });
@@ -45454,7 +45511,7 @@ function keysrt(key,desc) {
 </script>
 </dom-module>
 <dom-module id="des-home" assetpath="../des_components/des-pages/">
-    <style>
+    <style include="shared-styles">
         :hover {
             cursor: pointer;
         }
@@ -45616,7 +45673,9 @@ function keysrt(key,desc) {
     </style>
 
     <template>
-
+        <paper-dialog class="dialog-position" id="jobHelpHome" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+            <p>Help goes here</p>
+        </paper-dialog>
         <section>
             <div class="horizontal layout around justified">
             <des-card heading="Welcome [[name]]!" class="welcome">
@@ -45656,6 +45715,7 @@ function keysrt(key,desc) {
 
         </section>
 
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
     </template>
 
 </dom-module>
@@ -45689,7 +45749,17 @@ function keysrt(key,desc) {
           pages.selected=sel;
           menu.selected=sel;
 
-        }
+        },
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        },
+
+        _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpHome').open();
+        },
 
     });
 </script>
@@ -45737,7 +45807,7 @@ function keysrt(key,desc) {
                 <vaadin-grid-column>
                       <template class="header">Download </template>
                       <template>
-                      <a style="text-decoration: none;" href="{{item.path}}" target="_blank"><paper-button raised="">Download</paper-button></a>
+                      <a style="text-decoration: none !important;" href="{{item.path}}" target="_blank"><paper-button class="describeButton" raised="">Download</paper-button></a>
                       </template>
                     </vaadin-grid-column>
 
@@ -45747,6 +45817,9 @@ function keysrt(key,desc) {
                   <paper-button class="indigo" raised="" dialog-confirm="">Ok</paper-button><br>
               </div>
     </paper-dialog>
+        <paper-dialog class="dialog-position" id="jobHelpFootprint" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+            <p>Help goes here</p>
+        </paper-dialog>
 
                 <des-card heading="[[header]]">
                     <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
@@ -45762,6 +45835,8 @@ function keysrt(key,desc) {
                 </div>
                     </div>
                 </des-card>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
     </template>
 
 
@@ -45890,6 +45965,7 @@ function keysrt(key,desc) {
                         inertia: false, minDistance: 100000
                     });
                     var canvas = navigation.renderContext.canvas;
+
                     loadTiles('/easyweb/static/tiles/grid.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -45968,7 +46044,7 @@ function keysrt(key,desc) {
                         var _self = this;
                         var geojsonFeature = {
                             "type": "Feature",
-                            "properties": {},
+                            "properties": {"name": "hola"},
                             "geometry": {
                                 "type": "Point",
                                 "coordinates": [ra,dec]
@@ -45984,7 +46060,8 @@ function keysrt(key,desc) {
                         var tempLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
-                                pointMaxSize : 1000
+                                pointMaxSize : 1000,
+                                //label: true,
                             })
                         });
                         tempLayer.addFeature(geojsonFeature);
@@ -46094,6 +46171,10 @@ function keysrt(key,desc) {
 
                 });
             },
+            _seeHelp: function(e){
+                e.preventDefault();
+                document.getElementById('jobHelpFootprint').open();
+            },
         });
 
 
@@ -46128,7 +46209,9 @@ function keysrt(key,desc) {
         }
     </style>
     <template>
-
+        <paper-dialog class="dialog-position" id="jobHelpCoadds" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+            <p>Help goes here</p>
+        </paper-dialog>
         <section>
             <des-card heading="Coadds Images Cutout Form">
                 <div class="card-content">
@@ -46201,6 +46284,8 @@ function keysrt(key,desc) {
                 </paper-card>
             </paper-dialog>
         </section>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
     </template>
 
 </dom-module>
@@ -46265,7 +46350,9 @@ function keysrt(key,desc) {
             document.getElementById("onlyreturnlist").checked=false;
             document.getElementById("desPositions").clear();
             document.getElementById("validemail").value='';
-//            document.getElementById("coaddTag").selected="0";
+            document.getElementById("validname").value='';
+
+            //            document.getElementById("coaddTag").selected="0";
             this.file_name = "Upload File";
             this.job_comment = "";
 //            document.getElementById("jobcommentcoadds").value="";
@@ -46283,14 +46370,8 @@ function keysrt(key,desc) {
         completeHandler: function(){
             console.log('YESSSSS');
             document.getElementById('desCoadds').clear();
-            //document.getElementById("getData").generateRequest();
             document.querySelector('#toast1').show();
-//            document.querySelector('des-my-jobs').show();
             document.querySelector('des-my-jobs')._refreshJobs();
-
-
-//            req = document.getElementById("getData");
-//            req.generateRequest();
         },
         errorHandler: function(){
             console.log('NOOOO');
@@ -46331,6 +46412,10 @@ function keysrt(key,desc) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
              }
          },
+        _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpCoadds').open();
+        },
     });
 
 
@@ -46354,6 +46439,9 @@ function keysrt(key,desc) {
         <paper-button on-tap="_submitPositions" raised="" class="indigo"> Accept</paper-button>
       </div>
       </paper-card>
+    </paper-dialog>
+    <paper-dialog class="dialog-position" id="jobHelpPositions" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
     </paper-dialog>
 
 </template>
@@ -46382,6 +46470,11 @@ function keysrt(key,desc) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
              }
          },
+
+          _seeHelp: function(e){
+              e.preventDefault();
+              document.getElementById('jobHelpPositions').open();
+          },
     });
 
 
@@ -46406,7 +46499,9 @@ function keysrt(key,desc) {
     </iron-ajax>
 
 
-
+    <!--<paper-dialog class="dialog-position" id="jobHelpResults" with-backdrop on-iron-overlay-opened="patchOverlay">-->
+        <!--<p>Help goes here</p>-->
+    <!--</paper-dialog>-->
 
     <paper-dialog id="logDialogHelp" with-backdrop="" modal="" on-iron-overlay-opened="patchOverlay">
         <h2>Log</h2>
@@ -46419,25 +46514,29 @@ function keysrt(key,desc) {
 
     </paper-dialog>
 
-    <des-card heading="Job : [[jobid]] ( [[jsondata.length]] objects)">
+
+    <des-card heading="Job1 : [[jobid]] ( [[jsondata.length]] objects)">
         <!--<br>-->
         <!--<b>Comment:</b> {{jobcomment}}-->
         <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
         <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
         <hr class="des-hr">
-
+    <div class="card-content" style="height: 70%; overflow-y: scroll;">
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle="{{item.title}}" imdisplay="{{item.name}}">
             </des-thumb>
         </template>
     </template>
+    </div>
 
 
     <template is="dom-if" if="{{!jsondata}}">
          <h3> There are no outputs for this job. Check logfile for details.</h3>
     </template>
     </des-card>
+    <!--<paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>-->
+
 
 
 </template>
@@ -46511,6 +46610,15 @@ function keysrt(key,desc) {
               //document.getElementById('getAllIcon').disabled=false;
               }
         },
+//        patchOverlay: function (e) {
+//            if (e.target.withBackdrop) {
+//                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+//            }
+//        },
+//        _seeHelp: function(e){
+//            e.preventDefault();
+//            document.getElementById('jobHelpResults').open();
+//        },
     });
 </script>
 </dom-module>
@@ -46618,6 +46726,10 @@ function keysrt(key,desc) {
                         <paper-button raised="" disabled=""> Download</paper-button>
                   </div>
             </paper-dialog>
+          <paper-dialog class="dialog-position" id="jobHelpThumb" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+              <p>Help goes here</p>
+          </paper-dialog>
+
 
       </template>
 
@@ -46700,6 +46812,10 @@ function keysrt(key,desc) {
                         e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
                      }
                  },
+                  _seeHelp: function(e){
+                      e.preventDefault();
+                      document.getElementById('jobHelpThumb').open();
+                  },
                   download: function(event){
                       var n1=this.jobid.search("__");
                       var n2=this.jobid.search("{");

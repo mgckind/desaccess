@@ -24,15 +24,14 @@
    on-response="_complete"
    debounce-duration="300">
 </iron-ajax>
+    <paper-dialog class="dialog-position" id="jobHelpQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
     <des-card heading=" Query box">
     <div class="content">
     Insert your query in the box below. Prelimary data results will be displayed below "Output File".
     </div>
-    </des-card>
-<div class="query-box" style="padding-right:20px">
-    <paper-dialog class="dialog-position" id="jobHelpQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <p>Help goes here</p>
-    </paper-dialog>
+<div class="query-box" style="padding-right:0px">
 <!--
 <paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
 </paper-textarea>-->
@@ -50,7 +49,7 @@
     <paper-input  id="queryname" name="name" label="Query Name" value=""></paper-input>
     <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file
     </paper-toggle-button>
-    <paper-input id="inputOutputFile" disabled required auto-validate label="Output file" value="output.csv"></paper-input>
+    <paper-input id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
 
 </div>
 <hr /><br>
@@ -97,9 +96,10 @@
 <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
 <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
-    <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 </div>
+    </des-card>
 </template>
 
 <script>

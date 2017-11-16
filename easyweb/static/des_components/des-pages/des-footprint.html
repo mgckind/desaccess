@@ -51,7 +51,7 @@
                 <vaadin-grid-column>
                       <template class="header">Download </template>
                       <template>
-                      <a style="text-decoration: none;" href="{{item.path}}" target="_blank"><paper-button raised >Download</paper-button></a>
+                      <a style="text-decoration: none !important;" href="{{item.path}}" target="_blank"><paper-button class="describeButton" raised >Download</paper-button></a>
                       </template>
                     </vaadin-grid-column>
 
@@ -79,7 +79,7 @@
                 </div>
                     </div>
                 </des-card>
-        <paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
 
@@ -209,6 +209,7 @@
                         inertia: false, minDistance: 100000
                     });
                     var canvas = navigation.renderContext.canvas;
+
                     loadTiles('/easyweb/static/tiles/grid.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -287,7 +288,7 @@
                         var _self = this;
                         var geojsonFeature = {
                             "type": "Feature",
-                            "properties": {},
+                            "properties": {"name": "hola"},
                             "geometry": {
                                 "type": "Point",
                                 "coordinates": [ra,dec]
@@ -303,7 +304,8 @@
                         var tempLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
-                                pointMaxSize : 1000
+                                pointMaxSize : 1000,
+                                //label: true,
                             })
                         });
                         tempLayer.addFeature(geojsonFeature);

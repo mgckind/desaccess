@@ -3,6 +3,7 @@
 <template>
    <style include="shared-styles"></style>
 
+      <div style="height: 85%; overflow: auto;">
     <iron-pages  id="mainPages" selected=[[selection]]>
         <des-home name={{name}} db={{db}}></des-home>
         <des-query name={{name}} db={{db}}></des-query>
@@ -13,6 +14,7 @@
         <des-my-jobs></des-my-jobs>
 
     </iron-pages>
+</div>
 
 </template>
 

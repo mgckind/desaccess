@@ -24,13 +24,26 @@ with open('config/ranC.tk', 'r') as fi:
     SKEY = fi.readline().strip()
 # COOKIE_SECRET = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(16))
 # SKEY = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(16))
+formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)-8s - %(message)s',
+                              datefmt='%d/%m/%Y %H:%M:%S')
+
 access_log = logging.getLogger('tornado.access')
 access_log.setLevel(logging.DEBUG)
 handler_access = logging.FileHandler(LOGFILE)
-formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)-8s - %(message)s',
-                              datefmt='%d/%m/%Y %Hh%Mm%Ss')
 handler_access.setFormatter(formatter)
 access_log.addHandler(handler_access)
+
+general_log = logging.getLogger('tornado.general')
+general_log.setLevel(logging.DEBUG)
+handler_general = logging.FileHandler(LOG_GENERALFILE)
+handler_general.setFormatter(formatter)
+general_log.addHandler(handler_general)
+
+app_log = logging.getLogger('tornado.application')
+app_log.setLevel(logging.DEBUG)
+handler_app = logging.FileHandler(LOG_APPFILE)
+handler_app.setFormatter(formatter)
+app_log.addHandler(handler_app)
 
 class dbConfig(object):
     def __init__(self):
