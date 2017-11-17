@@ -33,14 +33,21 @@ class SignupHandler(BaseHandler):
         email = self.get_argument("email", "").lower()
         if db_utils.check_username(username):
             if db_utils.check_email(email):
-                db_utils.create_user(username, password, firstname, lastname, email, '', '')
-                check, url = db_utils.create_reset_url(email)
-                email_utils.send_activation(firstname, username, email, url)
-                msg = 'Activation email sent!'
-                err = '0'
+                check, msgerr = db_utils.create_user(username, password, firstname, lastname, email, '', '')
+                if not check:
+                    err = '3'
+                    if '911' or '922' in msgerr:
+                        msg = 'Invalid character in password.'
+                    else:
+                        msg = msgerr
+                else:
+                    check, url = db_utils.create_reset_url(email)
+                    email_utils.send_activation(firstname, username, email, url)
+                    msg = 'Activation email sent!'
+                    err = '0'
             else:
                 msg = 'Email address already exists in our database.'
-                err = '1'
+                err = '2'
         else:
             msg = '{0} already exists. Try a different one'.format(username)
             err = '1'

@@ -14,15 +14,34 @@
 </iron-ajax>
 
 
-<paper-dialog id="TermsDialog" modal>
+<paper-dialog class="tos-dialog" id="TermsDialog" modal>
   <h2>Terms of Service</h2>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p> Welcome to the DESaccess website. <br />
+      NCSA provides website applications and other products and servces to access DES public data, use product
+      or services.
+      NCSA provides the Services subject to the following conditions: <br />
+      <br />
+      <b>Abuse:</b><br />
+      <b>Use:</b><br />
+      <b>Data Expiration:</b><br />
+      <b>Termination:</b><br />
+      <b>Acknoledgements:</b>
+
+  </p>
     <div class="buttons">
-  <paper-button class="custom indigo" dialog-confirm autofocus>Accept</paper-button>
+  <paper-button class="custom indigo" dialog-confirm autofocus>Close</paper-button>
 
 </div>
 </paper-dialog>
+
+    <template is="dom-if" if="{{msg}}">
+        <des-login-message title='Thanks!'>
+            <b> Activation Required:</b> {{text}} <br /> <br />
+            Please activate your account.<br /><br />
+        </des-login-message>
+    </template>
+
+    <template is="dom-if" if="{{!msg}}">
 
 
   <div style="cursor:default;" class="container">
@@ -33,7 +52,11 @@
 
       <div class="card-content">
 
-        <span>Please complete and submit this form. <br />You need to read and accept the Terms of Services to continue.</span><br>
+        <span>Please complete and submit this form. <br />
+
+        <span> Fill this <a href='http://desrelease.cosmology.illinois.edu:8888/help' target="_blank">form</a>
+             if you have trouble accessing the server</span><br /><br />
+            You need to read and accept the <a href="javascript:;" on-click="_readT">Terms of Service</a> to continue.</span><br>
 
          <iron-form id="signUser">
          <form action="/easyweb/signup/" method="post">
@@ -42,12 +65,12 @@
           <paper-input id="form_last" name="lastname" label="Last" ></paper-input>
           </div>
           <paper-input id="form_email" name="email" label="Email" on-change="_enable" required auto-validate></paper-input><br>
-          <paper-input  id="form_user" name="username" label="Username" on-change="_enable" required auto-validate></paper-input><br>
+          <paper-input  id="form_user" name="username" label="Username" on-change="_enable" required auto-validate pattern="[a-zA-Z0-9]*" error-message="Can't be empty and include alphanumeric characters only" ></paper-input><br>
 
           <match-passwords-validator id="match-passwords-validator"
             password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="Password"
+          <paper-password-input id="first_password" label="Password"
             value="{{password}}"
              required>
           </paper-password-input>
@@ -58,7 +81,7 @@
             required>
           </paper-password-input>
           <br>
-          <paper-checkbox id="readTerms" name="read" on-change="_enable" required>I read the </paper-checkbox> <a href="javascript:;" on-click="_readT">Terms of Service</a><br>
+          <paper-checkbox id="readTerms" name="read" on-change="_enable" required>I agree to the </paper-checkbox> <a href="javascript:;" on-click="_readT">Terms of Service</a><br>
           <div class="container">
             <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerSignup" class="big"></paper-spinner>
             <paper-button class="custom indigo" id="SignButton"
@@ -80,6 +103,7 @@
 
     </paper-card>
   </div>
+    </template>
 <paper-toast class="toast-position" id="toastSignUp" text="Form Submitted!" duration="2000"> </paper-toast>
 </template>
 
@@ -100,6 +124,14 @@
         type: String,
         value: '',
       },
+      text :{
+        type: String,
+        value: '',
+      },
+      msg:{
+        type: Boolean,
+        value: false,
+      },
       toastpass: {
         type: String,
         value: false,
@@ -116,6 +148,7 @@
             termd.open();
     },
       _enable: function(e){
+          //this.msg = true;
           var form = document.getElementById('signUser');
           var valid_form = form.validate();
           var invalid = true;
@@ -127,8 +160,6 @@
            },
     _clickSubmit: function(e) {
       var button = document.getElementById('SignButton');
-      button.disabled = true;
-      document.getElementById('LoginSpinnerSignup').active = true;
       var form2 = document.getElementById('SignupForm');
       form2.body = {
           'username': document.getElementById('form_user').value,
@@ -137,8 +168,14 @@
           'password': document.getElementById('form_password').value,
           'email': document.getElementById('form_email').value,
       };
-      form2.generateRequest();
-      document.getElementById("toastSignUp").show();
+      var form = document.getElementById('signUser');
+      var valid_form = form.validate();
+      if (valid_form) {
+        button.disabled = true;
+        document.getElementById('LoginSpinnerSignup').active = true;
+        form2.generateRequest();
+        document.getElementById("toastSignUp").show();
+       }
     },
     afterForm: function(e){
 
@@ -150,8 +187,26 @@
      //document.getElementById("toastSignUp").show();
      this.error = _self.data.msg;
      this.errno = _self.data.errno;
-     if (this.errno=='1') document.getElementById('form_user').value = '';
-     window.location.href = "/easyweb/logout/";
+     console.log(this.error);
+     if (this.errno=='1') {
+         document.getElementById('form_user').value = '';
+     }
+     else if (this.errno=='2') {
+         document.getElementById('form_email').value = '';
+     }
+     else if (this.errno=='3') {
+         document.getElementById('form_password').value = '';
+     }
+     else {
+         var email = document.getElementById('form_email').value;
+         this.text = 'An activation link was sent to '+ email + '.';
+         this.msg=  true;
+         //msgReq = document.getElementById('Message');
+         //msgReq.body = {
+          //'title': 'Activation link sent by email',
+         //};
+        //msgReq.generateRequest();
+      }
 
     },
     _updateToast: function(e) {
