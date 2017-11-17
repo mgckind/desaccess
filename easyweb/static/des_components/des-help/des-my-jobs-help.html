@@ -1,9 +1,36 @@
 <dom-module id="des-my-jobs-help">
     <template>
-        <style include="shared-styles"></style>
+        <style include="shared-styles">
+            paper-icon-item {
+                --paper-item-disabled-color: black;
+            }
+            paper-item {
+                --paper-item-disabled-color: black;
+                color: black;
+                --paper-item-focused: {
+                };
+                --paper-item-selected: {
+                    background: var(--paper-amber-50) ;
+                };
+                --paper-item-focused-before: {
+                    opacity:0.0;
+                };
+            }
+            .status {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: var(--paper-yellow-500);
+            }
+            .green {background: var(--paper-green-500);}
+            .red {background: var(--paper-red-500);}
+
+        </style>
 
         <des-card-help heading="Help">
-            <div class="card-content">
+            <div class="card-content" >
                 <p> Click on <iron-icon icon="launch"></iron-icon> or <iron-icon icon="assignment"></iron-icon> to see the results or log-file for an individual Job.
                     Use <iron-icon icon="icons:highlight-off"></iron-icon> to stop a running Job.
                     Click on

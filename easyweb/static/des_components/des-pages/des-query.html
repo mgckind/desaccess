@@ -41,6 +41,7 @@
 <paper-button class="indigo" raised on-tap="clearQueryBox">Clear</paper-button>
 <paper-button class="indigo" raised on-tap="_checkSyntax">Check</paper-button>
 <paper-button class="indigo" raised on-tap="_quickSubmit">Quick</paper-button>
+<paper-button class="indigo" raised on-tap="_seeExample">Example Query</paper-button>
 <paper-spinner id="querySpinner" class="big"></paper-spinner>
 <br>
 <br>
@@ -299,6 +300,14 @@ Polymer({
     _seeHelp: function(e){
         e.preventDefault();
         document.getElementById('jobHelpQuery').open();
+    },
+
+    _seeExample: function(e){
+        var app = document.querySelector('#app');
+        var pages = document.getElementById("mainPages");
+        app.selection=3;
+        pages.selected=3;
+        app.editor.refresh();
     },
 });
 </script>
