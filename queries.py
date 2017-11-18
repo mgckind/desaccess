@@ -111,6 +111,12 @@ class QueryHandler(BaseHandler):
                     self.write(response)
                     self.finish()
                     return
+            run_check = ea_tasks.check_query(query, db, loc_user, lp.decode())
+            if run_check['status'] == 'error':
+                self.flush()
+                self.write(run_check)
+                self.finish()
+                return
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
             con.commit()
             try:
