@@ -305,8 +305,10 @@ Polymer({
     _seeExample: function(e){
         var app = document.querySelector('#app');
         var pages = document.getElementById("mainPages");
+        var menu = document.querySelector('paper-menu');
         app.selection=3;
         pages.selected=3;
+        menu.selected=3;
         app.editor.refresh();
     },
 });
