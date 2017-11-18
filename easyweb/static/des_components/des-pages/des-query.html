@@ -35,14 +35,14 @@
 <!--
 <paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
 </paper-textarea>-->
-<textarea id="queryBox" autofocus placeholder="Query box"></textarea>
-<br>
+<textarea style="border: 1px solid red;" id="queryBox" autofocus placeholder="Query box"></textarea>
+<hr />
 <paper-button id="subQuery" class="indigo" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
 <paper-button class="indigo" raised on-tap="clearQueryBox">Clear</paper-button>
 <paper-button class="indigo" raised on-tap="_checkSyntax">Check</paper-button>
 <paper-button class="indigo" raised on-tap="_quickSubmit">Quick</paper-button>
-<paper-button class="indigo" raised on-tap="_seeExample">See Examples</paper-button>
 <paper-spinner id="querySpinner" class="big"></paper-spinner>
+<paper-button style="position:absolute; right:10px" class="indigo" raised on-tap="_seeExample">See Examples</paper-button>
 <br>
 <br>
 <div class="container3">
