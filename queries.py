@@ -66,17 +66,18 @@ class QueryHandler(BaseHandler):
         print(query_kind)
         print(query_name)
         file_error = False
+        tf = filename
         if filename == "nofile":
             filename = None
             if query_kind == "submit":
                 file_error = True
         elif filename == "":
             file_error = True
-        elif not filename.endswith('.csv') and not filename.endswith('.fits'):
+        elif not tf.endswith('.csv') and not tf.endswith('.fits') and not tf.endswith('.h5'):
             file_error = True
         print(filename)
         if file_error:
-            response['data'] = 'ERROR: File format allowed : .csv and .fits'
+            response['data'] = 'ERROR: File format allowed : .csv, .fits and .h5'
             response['kind'] = 'query'
             with open(jsonfile, 'w') as fp:
                 json.dump(response, fp)
