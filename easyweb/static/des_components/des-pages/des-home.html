@@ -16,73 +16,6 @@
             padding-bottom:50px;
         }
 
-        div#desjobs {
-            background: url("../../images/home-jobs.jpg");
-            width: 250px;
-            height: 150px;
-            /*height: inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        div#coadd {
-            background: url("../../images/home-coadd.jpg");
-            width: 250px;
-            height: 150px;
-            /*height: inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-
-
-        }
-
-        div#footprint {
-            background-image: url("../../images/home-footprint.jpg");
-            width: 250px;
-            /*height:  inherit;*/
-            height: 150px;
-            background-position: center;
-            background-repeat: no-repeat;
-
-        }
-
-        div#query {
-            background: url("../../images/home-epoch.jpg");
-            width: 250px;
-            height: 150px;
-            /*height:  inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        /*div#easyjobs {*/
-            /*background: url("../../images/home-easyjobs.png");*/
-            /*width: 450px;*/
-            /*height: 350px;*/
-            /*!*height: inherit;*!*/
-            /*background-position: center;*/
-            /*background-repeat: no-repeat;*/
-        /*}*/
-
-        div#allTables {
-            background-image: url("../../images/home-tables.png");
-            width: 250px;
-            height: 150px;
-            /*height:  inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        div#example {
-            background: url("../../images/home-example.jpg");
-            width: 250px;
-            height: 150px;
-            /*height:  inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-
 
         div.gallery:hover {
             border: 2px solid black;
@@ -162,37 +95,16 @@
             <div class="horizontal layout around justified">
             <des-card heading="Welcome [[name]]!" class="welcome">
 
-                <div class="gallery" id="query" on-click="change">
-                <paper-item class="foobar" id="query">QUERY</paper-item>
-                </div>
 
-                <div class="gallery" id="allTables" on-click="change">
-                    <paper-item class="foobar" id="allTables">DR1 TABLES</paper-item>
-                </div>
-
-                <div class="gallery" id="example" on-click="change">
-                     <paper-item class="foobar" id="example">EXAMPLE QUERY</paper-item>
-                </div>
-
-
-
-                <div class="gallery" id="coadd" on-click="change">
-                     <paper-item class="foobar" id="coadd">COADDS IMAGES</paper-item>
-                </div>
-
-                <div class="gallery" id="footprint" on-click="change">
-                     <paper-item class="foobar" id="footprint">FOOTPRINT</paper-item>
-                </div>
-
-                <div class="gallery" id="desjobs" on-click="change">
-                    <paper-item class="foobar" id="desjobs">JOBS</paper-item>
-
-                </div>
-
+                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="SQL command line" name="query" class="white"></des-card-welcome>
+                <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables" class="white"></des-card-welcome>
+                <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example" class="white"></des-card-welcome>
+                <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd" class="white"></des-card-welcome>
+                <des-card-welcome heading="FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint" class="white"></des-card-welcome>
+                <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs" class="white"></des-card-welcome>
 
 
             </des-card>
-
             </div>
 
         </section>
@@ -213,25 +125,7 @@
                 value:''
             },
         },
-        change: function(e){
 
-           var tid = e.target.id;
-           var sel = 0;
-           if (tid == 'query') sel = 1;
-           if (tid == 'allTables') sel = 2;
-           if (tid == 'example') sel = 3;
-           if (tid == 'coadd') sel = 4;
-           if (tid == 'footprint') sel = 5;
-           if (tid == 'desjobs') sel = 6;
-
-           var app = document.querySelector('#app');
-           var pages = document.getElementById("mainPages");
-           var menu = document.querySelector('paper-menu');
-          app.selection=sel;
-          pages.selected=sel;
-          menu.selected=sel;
-
-        },
         patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
