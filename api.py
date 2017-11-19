@@ -61,7 +61,7 @@ WHERE
   main.MAG_AUTO_I < 21
 GROUP BY hp.HPIX_1024
 """
-        query2 = """__
+        query2 = """--
 -- Example Query --
 -- This query selects stars around the center of glubular cluster M2
 SELECT
@@ -81,32 +81,50 @@ WHERE
    FLAGS_G < 4 and
    FLAGS_R < 4
 """
-        query3 = """__
+        query3 = """--
 -- Example Query --
 -- This query selects  a sample of bright galaxies
-SELECT d.RA,d.DEC,d.COADD_OBJECT_ID
-FROM dr1_main sample(0.01) d
+SELECT dr1.RA,dr1.DEC,dr1.COADD_OBJECT_ID
+FROM dr1_main sample(0.01) dr1
 WHERE
-d.MAG_AUTO_G < 18 and
-d.WAVG_SPREAD_MODEL_I + 3.0*d.WAVG_SPREADERR_MODEL_I > 0.005 and
-d.WAVG_SPREAD_MODEL_I + 1.0*d.WAVG_SPREADERR_MODEL_I > 0.003 and
-d.WAVG_SPREAD_MODEL_I - 1.0*d.WAVG_SPREADERR_MODEL_I > 0.001 and
-d.WAVG_SPREAD_MODEL_I > -1 and
-d.IMAFLAGS_ISO_G = 0 and
-d.IMAFLAGS_ISO_R = 0 and
-d.IMAFLAGS_ISO_I = 0 and
-d.FLAGS_G < 4 and
-d.FLAGS_R < 4 and
-d.FLAGS_I < 4 and
-d.NEPOCHS_G > 0 and
-d.NEPOCHS_R > 0 and
-d.NEPOCHS_I > 0
+dr1.MAG_AUTO_G < 18 and
+dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
+dr1.WAVG_SPREAD_MODEL_I + 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.003 and
+dr1.WAVG_SPREAD_MODEL_I - 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.001 and
+dr1.WAVG_SPREAD_MODEL_I > -1 and
+dr1.IMAFLAGS_ISO_G = 0 and
+dr1.IMAFLAGS_ISO_R = 0 and
+dr1.IMAFLAGS_ISO_I = 0 and
+dr1.FLAGS_G < 4 and
+dr1.FLAGS_R < 4 and
+dr1.FLAGS_I < 4 and
+dr1.NEPOCHS_G > 0 and
+dr1.NEPOCHS_R > 0 and
+dr1.NEPOCHS_I > 0
+        """
+        query4 = """--
+-- Example Query --
+-- This query creates a Helpix map of number of galaxies
+-- and their mean magnitude on a resolution of NSIDE = 1024
+-- using NEST Schema
+SELECT count(dr1.MAG_AUTO_I),avg(dr1.MAG_AUTO_I),hp.HPIX_1024
+FROM DR1_MAIN dr1
+JOIN  DR1_HPIX hp ON hp.COADD_OBJECT_ID = dr1.COADD_OBJECT_ID
+where
+dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
+dr1.WAVG_SPREAD_MODEL_I + 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.003 and
+dr1.WAVG_SPREAD_MODEL_I - 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.001 and
+dr1.WAVG_SPREAD_MODEL_I > -1 and
+dr1.IMAFLAGS_ISO_I = 0 and
+dr1.MAG_AUTO_I < 23
+group by hp.HPIX_1024
         """
         queries = []
         queries.append({'desc': 'Sample Basic information', 'query': query0})
         queries.append({'desc': 'Create stellar density healpix map', 'query': query1})
         queries.append({'desc': 'Select stars from M2 Globular Cluster', 'query': query2})
         queries.append({'desc': 'Sample of bright galaxies', 'query': query3})
+        queries.append({'desc': 'Create galaxy density healpix map', 'query': query4})
         jjob = []
         jquery = []
 
