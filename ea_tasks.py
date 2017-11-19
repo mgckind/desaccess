@@ -270,6 +270,9 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     os.chdir(mypath)
     oo = subprocess.check_output([com], shell=True)
     if listonly:
+        os.chdir(user_folder)
+        os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+        os.chdir(os.path.dirname(__file__))
         if os.path.exists(mypath+"list.json"):
             os.remove(mypath+"list.json")
         with open(mypath+"list.json", "w") as outfile:
