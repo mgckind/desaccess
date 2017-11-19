@@ -49,6 +49,7 @@
         <!--<b>Comment:</b> {{jobcomment}}-->
         <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
         <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
+        <paper-button class="custom indigo" on-tap="_closedialog"> Close</paper-button>
         <hr class="des-hr">
     <div class="card-content" style="height: 70%; overflow-y: scroll;">
     <template is="dom-if" if="{{jsondata}}">
@@ -122,6 +123,9 @@
                   document.getElementById('logDialogHelp').close();
                   document.getElementById('JobTiles').close();
                   document.getElementById('JobTiles').open();
+              },
+              _closedialog: function(event){
+                  document.getElementById('JobTiles').close();
               },
 
              patchOverlay: function (e) {
