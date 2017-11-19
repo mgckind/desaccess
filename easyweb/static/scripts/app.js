@@ -48,8 +48,9 @@
             mode: 'text/x-plsql',
             readOnly: true,
             autofocus: true,
+            viewportMargin: 50,
         });
-        app.examplequerybox.setValue('\n\n\n\n\n\n\n\n\n\n');
+        app.examplequerybox.setValue('\n\n\n\n\n\n\n\n\n\n\n');
         app.examplequerybox.focus();
 
         var xsize = document.getElementById("xsizeSlider");
