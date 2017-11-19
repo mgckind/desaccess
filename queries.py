@@ -49,6 +49,8 @@ class QueryHandler(BaseHandler):
         query_kind = self.get_argument("querykind", "")
         filename = self.get_argument("filename", "")
         query_name = self.get_argument("queryname", "")
+        query_email = self.get_argument("queryemail", "")
+        compression = self.get_argument("querycomp", "") == "true"
         if query == "":
             print('No query string')
             return
@@ -65,6 +67,9 @@ class QueryHandler(BaseHandler):
         print('*******')
         print(query_kind)
         print(query_name)
+        print(query_email)
+        print(compression)
+        print('*******')
         file_error = False
         tf = filename
         if filename == "nofile":
@@ -121,7 +126,8 @@ class QueryHandler(BaseHandler):
             con.commit()
             try:
                 run = ea_tasks.run_query.apply_async(args=[query, filename, db,
-                                                     loc_user, lp.decode(), jobid], task_id=jobid)
+                                                     loc_user, lp.decode(), jobid,
+                                                     query_email, compression], task_id=jobid)
             except:
                 pass
             response['data'] = 'Job {0} submitted'.format(jobid)
