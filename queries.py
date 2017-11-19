@@ -138,7 +138,8 @@ class QueryHandler(BaseHandler):
             with open(jsonfile, 'w') as fp:
                 json.dump(response, fp)
         elif query_kind == "quick":
-            run = ea_tasks.run_query(query, filename, db, loc_user, lp.decode(), jobid, timeout=60)
+            run = ea_tasks.run_query(query, filename, db, loc_user, lp.decode(), jobid,
+                                     query_email, compression, timeout=60)
             response = run
         elif query_kind == "check":
             run = ea_tasks.check_query(query, db, loc_user, lp.decode())
