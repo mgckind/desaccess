@@ -37310,6 +37310,10 @@ app-toolbar.black {
         @apply(--layout-horizontal);
         @apply(--layout-around-justified);
     }
+    .container4 {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+    }
     .container3 {
         width: 50%;
         position: relative;
@@ -37320,6 +37324,9 @@ app-toolbar.black {
     .dbname {
       @apply(--layout-horizontal);
       @apply(--layout-center-justified);
+    }
+    paper-button.medium {
+        font-size: 15px;
     }
     paper-button.indigo {
       background-color: var(--paper-indigo-500);
@@ -37682,7 +37689,7 @@ paper-item {
 <template>
 <style include="shared-styles"></style>
 
-<iron-ajax id="getQuery" url="/easyweb/query/" method="POST" contenttype="application/json" params="{{_getQuery(querystr,querykind,outputfile, queryname)}}" handle-as="json" on-response="_complete" on-request="_request" on-error="_error" debounce-duration="300">
+<iron-ajax id="getQuery" url="/easyweb/query/" method="POST" contenttype="application/json" params="{{_getQuery(querystr,querykind,outputfile, queryname, queryemail, querycomp)}}" handle-as="json" on-response="_complete" on-request="_request" on-error="_error" debounce-duration="300">
 </iron-ajax>
 
 <iron-ajax id="getMyResponse" url="/easyweb/myresponse/" method="POST" contenttype="application/json" params="{{_getJobid(jobid)}}" handle-as="json" on-response="_complete" debounce-duration="300">
@@ -37692,32 +37699,14 @@ paper-item {
     </paper-dialog>
     <des-card heading=" Query box">
     <div class="content">
-    Insert your query in the box below. Prelimary data results will be displayed below "Output File".
+    Insert your query in the box below. Data results for "Quick" Jobs (~1 min.) will be displayed at the bottom.
     </div>
 <div class="query-box" style="padding-right:0px">
 <!--
 <paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
 </paper-textarea>-->
-<textarea id="queryBox" autofocus="" placeholder="Query box"></textarea>
-<br>
-<paper-button id="subQuery" class="indigo" raised="" disabled="" on-tap="_submitQuery">Submit Job</paper-button>
-<paper-button class="indigo" raised="" on-tap="clearQueryBox">Clear</paper-button>
-<paper-button class="indigo" raised="" on-tap="_checkSyntax">Check</paper-button>
-<paper-button class="indigo" raised="" on-tap="_quickSubmit">Quick</paper-button>
-<paper-button class="indigo" raised="" on-tap="_seeExample">See Examples</paper-button>
-<paper-spinner id="querySpinner" class="big"></paper-spinner>
-<br>
-<br>
-<div class="container3">
-
-    <paper-input id="queryname" name="name" label="Query Name" value=""></paper-input>
-    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink="" on-tap="_enableOutputFile"> Output file
-    </paper-toggle-button>
-    <paper-input id="inputOutputFile" disabled="" required="" auto-validate="" label="Output file"></paper-input>
-
-</div>
-<hr><br>
-<div id="response" class="results">
+<textarea style="border: 1px solid red;" id="queryBox" autofocus="" placeholder="Query box"></textarea>
+<hr>
 <template is="dom-if" if="{{isQuery}}">
     <template is="dom-if" if="{{isOk}}">
         <span class="queryMsg" style="color: green"> {{msg}}</span>
@@ -37726,6 +37715,34 @@ paper-item {
         <span class="queryMsg" style="color: red"> {{msg}}</span>
     </template>
 </template>
+<hr>
+<paper-button id="subQuery" class="indigo medium" raised="" disabled="" on-tap="_submitQuery">Submit Job</paper-button>
+<paper-button class="indigo medium" raised="" on-tap="clearQueryBox">Clear</paper-button>
+<paper-button class="indigo medium" raised="" on-tap="_checkSyntax">Check</paper-button>
+<paper-button class="indigo medium" raised="" on-tap="_quickSubmit">Quick</paper-button>
+<paper-spinner id="querySpinner" class="big"></paper-spinner>
+<paper-button style="position:absolute; right:10px" class="indigo medium" raised="" on-tap="_seeExample">See Examples</paper-button>
+<div style="width: 500px; padding-left: 10px; font-size: 15px;">
+    <div class="container4">
+
+    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink="" on-tap="_enableOutputFile"> Output file
+    </paper-toggle-button>
+    <paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled="" required="" auto-validate="" label="Output file"></paper-input>
+    </div>
+</div>
+    <div style="padding-left: 10px; font-size: 15px;">
+    Options:
+    <div class="container4" style="font-size: 15px;">
+    <paper-input id="queryname" name="name" label="Job Name" value=""></paper-input>
+    <paper-checkbox id="compress-box" style="margin-top: 38px; margin-left:10px;">Compressed files (csv and h5 files). Longer jobs but smaller files</paper-checkbox>
+    </div>
+    <div class="container4" style="font-size: 15px;">
+    <paper-input id="queryemail" name="email" label="Email" value=""></paper-input>
+    <paper-checkbox id="checkemail" style="margin-top: 38px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
+     </div>
+
+<hr><br>
+<div id="response" class="results">
 <template is="dom-if" if="{{isSelect}}">
     <div class="scrollTable">
 <table id="t01" style="width:100%">
@@ -37763,8 +37780,8 @@ paper-item {
         <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 </div>
-    </des-card>
-</template>
+    
+</div></des-card></template>
 
 <script>
 Polymer({
@@ -37786,6 +37803,10 @@ Polymer({
             type: String,
             value: 'nofile',
         },
+        email :{
+            type: String,
+            value: '',
+        },
         jobid :{
             // current job id
             type: String,
@@ -37794,6 +37815,14 @@ Polymer({
         queryname :{
             type: String,
             value: ''
+        },
+        queryemail :{
+            type: String,
+            value: ''
+        },
+        querycomp :{
+            type: Boolean,
+            value: false
         }
     },
     attached: function() {
@@ -37823,11 +37852,22 @@ Polymer({
             }
     },
     _returnVal: function(item,key) {return item[key];},
-    _getQuery: function(querystr,querykind,outputfile, queryname){return {query:querystr, querykind:querykind, filename:outputfile, queryname: queryname};},
+    _getQuery: function(querystr,querykind,outputfile, queryname, queryemail, querycomp){return {query:querystr, querykind:querykind, filename:outputfile, queryname: queryname,queryemail:queryemail, querycomp:querycomp};},
     _getJobid: function(jobid){return {jobid:jobid};},
     _queryChanged: function(){
         console.log('query  changed to: ' , this.querystr);
     },
+    _emailcheck: function(){
+            var emailbox = document.getElementById("checkemail");
+            document.getElementById("queryemail").value=this.email;
+            if (emailbox.checked == true){
+                //edialog.open();
+            }
+            else
+            {
+            document.getElementById("queryemail").value='';
+            }
+        },
     _enableOutputFile: function(){
         if (document.getElementById('inputOutputCheck').checked){
             document.getElementById('inputOutputFile').disabled=false;
@@ -37898,6 +37938,8 @@ Polymer({
         document.getElementById('inputOutputCheck').checked = false;
         document.getElementById('inputOutputFile').value = '';
         document.getElementById('queryname').value = '';
+        document.getElementById('checkemail').checked = false;
+        document.getElementById('queryemail').value ='';
         document.getElementById('subQuery').disabled=true;
         this.outputfile = 'nofile';
         this.mydata = [];
@@ -37906,9 +37948,12 @@ Polymer({
         this.idx = '';
     },
     _submitQuery: function(event){
+            console.log('invalid');
         this.querystr = app.editor.getValue();
         this.querykind = 'submit';
         this.queryname = document.getElementById('queryname').value;
+        this.queryemail = document.getElementById('queryemail').value;
+        this.querycomp = document.getElementById('compress-box').checked;
         if (document.getElementById('inputOutputCheck').checked){
             this.outputfile = document.getElementById('inputOutputFile').value;}
         this.mydata = [];
@@ -37918,7 +37963,9 @@ Polymer({
         if (this.querystr == '') {
             valid = false;
         }
-        if (valid) {document.getElementById("getQuery").generateRequest();}
+        if (valid) {
+            queryform = document.getElementById("getQuery");
+            queryform.generateRequest();}
     },
     _quickSubmit: function(event){
         document.getElementById('inputOutputCheck').checked = false;
@@ -37928,6 +37975,8 @@ Polymer({
         this.querykind = 'quick';
         this.outputfile = 'nofile';
         this.queryname = document.getElementById('queryname').value;
+        this.queryemail = document.getElementById('queryemail').value;
+        this.querycomp = document.getElementById('compress-box').checked;
         this.mydata = [];
         this.keys = [];
         this.idx = '';
@@ -37936,15 +37985,17 @@ Polymer({
             valid = false;
         }
         //var valid = document.getElementById("queryBox").validate();
-        if (valid) {document.getElementById("getQuery").generateRequest();}
+        if (valid) {
+            queryform = document.getElementById("getQuery");
+            queryform.generateRequest();}
     },
     _checkSyntax: function(event){
         this.querystr = app.editor.getValue();
         this.querykind = 'check';
         this.queryname = document.getElementById('queryname').value;
-        if (document.getElementById('inputOutputCheck').checked){
-            this.outputfile = document.getElementById('inputOutputFile').value;
-        }
+        this.queryemail = document.getElementById('queryemail').value;
+        this.querycomp = document.getElementById('compress-box').checked;
+        this.outputfile = 'nofile';
         this.mydata = [];
         this.keys = [];
         this.idx = '';
@@ -38165,7 +38216,7 @@ Polymer({
       <div style="height: 85%; overflow: auto;">
     <iron-pages id="mainPages" selected="[[selection]]">
         <des-home name="{{name}}" db="{{db}}"></des-home>
-        <des-query name="{{name}}" db="{{db}}"></des-query>
+        <des-query name="{{name}}" db="{{db}}" email="{{email}}"></des-query>
         <des-all-tables></des-all-tables>
         <des-example-query></des-example-query>
         <des-coadds id="desCoadds" email="{{email}}"></des-coadds>
@@ -46467,7 +46518,7 @@ function keysrt(key,desc) {
             var edialog = document.getElementById("emaildialog");
             document.getElementById("validemail").value=this.email;
             if (emailbox.checked == true){
-                edialog.open();
+                //edialog.open();
             }
             else
             {

@@ -49,6 +49,8 @@ class QueryHandler(BaseHandler):
         query_kind = self.get_argument("querykind", "")
         filename = self.get_argument("filename", "")
         query_name = self.get_argument("queryname", "")
+        query_email = self.get_argument("queryemail", "")
+        compression = self.get_argument("querycomp", "") == "true"
         if query == "":
             print('No query string')
             return
@@ -65,18 +67,22 @@ class QueryHandler(BaseHandler):
         print('*******')
         print(query_kind)
         print(query_name)
+        print(query_email)
+        print(compression)
+        print('*******')
         file_error = False
+        tf = filename
         if filename == "nofile":
             filename = None
             if query_kind == "submit":
                 file_error = True
         elif filename == "":
             file_error = True
-        elif not filename.endswith('.csv') and not filename.endswith('.fits'):
+        elif not tf.endswith('.csv') and not tf.endswith('.fits') and not tf.endswith('.h5'):
             file_error = True
         print(filename)
         if file_error:
-            response['data'] = 'ERROR: File format allowed : .csv and .fits'
+            response['data'] = 'ERROR: File format allowed : .csv, .fits and .h5'
             response['kind'] = 'query'
             with open(jsonfile, 'w') as fp:
                 json.dump(response, fp)
@@ -110,11 +116,18 @@ class QueryHandler(BaseHandler):
                     self.write(response)
                     self.finish()
                     return
+            run_check = ea_tasks.check_query(query, db, loc_user, lp.decode())
+            if run_check['status'] == 'error':
+                self.flush()
+                self.write(run_check)
+                self.finish()
+                return
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
             con.commit()
             try:
                 run = ea_tasks.run_query.apply_async(args=[query, filename, db,
-                                                     loc_user, lp.decode(), jobid], task_id=jobid)
+                                                     loc_user, lp.decode(), jobid,
+                                                     query_email, compression], task_id=jobid)
             except:
                 pass
             response['data'] = 'Job {0} submitted'.format(jobid)
