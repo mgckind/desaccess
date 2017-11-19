@@ -74,6 +74,7 @@
 <hr /><br>
 <div id="response" class="results">
 <template is="dom-if" if={{isSelect}} >
+    <paper-button raised class="SeeFilesButton" on-tap='_downloadFile'>Download File</paper-button>
     <div class="scrollTable">
 <table id="t01" style="width:100%">
     <tr>
@@ -135,6 +136,10 @@ Polymer({
             value: 'nofile',
         },
         email :{
+            type: String,
+            value: '',
+        },
+        username :{
             type: String,
             value: '',
         },
@@ -359,6 +364,28 @@ Polymer({
         menu.selected=3;
         app.editor.refresh();
     },
+    _downloadFile: function(e){
+        e.preventDefault();
+        var filename =  'quickResults.csv'
+        var user = this.username;
+        console.log(user);
+        var link = document.createElement('a');
+        link.href = "/easyweb/static/workdir/"+user+"/"+filename;
+              if (link.download !== undefined){
+                  //Set HTML5 download attribute. This will prevent file from opening if supported.
+                  var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+                  link.download = fileName;
+                }
+                if (document.createEvent) {
+                  var e = document.createEvent('MouseEvents');
+                  e.initEvent('click' ,true ,true);
+                  link.dispatchEvent(e);
+                  return true;
+                }
+                  var query = '?download';
+                  window.open(link.href + query);
+
+    }
 });
 </script>
 </dom-module>

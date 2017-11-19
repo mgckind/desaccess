@@ -198,6 +198,7 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
                 if timeout is not None:
                     tt.cancel()
                 data = df.to_json(orient='records')
+                df.to_csv(os.path.join(user_folder, 'quickResults.csv'), index=False)
                 t2 = time.time()
             response['status'] = 'ok'
             response['data'] = data
