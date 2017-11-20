@@ -24,6 +24,8 @@
 
 
 
+
+
         input {
             width: 100%;
             box-sizing: border-box;
@@ -95,12 +97,12 @@
             <des-card heading="Welcome [[name]]!" class="welcome">
             <div class="horizontal layout around justified">
 
-                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="SQL command line" name="query" class="white"></des-card-welcome>
-                <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables" class="white"></des-card-welcome>
-                <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example" class="white"></des-card-welcome>
-                <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd" class="white"></des-card-welcome>
-                <des-card-welcome heading="FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint" class="white"></des-card-welcome>
-                <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs" class="white"></des-card-welcome>
+                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="SQL command line" name="query" ></des-card-welcome>
+                <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables" ></des-card-welcome>
+                <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example" ></des-card-welcome>
+                <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd" ></des-card-welcome>
+                <des-card-welcome heading="FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint" ></des-card-welcome>
+                <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs" ></des-card-welcome>
 
 
             </div>
@@ -125,6 +127,25 @@
             },
         },
 
+        change: function(e){
+
+            var tid = e.target.id;
+            var sel = 0;
+            if (tid == 'query') sel = 1;
+            if (tid == 'allTables') sel = 2;
+            if (tid == 'example') sel = 3;
+            if (tid == 'coadd') sel = 4;
+            if (tid == 'footprint') sel = 5;
+            if (tid == 'desjobs') sel = 6;
+
+            var app = document.querySelector('#app');
+            var pages = document.getElementById("mainPages");
+            var menu = document.querySelector('paper-menu');
+            app.selection=sel;
+            pages.selected=sel;
+            menu.selected=sel;
+
+        },
         patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
