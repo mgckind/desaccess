@@ -1,8 +1,5 @@
 <dom-module id="des-thumb">
-
-      <style>
-
-
+    <style include="shared-styles">
             :host {
                   display: block;
                   height : 220px;
@@ -98,8 +95,8 @@
                   <h2 id="SingleTileTitle">{{imtitle}}</h2>
                   <img id="SingleTileImg" class = "Image" />
                   <div class="buttons horizontal layout left-justified">
-                        <paper-button on-tap="_gobackdialog" raised>Close</paper-button>
-                        <paper-button raised disabled> Download</paper-button>
+                        <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
+                        <paper-button class="indigo" raised disabled> Download</paper-button>
                   </div>
             </paper-dialog>
           <paper-dialog class="dialog-position" id="jobHelpThumb" with-backdrop on-iron-overlay-opened="patchOverlay">
@@ -115,6 +112,9 @@
           (function(){
               Polymer({
                   is: "des-thumb",
+                behaviors: [
+                  Polymer.IronA11yKeysBehavior
+                ],
                   properties: {
                       _elevation:{
                           type: Number,
@@ -133,6 +133,9 @@
 
                       },
                   },
+            keyBindings:{
+              'enter:keydown':'_gobackdialog',
+            },
 
                   _mouseout: function(){
                       this._elevation = 0;

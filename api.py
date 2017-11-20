@@ -43,8 +43,88 @@ class MyExamplesHandler(BaseHandler):
 -- This query selects 1% of the data
 SELECT RA, DEC, MAG_AUTO_G from DR1_MAIN sample(0.0001)
 """
+        query1 = """--
+-- Example Query --
+-- This query creates a Helpix map of number of starts
+-- and their mean magnitude on a resolution of NSIDE = 1024
+-- using NEST Schema
+SELECT
+count(main.MAG_AUTO_I) COUNT,
+avg(main.MAG_AUTO_I) COUNT,
+hp.HPIX_1024
+FROM DR1_MAIN main
+JOIN  DR1_HPIX hp ON hp.COADD_OBJECT_ID = main.COADD_OBJECT_ID
+WHERE
+  main.WAVG_SPREAD_MODEL_I + 3.0*main.WAVG_SPREADERR_MODEL_I < 0.005 and
+  main.WAVG_SPREAD_MODEL_I > -1 and
+  main.IMAFLAGS_ISO_I = 0 and
+  main.MAG_AUTO_I < 21
+GROUP BY hp.HPIX_1024
+"""
+        query2 = """--
+-- Example Query --
+-- This query selects stars around the center of glubular cluster M2
+SELECT
+  COADD_OBJECT_ID,RA,DEC,
+  MAG_AUTO_G G,
+  MAG_AUTO_R R,
+  WAVG_MAG_PSF_G G_PSF,
+  WAVG_MAG_PSF_R R_PSF
+FROM DR1_MAIN
+WHERE
+   RA between 323.36-0.12 and 323.36+0.12 and
+   DEC between -0.82-0.12 and -0.82+0.12 and
+   WAVG_SPREAD_MODEL_I + 3.0*WAVG_SPREADERR_MODEL_I < 0.005 and
+   WAVG_SPREAD_MODEL_I > -1 and
+   IMAFLAGS_ISO_G = 0 and
+   IMAFLAGS_ISO_R = 0 and
+   FLAGS_G < 4 and
+   FLAGS_R < 4
+"""
+        query3 = """--
+-- Example Query --
+-- This query selects  a sample of bright galaxies
+SELECT dr1.RA,dr1.DEC,dr1.COADD_OBJECT_ID
+FROM dr1_main sample(0.01) dr1
+WHERE
+dr1.MAG_AUTO_G < 18 and
+dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
+dr1.WAVG_SPREAD_MODEL_I + 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.003 and
+dr1.WAVG_SPREAD_MODEL_I - 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.001 and
+dr1.WAVG_SPREAD_MODEL_I > -1 and
+dr1.IMAFLAGS_ISO_G = 0 and
+dr1.IMAFLAGS_ISO_R = 0 and
+dr1.IMAFLAGS_ISO_I = 0 and
+dr1.FLAGS_G < 4 and
+dr1.FLAGS_R < 4 and
+dr1.FLAGS_I < 4 and
+dr1.NEPOCHS_G > 0 and
+dr1.NEPOCHS_R > 0 and
+dr1.NEPOCHS_I > 0
+        """
+        query4 = """--
+-- Example Query --
+-- This query creates a Helpix map of number of galaxies
+-- and their mean magnitude on a resolution of NSIDE = 1024
+-- using NEST Schema
+SELECT count(dr1.MAG_AUTO_I),avg(dr1.MAG_AUTO_I),hp.HPIX_1024
+FROM DR1_MAIN dr1
+JOIN  DR1_HPIX hp ON hp.COADD_OBJECT_ID = dr1.COADD_OBJECT_ID
+where
+dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
+dr1.WAVG_SPREAD_MODEL_I + 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.003 and
+dr1.WAVG_SPREAD_MODEL_I - 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.001 and
+dr1.WAVG_SPREAD_MODEL_I > -1 and
+dr1.IMAFLAGS_ISO_I = 0 and
+dr1.MAG_AUTO_I < 23
+group by hp.HPIX_1024
+        """
         queries = []
-        queries.append({'desc':'Sample Basic information', 'query': query0})
+        queries.append({'desc': 'Sample Basic information', 'query': query0})
+        queries.append({'desc': 'Create stellar density healpix map', 'query': query1})
+        queries.append({'desc': 'Select stars from M2 Globular Cluster', 'query': query2})
+        queries.append({'desc': 'Sample of bright galaxies', 'query': query3})
+        queries.append({'desc': 'Create galaxy density healpix map', 'query': query4})
         jjob = []
         jquery = []
 
@@ -66,7 +146,7 @@ class GetTileHandler(BaseHandler):
         loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
         con = ea.connect(loc_db, user=loc_user, passwd=loc_passw)
         query = """select FITS_IMAGE_G, FITS_IMAGE_R, FITS_IMAGE_I, FITS_IMAGE_Z, FITS_IMAGE_Y,
-                   FITS_IMAGE_DET,FITS_CATALOG_DET, TIFF_COLOR_IMAGE 
+                   FITS_IMAGE_DET,FITS_CATALOG_DET, TIFF_COLOR_IMAGE
                    from DR1_TILE_INFO where tilename = '{0}'""".format(tilename)
         temp_df = con.query_to_pandas(query)
         new = temp_df.transpose().reset_index()

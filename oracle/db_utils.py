@@ -58,7 +58,12 @@ def create_user(username, password, first, last, email, country, institution, lo
     CREATE USER {user} IDENTIFIED BY {passwd}
     DEFAULT TABLESPACE USERS
     """
-    con.query_and_print(query_user.format(**dict), suc_arg='User {user} created'.format(**dict))
+    try:
+        con.cur.execute(query_user.format(**dict))
+        print('User {user} created'.format(**dict))
+    except Exception as e:
+        con.close()
+        return False,e.args[0].message
     grant_session = "GRANT CREATE SESSION to {user}".format(**dict)
     con.query_and_print(grant_session.format(**dict), suc_arg='Granted login')
     tables = ['DES_ADMIN.CACHE_TABLES', 'DES_ADMIN.CACHE_COLUMNS']
@@ -77,10 +82,13 @@ def create_user(username, password, first, last, email, country, institution, lo
         qlock = "ALTER USER {user} account lock".format(**dict)
         con.query_and_print(qlock, suc_arg='Account locked')
     con.close()
+    return True, ''
 
 
 def delete_user(username):
     con = ea.connect('desdr')
+    delete_url = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
+    con.query_and_print(delete_url, suc_arg='Delete user url')
     delete_des = "DELETE FROM DES_ADMIN.DES_USERS where username = '{}'"
     con.query_and_print(delete_des.format(username), suc_arg='{} removed from DES_USERS'.format(username))
     delete_user = "DROP USER {} CASCADE".format(username)
@@ -92,6 +100,8 @@ def unlock_user(username):
     con = ea.connect('desdr')
     qlock = "ALTER USER {0} account unlock".format(username)
     con.query_and_print(qlock, suc_arg='Account unlocked')
+    delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
+    con.query_and_print(delete_old, suc_arg='Delete used Url')
     con.close()
 
 
@@ -123,7 +133,9 @@ def delete_url(url):
 def update_password(username, password):
     con = ea.connect('desdr')
     qlock = "ALTER USER {0} IDENTIFIED BY {1}".format(username, password)
-    con.query_and_print(qlock, suc_arg='Password Change')
+    con.query_and_print(qlock, suc_arg='Password Changed')
+    delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
+    con.query_and_print(delete_old, suc_arg='Delete used Url')
     con.close()
     return True
 

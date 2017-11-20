@@ -116,7 +116,7 @@ def check_query(query, db, username, lp):
 
 
 @app.task(base=CustomTask)
-def run_query(query, filename, db, username, lp, jid, timeout=None):
+def run_query(query, filename, db, username, lp, jid, email, compression, timeout=None):
     """
     Run a query
 
@@ -153,6 +153,8 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
     response['files'] = None
     response['sizes'] = None
     response['email'] = 'no'
+    if email != "":
+        response['email'] = email
     user_folder = os.path.join(Settings.WORKDIR, username)+'/'
     if filename is not None:
         if not os.path.exists(os.path.join(user_folder, jid)):
@@ -179,6 +181,8 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
         try:
             if filename is not None:
                 outfile = os.path.join(user_folder, jid, filename)
+                if compression:
+                    connection.compression = True
                 connection.query_and_save(query, outfile)
                 if timeout is not None:
                     tt.cancel()
@@ -194,6 +198,7 @@ def run_query(query, filename, db, username, lp, jid, timeout=None):
                 if timeout is not None:
                     tt.cancel()
                 data = df.to_json(orient='records')
+                df.to_csv(os.path.join(user_folder, 'quickResults.csv'), index=False)
                 t2 = time.time()
             response['status'] = 'ok'
             response['data'] = data
@@ -265,6 +270,9 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     os.chdir(mypath)
     oo = subprocess.check_output([com], shell=True)
     if listonly:
+        os.chdir(user_folder)
+        os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+        os.chdir(os.path.dirname(__file__))
         if os.path.exists(mypath+"list.json"):
             os.remove(mypath+"list.json")
         with open(mypath+"list.json", "w") as outfile:

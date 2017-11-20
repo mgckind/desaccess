@@ -47,14 +47,14 @@
                debounce-duration="300">
     </iron-ajax>
 
-    <paper-dialog class="dialog-position" id="JobQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+    <paper-dialog class="dialog-position-query" id="JobQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>Job id: {{jobid}}</h2>
-              <div class="insideDialog">
+              <div class="insideDialog" >
                   <textarea id="jobQueryBox" autofocus></textarea>
               </div>
               <div class="buttons" on-iron-overlay-opened="patchOverlay">
                   <paper-button class="indigo" raised dialog-confirm on-tap="_copyQuery">Copy query</paper-button>
-                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+                  <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
               </div>
     </paper-dialog>
 
@@ -62,22 +62,20 @@
               <des-results id="desTiles" username={{username}} jobid={{jobid}}></des-results>
     </paper-dialog>
 
-    <paper-dialog class="dialog-position" id="JobName" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <h2>{{jobname}}</h2>
-        <p>{{jobid}}</p>
-        <paper-input  id="newname" name="name" label="New Name" value=""></paper-input>
+    <paper-dialog class="dialog-position-small" id="JobName" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <b>Job id: {{jobid}} </b><br />
+        <paper-input style="font-size: 10px;" id="newname" name="name" label="New Name" value="{{jobname}}"></paper-input>
         <div class="buttons" on-iron-overlay-opened="patchOverlay">
             <paper-button class="indigo" raised dialog-confirm on-tap="_genChangeReq">Change Name</paper-button>
-            <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+            <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
         </div>
     </paper-dialog>
 
 
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>Job id: {{jobid}}</h2>
+              <p> {{nfiles}} files generated  </p>
               <div>
-
-
         <vaadin-grid items="{{myfiles}}" id="material">
 
 
@@ -102,8 +100,8 @@
             </vaadin-grid>
               </div>
 
-              <div class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+              <div style="bottom: 20px;" class="buttons" on-iron-overlay-opened="patchOverlay">
+                  <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
               </div>
     </paper-dialog>
 
@@ -159,8 +157,15 @@
         <!--</template>-->
     <!--</vaadin-grid-column>-->
 
-      <vaadin-grid-column flex-grow="2" width = 200px>
-        <template class="header">Job Name</template>
+      <vaadin-grid-column flex-grow="0" width="290px">
+        <template class="header">
+
+            <vaadin-grid-filter aria-label="Job Name" path="jname" value="[[_filterJobName]]">
+            <input placeholder="Job Name" value="{{_filterJobName::input}}" focus-target>
+                      </vaadin-grid-filter>
+
+
+        </template>
           <template>
           <paper-item-body two-line>
               <div>
@@ -179,14 +184,17 @@
 
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="1">
-        <template class="header" style="padding-left: 5px">Job type</template>
+      <vaadin-grid-column flex-grow="0" width="120px">
+
+        <template class="header" style="padding-left: 5px">
+         <vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+        </template>
         <template>{{item.jobtype}}<br />
         </template>
       </vaadin-grid-column>
 
     <!--Cancel job button-->
-      <vaadin-grid-column flex-grow="1">
+      <vaadin-grid-column flex-grow="0" width="120px">
         <template class="header">Cancel Job</template>
           <template>
 
@@ -250,6 +258,9 @@ function keysrt(key,desc) {
         jobid: {
             type: String,
             value: '',
+        },
+        nfiles: {
+            value: 0,
         },
         jobquery: {
             type: String,
@@ -385,6 +396,7 @@ function keysrt(key,desc) {
         this.username = e.model.item.user;
         this.jobfiles = JSON.parse(e.model.item.jfiles);
         this.jobsizes = JSON.parse(e.model.item.jsizes);
+        this.nfiles = this.jobfiles.length;
         this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
         for (i=0; i< this.jobfiles.length; i++){
             this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
