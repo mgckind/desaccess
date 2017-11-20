@@ -31,70 +31,12 @@
             <des-coadds-help></des-coadds-help>
         </paper-dialog>
         <section>
-            <!--<des-card heading = "Coadds Images Cutout Form" >-->
-                <!--<div class="card-content">-->
-                    <!--Upload the file with the positions or enter the positions by hand and run the desthumb generator-->
-                <!--</div>-->
-                <!--<div class="card-content">-->
-                    <!--<div class="horizontal layout around-justified" >-->
-                        <!--<paper-button raised  class="indigo"  id="uploadFile">-->
-                            <!--<div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>-->
-                                <!--&nbsp;  &nbsp;-->
-                            <!--</div>-->
-                            <!--<span style="overflow-x: auto; overflow-wrap: break-word;">-->
-                                <!--[[file_name]]-->
-                            <!--</span>-->
-                            <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                        <!--</paper-button>-->
-
-                        <!--<paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">-->
-                            <!--<div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>-->
-                                <!--&nbsp;  &nbsp;-->
-                            <!--</div>-->
-                            <!--<span>[[enter_values]]</span>-->
-                        <!--</paper-button>-->
-                    <!--</div>-->
-
-                    <!--<hr>-->
-
-                    <!--<div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>-->
-                    <!--<paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>-->
-                    <!--<div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>-->
-                    <!--<paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>-->
-
-                    <!--<hr>-->
-
-                    <!--<paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>-->
-
-                    <!--<hr>-->
-
-                    <!--<div class="flex2" >-->
-                        <!--<paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>-->
-            <!--&nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>-->
-                        <!--<paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>-->
-                        <!--<br>-->
-                    <!--</div>-->
-
-                    <!--<div>-->
-
-                        <!--<paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">-->
-                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form-->
-                        <!--</paper-button>-->
-
-                        <!--<paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">-->
-                        <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job-->
-                        <!--</paper-button>-->
-                    <!--</div>-->
-                <!--</div>-->
-
-            <!--</des-card>-->
-
-
-            <des-card heading="Coadds Images Cutout Form">
-                <iron-form id="form2">
-                    <form action="/foo" method="get">
-                        <!--sec 1-->
-
+            <des-card heading = "Coadds Images Cutout Form" >
+                <div class="card-content">
+                    Upload the file with the positions or enter the positions by hand and run the desthumb generator
+                </div>
+                <div class="card-content">
+                    <div class="horizontal layout around-justified" >
                         <paper-button raised  class="indigo"  id="uploadFile">
                             <div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>
                                 &nbsp;  &nbsp;
@@ -111,39 +53,40 @@
                             </div>
                             <span>[[enter_values]]</span>
                         </paper-button>
+                    </div>
 
-                        <!--sec 2-->
+                    <hr>
 
-                        <div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>
-                        <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>
-                        <div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>
-                        <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>
+                    <div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>
+                    <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>
+                    <div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>
+                    <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>
 
-                        <!--sec 3-->
+                    <hr>
 
+                    <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
 
-                        <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                    <hr>
 
-
-                        <!--<div class="flex2" >-->
+                    <div class="flex2" >
                         <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
-                        &nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>
+            &nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>
                         <paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>
-                            <!--<br>-->
-                        <!--</div>-->
+                        <br>
+                    </div>
 
-                        <paper-button raised class="indigo"  id="clearFormButton" onclick="form2.reset()">
+                    <div>
+
+                        <paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">
                             <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
                         </paper-button>
 
                         <paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">
-                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
+                        <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
                         </paper-button>
+                    </div>
+                </div>
 
-                    </form>
-                    <br>
-                    <div class="output"></div>
-                </iron-form>
             </des-card>
 
             <des-positions id="desPositions"></des-positions>
