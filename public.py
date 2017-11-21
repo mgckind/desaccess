@@ -31,8 +31,8 @@ def create_db(delete=False):
         cur.execute("DROP TABLE IF EXISTS Jobs")
     cur.execute("""
     CREATE TABLE IF NOT EXISTS Jobs(
-    user text,
-    job text,
+    user varchar(50),
+    job varchar(50),
     name text,
     status text,
     time datetime,
