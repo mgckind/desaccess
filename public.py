@@ -33,12 +33,12 @@ def create_db(delete=False):
     CREATE TABLE IF NOT EXISTS Jobs(
     user text,
     job text,
-    name mediumtext,
+    name text,
     status text,
     time datetime,
     type text,
     query mediumtext,
-    files text,
+    files mediumtext,
     sizes text
     )""")
     con.commit()
