@@ -48,7 +48,9 @@
     "iron-form": "PolymerElements/iron-form#^2.0.1",
     "paper-slider": "PolymerElements/paper-slider#^2.0.2",
     "neon-animation": "PolymerElements/neon-animation#^2.0.1",
-    "paper-fab": "PolymerElements/paper-fab#^2.0.0"
+    "paper-fab": "PolymerElements/paper-fab#^2.0.0",
+    "vaadin-valo-theme": "vaadin/vaadin-valo-theme#^0.3.2",
+    "vaadin-form-layout": "vaadin/vaadin-form-layout#^1.0.4"
   },
   "resolutions": {
     "polymer": "^1.9.0",
