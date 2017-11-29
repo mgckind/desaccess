@@ -37,13 +37,19 @@
         }
         .left2 {
             @apply(--layout-flex);
-            @apply(--layout-center-justified);
             text-align: center;
+
         }
         .right {
             @apply(--layout-flex-2);
+
         }
 
+        .right2 {
+            @apply(--layout-flex-2);
+            text-align: center;
+
+        }
 
         .mid {
             @apply(--layout-flex);
@@ -90,8 +96,17 @@
 
                     <!-- file -->
                     <div class="container">
-                        <div class="left2">
-
+                        <div class="left">
+                            <!-- version B -->
+                            <paper-icon-item>
+                                <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                Upload File
+                                </span>
+                                <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                            </paper-icon-item>
+                        </div>
+                        <div class="right2">
                             <!-- version A -->
                             <paper-button raised class="indigo" id="uploadFile">
                                 <div id ="uploadicon" style="display: inline-block;">
@@ -103,45 +118,29 @@
                                 </span>
                                 <input type="file" class="upload" id="file" on-change="_fileChange" />
                             </paper-button>
-
-
-                            <!--&lt;!&ndash; version B &ndash;&gt;-->
-                            <!--<paper-icon-item id="uploadFile" class="buttonLook center">-->
-                                <!--<iron-icon id ="uploadicon" icon="backup" slot="item-icon"></iron-icon>-->
-                                <!--<span style="overflow-x: auto; overflow-wrap: break-word;">-->
-                                <!--[[file_name]]-->
-                                <!--</span>-->
-                                <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                            <!--</paper-icon-item>-->
-                        </div>
-                        <div class="right">
-                            <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                <paper-input disabled always-float-label id="filename" name="filename" label="File Name" value=""></paper-input>
-                            </span>
                         </div>
                     </div>
 
                     <br>
                     <!-- value -->
                     <div class="container">
-                        <div class="left2">
+                        <div class="left">
 
+                            <!-- version B -->
+                            <paper-icon-item>
+                                <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                Enter Values
+                            </paper-icon-item>
+
+                        </div>
+                        <div class="right2">
                             <!-- version A -->
                             <paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">
-                            <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                            &nbsp;  &nbsp;
-                            </div>
-                            <span>[[enter_values]]</span>
+                                <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                    &nbsp;  &nbsp;
+                                </div>
+                                <span>[[enter_values]]</span>
                             </paper-button>
-
-                            <!--&lt;!&ndash; version B &ndash;&gt;-->
-                            <!--<paper-icon-item id="enterValues" on-tap="_openPositions" class="buttonLook">-->
-                                <!--<iron-icon id ="keyboardicon" icon="hardware:keyboard" slot="item-icon"></iron-icon>-->
-                                <!--[[enter_values]]-->
-                            <!--</paper-icon-item>-->
-                        </div>
-                        <div class="right">
-                            <paper-input disabled always-float-label id="coords" name="coords" label="Enter Coordinates" value="[[values_input]]"></paper-input>
                         </div>
                     </div>
 
@@ -322,11 +321,6 @@
                 value : "Enter Values"
             },
 
-            values_input: {
-                type: String,
-                value: "",
-            },
-
             submit_type : {
                 type: String,
                 value: "csvfile",
@@ -364,7 +358,7 @@
             document.getElementById("uploadicon").icon = "done";
 
             this.submit_type = 'csvfile';
-            document.getElementById("filename").value = this.file_name;
+//            document.getElementById("filename").value = this.file_name;
         },
         clear: function(){
             document.getElementById("submitJobButton").disabled=true;
@@ -378,8 +372,8 @@
             document.getElementById("desPositions").clear();
             document.getElementById("validemail").value='';
             document.getElementById("validname").value='';
-            document.getElementById("filename").value = '';
-            document.getElementById("coords").value = '';
+//            document.getElementById("filename").value = '';
+//            document.getElementById("coords").value = '';
             document.getElementById("uploadicon").icon = "backup";
             document.getElementById("keyboardicon").icon = "hardware:keyboard";
 
