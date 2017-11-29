@@ -17,14 +17,49 @@
             @apply(--layout-vertical);
         }
 
+        .card-content {
+            @apply(--layout-vertical);
+        }
+
+        /*.middle {*/
+        /*@apply(--layout-flex);*/
+        /*}*/
+
+        .container {
+            @apply(--layout-horizontal);
+        }
+
+        .left {
+            @apply(--layout-flex);
+        }
+
+        .right {
+            @apply(--layout-flex-2);
+        }
+        .mid {
+            @apply(--layout-flex-2);
+        }
+        .flex3child {
+            @apply(--layout-flex-3);
+        }
+        .flex4child {
+            @apply(--layout-flex-4);
+        }
+
+
+
         paper-slider {
-            width: 80%;
+            width: 100%;
         }
         hr {
             display: block;
             border: 1px solid gray;
             opacity: 0.2;
 
+        }
+
+        paper-icon-item {
+            background: linear-gradient(to right, #efeaf4, white);
         }
     </style>
     <template>
@@ -34,59 +69,212 @@
         <section>
             <des-card heading = "Coadds Images Cutout Form" >
                 <div class="card-content">
-                    Upload the file with the positions or enter the positions by hand and run the desthumb generator
-                </div>
-                <div class="card-content">
-                    <div class="horizontal layout around-justified" >
-                        <paper-button raised  class="indigo"  id="uploadFile">
-                            <div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>
-                                &nbsp;  &nbsp;
-                            </div>
-                            <span style="overflow-x: auto; overflow-wrap: break-word;">
+                    <div class="top">
+                        Upload the file with the positions or enter the positions by hand and run the desthumb generator
+                    </div>
+
+                    <!-- file -->
+                    <div class="container">
+                        <div class="left">
+
+                            <!-- version A -->
+                            <!--<paper-item>-->
+                                <!--<paper-button raised  id="uploadFile">-->
+                                    <!--<div id ="uploadicon" style="display: inline-block;">-->
+                                        <!--<i class="fa fa-cloud-upload"></i>-->
+                                        <!--&nbsp;  &nbsp;-->
+                                    <!--</div>-->
+                                    <!--<span style="overflow-x: auto; overflow-wrap: break-word;">-->
+                                    <!--[[file_name]]-->
+                                <!--</span>-->
+                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                                <!--</paper-button>-->
+                            <!--</paper-item>-->
+
+                            <!-- version B -->
+                            <paper-icon-item id="uploadFile">
+                                <iron-icon id ="uploadicon" icon="backup" slot="item-icon"></iron-icon>
+                                <span style="overflow-x: auto; overflow-wrap: break-word;">
                                 [[file_name]]
+                                </span>
+                                <input type="file" class="upload" id="file" on-change="_fileChange"/>
+                            </paper-icon-item>
+                        </div>
+                        <div class="right">
+                            <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                <paper-input disabled always-float-label id="filename" name="filename" label="File Name" value=""></paper-input>
                             </span>
-                            <input type="file" class="upload" id="file" on-change="_fileChange"/>
-                        </paper-button>
-
-                        <paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">
-                            <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                                &nbsp;  &nbsp;
-                            </div>
-                            <span>[[enter_values]]</span>
-                        </paper-button>
+                        </div>
                     </div>
 
-                    <hr>
+                    <br>
+                    <!-- value -->
+                    <div class="container">
+                        <div class="left">
 
-                    <div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>
-                    <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>
-                    <div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>
-                    <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>
+                            <!-- version A -->
+                            <!--<paper-item>-->
+                                <!--<paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">-->
+                                <!--<div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>-->
+                                <!--&nbsp;  &nbsp;-->
+                                <!--</div>-->
+                                <!--<span>[[enter_values]]</span>-->
+                                <!--</paper-button>-->
+                            <!--</paper-item>-->
 
-                    <hr>
+                            <!-- version B -->
+                            <paper-icon-item id="enterValues" on-tap="_openPositions">
+                                <iron-icon id ="keyboardicon" icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                [[enter_values]]
+                            </paper-icon-item>
+                        </div>
 
-                    <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
-
-                    <hr>
-
-                    <div class="flex2" >
-                        <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
-            &nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>
-                        <paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>
-                        <br>
+                        <div class="right">
+                            <paper-input disabled always-float-label id="coords" name="coords" label="Enter Coordinates" value="[[values_input]]"></paper-input>
+                        </div>
                     </div>
 
-                    <div>
+                    <br>
 
-                        <paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">
-                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
-                        </paper-button>
+                    <!-- xslider -->
+                    <div class="container">
+                        <div class="left">
+                            <div>xsize (arcmin, if not selected default is from file or 1.0):
+                                <span id="xsizeLabel" class="caption">0</span></div><br>
+                        </div>
 
-                        <paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">
-                        <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
-                        </paper-button>
+                        <div class="right">
+                            <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>
+                        </div>
+                    </div>
+
+
+                    <!-- yslider -->
+                    <div class="container">
+                        <div class="left">
+                            <div>ysize (arcmin, if not selected default is from file or 1.0):
+                                <span id="ysizeLabel" class="caption">0</span>
+                            </div><br>
+                        </div>
+
+                        <div class="right">
+                            <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- job name -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-icon-item>
+                                <iron-icon icon="create" slot="item-icon"></iron-icon>
+                                Job Name
+                            </paper-icon-item>
+                        </div>
+                        <div class="right">
+                            <paper-input always-float-label id="validname" name="name" label="Job Name" value=""></paper-input>
+                        </div>
+                    </div>
+
+
+                    <!-- email -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-item>
+                                <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
+                            </paper-item>
+                        </div>
+                        <div class="right">
+                            <paper-input always-float-label id="validemail" name="email" label="Email" value=""></paper-input>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- return -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-icon-item>
+                                <iron-icon icon="save" slot="item-icon"></iron-icon>
+                                Return Type
+                            </paper-icon-item>
+                        </div>
+                        <div class="right">
+                            <paper-item>
+                                <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                            </paper-item>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- buttons -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">
+                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
+                            </paper-button>
+                        </div>
+                        <div class="right">
+                            <paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">
+                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
+                            </paper-button>
+                        </div>
                     </div>
                 </div>
+
+                <!--<div class="card-content">-->
+                    <!--<div class="" >-->
+                        <!--<paper-button raised  class="indigo"  id="uploadFile">-->
+                            <!--<div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>-->
+                                <!--&nbsp;  &nbsp;-->
+                            <!--</div>-->
+                            <!--<span style="overflow-x: auto; overflow-wrap: break-word;">-->
+                                <!--[[file_name]]-->
+                            <!--</span>-->
+                            <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                        <!--</paper-button>-->
+
+                        <!--<paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">-->
+                            <!--<div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>-->
+                                <!--&nbsp;  &nbsp;-->
+                            <!--</div>-->
+                            <!--<span>[[enter_values]]</span>-->
+                        <!--</paper-button>-->
+                    <!--</div>-->
+
+                    <!--<hr>-->
+
+                    <!--<div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>-->
+                    <!--<paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>-->
+                    <!--<div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>-->
+                    <!--<paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>-->
+
+                    <!--<hr>-->
+
+                    <!--<paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>-->
+
+                    <!--<hr>-->
+
+                    <!--<div class="flex2" >-->
+                        <!--<paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>-->
+                        <!--&nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>-->
+                        <!--<paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>-->
+                        <!--<br>-->
+                    <!--</div>-->
+
+                    <!--<div>-->
+
+                        <!--<paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">-->
+                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form-->
+                        <!--</paper-button>-->
+
+                        <!--<paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">-->
+                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job-->
+                        <!--</paper-button>-->
+                    <!--</div>-->
+                <!--</div>-->
 
             </des-card>
 
@@ -122,6 +310,12 @@
                 type : String,
                 value : "Enter Values"
             },
+
+            values_input: {
+                type: String,
+                value: "",
+            },
+
             submit_type : {
                 type: String,
                 value: "csvfile",
@@ -147,7 +341,7 @@
             }
             else
             {
-            document.getElementById("validemail").value='';
+                document.getElementById("validemail").value='';
             }
         },
         _fileChange: function(){
@@ -155,8 +349,11 @@
             console.log('File to read : ' + this.file_name );
             document.getElementById("submitJobButton").disabled=false;
             document.getElementById("enterValues").disabled=true;
-            document.getElementById("uploadicon").style.display='none';
+//            document.getElementById("uploadicon").style.display='none';
+            document.getElementById("uploadicon").icon = "done";
+
             this.submit_type = 'csvfile';
+            document.getElementById("filename").value = this.file_name;
         },
         clear: function(){
             document.getElementById("submitJobButton").disabled=true;
@@ -170,6 +367,14 @@
             document.getElementById("desPositions").clear();
             document.getElementById("validemail").value='';
             document.getElementById("validname").value='';
+            document.getElementById("filename").value = '';
+            document.getElementById("coords").value = '';
+            document.getElementById("uploadicon").icon = "backup";
+            document.getElementById("keyboardicon").icon = "hardware:keyboard";
+
+
+
+
 
             //            document.getElementById("coaddTag").selected="0";
             this.file_name = "Upload File";
@@ -181,10 +386,16 @@
             //$('#dothis')[0].checked=false;
             this.$.file.value = "";
         },
+        _countCoords: function(coords) {
+            console.log(coords);
+        },
+
         _openPositions: function(){
             var inputDialog = document.getElementById("inputValuesDialog");
             inputDialog.open();
             this.submit_type = 'manual';
+
+
         },
         completeHandler: function(){
             console.log('YESSSSS');
@@ -226,11 +437,11 @@
             desCoadds=document.getElementById('desCoadds');
             desCoadds.clear();
         },
-         patchOverlay: function (e) {
-             if (e.target.withBackdrop) {
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-             }
-         },
+            }
+        },
         _seeHelp: function(e){
             e.preventDefault();
             document.getElementById('jobHelpCoadds').open();

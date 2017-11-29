@@ -50,7 +50,9 @@
     "neon-animation": "PolymerElements/neon-animation#^2.0.1",
     "paper-fab": "PolymerElements/paper-fab#^2.0.0",
     "vaadin-valo-theme": "vaadin/vaadin-valo-theme#^0.3.2",
-    "vaadin-form-layout": "vaadin/vaadin-form-layout#^1.0.4"
+    "vaadin-form-layout": "vaadin/vaadin-form-layout#^1.0.4",
+    "s-table": "StartPolymer/s-table#^0.2.2",
+    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0"
   },
   "resolutions": {
     "polymer": "^1.9.0",
