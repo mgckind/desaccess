@@ -252,6 +252,8 @@ Polymer({
             document.querySelector('#toast1').show();}
         }
         //document.querySelector('#toast1').show();
+        this.clearQueryBox();
+
     },
     _request: function(e){
         var bbs = document.getElementsByClassName("queryButton");
@@ -305,7 +307,8 @@ Polymer({
         }
         if (valid) {
             queryform = document.getElementById("getQuery");
-            queryform.generateRequest();}
+            queryform.generateRequest();
+        }
     },
     _quickSubmit: function(event){
         document.getElementById('inputOutputCheck').checked = false;
