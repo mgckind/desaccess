@@ -127,25 +127,26 @@
             },
         },
 
-        change: function(e){
+//        change: function(e){
+//
+//            var tid = e.target.id;
+//            var sel = 0;
+//            if (tid == 'query') sel = 1;
+//            if (tid == 'allTables') sel = 2;
+//            if (tid == 'example') sel = 3;
+//            if (tid == 'coadd') sel = 4;
+//            if (tid == 'footprint') sel = 5;
+//            if (tid == 'desjobs') sel = 6;
+//
+//            var app = document.querySelector('#app');
+//            var pages = document.getElementById("mainPages");
+//            var menu = document.querySelector('paper-menu');
+//            app.selection=sel;
+//            pages.selected=sel;
+//            menu.selected=sel;
+//
+//        },
 
-            var tid = e.target.id;
-            var sel = 0;
-            if (tid == 'query') sel = 1;
-            if (tid == 'allTables') sel = 2;
-            if (tid == 'example') sel = 3;
-            if (tid == 'coadd') sel = 4;
-            if (tid == 'footprint') sel = 5;
-            if (tid == 'desjobs') sel = 6;
-
-            var app = document.querySelector('#app');
-            var pages = document.getElementById("mainPages");
-            var menu = document.querySelector('paper-menu');
-            app.selection=sel;
-            pages.selected=sel;
-            menu.selected=sel;
-
-        },
         patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
