@@ -3,7 +3,7 @@ import time
 import schedule
 #import config.mysqlconfig as ms
 from subprocess import Popen, PIPE
-import MySQLdb as mydb
+#import MySQLdb as mydb
 import yaml
 import sys
 

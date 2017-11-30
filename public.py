@@ -6,7 +6,7 @@ import pusher
 import queries
 import login_public as login
 import api
-import MySQLdb as mydb
+#import MySQLdb as mydb
 from tornado.options import define, options
 import Settings
 import yaml
@@ -100,7 +100,7 @@ def main():
     """
     if not os.path.exists(Settings.WORKDIR):
         os.mkdir(Settings.WORKDIR)
-    create_db()
+    #create_db()
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(options.port)

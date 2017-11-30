@@ -6,7 +6,7 @@ import json
 import os
 import datetime
 import easyaccess as ea
-import MySQLdb as mydb
+#import MySQLdb as mydb
 from celery import Celery
 import yaml
 
