@@ -33,11 +33,13 @@
         },
       },
       _submitPositions: function(){
-        document.getElementById("inputValuesDialog").close();
-        document.getElementById("submitJobButton").disabled=false;
-        document.getElementById("uploadFile").disabled=true;
-        document.getElementById("keyboardicon").style.display='none';
-        document.getElementById("desCoadds").enter_values = "Values Entered";
+            document.getElementById("inputValuesDialog").close();
+            document.getElementById("submitJobButton").disabled=false;
+            document.getElementById("uploadFile").disabled=true;
+            document.getElementById("keyboardicon").icon = "done";
+            document.getElementById("desCoadds").enter_values = "Values Entered";
+
+
         },
         clear: function(){
             document.getElementById("enteredPositions").value="";
