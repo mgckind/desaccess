@@ -98,9 +98,9 @@
             var pages = document.getElementById("mainPages");
             var menu = document.querySelector('paper-menu');
             app.selection=sel;
-            pages.selected=sel;
-            menu.selected=sel;
-
+            pages.select(sel);
+            menu.select(sel);
+            console.log("selected: ", menu.selected);
         },
 
     });

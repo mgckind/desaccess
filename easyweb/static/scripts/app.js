@@ -12,11 +12,14 @@
     var pages = document.getElementById("mainPages");
     var menu = document.querySelector('paper-menu');
     app.selection="0";
-    pages.selected="0";
-    menu.selected="0";
+    pages.select("0");
+    menu.select("0");
+    // pages.selected="0";
+    // menu.selected="0";
         menu.addEventListener('iron-select', function() {
             app.selection=menu.selected;
-            pages.selected=menu.selected;
+            // pages.selected=menu.selected;
+            pages.select(menu.selected)
             app.editor.refresh();
             if (app.$.drawerLayout.narrow) {app.$.drawer.close();}
         });
