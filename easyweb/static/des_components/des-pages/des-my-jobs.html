@@ -134,7 +134,10 @@
       </vaadin-grid-column>
 
       <vaadin-grid-column width="80px" flex-grow="0">
-        <template class="header">Status</template>
+        <!--<template class="header">Status</template>-->
+          <template class="header" style="padding-left: 5px">
+              <vaadin-grid-sorter path="status">Status<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+          </template>
 
           <template>
               <template is="dom-if" if="{{_completed(item.status)}}">
