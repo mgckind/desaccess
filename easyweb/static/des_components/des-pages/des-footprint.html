@@ -20,6 +20,10 @@
         .downloadTile {
             visibility: hidden;
         }
+        .localTable tr td{
+        font-size:  18px;
+        border: 1px solid white;
+        }
     </style>
 
     <iron-ajax id="getFilesTile"
@@ -72,8 +76,19 @@
                  <div class="flex" >
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
                         <des-card heading="Tile properties">
-                            <div id="tiletitleHelp"></div>
-                            <paper-button class="indigo downloadTile" raised on-tap="_getTiles" id ="downloadTile"> Get Files</paper-button>
+                            <div id="tiletitleHelp" class="card-content">
+                                <table id="tileTable" class="localTable">
+                                <tr><td>Name</td><td>:</td></tr>
+                                <tr><td>Tile Center</td><td>:</td></tr>
+                                <tr><td>No Objects</td><td>:</td></tr>
+                                <tr><td>RA Corners</td><td>:</td></tr>
+                                <tr><td>DEC Corners</td><td>:</td></tr>
+                                </table>
+                            </div>
+                            <div class="card-content">
+
+                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Files</paper-button>
+                            </div>
 
                         </des-card>
                 </div>
@@ -103,10 +118,11 @@
             if (ra > 180.) {
                 ra = ra - 360.;
             };
-            return ra;
+            return 0.-ra;
         }
 
         function restoreRA(ra) {
+            ra = 0. -ra
             if (ra < 0) {
                 ra = ra + 360.;
             };
@@ -164,6 +180,7 @@
                 if (ra1 > 180.) {
                     ra1 = ra1 - 360.;
                 };
+                ra1 = 0. - ra1
                 //navigation.zoomTo([ra1,dec1],500000,1000);
                 PositionZoom(ra1,dec1);
             },
@@ -206,8 +223,10 @@
                         defaultColor: [220.,220.,220.,255.]
                     } );
                     var navigation = new GlobWeb.Navigation(globe, {
-                        inertia: false, minDistance: 100000
+                        inertia: false,
+                        minDistance: 100000,
                     });
+                    navigation.zoomTo([-25,-25],20000000,10);
                     var canvas = navigation.renderContext.canvas;
 
                     loadTiles('/easyweb/static/tiles/grid.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
@@ -268,7 +287,7 @@
                     });
 
 
-                    loadTiles('/easyweb/static/tiles/y3a2_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                    loadTiles('/easyweb/static/tiles/dr1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 strokeColor : [0.2980392156862745, 0.4470588235294118, 0.6901960784313725,1.0],
@@ -329,19 +348,30 @@
                             document.getElementById('FootprintPage').updateTile(tilename);
                             var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                             var dec_t = all_tiles.features[tile].properties.DEC_C;
+                            var count = all_tiles.features[tile].properties.COUNT;
+                            var ra_corner = all_tiles.features[tile].properties.RA_CORNER;
+                            var dec_corner = all_tiles.features[tile].properties.DEC_CORNER;
                             var titleHelp = document.getElementById("tiletitleHelp");
                             this.xvalue = restoreRA(ra_t);
                             this.yvalue = dec_t;
                             this.data = restoreRA(ra_t)+", "+dec_t;
                             var x_part = this.xvalue.toFixed(5);
                             var y_part = this.yvalue.toFixed(5);
-                            titleHelp.innerHTML =
-                            "Name       : " + tilename  + "<br />" +
-                            "Tile Center : " + x_part +", "+y_part + "<br />" +
-                            "No Objects   : " + "<br />" +
-                            "RA Corners   : " + "<br />" +
-                            "DEC Corners  : " + "<br /> <br /> <br />";
-                             document.getElementById('downloadTile').style.visibility = 'visible';
+                            var tileTable = document.getElementById("tileTable");
+                            tileTable.rows[0].cells[1].innerHTML = ': '+tilename;
+                            tileTable.rows[1].cells[1].innerHTML = ': '+x_part + ", " + y_part;
+                            tileTable.rows[2].cells[1].innerHTML = ': '+count;
+                            tileTable.rows[3].cells[1].innerHTML = ': '+ra_corner;
+                            tileTable.rows[4].cells[1].innerHTML = ': '+dec_corner;
+                            //titleHelp.innerHTML =
+                            //"Name       : " + tilename  + "<br />" +
+                            //"Tile Center : " + x_part +", "+y_part + "<br />" +
+                            //"No Objects   : " + count +"<br />" +
+                            //"RA Corners   : " + ra_corner + "<br />" +
+                            //"DEC Corners  : " + dec_corner + "<br /> <br /> <br />";
+
+                             //document.getElementById('downloadTile').style.visibility = 'visible';
+                             document.getElementById('downloadTile').disabled = false;
 
 
                     };
@@ -371,6 +401,9 @@
                                 document.getElementById('FootprintPage').updateTile(tilename);
                                 var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                                 var dec_t = all_tiles.features[tile].properties.DEC_C;
+                                var count = all_tiles.features[tile].properties.COUNT;
+                                var ra_corner = all_tiles.features[tile].properties.RA_CORNER;
+                                var dec_corner = all_tiles.features[tile].properties.DEC_CORNER;
                                 navigation.zoomTo([ra_t,dec_t],500000,1000);
 //                            var title =document.getElementById("tiletitle");
                                 var titleHelp =document.getElementById("tiletitleHelp");
@@ -379,13 +412,20 @@
                                 this.data = restoreRA(ra_t)+", "+dec_t;
                                 var x_part = this.xvalue.toFixed(5);
                                 var y_part = this.yvalue.toFixed(5);
-                                titleHelp.innerHTML =
-                                "Name       : " + tilename  + "<br />" +
-                                "Tile Center : " + x_part +", "+y_part + "<br />" +
-                                "No Objects   : " + "<br />" +
-                                "RA Corners   : " + "<br />" +
-                                "DEC Corners  : " + "<br /> <br /> <br />";
-                                 document.getElementById('downloadTile').style.visibility = 'visible';
+                                var tileTable = document.getElementById("tileTable");
+                                tileTable.rows[0].cells[1].innerHTML = ': '+tilename;
+                                tileTable.rows[1].cells[1].innerHTML = ': '+x_part + ", " + y_part;
+                                tileTable.rows[2].cells[1].innerHTML = ': '+count;
+                                tileTable.rows[3].cells[1].innerHTML = ': '+ra_corner;
+                                tileTable.rows[4].cells[1].innerHTML = ': '+dec_corner;
+                                //titleHelp.innerHTML =
+                                //"Name       : " + tilename  + "<br />" +
+                                //"Tile Center : " + x_part +", "+y_part + "<br />" +
+                                //"No Objects   : " + count +"<br />" +
+                                //"RA Corners   : " + ra_corner +"<br />" +
+                                //"DEC Corners  : " + dec_corner +"<br /> <br /> <br />";
+                                 //document.getElementById('downloadTile').style.visibility = 'visible';
+                                 document.getElementById('downloadTile').disabled=false;
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }
