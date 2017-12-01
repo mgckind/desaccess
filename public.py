@@ -81,6 +81,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/delete/", api.DeleteHandler),
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),
+            (r"/easyweb/help/?", api.HelpHandler)
         ]
         settings = {
             "template_path": Settings.TEMPLATE_PATH,

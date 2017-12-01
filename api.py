@@ -384,3 +384,25 @@ class ChangeHandler(BaseHandler):
         con.close()
 
         self.finish()
+
+class HelpHandler(tornado.web.RequestHandler):
+    """
+    This class is special as it also include a post request to
+    deal with the form submission
+    """
+    @tornado.web.asynchronous
+    def post(self):
+        arguments = { k.lower(): self.get_argument(k) for k in self.request.arguments }
+        print(arguments)
+        name = self.get_argument("name", "")
+        last = self.get_argument("lastname", "")
+        email = self.get_argument("email", "")
+        subject = self.get_argument("subject", "")
+        question = self.get_argument("question", "")
+        topic = self.get_argument("topic", "")
+        topics = topic.replace(',', '\n')
+        print(name, last, email, topic, question)
+        jira_ticket.create_ticket(name, last, email, topics, subject, question)
+        self.set_status(200)
+        self.flush()
+        self.finish()
