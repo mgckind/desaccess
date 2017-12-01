@@ -9,6 +9,7 @@ import easyaccess as ea
 import MySQLdb as mydb
 from celery import Celery
 import yaml
+import jira_ticket
 
 
 class BaseHandler(tornado.web.RequestHandler):
