@@ -82,6 +82,7 @@ class ResetHandler(BaseHandler):
     def put(self):
         username = self.get_argument("username", "")
         password = self.get_argument("password", "")
+        valid = len(password) >= 6
         url = self.get_argument("url", "")
         print(username, password, url)
         username2, msg = db_utils.valid_url(url, 3600+60)
@@ -231,7 +232,12 @@ class ChangeAuthHandler(BaseHandler):
         oldpassword = self.get_argument("oldpassword", "")
         password = self.get_argument("password", "")
         db = self.get_argument("database", "")
-        auth, err = self.check_permission_new(oldpassword, password, username, db)
+        valid = len(password) >= 6
+        if valid:
+            auth, err = self.check_permission_new(oldpassword, password, username, db)
+        else:
+            auth = False
+            err = 'Password minimum length is 6.'
         if auth:
             self.clear_cookie("usera")
             self.clear_cookie("userb")
