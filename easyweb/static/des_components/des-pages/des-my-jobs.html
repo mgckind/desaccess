@@ -305,8 +305,10 @@ function keysrt(key,desc) {
           }
       },
     _copyQuery: function(){
+        document.getElementById("desQuery").clearQueryBox();
         document.querySelector('#toastCopy').show();
         app.editor.setValue(app.jobquerybox.getValue());
+
         console.log("-> line number: ", app.editor.lineCount());
         setTimeout(function() {
             app.editor.refresh();
