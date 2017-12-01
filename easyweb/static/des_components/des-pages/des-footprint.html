@@ -180,7 +180,7 @@
                 if (ra1 > 180.) {
                     ra1 = ra1 - 360.;
                 };
-                ra1 = 0. - ra1
+                //ra1 = 0. - ra1
                 //navigation.zoomTo([ra1,dec1],500000,1000);
                 PositionZoom(ra1,dec1);
             },
@@ -307,30 +307,37 @@
                         var _self = this;
                         var geojsonFeature = {
                             "type": "Feature",
-                            "properties": {"name": "hola"},
+                            "properties": {"name": "check"},
                             "geometry": {
                                 "type": "Point",
-                                "coordinates": [ra,dec]
+                                "coordinates": [0.-ra,dec]
                             }
                         };
-                        navigation.zoomTo([ra,dec],500000,1000);
+                        rat = 0.-ra
                         if (window.tempLayer === undefined){
                             var ju = 0;
                         }
                         else{
                             globe.removeLayer( window.tempLayer );
                         }
+                        var style_tile = new GlobWeb.FeatureStyle({
+                            fillColor: [0.,0.,0.,1.],
+                            pointMaxSize: 10,
+                            label: 'tilename'
+                        });
                         var tempLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
-                                pointMaxSize : 1000,
-                                //label: true,
+                                pointMaxSize : 500,
+                                //label: geojsonFeature['properties']['name'],
+
                             })
                         });
                         tempLayer.addFeature(geojsonFeature);
                         tempLayer.visible(true);
                         globe.addLayer( tempLayer );
                         window.tempLayer = tempLayer;
+                        navigation.zoomTo([rat,dec],500000,1000);
                             var max_d = Number.POSITIVE_INFINITY;
                             var tile = -1
                             for (i=0; i < all_tiles.features.length-1; i++){
