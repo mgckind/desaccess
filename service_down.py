@@ -2,6 +2,7 @@ import tornado.ioloop
 """Easyaccess Web application."""
 import tornado.web
 from tornado.options import define, options
+from version import __version__
 import Settings
 
 define("port", default=8080, help="run on the given port", type=int)
@@ -10,7 +11,7 @@ define("port", default=8080, help="run on the given port", type=int)
 class DownHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_status(404)
-        self.render('service-down.html', errormessage='These services are down for the moment', username='')
+        self.render('service-down.html', version=__version__, errormessage='These services are down for the moment', username='')
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):

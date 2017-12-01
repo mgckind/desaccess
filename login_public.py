@@ -23,7 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class SignupHandler(BaseHandler):
     def get(self):
-        self.render('signup.html', errormessage='', toast='no')
+        self.render('signup.html', errormessage='', version=__version__, toast='no')
 
     def post(self):
         username = self.get_argument("username", "").lower()
@@ -58,7 +58,7 @@ class ResetHandler(BaseHandler):
     def get(self, slug):
         username, msg = db_utils.valid_url(slug, 3600)
         if username is not None:
-            self.render('reset.html', errormessage='', toast='no', url=slug, user=username)
+            self.render('reset.html', errormessage='', version=__version__, toast='no', url=slug, user=username)
         else:
             self.write(msg)
 
@@ -95,9 +95,9 @@ class ActivateHandler(BaseHandler):
         if username is not None:
             db_utils.unlock_user(username)
             msg = 'Thanks for activate your account'
-            self.render('activate.html', errormessage=msg, username='')
+            self.render('activate.html', version=__version__, errormessage=msg, username='')
         else:
-            self.render('activate.html', errormessage=msg, username='')
+            self.render('activate.html', version=__version__, errormessage=msg, username='')
 
 
 class MainHandler(BaseHandler):

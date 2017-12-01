@@ -12,6 +12,7 @@ import Settings
 import yaml
 import backup
 import cutout
+from version import __version__
 
 define("port", default=8080, help="run on the given port", type=int)
 
@@ -47,7 +48,7 @@ def create_db(delete=False):
 class My404Handler(tornado.web.RequestHandler):
     def prepare(self):
         self.set_status(404)
-        self.render('404.html', errormessage='404: Page Not Found', username='')
+        self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
 
 
 class Application(tornado.web.Application):
