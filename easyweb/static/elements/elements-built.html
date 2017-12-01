@@ -1,7 +1,11 @@
-<html><head><meta charset="UTF-8"><!-- other -- >
-<link rel="import" href="../styles/shared-styles.html">
-<link rel="import" href="../bower_components/grid-element/grid-element.html">
-<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<html><head><meta charset="UTF-8"><!-- other -->
+<!--<link rel="import" href="../styles/shared-styles.html">-->
+<!--<link rel="import" href="../bower_components/grid-element/grid-element.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-valo-theme/vaadin-text-field.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-text-field/vaadin-text-field.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-valo-theme/color.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-form-layout/vaadin-form-layout.html">-->
 
 
 <!-- Paper Elements -->
@@ -8616,351 +8620,362 @@ A complete [guide](https://elements.polymer-project.org/guides/flex-layout) to `
 @pseudoElement iron-flex-layout
 @demo demo/index.html
 -->
-<custom-style>
-  <style is="custom-style">
-    html {
 
-      --layout: {
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-      };
+<style>
+  /* IE 10 support for HTML5 hidden attr */
+  [hidden] {
+    display: none !important;
+  }
+</style><style is="custom-style">
+  :root {
 
-      --layout-inline: {
-        display: -ms-inline-flexbox;
-        display: -webkit-inline-flex;
-        display: inline-flex;
-      };
+    --layout: {
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+    };
 
-      --layout-horizontal: {
-        @apply --layout;
+    --layout-inline: {
+      display: -ms-inline-flexbox;
+      display: -webkit-inline-flex;
+      display: inline-flex;
+    };
 
-        -ms-flex-direction: row;
-        -webkit-flex-direction: row;
-        flex-direction: row;
-      };
+    --layout-horizontal: {
+      @apply(--layout);
 
-      --layout-horizontal-reverse: {
-        @apply --layout;
+      -ms-flex-direction: row;
+      -webkit-flex-direction: row;
+      flex-direction: row;
+    };
 
-        -ms-flex-direction: row-reverse;
-        -webkit-flex-direction: row-reverse;
-        flex-direction: row-reverse;
-      };
+    --layout-horizontal-reverse: {
+      @apply(--layout);
 
-      --layout-vertical: {
-        @apply --layout;
+      -ms-flex-direction: row-reverse;
+      -webkit-flex-direction: row-reverse;
+      flex-direction: row-reverse;
+    };
 
-        -ms-flex-direction: column;
-        -webkit-flex-direction: column;
-        flex-direction: column;
-      };
+    --layout-vertical: {
+      @apply(--layout);
 
-      --layout-vertical-reverse: {
-        @apply --layout;
+      -ms-flex-direction: column;
+      -webkit-flex-direction: column;
+      flex-direction: column;
+    };
 
-        -ms-flex-direction: column-reverse;
-        -webkit-flex-direction: column-reverse;
-        flex-direction: column-reverse;
-      };
+    --layout-vertical-reverse: {
+      @apply(--layout);
 
-      --layout-wrap: {
-        -ms-flex-wrap: wrap;
-        -webkit-flex-wrap: wrap;
-        flex-wrap: wrap;
-      };
+      -ms-flex-direction: column-reverse;
+      -webkit-flex-direction: column-reverse;
+      flex-direction: column-reverse;
+    };
 
-      --layout-wrap-reverse: {
-        -ms-flex-wrap: wrap-reverse;
-        -webkit-flex-wrap: wrap-reverse;
-        flex-wrap: wrap-reverse;
-      };
+    --layout-wrap: {
+      -ms-flex-wrap: wrap;
+      -webkit-flex-wrap: wrap;
+      flex-wrap: wrap;
+    };
 
-      --layout-flex-auto: {
-        -ms-flex: 1 1 auto;
-        -webkit-flex: 1 1 auto;
-        flex: 1 1 auto;
-      };
+    --layout-no-wrap: {
+      -ms-flex-wrap: nowrap;
+      -webkit-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+    };
 
-      --layout-flex-none: {
-        -ms-flex: none;
-        -webkit-flex: none;
-        flex: none;
-      };
+    --layout-wrap-reverse: {
+      -ms-flex-wrap: wrap-reverse;
+      -webkit-flex-wrap: wrap-reverse;
+      flex-wrap: wrap-reverse;
+    };
 
-      --layout-flex: {
-        -ms-flex: 1 1 0.000000001px;
-        -webkit-flex: 1;
-        flex: 1;
-        -webkit-flex-basis: 0.000000001px;
-        flex-basis: 0.000000001px;
-      };
+    --layout-flex-auto: {
+      -ms-flex: 1 1 auto;
+      -webkit-flex: 1 1 auto;
+      flex: 1 1 auto;
+    };
 
-      --layout-flex-2: {
-        -ms-flex: 2;
-        -webkit-flex: 2;
-        flex: 2;
-      };
+    --layout-flex-none: {
+      -ms-flex: none;
+      -webkit-flex: none;
+      flex: none;
+    };
 
-      --layout-flex-3: {
-        -ms-flex: 3;
-        -webkit-flex: 3;
-        flex: 3;
-      };
+    --layout-flex: {
+      -ms-flex: 1 1 0.000000001px;
+      -webkit-flex: 1;
+      flex: 1;
+      -webkit-flex-basis: 0.000000001px;
+      flex-basis: 0.000000001px;
+    };
 
-      --layout-flex-4: {
-        -ms-flex: 4;
-        -webkit-flex: 4;
-        flex: 4;
-      };
+    --layout-flex-2: {
+      -ms-flex: 2;
+      -webkit-flex: 2;
+      flex: 2;
+    };
 
-      --layout-flex-5: {
-        -ms-flex: 5;
-        -webkit-flex: 5;
-        flex: 5;
-      };
+    --layout-flex-3: {
+      -ms-flex: 3;
+      -webkit-flex: 3;
+      flex: 3;
+    };
 
-      --layout-flex-6: {
-        -ms-flex: 6;
-        -webkit-flex: 6;
-        flex: 6;
-      };
+    --layout-flex-4: {
+      -ms-flex: 4;
+      -webkit-flex: 4;
+      flex: 4;
+    };
 
-      --layout-flex-7: {
-        -ms-flex: 7;
-        -webkit-flex: 7;
-        flex: 7;
-      };
+    --layout-flex-5: {
+      -ms-flex: 5;
+      -webkit-flex: 5;
+      flex: 5;
+    };
 
-      --layout-flex-8: {
-        -ms-flex: 8;
-        -webkit-flex: 8;
-        flex: 8;
-      };
+    --layout-flex-6: {
+      -ms-flex: 6;
+      -webkit-flex: 6;
+      flex: 6;
+    };
 
-      --layout-flex-9: {
-        -ms-flex: 9;
-        -webkit-flex: 9;
-        flex: 9;
-      };
+    --layout-flex-7: {
+      -ms-flex: 7;
+      -webkit-flex: 7;
+      flex: 7;
+    };
 
-      --layout-flex-10: {
-        -ms-flex: 10;
-        -webkit-flex: 10;
-        flex: 10;
-      };
+    --layout-flex-8: {
+      -ms-flex: 8;
+      -webkit-flex: 8;
+      flex: 8;
+    };
 
-      --layout-flex-11: {
-        -ms-flex: 11;
-        -webkit-flex: 11;
-        flex: 11;
-      };
+    --layout-flex-9: {
+      -ms-flex: 9;
+      -webkit-flex: 9;
+      flex: 9;
+    };
 
-      --layout-flex-12: {
-        -ms-flex: 12;
-        -webkit-flex: 12;
-        flex: 12;
-      };
+    --layout-flex-10: {
+      -ms-flex: 10;
+      -webkit-flex: 10;
+      flex: 10;
+    };
 
-      /* alignment in cross axis */
+    --layout-flex-11: {
+      -ms-flex: 11;
+      -webkit-flex: 11;
+      flex: 11;
+    };
 
-      --layout-start: {
-        -ms-flex-align: start;
-        -webkit-align-items: flex-start;
-        align-items: flex-start;
-      };
+    --layout-flex-12: {
+      -ms-flex: 12;
+      -webkit-flex: 12;
+      flex: 12;
+    };
 
-      --layout-center: {
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        align-items: center;
-      };
+    /* alignment in cross axis */
 
-      --layout-end: {
-        -ms-flex-align: end;
-        -webkit-align-items: flex-end;
-        align-items: flex-end;
-      };
+    --layout-start: {
+      -ms-flex-align: start;
+      -webkit-align-items: flex-start;
+      align-items: flex-start;
+    };
 
-      --layout-baseline: {
-        -ms-flex-align: baseline;
-        -webkit-align-items: baseline;
-        align-items: baseline;
-      };
+    --layout-center: {
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    };
 
-      /* alignment in main axis */
+    --layout-end: {
+      -ms-flex-align: end;
+      -webkit-align-items: flex-end;
+      align-items: flex-end;
+    };
 
-      --layout-start-justified: {
-        -ms-flex-pack: start;
-        -webkit-justify-content: flex-start;
-        justify-content: flex-start;
-      };
+    --layout-baseline: {
+      -ms-flex-align: baseline;
+      -webkit-align-items: baseline;
+      align-items: baseline;
+    };
 
-      --layout-center-justified: {
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-      };
+    /* alignment in main axis */
 
-      --layout-end-justified: {
-        -ms-flex-pack: end;
-        -webkit-justify-content: flex-end;
-        justify-content: flex-end;
-      };
+    --layout-start-justified: {
+      -ms-flex-pack: start;
+      -webkit-justify-content: flex-start;
+      justify-content: flex-start;
+    };
 
-      --layout-around-justified: {
-        -ms-flex-pack: distribute;
-        -webkit-justify-content: space-around;
-        justify-content: space-around;
-      };
+    --layout-center-justified: {
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+    };
 
-      --layout-justified: {
-        -ms-flex-pack: justify;
-        -webkit-justify-content: space-between;
-        justify-content: space-between;
-      };
+    --layout-end-justified: {
+      -ms-flex-pack: end;
+      -webkit-justify-content: flex-end;
+      justify-content: flex-end;
+    };
 
-      --layout-center-center: {
-        @apply --layout-center;
-        @apply --layout-center-justified;
-      };
+    --layout-around-justified: {
+      -ms-flex-pack: distribute;
+      -webkit-justify-content: space-around;
+      justify-content: space-around;
+    };
 
-      /* self alignment */
+    --layout-justified: {
+      -ms-flex-pack: justify;
+      -webkit-justify-content: space-between;
+      justify-content: space-between;
+    };
 
-      --layout-self-start: {
-        -ms-align-self: flex-start;
-        -webkit-align-self: flex-start;
-        align-self: flex-start;
-      };
+    --layout-center-center: {
+      @apply(--layout-center);
+      @apply(--layout-center-justified);
+    };
 
-      --layout-self-center: {
-        -ms-align-self: center;
-        -webkit-align-self: center;
-        align-self: center;
-      };
+    /* self alignment */
 
-      --layout-self-end: {
-        -ms-align-self: flex-end;
-        -webkit-align-self: flex-end;
-        align-self: flex-end;
-      };
+    --layout-self-start: {
+      -ms-align-self: flex-start;
+      -webkit-align-self: flex-start;
+      align-self: flex-start;
+    };
 
-      --layout-self-stretch: {
-        -ms-align-self: stretch;
-        -webkit-align-self: stretch;
-        align-self: stretch;
-      };
+    --layout-self-center: {
+      -ms-align-self: center;
+      -webkit-align-self: center;
+      align-self: center;
+    };
 
-      --layout-self-baseline: {
-        -ms-align-self: baseline;
-        -webkit-align-self: baseline;
-        align-self: baseline;
-      };
+    --layout-self-end: {
+      -ms-align-self: flex-end;
+      -webkit-align-self: flex-end;
+      align-self: flex-end;
+    };
 
-      /* multi-line alignment in main axis */
+    --layout-self-stretch: {
+      -ms-align-self: stretch;
+      -webkit-align-self: stretch;
+      align-self: stretch;
+    };
 
-      --layout-start-aligned: {
-        -ms-flex-line-pack: start;  /* IE10 */
-        -ms-align-content: flex-start;
-        -webkit-align-content: flex-start;
-        align-content: flex-start;
-      };
+    --layout-self-baseline: {
+      -ms-align-self: baseline;
+      -webkit-align-self: baseline;
+      align-self: baseline;
+    };
 
-      --layout-end-aligned: {
-        -ms-flex-line-pack: end;  /* IE10 */
-        -ms-align-content: flex-end;
-        -webkit-align-content: flex-end;
-        align-content: flex-end;
-      };
+    /* multi-line alignment in main axis */
 
-      --layout-center-aligned: {
-        -ms-flex-line-pack: center;  /* IE10 */
-        -ms-align-content: center;
-        -webkit-align-content: center;
-        align-content: center;
-      };
+    --layout-start-aligned: {
+      -ms-flex-line-pack: start;  /* IE10 */
+      -ms-align-content: flex-start;
+      -webkit-align-content: flex-start;
+      align-content: flex-start;
+    };
 
-      --layout-between-aligned: {
-        -ms-flex-line-pack: justify;  /* IE10 */
-        -ms-align-content: space-between;
-        -webkit-align-content: space-between;
-        align-content: space-between;
-      };
+    --layout-end-aligned: {
+      -ms-flex-line-pack: end;  /* IE10 */
+      -ms-align-content: flex-end;
+      -webkit-align-content: flex-end;
+      align-content: flex-end;
+    };
 
-      --layout-around-aligned: {
-        -ms-flex-line-pack: distribute;  /* IE10 */
-        -ms-align-content: space-around;
-        -webkit-align-content: space-around;
-        align-content: space-around;
-      };
+    --layout-center-aligned: {
+      -ms-flex-line-pack: center;  /* IE10 */
+      -ms-align-content: center;
+      -webkit-align-content: center;
+      align-content: center;
+    };
 
-      /*******************************
-                Other Layout
-      *******************************/
+    --layout-between-aligned: {
+      -ms-flex-line-pack: justify;  /* IE10 */
+      -ms-align-content: space-between;
+      -webkit-align-content: space-between;
+      align-content: space-between;
+    };
 
-      --layout-block: {
-        display: block;
-      };
+    --layout-around-aligned: {
+      -ms-flex-line-pack: distribute;  /* IE10 */
+      -ms-align-content: space-around;
+      -webkit-align-content: space-around;
+      align-content: space-around;
+    };
 
-      --layout-invisible: {
-        visibility: hidden !important;
-      };
+    /*******************************
+              Other Layout
+    *******************************/
 
-      --layout-relative: {
-        position: relative;
-      };
+    --layout-block: {
+      display: block;
+    };
 
-      --layout-fit: {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      };
+    --layout-invisible: {
+      visibility: hidden !important;
+    };
 
-      --layout-scroll: {
-        -webkit-overflow-scrolling: touch;
-        overflow: auto;
-      };
+    --layout-relative: {
+      position: relative;
+    };
 
-      --layout-fullbleed: {
-        margin: 0;
-        height: 100vh;
-      };
+    --layout-fit: {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    };
 
-      /* fixed position */
+    --layout-scroll: {
+      -webkit-overflow-scrolling: touch;
+      overflow: auto;
+    };
 
-      --layout-fixed-top: {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-      };
+    --layout-fullbleed: {
+      margin: 0;
+      height: 100vh;
+    };
 
-      --layout-fixed-right: {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-      };
+    /* fixed position */
 
-      --layout-fixed-bottom: {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      };
+    --layout-fixed-top: {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    };
 
-      --layout-fixed-left: {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-      };
+    --layout-fixed-right: {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    };
 
-    }
-  </style>
-</custom-style><!--
+    --layout-fixed-bottom: {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    };
+
+    --layout-fixed-left: {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+    };
+
+  }
+
+</style><!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -10775,7 +10790,7 @@ Example:
       <style is="custom-style" include="paper-material-styles"></style>
     </custom-style>
 
-    <div class="paper-material" elevation="1">
+    <div class="paper-material elevation-1">
       ... content ...
     </div>
 
@@ -10791,71 +10806,70 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
---><custom-style>
-  <style is="custom-style">
-    html {
+--><style is="custom-style">
 
-      --shadow-transition: {
-        transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-      };
+  :root {
 
-      --shadow-none: {
-        box-shadow: none;
-      };
+    --shadow-transition: {
+      transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    };
 
-      /* from http://codepen.io/shyndman/pen/c5394ddf2e8b2a5c9185904b57421cdb */
+    --shadow-none: {
+      box-shadow: none;
+    };
 
-      --shadow-elevation-2dp: {
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
-      };
+    /* from http://codepen.io/shyndman/pen/c5394ddf2e8b2a5c9185904b57421cdb */
 
-      --shadow-elevation-3dp: {
-        box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 8px 0 rgba(0, 0, 0, 0.12),
-                    0 3px 3px -2px rgba(0, 0, 0, 0.4);
-      };
+    --shadow-elevation-2dp: {
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    };
 
-      --shadow-elevation-4dp: {
-        box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 10px 0 rgba(0, 0, 0, 0.12),
-                    0 2px 4px -1px rgba(0, 0, 0, 0.4);
-      };
+    --shadow-elevation-3dp: {
+      box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 8px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 3px -2px rgba(0, 0, 0, 0.4);
+    };
 
-      --shadow-elevation-6dp: {
-        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 18px 0 rgba(0, 0, 0, 0.12),
-                    0 3px 5px -1px rgba(0, 0, 0, 0.4);
-      };
+    --shadow-elevation-4dp: {
+      box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 10px 0 rgba(0, 0, 0, 0.12),
+                  0 2px 4px -1px rgba(0, 0, 0, 0.4);
+    };
 
-      --shadow-elevation-8dp: {
-        box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                    0 3px 14px 2px rgba(0, 0, 0, 0.12),
-                    0 5px 5px -3px rgba(0, 0, 0, 0.4);
-      };
+    --shadow-elevation-6dp: {
+      box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 18px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 5px -1px rgba(0, 0, 0, 0.4);
+    };
 
-      --shadow-elevation-12dp: {
-        box-shadow: 0 12px 16px 1px rgba(0, 0, 0, 0.14),
-                    0 4px 22px 3px rgba(0, 0, 0, 0.12),
-                    0 6px 7px -4px rgba(0, 0, 0, 0.4);
-      };
+    --shadow-elevation-8dp: {
+      box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                  0 3px 14px 2px rgba(0, 0, 0, 0.12),
+                  0 5px 5px -3px rgba(0, 0, 0, 0.4);
+    };
 
-      --shadow-elevation-16dp: {
-        box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
-                    0  6px 30px 5px rgba(0, 0, 0, 0.12),
-                    0  8px 10px -5px rgba(0, 0, 0, 0.4);
-      };
+    --shadow-elevation-12dp: {
+      box-shadow: 0 12px 16px 1px rgba(0, 0, 0, 0.14),
+                  0 4px 22px 3px rgba(0, 0, 0, 0.12),
+                  0 6px 7px -4px rgba(0, 0, 0, 0.4);
+    };
 
-      --shadow-elevation-24dp: {
-        box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14),
-                    0 9px 46px 8px rgba(0, 0, 0, 0.12),
-                    0 11px 15px -7px rgba(0, 0, 0, 0.4);
-      };
-    }
-  </style>
-</custom-style>
-<dom-module id="paper-material-styles" assetpath="../bower_components/paper-styles/element-styles/">
+    --shadow-elevation-16dp: {
+      box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+                  0  6px 30px 5px rgba(0, 0, 0, 0.12),
+                  0  8px 10px -5px rgba(0, 0, 0, 0.4);
+    };
+
+    --shadow-elevation-24dp: {
+      box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14),
+                  0 9px 46px 8px rgba(0, 0, 0, 0.12),
+                  0 11px 15px -7px rgba(0, 0, 0, 0.4);
+    };
+  }
+
+</style><dom-module id="paper-material-styles" assetpath="../bower_components/paper-styles/element-styles/">
   <template>
     <style>
       :host, html {
@@ -11079,6 +11093,418 @@ Custom property | Description | Default
 @hero hero.svg
 -->
 
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!-- Most common used flex styles-->
+<dom-module id="iron-flex" assetpath="../bower_components/iron-flex-layout/">
+  <template>
+    <style>
+      .layout.horizontal,
+      .layout.vertical {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+      }
+
+      .layout.inline {
+        display: -ms-inline-flexbox;
+        display: -webkit-inline-flex;
+        display: inline-flex;
+      }
+
+      .layout.horizontal {
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+      }
+
+      .layout.vertical {
+        -ms-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+      }
+
+      .layout.wrap {
+        -ms-flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+      }
+
+      .layout.no-wrap {
+        -ms-flex-wrap: nowrap;
+        -webkit-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+      }
+
+      .layout.center,
+      .layout.center-center {
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+      .layout.center-justified,
+      .layout.center-center {
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+      }
+
+      .flex {
+        -ms-flex: 1 1 0.000000001px;
+        -webkit-flex: 1;
+        flex: 1;
+        -webkit-flex-basis: 0.000000001px;
+        flex-basis: 0.000000001px;
+      }
+
+      .flex-auto {
+        -ms-flex: 1 1 auto;
+        -webkit-flex: 1 1 auto;
+        flex: 1 1 auto;
+      }
+
+      .flex-none {
+        -ms-flex: none;
+        -webkit-flex: none;
+        flex: none;
+      }
+    </style>
+  </template>
+</dom-module>
+
+<!-- Basic flexbox reverse styles -->
+<dom-module id="iron-flex-reverse" assetpath="../bower_components/iron-flex-layout/">
+  <template>
+    <style>
+      .layout.horizontal-reverse,
+      .layout.vertical-reverse {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+      }
+
+      .layout.horizontal-reverse {
+        -ms-flex-direction: row-reverse;
+        -webkit-flex-direction: row-reverse;
+        flex-direction: row-reverse;
+      }
+
+      .layout.vertical-reverse {
+        -ms-flex-direction: column-reverse;
+        -webkit-flex-direction: column-reverse;
+        flex-direction: column-reverse;
+      }
+
+      .layout.wrap-reverse {
+        -ms-flex-wrap: wrap-reverse;
+        -webkit-flex-wrap: wrap-reverse;
+        flex-wrap: wrap-reverse;
+      }
+    </style>
+  </template>
+</dom-module>
+
+<!-- Flexbox alignment -->
+<dom-module id="iron-flex-alignment" assetpath="../bower_components/iron-flex-layout/">
+  <template>
+    <style>
+      /**
+       * Alignment in cross axis.
+       */
+      .layout.start {
+        -ms-flex-align: start;
+        -webkit-align-items: flex-start;
+        align-items: flex-start;
+      }
+
+      .layout.center,
+      .layout.center-center {
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+      .layout.end {
+        -ms-flex-align: end;
+        -webkit-align-items: flex-end;
+        align-items: flex-end;
+      }
+
+      .layout.baseline {
+        -ms-flex-align: baseline;
+        -webkit-align-items: baseline;
+        align-items: baseline;
+      }
+
+      /**
+       * Alignment in main axis.
+       */
+      .layout.start-justified {
+        -ms-flex-pack: start;
+        -webkit-justify-content: flex-start;
+        justify-content: flex-start;
+      }
+
+      .layout.center-justified,
+      .layout.center-center {
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+      }
+
+      .layout.end-justified {
+        -ms-flex-pack: end;
+        -webkit-justify-content: flex-end;
+        justify-content: flex-end;
+      }
+
+      .layout.around-justified {
+        -ms-flex-pack: distribute;
+        -webkit-justify-content: space-around;
+        justify-content: space-around;
+      }
+
+      .layout.justified {
+        -ms-flex-pack: justify;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+      }
+
+      /**
+       * Self alignment.
+       */
+      .self-start {
+        -ms-align-self: flex-start;
+        -webkit-align-self: flex-start;
+        align-self: flex-start;
+      }
+
+      .self-center {
+        -ms-align-self: center;
+        -webkit-align-self: center;
+        align-self: center;
+      }
+
+      .self-end {
+        -ms-align-self: flex-end;
+        -webkit-align-self: flex-end;
+        align-self: flex-end;
+      }
+
+      .self-stretch {
+        -ms-align-self: stretch;
+        -webkit-align-self: stretch;
+        align-self: stretch;
+      }
+
+      .self-baseline {
+        -ms-align-self: baseline;
+        -webkit-align-self: baseline;
+        align-self: baseline;
+      }
+
+      /**
+       * multi-line alignment in main axis.
+       */
+      .layout.start-aligned {
+        -ms-flex-line-pack: start;  /* IE10 */
+        -ms-align-content: flex-start;
+        -webkit-align-content: flex-start;
+        align-content: flex-start;
+      }
+
+      .layout.end-aligned {
+        -ms-flex-line-pack: end;  /* IE10 */
+        -ms-align-content: flex-end;
+        -webkit-align-content: flex-end;
+        align-content: flex-end;
+      }
+
+      .layout.center-aligned {
+        -ms-flex-line-pack: center;  /* IE10 */
+        -ms-align-content: center;
+        -webkit-align-content: center;
+        align-content: center;
+      }
+
+      .layout.between-aligned {
+        -ms-flex-line-pack: justify;  /* IE10 */
+        -ms-align-content: space-between;
+        -webkit-align-content: space-between;
+        align-content: space-between;
+      }
+
+      .layout.around-aligned {
+        -ms-flex-line-pack: distribute;  /* IE10 */
+        -ms-align-content: space-around;
+        -webkit-align-content: space-around;
+        align-content: space-around;
+      }
+    </style>
+  </template>
+</dom-module>
+
+<dom-module id="iron-flex-factors" assetpath="../bower_components/iron-flex-layout/">
+  <template>
+    <style>
+      .flex,
+      .flex-1 {
+        -ms-flex: 1 1 0.000000001px;
+        -webkit-flex: 1;
+        flex: 1;
+        -webkit-flex-basis: 0.000000001px;
+        flex-basis: 0.000000001px;
+      }
+
+      .flex-2 {
+        -ms-flex: 2;
+        -webkit-flex: 2;
+        flex: 2;
+      }
+
+      .flex-3 {
+        -ms-flex: 3;
+        -webkit-flex: 3;
+        flex: 3;
+      }
+
+      .flex-4 {
+        -ms-flex: 4;
+        -webkit-flex: 4;
+        flex: 4;
+      }
+
+      .flex-5 {
+        -ms-flex: 5;
+        -webkit-flex: 5;
+        flex: 5;
+      }
+
+      .flex-6 {
+        -ms-flex: 6;
+        -webkit-flex: 6;
+        flex: 6;
+      }
+
+      .flex-7 {
+        -ms-flex: 7;
+        -webkit-flex: 7;
+        flex: 7;
+      }
+
+      .flex-8 {
+        -ms-flex: 8;
+        -webkit-flex: 8;
+        flex: 8;
+      }
+
+      .flex-9 {
+        -ms-flex: 9;
+        -webkit-flex: 9;
+        flex: 9;
+      }
+
+      .flex-10 {
+        -ms-flex: 10;
+        -webkit-flex: 10;
+        flex: 10;
+      }
+
+      .flex-11 {
+        -ms-flex: 11;
+        -webkit-flex: 11;
+        flex: 11;
+      }
+
+      .flex-12 {
+        -ms-flex: 12;
+        -webkit-flex: 12;
+        flex: 12;
+      }
+    </style>
+  </template>
+</dom-module>
+
+<!-- Non-flexbox positioning helper styles -->
+<dom-module id="iron-positioning" assetpath="../bower_components/iron-flex-layout/">
+  <template>
+    <style>
+      .block {
+        display: block;
+      }
+
+      /* IE 10 support for HTML5 hidden attr */
+      [hidden] {
+        display: none !important;
+      }
+
+      .invisible {
+        visibility: hidden !important;
+      }
+
+      .relative {
+        position: relative;
+      }
+
+      .fit {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      body.fullbleed {
+        margin: 0;
+        height: 100vh;
+      }
+
+      .scroll {
+        -webkit-overflow-scrolling: touch;
+        overflow: auto;
+      }
+
+      /* fixed position */
+      .fixed-bottom,
+      .fixed-left,
+      .fixed-right,
+      .fixed-top {
+        position: fixed;
+      }
+
+      .fixed-top {
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .fixed-right {
+        top: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      .fixed-bottom {
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      .fixed-left {
+        top: 0;
+        bottom: 0;
+        left: 0;
+      }
+    </style>
+  </template>
+</dom-module>
 <!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
@@ -12910,14 +13336,6 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 --><!--
-Typographic styles are provided matching the Material Design standard styles:
-http://www.google.com/design/spec/style/typography.html#typography-standard-styles
-
-Note that these are English/Latin centric styles. You may need to further adjust
-line heights and weights for CJK typesetting. See the notes in the Material
-Design typography section.
--->
-<!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -12926,164 +13344,162 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 --><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic" crossorigin="anonymous">
-<custom-style>
-  <style is="custom-style">
-    html {
+<style is="custom-style">
 
-      /* Shared Styles */
-      --paper-font-common-base: {
-        font-family: 'Roboto', 'Noto', sans-serif;
-        -webkit-font-smoothing: antialiased;
-      };
+  :root {
 
-      --paper-font-common-code: {
-        font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
-        -webkit-font-smoothing: antialiased;
-      };
+    /* Shared Styles */
+    --paper-font-common-base: {
+      font-family: 'Roboto', 'Noto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    };
 
-      --paper-font-common-expensive-kerning: {
-        text-rendering: optimizeLegibility;
-      };
+    --paper-font-common-code: {
+      font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+      -webkit-font-smoothing: antialiased;
+    };
 
-      --paper-font-common-nowrap: {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      };
+    --paper-font-common-expensive-kerning: {
+      text-rendering: optimizeLegibility;
+    };
 
-      /* Material Font Styles */
+    --paper-font-common-nowrap: {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    };
 
-      --paper-font-display4: {
-        @apply --paper-font-common-base;
-        @apply --paper-font-common-nowrap;
+    /* Material Font Styles */
 
-        font-size: 112px;
-        font-weight: 300;
-        letter-spacing: -.044em;
-        line-height: 120px;
-      };
+    --paper-font-display4: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
 
-      --paper-font-display3: {
-        @apply --paper-font-common-base;
-        @apply --paper-font-common-nowrap;
+      font-size: 112px;
+      font-weight: 300;
+      letter-spacing: -.044em;
+      line-height: 120px;
+    };
 
-        font-size: 56px;
-        font-weight: 400;
-        letter-spacing: -.026em;
-        line-height: 60px;
-      };
+    --paper-font-display3: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
 
-      --paper-font-display2: {
-        @apply --paper-font-common-base;
+      font-size: 56px;
+      font-weight: 400;
+      letter-spacing: -.026em;
+      line-height: 60px;
+    };
 
-        font-size: 45px;
-        font-weight: 400;
-        letter-spacing: -.018em;
-        line-height: 48px;
-      };
+    --paper-font-display2: {
+      @apply(--paper-font-common-base);
 
-      --paper-font-display1: {
-        @apply --paper-font-common-base;
+      font-size: 45px;
+      font-weight: 400;
+      letter-spacing: -.018em;
+      line-height: 48px;
+    };
 
-        font-size: 34px;
-        font-weight: 400;
-        letter-spacing: -.01em;
-        line-height: 40px;
-      };
+    --paper-font-display1: {
+      @apply(--paper-font-common-base);
 
-      --paper-font-headline: {
-        @apply --paper-font-common-base;
+      font-size: 34px;
+      font-weight: 400;
+      letter-spacing: -.01em;
+      line-height: 40px;
+    };
 
-        font-size: 24px;
-        font-weight: 400;
-        letter-spacing: -.012em;
-        line-height: 32px;
-      };
+    --paper-font-headline: {
+      @apply(--paper-font-common-base);
 
-      --paper-font-title: {
-        @apply --paper-font-common-base;
-        @apply --paper-font-common-nowrap;
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: -.012em;
+      line-height: 32px;
+    };
 
-        font-size: 20px;
-        font-weight: 500;
-        line-height: 28px;
-      };
+    --paper-font-title: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
 
-      --paper-font-subhead: {
-        @apply --paper-font-common-base;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 28px;
+    };
 
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 24px;
-      };
+    --paper-font-subhead: {
+      @apply(--paper-font-common-base);
 
-      --paper-font-body2: {
-        @apply --paper-font-common-base;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+    };
 
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 24px;
-      };
+    --paper-font-body2: {
+      @apply(--paper-font-common-base);
 
-      --paper-font-body1: {
-        @apply --paper-font-common-base;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 24px;
+    };
 
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-      };
+    --paper-font-body1: {
+      @apply(--paper-font-common-base);
 
-      --paper-font-caption: {
-        @apply --paper-font-common-base;
-        @apply --paper-font-common-nowrap;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+    };
 
-        font-size: 12px;
-        font-weight: 400;
-        letter-spacing: 0.011em;
-        line-height: 20px;
-      };
+    --paper-font-caption: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
 
-      --paper-font-menu: {
-        @apply --paper-font-common-base;
-        @apply --paper-font-common-nowrap;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.011em;
+      line-height: 20px;
+    };
 
-        font-size: 13px;
-        font-weight: 500;
-        line-height: 24px;
-      };
+    --paper-font-menu: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
 
-      --paper-font-button: {
-        @apply --paper-font-common-base;
-        @apply --paper-font-common-nowrap;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 24px;
+    };
 
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0.018em;
-        line-height: 24px;
-        text-transform: uppercase;
-      };
+    --paper-font-button: {
+      @apply(--paper-font-common-base);
+      @apply(--paper-font-common-nowrap);
 
-      --paper-font-code2: {
-        @apply --paper-font-common-code;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.018em;
+      line-height: 24px;
+      text-transform: uppercase;
+    };
 
-        font-size: 14px;
-        font-weight: 700;
-        line-height: 20px;
-      };
+    --paper-font-code2: {
+      @apply(--paper-font-common-code);
 
-      --paper-font-code1: {
-        @apply --paper-font-common-code;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+    };
 
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 20px;
-      };
+    --paper-font-code1: {
+      @apply(--paper-font-common-code);
 
-    }
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+    };
 
-  </style>
-</custom-style>
-<!--
+  }
+
+</style><!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -13316,385 +13732,383 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
---><custom-style>
-  <style is="custom-style">
-    html {
+--><style is="custom-style">
 
-      /* Material Design color palette for Google products */
+  :root {
 
-      --google-red-100: #f4c7c3;
-      --google-red-300: #e67c73;
-      --google-red-500: #db4437;
-      --google-red-700: #c53929;
+    /* Material Design color palette for Google products */
 
-      --google-blue-100: #c6dafc;
-      --google-blue-300: #7baaf7;
-      --google-blue-500: #4285f4;
-      --google-blue-700: #3367d6;
+    --google-red-100: #f4c7c3;
+    --google-red-300: #e67c73;
+    --google-red-500: #db4437;
+    --google-red-700: #c53929;
 
-      --google-green-100: #b7e1cd;
-      --google-green-300: #57bb8a;
-      --google-green-500: #0f9d58;
-      --google-green-700: #0b8043;
+    --google-blue-100: #c6dafc;
+    --google-blue-300: #7baaf7;
+    --google-blue-500: #4285f4;
+    --google-blue-700: #3367d6;
 
-      --google-yellow-100: #fce8b2;
-      --google-yellow-300: #f7cb4d;
-      --google-yellow-500: #f4b400;
-      --google-yellow-700: #f09300;
+    --google-green-100: #b7e1cd;
+    --google-green-300: #57bb8a;
+    --google-green-500: #0f9d58;
+    --google-green-700: #0b8043;
 
-      --google-grey-100: #f5f5f5;
-      --google-grey-300: #e0e0e0;
-      --google-grey-500: #9e9e9e;
-      --google-grey-700: #616161;
+    --google-yellow-100: #fce8b2;
+    --google-yellow-300: #f7cb4d;
+    --google-yellow-500: #f4b400;
+    --google-yellow-700: #f09300;
 
-      /* Material Design color palette from online spec document */
+    --google-grey-100: #f5f5f5;
+    --google-grey-300: #e0e0e0;
+    --google-grey-500: #9e9e9e;
+    --google-grey-700: #616161;
+    
+    /* Material Design color palette from online spec document */
 
-      --paper-red-50: #ffebee;
-      --paper-red-100: #ffcdd2;
-      --paper-red-200: #ef9a9a;
-      --paper-red-300: #e57373;
-      --paper-red-400: #ef5350;
-      --paper-red-500: #f44336;
-      --paper-red-600: #e53935;
-      --paper-red-700: #d32f2f;
-      --paper-red-800: #c62828;
-      --paper-red-900: #b71c1c;
-      --paper-red-a100: #ff8a80;
-      --paper-red-a200: #ff5252;
-      --paper-red-a400: #ff1744;
-      --paper-red-a700: #d50000;
+    --paper-red-50: #ffebee;
+    --paper-red-100: #ffcdd2;
+    --paper-red-200: #ef9a9a;
+    --paper-red-300: #e57373;
+    --paper-red-400: #ef5350;
+    --paper-red-500: #f44336;
+    --paper-red-600: #e53935;
+    --paper-red-700: #d32f2f;
+    --paper-red-800: #c62828;
+    --paper-red-900: #b71c1c;
+    --paper-red-a100: #ff8a80;
+    --paper-red-a200: #ff5252;
+    --paper-red-a400: #ff1744;
+    --paper-red-a700: #d50000;
+ 
+    --paper-pink-50: #fce4ec;
+    --paper-pink-100: #f8bbd0;
+    --paper-pink-200: #f48fb1;
+    --paper-pink-300: #f06292;
+    --paper-pink-400: #ec407a;
+    --paper-pink-500: #e91e63;
+    --paper-pink-600: #d81b60;
+    --paper-pink-700: #c2185b;
+    --paper-pink-800: #ad1457;
+    --paper-pink-900: #880e4f;
+    --paper-pink-a100: #ff80ab;
+    --paper-pink-a200: #ff4081;
+    --paper-pink-a400: #f50057;
+    --paper-pink-a700: #c51162;
+ 
+    --paper-purple-50: #f3e5f5;
+    --paper-purple-100: #e1bee7;
+    --paper-purple-200: #ce93d8;
+    --paper-purple-300: #ba68c8;
+    --paper-purple-400: #ab47bc;
+    --paper-purple-500: #9c27b0;
+    --paper-purple-600: #8e24aa;
+    --paper-purple-700: #7b1fa2;
+    --paper-purple-800: #6a1b9a;
+    --paper-purple-900: #4a148c;
+    --paper-purple-a100: #ea80fc;
+    --paper-purple-a200: #e040fb;
+    --paper-purple-a400: #d500f9;
+    --paper-purple-a700: #aa00ff;
+ 
+    --paper-deep-purple-50: #ede7f6;
+    --paper-deep-purple-100: #d1c4e9;
+    --paper-deep-purple-200: #b39ddb;
+    --paper-deep-purple-300: #9575cd;
+    --paper-deep-purple-400: #7e57c2;
+    --paper-deep-purple-500: #673ab7;
+    --paper-deep-purple-600: #5e35b1;
+    --paper-deep-purple-700: #512da8;
+    --paper-deep-purple-800: #4527a0;
+    --paper-deep-purple-900: #311b92;
+    --paper-deep-purple-a100: #b388ff;
+    --paper-deep-purple-a200: #7c4dff;
+    --paper-deep-purple-a400: #651fff;
+    --paper-deep-purple-a700: #6200ea;
+ 
+    --paper-indigo-50: #e8eaf6;
+    --paper-indigo-100: #c5cae9;
+    --paper-indigo-200: #9fa8da;
+    --paper-indigo-300: #7986cb;
+    --paper-indigo-400: #5c6bc0;
+    --paper-indigo-500: #3f51b5;
+    --paper-indigo-600: #3949ab;
+    --paper-indigo-700: #303f9f;
+    --paper-indigo-800: #283593;
+    --paper-indigo-900: #1a237e;
+    --paper-indigo-a100: #8c9eff;
+    --paper-indigo-a200: #536dfe;
+    --paper-indigo-a400: #3d5afe;
+    --paper-indigo-a700: #304ffe;
+ 
+    --paper-blue-50: #e3f2fd;
+    --paper-blue-100: #bbdefb;
+    --paper-blue-200: #90caf9;
+    --paper-blue-300: #64b5f6;
+    --paper-blue-400: #42a5f5;
+    --paper-blue-500: #2196f3;
+    --paper-blue-600: #1e88e5;
+    --paper-blue-700: #1976d2;
+    --paper-blue-800: #1565c0;
+    --paper-blue-900: #0d47a1;
+    --paper-blue-a100: #82b1ff;
+    --paper-blue-a200: #448aff;
+    --paper-blue-a400: #2979ff;
+    --paper-blue-a700: #2962ff;
+ 
+    --paper-light-blue-50: #e1f5fe;
+    --paper-light-blue-100: #b3e5fc;
+    --paper-light-blue-200: #81d4fa;
+    --paper-light-blue-300: #4fc3f7;
+    --paper-light-blue-400: #29b6f6;
+    --paper-light-blue-500: #03a9f4;
+    --paper-light-blue-600: #039be5;
+    --paper-light-blue-700: #0288d1;
+    --paper-light-blue-800: #0277bd;
+    --paper-light-blue-900: #01579b;
+    --paper-light-blue-a100: #80d8ff;
+    --paper-light-blue-a200: #40c4ff;
+    --paper-light-blue-a400: #00b0ff;
+    --paper-light-blue-a700: #0091ea;
+ 
+    --paper-cyan-50: #e0f7fa;
+    --paper-cyan-100: #b2ebf2;
+    --paper-cyan-200: #80deea;
+    --paper-cyan-300: #4dd0e1;
+    --paper-cyan-400: #26c6da;
+    --paper-cyan-500: #00bcd4;
+    --paper-cyan-600: #00acc1;
+    --paper-cyan-700: #0097a7;
+    --paper-cyan-800: #00838f;
+    --paper-cyan-900: #006064;
+    --paper-cyan-a100: #84ffff;
+    --paper-cyan-a200: #18ffff;
+    --paper-cyan-a400: #00e5ff;
+    --paper-cyan-a700: #00b8d4;
+ 
+    --paper-teal-50: #e0f2f1;
+    --paper-teal-100: #b2dfdb;
+    --paper-teal-200: #80cbc4;
+    --paper-teal-300: #4db6ac;
+    --paper-teal-400: #26a69a;
+    --paper-teal-500: #009688;
+    --paper-teal-600: #00897b;
+    --paper-teal-700: #00796b;
+    --paper-teal-800: #00695c;
+    --paper-teal-900: #004d40;
+    --paper-teal-a100: #a7ffeb;
+    --paper-teal-a200: #64ffda;
+    --paper-teal-a400: #1de9b6;
+    --paper-teal-a700: #00bfa5;
+ 
+    --paper-green-50: #e8f5e9;
+    --paper-green-100: #c8e6c9;
+    --paper-green-200: #a5d6a7;
+    --paper-green-300: #81c784;
+    --paper-green-400: #66bb6a;
+    --paper-green-500: #4caf50;
+    --paper-green-600: #43a047;
+    --paper-green-700: #388e3c;
+    --paper-green-800: #2e7d32;
+    --paper-green-900: #1b5e20;
+    --paper-green-a100: #b9f6ca;
+    --paper-green-a200: #69f0ae;
+    --paper-green-a400: #00e676;
+    --paper-green-a700: #00c853;
+ 
+    --paper-light-green-50: #f1f8e9;
+    --paper-light-green-100: #dcedc8;
+    --paper-light-green-200: #c5e1a5;
+    --paper-light-green-300: #aed581;
+    --paper-light-green-400: #9ccc65;
+    --paper-light-green-500: #8bc34a;
+    --paper-light-green-600: #7cb342;
+    --paper-light-green-700: #689f38;
+    --paper-light-green-800: #558b2f;
+    --paper-light-green-900: #33691e;
+    --paper-light-green-a100: #ccff90;
+    --paper-light-green-a200: #b2ff59;
+    --paper-light-green-a400: #76ff03;
+    --paper-light-green-a700: #64dd17;
+ 
+    --paper-lime-50: #f9fbe7;
+    --paper-lime-100: #f0f4c3;
+    --paper-lime-200: #e6ee9c;
+    --paper-lime-300: #dce775;
+    --paper-lime-400: #d4e157;
+    --paper-lime-500: #cddc39;
+    --paper-lime-600: #c0ca33;
+    --paper-lime-700: #afb42b;
+    --paper-lime-800: #9e9d24;
+    --paper-lime-900: #827717;
+    --paper-lime-a100: #f4ff81;
+    --paper-lime-a200: #eeff41;
+    --paper-lime-a400: #c6ff00;
+    --paper-lime-a700: #aeea00;
+ 
+    --paper-yellow-50: #fffde7;
+    --paper-yellow-100: #fff9c4;
+    --paper-yellow-200: #fff59d;
+    --paper-yellow-300: #fff176;
+    --paper-yellow-400: #ffee58;
+    --paper-yellow-500: #ffeb3b;
+    --paper-yellow-600: #fdd835;
+    --paper-yellow-700: #fbc02d;
+    --paper-yellow-800: #f9a825;
+    --paper-yellow-900: #f57f17;
+    --paper-yellow-a100: #ffff8d;
+    --paper-yellow-a200: #ffff00;
+    --paper-yellow-a400: #ffea00;
+    --paper-yellow-a700: #ffd600;
+ 
+    --paper-amber-50: #fff8e1;
+    --paper-amber-100: #ffecb3;
+    --paper-amber-200: #ffe082;
+    --paper-amber-300: #ffd54f;
+    --paper-amber-400: #ffca28;
+    --paper-amber-500: #ffc107;
+    --paper-amber-600: #ffb300;
+    --paper-amber-700: #ffa000;
+    --paper-amber-800: #ff8f00;
+    --paper-amber-900: #ff6f00;
+    --paper-amber-a100: #ffe57f;
+    --paper-amber-a200: #ffd740;
+    --paper-amber-a400: #ffc400;
+    --paper-amber-a700: #ffab00;
+ 
+    --paper-orange-50: #fff3e0;
+    --paper-orange-100: #ffe0b2;
+    --paper-orange-200: #ffcc80;
+    --paper-orange-300: #ffb74d;
+    --paper-orange-400: #ffa726;
+    --paper-orange-500: #ff9800;
+    --paper-orange-600: #fb8c00;
+    --paper-orange-700: #f57c00;
+    --paper-orange-800: #ef6c00;
+    --paper-orange-900: #e65100;
+    --paper-orange-a100: #ffd180;
+    --paper-orange-a200: #ffab40;
+    --paper-orange-a400: #ff9100;
+    --paper-orange-a700: #ff6500;
+ 
+    --paper-deep-orange-50: #fbe9e7;
+    --paper-deep-orange-100: #ffccbc;
+    --paper-deep-orange-200: #ffab91;
+    --paper-deep-orange-300: #ff8a65;
+    --paper-deep-orange-400: #ff7043;
+    --paper-deep-orange-500: #ff5722;
+    --paper-deep-orange-600: #f4511e;
+    --paper-deep-orange-700: #e64a19;
+    --paper-deep-orange-800: #d84315;
+    --paper-deep-orange-900: #bf360c;
+    --paper-deep-orange-a100: #ff9e80;
+    --paper-deep-orange-a200: #ff6e40;
+    --paper-deep-orange-a400: #ff3d00;
+    --paper-deep-orange-a700: #dd2c00;
+ 
+    --paper-brown-50: #efebe9;
+    --paper-brown-100: #d7ccc8;
+    --paper-brown-200: #bcaaa4;
+    --paper-brown-300: #a1887f;
+    --paper-brown-400: #8d6e63;
+    --paper-brown-500: #795548;
+    --paper-brown-600: #6d4c41;
+    --paper-brown-700: #5d4037;
+    --paper-brown-800: #4e342e;
+    --paper-brown-900: #3e2723;
+ 
+    --paper-grey-50: #fafafa;
+    --paper-grey-100: #f5f5f5;
+    --paper-grey-200: #eeeeee;
+    --paper-grey-300: #e0e0e0;
+    --paper-grey-400: #bdbdbd;
+    --paper-grey-500: #9e9e9e;
+    --paper-grey-600: #757575;
+    --paper-grey-700: #616161;
+    --paper-grey-800: #424242;
+    --paper-grey-900: #212121;
+ 
+    --paper-blue-grey-50: #eceff1;
+    --paper-blue-grey-100: #cfd8dc;
+    --paper-blue-grey-200: #b0bec5;
+    --paper-blue-grey-300: #90a4ae;
+    --paper-blue-grey-400: #78909c;
+    --paper-blue-grey-500: #607d8b;
+    --paper-blue-grey-600: #546e7a;
+    --paper-blue-grey-700: #455a64;
+    --paper-blue-grey-800: #37474f;
+    --paper-blue-grey-900: #263238;
 
-      --paper-pink-50: #fce4ec;
-      --paper-pink-100: #f8bbd0;
-      --paper-pink-200: #f48fb1;
-      --paper-pink-300: #f06292;
-      --paper-pink-400: #ec407a;
-      --paper-pink-500: #e91e63;
-      --paper-pink-600: #d81b60;
-      --paper-pink-700: #c2185b;
-      --paper-pink-800: #ad1457;
-      --paper-pink-900: #880e4f;
-      --paper-pink-a100: #ff80ab;
-      --paper-pink-a200: #ff4081;
-      --paper-pink-a400: #f50057;
-      --paper-pink-a700: #c51162;
+    /* opacity for dark text on a light background */
+    --dark-divider-opacity: 0.12;
+    --dark-disabled-opacity: 0.38; /* or hint text or icon */
+    --dark-secondary-opacity: 0.54;
+    --dark-primary-opacity: 0.87;
 
-      --paper-purple-50: #f3e5f5;
-      --paper-purple-100: #e1bee7;
-      --paper-purple-200: #ce93d8;
-      --paper-purple-300: #ba68c8;
-      --paper-purple-400: #ab47bc;
-      --paper-purple-500: #9c27b0;
-      --paper-purple-600: #8e24aa;
-      --paper-purple-700: #7b1fa2;
-      --paper-purple-800: #6a1b9a;
-      --paper-purple-900: #4a148c;
-      --paper-purple-a100: #ea80fc;
-      --paper-purple-a200: #e040fb;
-      --paper-purple-a400: #d500f9;
-      --paper-purple-a700: #aa00ff;
+    /* opacity for light text on a dark background */
+    --light-divider-opacity: 0.12;
+    --light-disabled-opacity: 0.3; /* or hint text or icon */
+    --light-secondary-opacity: 0.7;
+    --light-primary-opacity: 1.0;
 
-      --paper-deep-purple-50: #ede7f6;
-      --paper-deep-purple-100: #d1c4e9;
-      --paper-deep-purple-200: #b39ddb;
-      --paper-deep-purple-300: #9575cd;
-      --paper-deep-purple-400: #7e57c2;
-      --paper-deep-purple-500: #673ab7;
-      --paper-deep-purple-600: #5e35b1;
-      --paper-deep-purple-700: #512da8;
-      --paper-deep-purple-800: #4527a0;
-      --paper-deep-purple-900: #311b92;
-      --paper-deep-purple-a100: #b388ff;
-      --paper-deep-purple-a200: #7c4dff;
-      --paper-deep-purple-a400: #651fff;
-      --paper-deep-purple-a700: #6200ea;
+  }
 
-      --paper-indigo-50: #e8eaf6;
-      --paper-indigo-100: #c5cae9;
-      --paper-indigo-200: #9fa8da;
-      --paper-indigo-300: #7986cb;
-      --paper-indigo-400: #5c6bc0;
-      --paper-indigo-500: #3f51b5;
-      --paper-indigo-600: #3949ab;
-      --paper-indigo-700: #303f9f;
-      --paper-indigo-800: #283593;
-      --paper-indigo-900: #1a237e;
-      --paper-indigo-a100: #8c9eff;
-      --paper-indigo-a200: #536dfe;
-      --paper-indigo-a400: #3d5afe;
-      --paper-indigo-a700: #304ffe;
+</style><style is="custom-style">
 
-      --paper-blue-50: #e3f2fd;
-      --paper-blue-100: #bbdefb;
-      --paper-blue-200: #90caf9;
-      --paper-blue-300: #64b5f6;
-      --paper-blue-400: #42a5f5;
-      --paper-blue-500: #2196f3;
-      --paper-blue-600: #1e88e5;
-      --paper-blue-700: #1976d2;
-      --paper-blue-800: #1565c0;
-      --paper-blue-900: #0d47a1;
-      --paper-blue-a100: #82b1ff;
-      --paper-blue-a200: #448aff;
-      --paper-blue-a400: #2979ff;
-      --paper-blue-a700: #2962ff;
+  :root {
+    /*
+     * You can use these generic variables in your elements for easy theming.
+     * For example, if all your elements use `--primary-text-color` as its main
+     * color, then switching from a light to a dark theme is just a matter of
+     * changing the value of `--primary-text-color` in your application.
+     */
+    --primary-text-color: var(--light-theme-text-color);
+    --primary-background-color: var(--light-theme-background-color);
+    --secondary-text-color: var(--light-theme-secondary-color);
+    --disabled-text-color: var(--light-theme-disabled-color);
+    --divider-color: var(--light-theme-divider-color);
+    --error-color: var(--paper-deep-orange-a700);
 
-      --paper-light-blue-50: #e1f5fe;
-      --paper-light-blue-100: #b3e5fc;
-      --paper-light-blue-200: #81d4fa;
-      --paper-light-blue-300: #4fc3f7;
-      --paper-light-blue-400: #29b6f6;
-      --paper-light-blue-500: #03a9f4;
-      --paper-light-blue-600: #039be5;
-      --paper-light-blue-700: #0288d1;
-      --paper-light-blue-800: #0277bd;
-      --paper-light-blue-900: #01579b;
-      --paper-light-blue-a100: #80d8ff;
-      --paper-light-blue-a200: #40c4ff;
-      --paper-light-blue-a400: #00b0ff;
-      --paper-light-blue-a700: #0091ea;
+    /*
+     * Primary and accent colors. Also see color.html for more colors.
+     */
+    --primary-color: var(--paper-indigo-500);
+    --light-primary-color: var(--paper-indigo-100);
+    --dark-primary-color: var(--paper-indigo-700);
 
-      --paper-cyan-50: #e0f7fa;
-      --paper-cyan-100: #b2ebf2;
-      --paper-cyan-200: #80deea;
-      --paper-cyan-300: #4dd0e1;
-      --paper-cyan-400: #26c6da;
-      --paper-cyan-500: #00bcd4;
-      --paper-cyan-600: #00acc1;
-      --paper-cyan-700: #0097a7;
-      --paper-cyan-800: #00838f;
-      --paper-cyan-900: #006064;
-      --paper-cyan-a100: #84ffff;
-      --paper-cyan-a200: #18ffff;
-      --paper-cyan-a400: #00e5ff;
-      --paper-cyan-a700: #00b8d4;
-
-      --paper-teal-50: #e0f2f1;
-      --paper-teal-100: #b2dfdb;
-      --paper-teal-200: #80cbc4;
-      --paper-teal-300: #4db6ac;
-      --paper-teal-400: #26a69a;
-      --paper-teal-500: #009688;
-      --paper-teal-600: #00897b;
-      --paper-teal-700: #00796b;
-      --paper-teal-800: #00695c;
-      --paper-teal-900: #004d40;
-      --paper-teal-a100: #a7ffeb;
-      --paper-teal-a200: #64ffda;
-      --paper-teal-a400: #1de9b6;
-      --paper-teal-a700: #00bfa5;
-
-      --paper-green-50: #e8f5e9;
-      --paper-green-100: #c8e6c9;
-      --paper-green-200: #a5d6a7;
-      --paper-green-300: #81c784;
-      --paper-green-400: #66bb6a;
-      --paper-green-500: #4caf50;
-      --paper-green-600: #43a047;
-      --paper-green-700: #388e3c;
-      --paper-green-800: #2e7d32;
-      --paper-green-900: #1b5e20;
-      --paper-green-a100: #b9f6ca;
-      --paper-green-a200: #69f0ae;
-      --paper-green-a400: #00e676;
-      --paper-green-a700: #00c853;
-
-      --paper-light-green-50: #f1f8e9;
-      --paper-light-green-100: #dcedc8;
-      --paper-light-green-200: #c5e1a5;
-      --paper-light-green-300: #aed581;
-      --paper-light-green-400: #9ccc65;
-      --paper-light-green-500: #8bc34a;
-      --paper-light-green-600: #7cb342;
-      --paper-light-green-700: #689f38;
-      --paper-light-green-800: #558b2f;
-      --paper-light-green-900: #33691e;
-      --paper-light-green-a100: #ccff90;
-      --paper-light-green-a200: #b2ff59;
-      --paper-light-green-a400: #76ff03;
-      --paper-light-green-a700: #64dd17;
-
-      --paper-lime-50: #f9fbe7;
-      --paper-lime-100: #f0f4c3;
-      --paper-lime-200: #e6ee9c;
-      --paper-lime-300: #dce775;
-      --paper-lime-400: #d4e157;
-      --paper-lime-500: #cddc39;
-      --paper-lime-600: #c0ca33;
-      --paper-lime-700: #afb42b;
-      --paper-lime-800: #9e9d24;
-      --paper-lime-900: #827717;
-      --paper-lime-a100: #f4ff81;
-      --paper-lime-a200: #eeff41;
-      --paper-lime-a400: #c6ff00;
-      --paper-lime-a700: #aeea00;
-
-      --paper-yellow-50: #fffde7;
-      --paper-yellow-100: #fff9c4;
-      --paper-yellow-200: #fff59d;
-      --paper-yellow-300: #fff176;
-      --paper-yellow-400: #ffee58;
-      --paper-yellow-500: #ffeb3b;
-      --paper-yellow-600: #fdd835;
-      --paper-yellow-700: #fbc02d;
-      --paper-yellow-800: #f9a825;
-      --paper-yellow-900: #f57f17;
-      --paper-yellow-a100: #ffff8d;
-      --paper-yellow-a200: #ffff00;
-      --paper-yellow-a400: #ffea00;
-      --paper-yellow-a700: #ffd600;
-
-      --paper-amber-50: #fff8e1;
-      --paper-amber-100: #ffecb3;
-      --paper-amber-200: #ffe082;
-      --paper-amber-300: #ffd54f;
-      --paper-amber-400: #ffca28;
-      --paper-amber-500: #ffc107;
-      --paper-amber-600: #ffb300;
-      --paper-amber-700: #ffa000;
-      --paper-amber-800: #ff8f00;
-      --paper-amber-900: #ff6f00;
-      --paper-amber-a100: #ffe57f;
-      --paper-amber-a200: #ffd740;
-      --paper-amber-a400: #ffc400;
-      --paper-amber-a700: #ffab00;
-
-      --paper-orange-50: #fff3e0;
-      --paper-orange-100: #ffe0b2;
-      --paper-orange-200: #ffcc80;
-      --paper-orange-300: #ffb74d;
-      --paper-orange-400: #ffa726;
-      --paper-orange-500: #ff9800;
-      --paper-orange-600: #fb8c00;
-      --paper-orange-700: #f57c00;
-      --paper-orange-800: #ef6c00;
-      --paper-orange-900: #e65100;
-      --paper-orange-a100: #ffd180;
-      --paper-orange-a200: #ffab40;
-      --paper-orange-a400: #ff9100;
-      --paper-orange-a700: #ff6500;
-
-      --paper-deep-orange-50: #fbe9e7;
-      --paper-deep-orange-100: #ffccbc;
-      --paper-deep-orange-200: #ffab91;
-      --paper-deep-orange-300: #ff8a65;
-      --paper-deep-orange-400: #ff7043;
-      --paper-deep-orange-500: #ff5722;
-      --paper-deep-orange-600: #f4511e;
-      --paper-deep-orange-700: #e64a19;
-      --paper-deep-orange-800: #d84315;
-      --paper-deep-orange-900: #bf360c;
-      --paper-deep-orange-a100: #ff9e80;
-      --paper-deep-orange-a200: #ff6e40;
-      --paper-deep-orange-a400: #ff3d00;
-      --paper-deep-orange-a700: #dd2c00;
-
-      --paper-brown-50: #efebe9;
-      --paper-brown-100: #d7ccc8;
-      --paper-brown-200: #bcaaa4;
-      --paper-brown-300: #a1887f;
-      --paper-brown-400: #8d6e63;
-      --paper-brown-500: #795548;
-      --paper-brown-600: #6d4c41;
-      --paper-brown-700: #5d4037;
-      --paper-brown-800: #4e342e;
-      --paper-brown-900: #3e2723;
-
-      --paper-grey-50: #fafafa;
-      --paper-grey-100: #f5f5f5;
-      --paper-grey-200: #eeeeee;
-      --paper-grey-300: #e0e0e0;
-      --paper-grey-400: #bdbdbd;
-      --paper-grey-500: #9e9e9e;
-      --paper-grey-600: #757575;
-      --paper-grey-700: #616161;
-      --paper-grey-800: #424242;
-      --paper-grey-900: #212121;
-
-      --paper-blue-grey-50: #eceff1;
-      --paper-blue-grey-100: #cfd8dc;
-      --paper-blue-grey-200: #b0bec5;
-      --paper-blue-grey-300: #90a4ae;
-      --paper-blue-grey-400: #78909c;
-      --paper-blue-grey-500: #607d8b;
-      --paper-blue-grey-600: #546e7a;
-      --paper-blue-grey-700: #455a64;
-      --paper-blue-grey-800: #37474f;
-      --paper-blue-grey-900: #263238;
-
-      /* opacity for dark text on a light background */
-      --dark-divider-opacity: 0.12;
-      --dark-disabled-opacity: 0.38; /* or hint text or icon */
-      --dark-secondary-opacity: 0.54;
-      --dark-primary-opacity: 0.87;
-
-      /* opacity for light text on a dark background */
-      --light-divider-opacity: 0.12;
-      --light-disabled-opacity: 0.3; /* or hint text or icon */
-      --light-secondary-opacity: 0.7;
-      --light-primary-opacity: 1.0;
-
-    }
-
-  </style>
-</custom-style>
-<custom-style>
-  <style is="custom-style">
-    html {
-      /*
-       * You can use these generic variables in your elements for easy theming.
-       * For example, if all your elements use `--primary-text-color` as its main
-       * color, then switching from a light to a dark theme is just a matter of
-       * changing the value of `--primary-text-color` in your application.
-       */
-      --primary-text-color: var(--light-theme-text-color);
-      --primary-background-color: var(--light-theme-background-color);
-      --secondary-text-color: var(--light-theme-secondary-color);
-      --disabled-text-color: var(--light-theme-disabled-color);
-      --divider-color: var(--light-theme-divider-color);
-      --error-color: var(--paper-deep-orange-a700);
-
-      /*
-       * Primary and accent colors. Also see color.html for more colors.
-       */
-      --primary-color: var(--paper-indigo-500);
-      --light-primary-color: var(--paper-indigo-100);
-      --dark-primary-color: var(--paper-indigo-700);
-
-      --accent-color: var(--paper-pink-a200);
-      --light-accent-color: var(--paper-pink-a100);
-      --dark-accent-color: var(--paper-pink-a400);
+    --accent-color: var(--paper-pink-a200);
+    --light-accent-color: var(--paper-pink-a100);
+    --dark-accent-color: var(--paper-pink-a400);
 
 
-      /*
-       * Material Design Light background theme
-       */
-      --light-theme-background-color: #ffffff;
-      --light-theme-base-color: #000000;
-      --light-theme-text-color: var(--paper-grey-900);
-      --light-theme-secondary-color: #737373;  /* for secondary text and icons */
-      --light-theme-disabled-color: #9b9b9b;  /* disabled/hint text */
-      --light-theme-divider-color: #dbdbdb;
+    /*
+     * Material Design Light background theme
+     */
+    --light-theme-background-color: #ffffff;
+    --light-theme-base-color: #000000;
+    --light-theme-text-color: var(--paper-grey-900);
+    --light-theme-secondary-color: #737373;  /* for secondary text and icons */
+    --light-theme-disabled-color: #9b9b9b;  /* disabled/hint text */
+    --light-theme-divider-color: #dbdbdb;
 
-      /*
-       * Material Design Dark background theme
-       */
-      --dark-theme-background-color: var(--paper-grey-900);
-      --dark-theme-base-color: #ffffff;
-      --dark-theme-text-color: #ffffff;
-      --dark-theme-secondary-color: #bcbcbc;  /* for secondary text and icons */
-      --dark-theme-disabled-color: #646464;  /* disabled/hint text */
-      --dark-theme-divider-color: #3c3c3c;
+    /*
+     * Material Design Dark background theme
+     */
+    --dark-theme-background-color: var(--paper-grey-900);
+    --dark-theme-base-color: #ffffff;
+    --dark-theme-text-color: #ffffff;
+    --dark-theme-secondary-color: #bcbcbc;  /* for secondary text and icons */
+    --dark-theme-disabled-color: #646464;  /* disabled/hint text */
+    --dark-theme-divider-color: #3c3c3c;
 
-      /*
-       * Deprecated values because of their confusing names.
-       */
-      --text-primary-color: var(--dark-theme-text-color);
-      --default-primary-color: var(--primary-color);
-    }
-  </style>
-</custom-style>
-<dom-module id="paper-input-container" assetpath="../bower_components/paper-input/">
+    /*
+     * Deprecated values because of their confusing names.
+     */
+    --text-primary-color: var(--dark-theme-text-color);
+    --default-primary-color: var(--primary-color);
+
+  }
+
+</style><dom-module id="paper-input-container" assetpath="../bower_components/paper-input/">
   <template>
     <style>
       :host {
@@ -25853,6 +26267,250 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 --><!--
+Use `<paper-item-body>` in a `<paper-item>` or `<paper-icon-item>` to make two- or
+three- line items. It is a flex item that is a vertical flexbox.
+
+    <paper-item>
+      <paper-item-body two-line>
+        <div>Show your status</div>
+        <div secondary>Your status is visible to everyone</div>
+      </paper-item-body>
+    </paper-item>
+
+The child elements with the `secondary` attribute is given secondary text styling.
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-item-body-two-line-min-height`   | Minimum height of a two-line item          | `72px`
+`--paper-item-body-three-line-min-height` | Minimum height of a three-line item        | `88px`
+`--paper-item-body-secondary-color`       | Foreground color for the `secondary` area  | `--secondary-text-color`
+`--paper-item-body-secondary`             | Mixin applied to the `secondary` area      | `{}`
+
+-->
+
+<dom-module id="paper-item-body" assetpath="../bower_components/paper-item/">
+  <template>
+    <style>
+      :host {
+        overflow: hidden; /* needed for text-overflow: ellipsis to work on ff */
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        @apply --layout-flex;
+      }
+
+      :host([two-line]) {
+        min-height: var(--paper-item-body-two-line-min-height, 72px);
+      }
+
+      :host([three-line]) {
+        min-height: var(--paper-item-body-three-line-min-height, 88px);
+      }
+
+      :host > ::slotted(*) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      :host > ::slotted([secondary]) {
+        @apply --paper-font-body1;
+
+        color: var(--paper-item-body-secondary-color, var(--secondary-text-color));
+
+        @apply --paper-item-body-secondary;
+      }
+    </style>
+
+    <slot></slot>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-item-body'
+    });
+  </script>
+</dom-module>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
+`<paper-icon-item>` is a convenience element to make an item with icon. It is an interactive list
+item with a fixed-width icon area, according to Material Design. This is useful if the icons are of
+varying widths, but you want the item bodies to line up. Use this like a `<paper-item>`. The child
+node with the slot name `item-icon` is placed in the icon area.
+
+    <paper-icon-item>
+      <iron-icon icon="favorite" slot="item-icon"></iron-icon>
+      Favorite
+    </paper-icon-item>
+    <paper-icon-item>
+      <div class="avatar" slot="item-icon"></div>
+      Avatar
+    </paper-icon-item>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property               | Description                                    | Default
+------------------------------|------------------------------------------------|----------
+`--paper-item-icon-width`     | Width of the icon area                         | `56px`
+`--paper-item-icon`           | Mixin applied to the icon area                 | `{}`
+`--paper-icon-item`           | Mixin applied to the item                      | `{}`
+`--paper-item-selected-weight`| The font weight of a selected item             | `bold`
+`--paper-item-selected`       | Mixin applied to selected paper-items                | `{}`
+`--paper-item-disabled-color` | The color for disabled paper-items             | `--disabled-text-color`
+`--paper-item-disabled`       | Mixin applied to disabled paper-items        | `{}`
+`--paper-item-focused`        | Mixin applied to focused paper-items         | `{}`
+`--paper-item-focused-before` | Mixin applied to :before focused paper-items | `{}`
+-->
+
+<dom-module id="paper-icon-item" assetpath="../bower_components/paper-item/">
+  <template>
+    <style include="paper-item-shared-styles"></style>
+    <style>
+      :host {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        @apply --paper-font-subhead;
+
+        @apply --paper-item;
+        @apply --paper-icon-item;
+      }
+
+      .content-icon {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+
+        width: var(--paper-item-icon-width, 56px);
+        @apply --paper-item-icon;
+      }
+    </style>
+
+    <div id="contentIcon" class="content-icon">
+      <slot name="item-icon"></slot>
+    </div>
+    <slot></slot>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-icon-item',
+
+      behaviors: [
+        Polymer.PaperItemBehavior
+      ]
+    });
+  </script>
+</dom-module>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
+Material design: [Menus](https://www.google.com/design/spec/components/menus.html)
+
+`<paper-listbox>` implements an accessible listbox control with Material Design styling. The focused item
+is highlighted, and the selected item has bolded text.
+
+    <paper-listbox>
+      <paper-item>Item 1</paper-item>
+      <paper-item>Item 2</paper-item>
+    </paper-listbox>
+
+An initial selection can be specified with the `selected` attribute.
+
+    <paper-listbox selected="0">
+      <paper-item>Item 1</paper-item>
+      <paper-item>Item 2</paper-item>
+    </paper-listbox>
+
+Make a multi-select listbox with the `multi` attribute. Items in a multi-select listbox can be deselected,
+and multiple item can be selected.
+
+    <paper-listbox multi>
+      <paper-item>Item 1</paper-item>
+      <paper-item>Item 2</paper-item>
+    </paper-listbox>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-listbox-background-color`   | Menu background color                                            | `--primary-background-color`
+`--paper-listbox-color`              | Menu foreground color                                            | `--primary-text-color`
+`--paper-listbox`                    | Mixin applied to the listbox                                        | `{}`
+
+### Accessibility
+
+`<paper-listbox>` has `role="listbox"` by default. A multi-select listbox will also have
+`aria-multiselectable` set. It implements key bindings to navigate through the listbox with the up and
+down arrow keys, esc to exit the listbox, and enter to activate a listbox item. Typing the first letter
+of a listbox item will also focus it.
+
+@group Paper Elements
+@element paper-listbox
+@hero hero.svg
+@demo demo/index.html
+-->
+
+<dom-module id="paper-listbox" assetpath="../bower_components/paper-listbox/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 8px 0;
+
+        background: var(--paper-listbox-background-color, var(--primary-background-color));
+        color: var(--paper-listbox-color, var(--primary-text-color));
+
+        @apply --paper-listbox;
+      }
+    </style>
+
+    <slot></slot>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'paper-listbox',
+
+        behaviors: [
+          Polymer.IronMenuBehavior
+        ],
+
+        hostAttributes: {
+          role: 'listbox'
+        }
+      });
+    })();
+  </script>
+</dom-module>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
 Material design: [Snackbars & toasts](https://www.google.com/design/spec/components/snackbars-toasts.html)
 
 `paper-toast` provides a subtle notification toast. Only one `paper-toast` will
@@ -32161,417 +32819,6 @@ Example:
 </dom-module>
 <!--
 @license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
---><!-- Most common used flex styles-->
-<dom-module id="iron-flex" assetpath="../bower_components/iron-flex-layout/">
-  <template>
-    <style>
-      .layout.horizontal,
-      .layout.vertical {
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-      }
-
-      .layout.inline {
-        display: -ms-inline-flexbox;
-        display: -webkit-inline-flex;
-        display: inline-flex;
-      }
-
-      .layout.horizontal {
-        -ms-flex-direction: row;
-        -webkit-flex-direction: row;
-        flex-direction: row;
-      }
-
-      .layout.vertical {
-        -ms-flex-direction: column;
-        -webkit-flex-direction: column;
-        flex-direction: column;
-      }
-
-      .layout.wrap {
-        -ms-flex-wrap: wrap;
-        -webkit-flex-wrap: wrap;
-        flex-wrap: wrap;
-      }
-
-      .layout.no-wrap {
-        -ms-flex-wrap: nowrap;
-        -webkit-flex-wrap: nowrap;
-        flex-wrap: nowrap;
-      }
-
-      .layout.center,
-      .layout.center-center {
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        align-items: center;
-      }
-
-      .layout.center-justified,
-      .layout.center-center {
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-      }
-
-      .flex {
-        -ms-flex: 1 1 0.000000001px;
-        -webkit-flex: 1;
-        flex: 1;
-        -webkit-flex-basis: 0.000000001px;
-        flex-basis: 0.000000001px;
-      }
-
-      .flex-auto {
-        -ms-flex: 1 1 auto;
-        -webkit-flex: 1 1 auto;
-        flex: 1 1 auto;
-      }
-
-      .flex-none {
-        -ms-flex: none;
-        -webkit-flex: none;
-        flex: none;
-      }
-    </style>
-  </template>
-</dom-module>
-
-<!-- Basic flexbox reverse styles -->
-<dom-module id="iron-flex-reverse" assetpath="../bower_components/iron-flex-layout/">
-  <template>
-    <style>
-      .layout.horizontal-reverse,
-      .layout.vertical-reverse {
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-      }
-
-      .layout.horizontal-reverse {
-        -ms-flex-direction: row-reverse;
-        -webkit-flex-direction: row-reverse;
-        flex-direction: row-reverse;
-      }
-
-      .layout.vertical-reverse {
-        -ms-flex-direction: column-reverse;
-        -webkit-flex-direction: column-reverse;
-        flex-direction: column-reverse;
-      }
-
-      .layout.wrap-reverse {
-        -ms-flex-wrap: wrap-reverse;
-        -webkit-flex-wrap: wrap-reverse;
-        flex-wrap: wrap-reverse;
-      }
-    </style>
-  </template>
-</dom-module>
-
-<!-- Flexbox alignment -->
-<dom-module id="iron-flex-alignment" assetpath="../bower_components/iron-flex-layout/">
-  <template>
-    <style>
-      /**
-       * Alignment in cross axis.
-       */
-      .layout.start {
-        -ms-flex-align: start;
-        -webkit-align-items: flex-start;
-        align-items: flex-start;
-      }
-
-      .layout.center,
-      .layout.center-center {
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        align-items: center;
-      }
-
-      .layout.end {
-        -ms-flex-align: end;
-        -webkit-align-items: flex-end;
-        align-items: flex-end;
-      }
-
-      .layout.baseline {
-        -ms-flex-align: baseline;
-        -webkit-align-items: baseline;
-        align-items: baseline;
-      }
-
-      /**
-       * Alignment in main axis.
-       */
-      .layout.start-justified {
-        -ms-flex-pack: start;
-        -webkit-justify-content: flex-start;
-        justify-content: flex-start;
-      }
-
-      .layout.center-justified,
-      .layout.center-center {
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-      }
-
-      .layout.end-justified {
-        -ms-flex-pack: end;
-        -webkit-justify-content: flex-end;
-        justify-content: flex-end;
-      }
-
-      .layout.around-justified {
-        -ms-flex-pack: distribute;
-        -webkit-justify-content: space-around;
-        justify-content: space-around;
-      }
-
-      .layout.justified {
-        -ms-flex-pack: justify;
-        -webkit-justify-content: space-between;
-        justify-content: space-between;
-      }
-
-      /**
-       * Self alignment.
-       */
-      .self-start {
-        -ms-align-self: flex-start;
-        -webkit-align-self: flex-start;
-        align-self: flex-start;
-      }
-
-      .self-center {
-        -ms-align-self: center;
-        -webkit-align-self: center;
-        align-self: center;
-      }
-
-      .self-end {
-        -ms-align-self: flex-end;
-        -webkit-align-self: flex-end;
-        align-self: flex-end;
-      }
-
-      .self-stretch {
-        -ms-align-self: stretch;
-        -webkit-align-self: stretch;
-        align-self: stretch;
-      }
-
-      .self-baseline {
-        -ms-align-self: baseline;
-        -webkit-align-self: baseline;
-        align-self: baseline;
-      }
-
-      /**
-       * multi-line alignment in main axis.
-       */
-      .layout.start-aligned {
-        -ms-flex-line-pack: start;  /* IE10 */
-        -ms-align-content: flex-start;
-        -webkit-align-content: flex-start;
-        align-content: flex-start;
-      }
-
-      .layout.end-aligned {
-        -ms-flex-line-pack: end;  /* IE10 */
-        -ms-align-content: flex-end;
-        -webkit-align-content: flex-end;
-        align-content: flex-end;
-      }
-
-      .layout.center-aligned {
-        -ms-flex-line-pack: center;  /* IE10 */
-        -ms-align-content: center;
-        -webkit-align-content: center;
-        align-content: center;
-      }
-
-      .layout.between-aligned {
-        -ms-flex-line-pack: justify;  /* IE10 */
-        -ms-align-content: space-between;
-        -webkit-align-content: space-between;
-        align-content: space-between;
-      }
-
-      .layout.around-aligned {
-        -ms-flex-line-pack: distribute;  /* IE10 */
-        -ms-align-content: space-around;
-        -webkit-align-content: space-around;
-        align-content: space-around;
-      }
-    </style>
-  </template>
-</dom-module>
-
-<dom-module id="iron-flex-factors" assetpath="../bower_components/iron-flex-layout/">
-  <template>
-    <style>
-      .flex,
-      .flex-1 {
-        -ms-flex: 1 1 0.000000001px;
-        -webkit-flex: 1;
-        flex: 1;
-        -webkit-flex-basis: 0.000000001px;
-        flex-basis: 0.000000001px;
-      }
-
-      .flex-2 {
-        -ms-flex: 2;
-        -webkit-flex: 2;
-        flex: 2;
-      }
-
-      .flex-3 {
-        -ms-flex: 3;
-        -webkit-flex: 3;
-        flex: 3;
-      }
-
-      .flex-4 {
-        -ms-flex: 4;
-        -webkit-flex: 4;
-        flex: 4;
-      }
-
-      .flex-5 {
-        -ms-flex: 5;
-        -webkit-flex: 5;
-        flex: 5;
-      }
-
-      .flex-6 {
-        -ms-flex: 6;
-        -webkit-flex: 6;
-        flex: 6;
-      }
-
-      .flex-7 {
-        -ms-flex: 7;
-        -webkit-flex: 7;
-        flex: 7;
-      }
-
-      .flex-8 {
-        -ms-flex: 8;
-        -webkit-flex: 8;
-        flex: 8;
-      }
-
-      .flex-9 {
-        -ms-flex: 9;
-        -webkit-flex: 9;
-        flex: 9;
-      }
-
-      .flex-10 {
-        -ms-flex: 10;
-        -webkit-flex: 10;
-        flex: 10;
-      }
-
-      .flex-11 {
-        -ms-flex: 11;
-        -webkit-flex: 11;
-        flex: 11;
-      }
-
-      .flex-12 {
-        -ms-flex: 12;
-        -webkit-flex: 12;
-        flex: 12;
-      }
-    </style>
-  </template>
-</dom-module>
-
-<!-- Non-flexbox positioning helper styles -->
-<dom-module id="iron-positioning" assetpath="../bower_components/iron-flex-layout/">
-  <template>
-    <style>
-      .block {
-        display: block;
-      }
-
-      [hidden] {
-        display: none !important;
-      }
-
-      .invisible {
-        visibility: hidden !important;
-      }
-
-      .relative {
-        position: relative;
-      }
-
-      .fit {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-
-      body.fullbleed {
-        margin: 0;
-        height: 100vh;
-      }
-
-      .scroll {
-        -webkit-overflow-scrolling: touch;
-        overflow: auto;
-      }
-
-      /* fixed position */
-      .fixed-bottom,
-      .fixed-left,
-      .fixed-right,
-      .fixed-top {
-        position: fixed;
-      }
-
-      .fixed-top {
-        top: 0;
-        left: 0;
-        right: 0;
-      }
-
-      .fixed-right {
-        top: 0;
-        right: 0;
-        bottom: 0;
-      }
-
-      .fixed-bottom {
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-
-      .fixed-left {
-        top: 0;
-        bottom: 0;
-        left: 0;
-      }
-    </style>
-  </template>
-</dom-module>
-<!--
-@license
 Copyright 2016 Sauli Tähkäpää
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -37255,7 +37502,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /** TOOLBAR **/
    paper-listbox {
     color: black;
-    width: 300px;
+    width: 150px;
   }
 
   paper-item.profileItem {
@@ -37630,7 +37877,7 @@ vaadin-grid#material {
       color: red;
     }
 
-paper-menu{
+paper-menu {
     --paper-menu-background-color: var(--primary-background-color);
     --paper-menu-color: var(--primary-text-color);
     --paper-menu-focused-item: {
@@ -37638,6 +37885,7 @@ paper-menu{
         };
     --paper-menu-focused-item-after: {
         background:blue;
+
         };
     }
 paper-item {
@@ -37939,6 +38187,7 @@ Polymer({
             document.querySelector('#toast1').show();}
         }
         //document.querySelector('#toast1').show();
+
     },
     _request: function(e){
         var bbs = document.getElementsByClassName("queryButton");
@@ -37964,6 +38213,7 @@ Polymer({
         document.getElementById('inputOutputFile').value = '';
         document.getElementById('queryname').value = '';
         document.getElementById('checkemail').checked = false;
+        document.getElementById('compress-box').checked = false;
         document.getElementById('queryemail').value ='';
         document.getElementById('subQuery').disabled=true;
         this.outputfile = 'nofile';
@@ -37991,7 +38241,8 @@ Polymer({
         }
         if (valid) {
             queryform = document.getElementById("getQuery");
-            queryform.generateRequest();}
+            queryform.generateRequest();
+        }
     },
     _quickSubmit: function(event){
         document.getElementById('inputOutputCheck').checked = false;
@@ -38231,8 +38482,9 @@ Polymer({
         <paper-item> DR1 Table Schema        </paper-item>
         <paper-item> Example Queries     </paper-item>
         <paper-item> Cutout Service     </paper-item>
-        <paper-item> Footprint     </paper-item>
+        <paper-item> DR1 Footprint     </paper-item>
         <paper-item> My Jobs           </paper-item>
+        <paper-item> Help           </paper-item>
 
     </paper-menu>
       </div>
@@ -38265,12 +38517,13 @@ Polymer({
       <div style="height: 85%; overflow: auto;">
     <iron-pages id="mainPages" selected="[[selection]]">
         <des-home name="{{name}}" db="{{db}}"></des-home>
-        <des-query username="{{username}}" db="{{db}}" email="{{email}}"></des-query>
+        <des-query id="desQuery" username="{{username}}" db="{{db}}" email="{{email}}"></des-query>
         <des-all-tables></des-all-tables>
         <des-example-query></des-example-query>
         <des-coadds id="desCoadds" email="{{email}}"></des-coadds>
         <des-footprint id="FootprintPage"></des-footprint>
         <des-my-jobs></des-my-jobs>
+        <des-help></des-help>
 
     </iron-pages>
 </div>
@@ -44290,7 +44543,10 @@ This program is available under Apache License Version 2.0, available at https:/
       </vaadin-grid-column>
 
       <vaadin-grid-column width="80px" flex-grow="0">
-        <template class="header">Status</template>
+        <!--<template class="header">Status</template>-->
+          <template class="header" style="padding-left: 5px">
+              <vaadin-grid-sorter path="status">Status<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+          </template>
 
           <template>
               <template is="dom-if" if="{{_completed(item.status)}}">
@@ -44458,8 +44714,10 @@ function keysrt(key,desc) {
           }
       },
     _copyQuery: function(){
+        document.getElementById("desQuery").clearQueryBox();
         document.querySelector('#toastCopy').show();
         app.editor.setValue(app.jobquerybox.getValue());
+
         console.log("-> line number: ", app.editor.lineCount());
         setTimeout(function() {
             app.editor.refresh();
@@ -44975,7 +45233,7 @@ function keysrt(key,desc) {
           <br>
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="NEW Password" value="{{password}}" required="">
+          <paper-password-input label="NEW Password (Minimum 6 characters)" value="{{password}}" required="">
           </paper-password-input>
           <paper-password-input on-invalid-changed="_enable" id="NewPass" name="password" label="Confirm NEW Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -45310,11 +45568,11 @@ function keysrt(key,desc) {
           <paper-input id="form_last" name="lastname" label="Last"></paper-input>
           </div>
           <paper-input id="form_email" name="email" label="Email" on-change="_enable" required="" auto-validate=""></paper-input><br>
-          <paper-input id="form_user" name="username" label="Username" on-change="_enable" required="" auto-validate="" pattern="[a-zA-Z0-9]*" error-message="Can't be empty and include alphanumeric characters only"></paper-input><br>
+          <paper-input id="form_user" name="username" label="Username" on-change="_enable" required="" auto-validate="" pattern="[a-zA-Z0-9]*" char-counter="" minlength="3" error-message="Minimum length is 3. Include alphanumeric characters only"></paper-input><br>
 
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input id="first_password" label="Password" value="{{password}}" required="">
+          <paper-password-input id="first_password" label="Password (at least 6 characters)" value="{{password}}" char-counter="" required="">
           </paper-password-input>
           <paper-password-input id="form_password" on-invalid-changed="_enable" name="password" label="Confirm Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -45868,8 +46126,9 @@ function keysrt(key,desc) {
                 <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables"></des-card-welcome>
                 <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example"></des-card-welcome>
                 <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd"></des-card-welcome>
-                <des-card-welcome heading="FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint"></des-card-welcome>
+                <des-card-welcome heading="DR1 FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint"></des-card-welcome>
                 <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs"></des-card-welcome>
+                <des-card-welcome heading="HELP" image="/easyweb/static/images/home-help.jpg" alt="Help" desc="Help form" name="help"></des-card-welcome>
 
 
             </div>
@@ -45894,25 +46153,26 @@ function keysrt(key,desc) {
             },
         },
 
-        change: function(e){
+//        change: function(e){
+//
+//            var tid = e.target.id;
+//            var sel = 0;
+//            if (tid == 'query') sel = 1;
+//            if (tid == 'allTables') sel = 2;
+//            if (tid == 'example') sel = 3;
+//            if (tid == 'coadd') sel = 4;
+//            if (tid == 'footprint') sel = 5;
+//            if (tid == 'desjobs') sel = 6;
+//
+//            var app = document.querySelector('#app');
+//            var pages = document.getElementById("mainPages");
+//            var menu = document.querySelector('paper-menu');
+//            app.selection=sel;
+//            pages.selected=sel;
+//            menu.selected=sel;
+//
+//        },
 
-            var tid = e.target.id;
-            var sel = 0;
-            if (tid == 'query') sel = 1;
-            if (tid == 'allTables') sel = 2;
-            if (tid == 'example') sel = 3;
-            if (tid == 'coadd') sel = 4;
-            if (tid == 'footprint') sel = 5;
-            if (tid == 'desjobs') sel = 6;
-
-            var app = document.querySelector('#app');
-            var pages = document.getElementById("mainPages");
-            var menu = document.querySelector('paper-menu');
-            app.selection=sel;
-            pages.selected=sel;
-            menu.selected=sel;
-
-        },
         patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
@@ -45944,6 +46204,10 @@ function keysrt(key,desc) {
         }
         .downloadTile {
             visibility: hidden;
+        }
+        .localTable tr td{
+        font-size:  18px;
+        border: 1px solid white;
         }
     </style>
 
@@ -45991,8 +46255,19 @@ function keysrt(key,desc) {
                  <div class="flex">
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
                         <des-card heading="Tile properties">
-                            <div id="tiletitleHelp"></div>
-                            <paper-button class="indigo downloadTile" raised="" on-tap="_getTiles" id="downloadTile"> Get Files</paper-button>
+                            <div id="tiletitleHelp" class="card-content">
+                                <table id="tileTable" class="localTable">
+                                <tbody><tr><td>Name</td><td>:</td></tr>
+                                <tr><td>Tile Center</td><td>:</td></tr>
+                                <tr><td>No Objects</td><td>:</td></tr>
+                                <tr><td>RA Corners</td><td>:</td></tr>
+                                <tr><td>DEC Corners</td><td>:</td></tr>
+                                </tbody></table>
+                            </div>
+                            <div class="card-content">
+
+                            <paper-button class="indigo" disabled="" raised="" on-tap="_getTiles" id="downloadTile"> Get Files</paper-button>
+                            </div>
 
                         </des-card>
                 </div>
@@ -46022,10 +46297,11 @@ function keysrt(key,desc) {
             if (ra > 180.) {
                 ra = ra - 360.;
             };
-            return ra;
+            return 0.-ra;
         }
 
         function restoreRA(ra) {
+            ra = 0. -ra
             if (ra < 0) {
                 ra = ra + 360.;
             };
@@ -46083,6 +46359,7 @@ function keysrt(key,desc) {
                 if (ra1 > 180.) {
                     ra1 = ra1 - 360.;
                 };
+                ra1 = 0. - ra1
                 //navigation.zoomTo([ra1,dec1],500000,1000);
                 PositionZoom(ra1,dec1);
             },
@@ -46125,8 +46402,10 @@ function keysrt(key,desc) {
                         defaultColor: [220.,220.,220.,255.]
                     } );
                     var navigation = new GlobWeb.Navigation(globe, {
-                        inertia: false, minDistance: 100000
+                        inertia: false,
+                        minDistance: 100000,
                     });
+                    navigation.zoomTo([-25,-25],20000000,10);
                     var canvas = navigation.renderContext.canvas;
 
                     loadTiles('/easyweb/static/tiles/grid.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
@@ -46187,7 +46466,7 @@ function keysrt(key,desc) {
                     });
 
 
-                    loadTiles('/easyweb/static/tiles/y3a2_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                    loadTiles('/easyweb/static/tiles/dr1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 strokeColor : [0.2980392156862745, 0.4470588235294118, 0.6901960784313725,1.0],
@@ -46248,19 +46527,30 @@ function keysrt(key,desc) {
                             document.getElementById('FootprintPage').updateTile(tilename);
                             var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                             var dec_t = all_tiles.features[tile].properties.DEC_C;
+                            var count = all_tiles.features[tile].properties.COUNT;
+                            var ra_corner = all_tiles.features[tile].properties.RA_CORNER;
+                            var dec_corner = all_tiles.features[tile].properties.DEC_CORNER;
                             var titleHelp = document.getElementById("tiletitleHelp");
                             this.xvalue = restoreRA(ra_t);
                             this.yvalue = dec_t;
                             this.data = restoreRA(ra_t)+", "+dec_t;
                             var x_part = this.xvalue.toFixed(5);
                             var y_part = this.yvalue.toFixed(5);
-                            titleHelp.innerHTML =
-                            "Name       : " + tilename  + "<br />" +
-                            "Tile Center : " + x_part +", "+y_part + "<br />" +
-                            "No Objects   : " + "<br />" +
-                            "RA Corners   : " + "<br />" +
-                            "DEC Corners  : " + "<br /> <br /> <br />";
-                             document.getElementById('downloadTile').style.visibility = 'visible';
+                            var tileTable = document.getElementById("tileTable");
+                            tileTable.rows[0].cells[1].innerHTML = ': '+tilename;
+                            tileTable.rows[1].cells[1].innerHTML = ': '+x_part + ", " + y_part;
+                            tileTable.rows[2].cells[1].innerHTML = ': '+count;
+                            tileTable.rows[3].cells[1].innerHTML = ': '+ra_corner;
+                            tileTable.rows[4].cells[1].innerHTML = ': '+dec_corner;
+                            //titleHelp.innerHTML =
+                            //"Name       : " + tilename  + "<br />" +
+                            //"Tile Center : " + x_part +", "+y_part + "<br />" +
+                            //"No Objects   : " + count +"<br />" +
+                            //"RA Corners   : " + ra_corner + "<br />" +
+                            //"DEC Corners  : " + dec_corner + "<br /> <br /> <br />";
+
+                             //document.getElementById('downloadTile').style.visibility = 'visible';
+                             document.getElementById('downloadTile').disabled = false;
 
 
                     };
@@ -46290,6 +46580,9 @@ function keysrt(key,desc) {
                                 document.getElementById('FootprintPage').updateTile(tilename);
                                 var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                                 var dec_t = all_tiles.features[tile].properties.DEC_C;
+                                var count = all_tiles.features[tile].properties.COUNT;
+                                var ra_corner = all_tiles.features[tile].properties.RA_CORNER;
+                                var dec_corner = all_tiles.features[tile].properties.DEC_CORNER;
                                 navigation.zoomTo([ra_t,dec_t],500000,1000);
 //                            var title =document.getElementById("tiletitle");
                                 var titleHelp =document.getElementById("tiletitleHelp");
@@ -46298,13 +46591,20 @@ function keysrt(key,desc) {
                                 this.data = restoreRA(ra_t)+", "+dec_t;
                                 var x_part = this.xvalue.toFixed(5);
                                 var y_part = this.yvalue.toFixed(5);
-                                titleHelp.innerHTML =
-                                "Name       : " + tilename  + "<br />" +
-                                "Tile Center : " + x_part +", "+y_part + "<br />" +
-                                "No Objects   : " + "<br />" +
-                                "RA Corners   : " + "<br />" +
-                                "DEC Corners  : " + "<br /> <br /> <br />";
-                                 document.getElementById('downloadTile').style.visibility = 'visible';
+                                var tileTable = document.getElementById("tileTable");
+                                tileTable.rows[0].cells[1].innerHTML = ': '+tilename;
+                                tileTable.rows[1].cells[1].innerHTML = ': '+x_part + ", " + y_part;
+                                tileTable.rows[2].cells[1].innerHTML = ': '+count;
+                                tileTable.rows[3].cells[1].innerHTML = ': '+ra_corner;
+                                tileTable.rows[4].cells[1].innerHTML = ': '+dec_corner;
+                                //titleHelp.innerHTML =
+                                //"Name       : " + tilename  + "<br />" +
+                                //"Tile Center : " + x_part +", "+y_part + "<br />" +
+                                //"No Objects   : " + count +"<br />" +
+                                //"RA Corners   : " + ra_corner +"<br />" +
+                                //"DEC Corners  : " + dec_corner +"<br /> <br /> <br />";
+                                 //document.getElementById('downloadTile').style.visibility = 'visible';
+                                 document.getElementById('downloadTile').disabled=false;
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }
@@ -46356,21 +46656,77 @@ function keysrt(key,desc) {
             bottom: 0;
             left: 0;
             right: 0;
+            /*border: 2px dotted #8da6ce;*/
+            /*border-style: outset;*/
         }
-        .flex2 {
-            width: 500px;
+
+        .card-content {
             @apply(--layout-vertical);
         }
 
-        paper-slider {
-            width: 80%;
+        /*.middle {*/
+        /*@apply(--layout-flex);*/
+        /*}*/
+
+        .container {
+            @apply(--layout-horizontal);
         }
+
+        .container2 {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-justified);
+        }
+
+        .left {
+            @apply(--layout-flex);
+        }
+        .left2 {
+            @apply(--layout-flex);
+            text-align: center;
+
+        }
+        .right {
+            @apply(--layout-flex-2);
+
+        }
+
+        .right2 {
+            @apply(--layout-flex-2);
+            text-align: center;
+
+        }
+
+        .mid {
+            @apply(--layout-flex);
+        }
+        .flex3child {
+            @apply(--layout-flex-3);
+        }
+        .flex4child {
+            @apply(--layout-flex-4);
+        }
+
+        paper-slider {
+            width: 100%;
+        }
+
         hr {
             display: block;
             border: 1px solid gray;
             opacity: 0.2;
 
         }
+
+        paper-icon-item {
+            background: linear-gradient(to right, #efeaf4, white);
+        }
+
+        .buttonLook{
+            border: 4px solid #ccc;
+            border-style: outset;
+            border-radius: 10px;
+        }
+
     </style>
     <template>
         <paper-dialog class="dialog-position" id="jobHelpCoadds" with-backdrop="" on-iron-overlay-opened="patchOverlay">
@@ -46379,59 +46735,201 @@ function keysrt(key,desc) {
         <section>
             <des-card heading="Coadds Images Cutout Form">
                 <div class="card-content">
-                    Upload the file with the positions or enter the positions by hand and run the desthumb generator
+                    <div class="top">
+                        Upload the file with the positions or enter the positions by hand and run the desthumb generator
+                    </div>
+
+                    <!-- file -->
+                    <div class="container">
+                        <div class="left">
+                            <!-- version B -->
+                            <paper-icon-item>
+                                <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                Upload File
+                                </span>
+                                <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                            </paper-icon-item>
+                        </div>
+                        <div class="right2">
+                            <!-- version A -->
+                            <paper-button raised="" class="indigo" id="uploadFile">
+                                <div id="uploadicon" style="display: inline-block;">
+                                    <i class="fa fa-cloud-upload"></i>
+                                    &nbsp;  &nbsp;
+                                </div>
+                                <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                    [[file_name]]
+                                </span>
+                                <input type="file" class="upload" id="file" on-change="_fileChange">
+                            </paper-button>
+                        </div>
+                    </div>
+
+                    <br>
+                    <!-- value -->
+                    <div class="container">
+                        <div class="left">
+
+                            <!-- version B -->
+                            <paper-icon-item>
+                                <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                Enter Values
+                            </paper-icon-item>
+
+                        </div>
+                        <div class="right2">
+                            <!-- version A -->
+                            <paper-button raised="" class="indigo" id="enterValues" on-tap="_openPositions">
+                                <div id="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                    &nbsp;  &nbsp;
+                                </div>
+                                <span>[[enter_values]]</span>
+                            </paper-button>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- xslider -->
+                    <div class="container">
+                        <div class="left">
+                            <div>xsize (in arcminutes, default is 1.0):
+                                <span id="xsizeLabel" class="caption">0</span></div><br>
+                        </div>
+
+                        <div class="right">
+                            <paper-slider id="xsizeSlider" pin="" max="12" max-markers="10" step="0.1" value="0" expand="" editable=""></paper-slider>
+                        </div>
+                    </div>
+
+
+                    <!-- yslider -->
+                    <div class="container">
+                        <div class="left">
+                            <div>ysize (in arcminutes, default is 1.0):
+                                <span id="ysizeLabel" class="caption">0</span>
+                            </div><br>
+                        </div>
+
+                        <div class="right">
+                            <paper-slider id="ysizeSlider" pin="" max="12" max-markers="10" step="0.1" value="0" expand="" editable=""></paper-slider>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- job name -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-icon-item>
+                                <iron-icon icon="create" slot="item-icon"></iron-icon>
+                                Job Name
+                            </paper-icon-item>
+                        </div>
+                        <div class="right">
+                            <paper-input always-float-label="" id="validname" name="name" label="Job Name" value=""></paper-input>
+                        </div>
+                    </div>
+
+
+                    <!-- email -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-item>
+                                <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send email after completion</paper-checkbox>
+                            </paper-item>
+                        </div>
+                        <div class="right">
+                            <paper-input always-float-label="" id="validemail" name="email" label="Email" value=""></paper-input>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- return -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-icon-item>
+                                <iron-icon icon="save" slot="item-icon"></iron-icon>
+                                Return Type
+                            </paper-icon-item>
+                        </div>
+                        <div class="right">
+                            <paper-item>
+                                <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                            </paper-item>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- buttons -->
+                    <div class="container">
+                        <div class="left">
+                            <paper-button raised="" class="indigo" id="clearFormButton" on-tap="_clearForm">
+                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
+                            </paper-button>
+                        </div>
+                        <div class="right">
+                            <paper-button raised="" class="indigo" id="submitJobButton" disabled="" on-tap="_submitJob">
+                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
+                            </paper-button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <div class="horizontal layout around-justified">
-                        <paper-button raised="" class="indigo" id="uploadFile">
-                            <div id="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>
-                                &nbsp;  &nbsp;
-                            </div>
-                            <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                [[file_name]]
-                            </span>
-                            <input type="file" class="upload" id="file" on-change="_fileChange">
-                        </paper-button>
 
-                        <paper-button raised="" class="indigo" id="enterValues" on-tap="_openPositions">
-                            <div id="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                                &nbsp;  &nbsp;
-                            </div>
-                            <span>[[enter_values]]</span>
-                        </paper-button>
-                    </div>
+                <!--<div class="card-content">-->
+                    <!--<div class="" >-->
+                        <!--<paper-button raised  class="indigo"  id="uploadFile">-->
+                            <!--<div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>-->
+                                <!--&nbsp;  &nbsp;-->
+                            <!--</div>-->
+                            <!--<span style="overflow-x: auto; overflow-wrap: break-word;">-->
+                                <!--[[file_name]]-->
+                            <!--</span>-->
+                            <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                        <!--</paper-button>-->
 
-                    <hr>
+                        <!--<paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">-->
+                            <!--<div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>-->
+                                <!--&nbsp;  &nbsp;-->
+                            <!--</div>-->
+                            <!--<span>[[enter_values]]</span>-->
+                        <!--</paper-button>-->
+                    <!--</div>-->
 
-                    <div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>
-                    <paper-slider id="xsizeSlider" pin="" max="12" max-markers="10" step="0.1" value="0" expand=""></paper-slider>
-                    <div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>
-                    <paper-slider id="ysizeSlider" pin="" max="12" max-markers="10" step="0.1" value="0" expand=""></paper-slider>
+                    <!--<hr>-->
 
-                    <hr>
+                    <!--<div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>-->
+                    <!--<paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>-->
+                    <!--<div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>-->
+                    <!--<paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>-->
 
-                    <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                    <!--<hr>-->
 
-                    <hr>
+                    <!--<paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>-->
 
-                    <div class="flex2">
-                        <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
-            &nbsp;  &nbsp;        <paper-input id="validemail" name="email" label="Email" value=""></paper-input>
-                        <paper-input id="validname" name="name" label="Job Name" value=""></paper-input>
-                        <br>
-                    </div>
+                    <!--<hr>-->
 
-                    <div>
+                    <!--<div class="flex2" >-->
+                        <!--<paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>-->
+                        <!--&nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>-->
+                        <!--<paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>-->
+                        <!--<br>-->
+                    <!--</div>-->
 
-                        <paper-button raised="" class="indigo" id="clearFormButton" on-tap="_clearForm">
-                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
-                        </paper-button>
+                    <!--<div>-->
 
-                        <paper-button raised="" class="indigo" id="submitJobButton" disabled="" on-tap="_submitJob">
-                        <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
-                        </paper-button>
-                    </div>
-                </div>
+                        <!--<paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">-->
+                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form-->
+                        <!--</paper-button>-->
+
+                        <!--<paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">-->
+                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job-->
+                        <!--</paper-button>-->
+                    <!--</div>-->
+                <!--</div>-->
 
             </des-card>
 
@@ -46467,6 +46965,7 @@ function keysrt(key,desc) {
                 type : String,
                 value : "Enter Values"
             },
+
             submit_type : {
                 type: String,
                 value: "csvfile",
@@ -46492,7 +46991,7 @@ function keysrt(key,desc) {
             }
             else
             {
-            document.getElementById("validemail").value='';
+                document.getElementById("validemail").value='';
             }
         },
         _fileChange: function(){
@@ -46500,8 +46999,11 @@ function keysrt(key,desc) {
             console.log('File to read : ' + this.file_name );
             document.getElementById("submitJobButton").disabled=false;
             document.getElementById("enterValues").disabled=true;
-            document.getElementById("uploadicon").style.display='none';
+//            document.getElementById("uploadicon").style.display='none';
+            document.getElementById("uploadicon").icon = "done";
+
             this.submit_type = 'csvfile';
+//            document.getElementById("filename").value = this.file_name;
         },
         clear: function(){
             document.getElementById("submitJobButton").disabled=true;
@@ -46515,6 +47017,14 @@ function keysrt(key,desc) {
             document.getElementById("desPositions").clear();
             document.getElementById("validemail").value='';
             document.getElementById("validname").value='';
+//            document.getElementById("filename").value = '';
+//            document.getElementById("coords").value = '';
+            document.getElementById("uploadicon").icon = "backup";
+            document.getElementById("keyboardicon").icon = "hardware:keyboard";
+
+
+
+
 
             //            document.getElementById("coaddTag").selected="0";
             this.file_name = "Upload File";
@@ -46526,10 +47036,16 @@ function keysrt(key,desc) {
             //$('#dothis')[0].checked=false;
             this.$.file.value = "";
         },
+        _countCoords: function(coords) {
+            console.log(coords);
+        },
+
         _openPositions: function(){
             var inputDialog = document.getElementById("inputValuesDialog");
             inputDialog.open();
             this.submit_type = 'manual';
+
+
         },
         completeHandler: function(){
             console.log('YESSSSS');
@@ -46571,11 +47087,11 @@ function keysrt(key,desc) {
             desCoadds=document.getElementById('desCoadds');
             desCoadds.clear();
         },
-         patchOverlay: function (e) {
-             if (e.target.withBackdrop) {
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-             }
-         },
+            }
+        },
         _seeHelp: function(e){
             e.preventDefault();
             document.getElementById('jobHelpCoadds').open();
@@ -46620,11 +47136,13 @@ function keysrt(key,desc) {
         },
       },
       _submitPositions: function(){
-        document.getElementById("inputValuesDialog").close();
-        document.getElementById("submitJobButton").disabled=false;
-        document.getElementById("uploadFile").disabled=true;
-        document.getElementById("keyboardicon").style.display='none';
-        document.getElementById("desCoadds").enter_values = "Values Entered";
+            document.getElementById("inputValuesDialog").close();
+            document.getElementById("submitJobButton").disabled=false;
+            document.getElementById("uploadFile").disabled=true;
+            document.getElementById("keyboardicon").icon = "done";
+            document.getElementById("desCoadds").enter_values = "Values Entered";
+
+
         },
         clear: function(){
             document.getElementById("enteredPositions").value="";
@@ -47024,6 +47542,143 @@ function keysrt(key,desc) {
       </script>
 
 </dom-module>
+<dom-module id="des-help" assetpath="../des_components/des-pages/">
+    <template>
+
+        <style include="shared-styles">
+
+            .form1:hover{
+                background: var(--paper-blue-grey-50);}
+
+            .helpform{
+                text-align:center;
+            }
+
+            .ironformcontent{
+                text-align: left;
+            }
+        </style>
+
+        <paper-dialog class="dialog-position" id="jobHelpHelp" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+            <des-help-help></des-help-help>
+        </paper-dialog>
+
+        <des-card heading="DES Release Help Form">
+            <div class="card-content">
+                Please complete the form below with any questions related to the DES Releases
+                that were not addressed by the socumentation pages.
+                Indicating one or more relevant topics will help us properly direct your question.
+            </div>
+            <hr>
+        </des-card>
+
+        <des-card class="helpform">
+
+
+            <div class="card-content">
+                <div class="horizontal layout center-justified">
+                    <paper-card elevation="4" style="padding:20px; width:100%; max-width:600px;">
+                        <iron-form class="ironformcontent" id="Helpform">
+                            <form is="iron-form" method="post" action="/help/">
+                                <div style="text-align: center; font-size: larger; color:red; padding-top: 10px">Help Form</div>
+                                <div class="form1" id="form1">
+                                    <p><b>Name:</b></p>
+                                    <paper-input name="name" label="First" required=""></paper-input>
+                                    <paper-input name="lastname" label="Last" required=""> </paper-input>
+                                </div>
+
+                                <div class="form1" id="form2">
+                                    <p><b>Contact Information:</b></p>
+                                    <paper-input name="email" label="Email" required=""></paper-input>
+                                </div>
+
+                                <div class="form1" id="form3">
+                                    <p><b>Question Topic (Please Select All That Apply):</b></p>
+                                    <paper-checkbox name="topic" value="DR1 Release"> DR1 Release</paper-checkbox> <br>
+                                    <paper-checkbox name="topic" value="Interfaces"> User Interfaces </paper-checkbox> <br>
+                                    <paper-checkbox name="topic" value="User Accounts"> User Accounts </paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="Files format/access"> File formats / File access </paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="SVA1 Gold"> SVA1 Gold</paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="Y1A1 Gold"> Y1A1 Gold</paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="General Questions"> General questions </paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="Other"> Other </paper-checkbox><br>
+                                    <paper-input name="topic" label="Please supply topic if checked 'Other'"> </paper-input><br>
+
+                                </div>
+
+
+                                <div class="form1" id="form4">
+                                    <p><b>What's Your Question?</b></p>
+                                    <input type="hidden" id="hiddenEntry" name="question" value="">
+                                    <paper-input name="subject" label="Subject" required=""> </paper-input><br>
+                                    <iron-autogrow-textarea id="questionEntry" name="question" rows="10" style="width:100%" required="" auto-validate="" invalid="{{invalid}}" placeholder="This section is required"></iron-autogrow-textarea><br><br>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <paper-button class="desButton" on-click="_submit">Submit Form</paper-button>
+                                </div>
+
+                            </form>
+                        </iron-form>
+                    </paper-card>
+                </div>
+            </div>
+
+        </des-card>
+        <paper-toast style="z-index: 9999; margin-left:260px;" id="toast1" text="Form has been submitted! Thanks"> </paper-toast>
+        <paper-toast style="z-index: 9999; margin-left:260px; color:red;" id="toast2" text="ERROR!, Please Check Form"> </paper-toast>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-help",
+            properties: {
+                invalid: {
+                    type: Boolean,
+                }
+            },
+            _submit: function() {
+                console.log('Submit!');
+                var form1 = this.$.Helpform;
+                var toast= this.$.toast1;
+
+                console.log(form1);
+                var valid = form1.validate();
+                if (valid) {
+                    var temp = this.$.questionEntry.value;
+                    this.$.hiddenEntry.value = temp;
+                    form1.submit();
+                    console.log('valid');
+                    this.$.toast1.open();
+                    form1.reset();
+                    this.$.questionEntry.value='';
+                    this.$.hiddenEntry.value='';
+                }
+                else{
+                    console.log('invalid');
+                    this.$.toast2.open();
+                }
+
+            },
+            patchOverlay: function (e) {
+                if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                }
+            },
+            _seeHelp: function(e){
+                e.preventDefault();
+                document.getElementById('jobHelpHelp').open();
+            },
+        });
+
+
+
+    </script>
+
+</dom-module>
 <dom-module id="des-card-intro" assetpath="../des_components/">
     <style>
 
@@ -47187,7 +47842,7 @@ function keysrt(key,desc) {
                 <p class="card-light" id="{{name}}" on-click="change">{{desc}}</p>
             </div>
             <div class="card-actions" id="{{name}}" on-click="change">
-                <paper-button id="{{name}}" on-click="change" class="card-explore">Explore!</paper-button>
+                <paper-button style="text-transform: none;" id="{{name}}" on-click="change" class="card-explore">More...</paper-button>
                 <!--<paper-button class="card-explore">Explore!</paper-button>-->
             </div>
         </paper-card>
@@ -47235,14 +47890,15 @@ function keysrt(key,desc) {
             if (tid == 'coadd') sel = 4;
             if (tid == 'footprint') sel = 5;
             if (tid == 'desjobs') sel = 6;
+            if (tid == 'help') sel = 7;
 
             var app = document.querySelector('#app');
             var pages = document.getElementById("mainPages");
             var menu = document.querySelector('paper-menu');
             app.selection=sel;
-            pages.selected=sel;
-            menu.selected=sel;
-
+            pages.select(sel);
+            menu.select(sel);
+            console.log("selected: ", menu.selected);
         },
 
     });
@@ -47700,6 +48356,29 @@ function keysrt(key,desc) {
     <script>
         Polymer({
             is: "des-thumb-help",
+            properties: {}
+
+        });
+
+    </script>
+</dom-module>
+<dom-module id="des-help-help" assetpath="../des_components/des-help/">
+    <template>
+        <style include="shared-styles"></style>
+
+        <des-card-help heading="Help">
+            <div class="card-content">
+                Use the form to submit your question.
+            </div>
+        </des-card-help>
+
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-help-help",
             properties: {}
 
         });
