@@ -1,0 +1,137 @@
+<dom-module id="des-help">
+    <template>
+
+        <style  include="shared-styles">
+
+            .form1:hover{
+                background: var(--paper-blue-grey-50);}
+
+            .helpform{
+                text-align:center;
+            }
+
+            .ironformcontent{
+                text-align: left;
+            }
+        </style>
+
+        <paper-dialog class="dialog-position" id="jobHelpHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <des-help-help></des-help-help>
+        </paper-dialog>
+
+        <des-card  heading="DES Release Help Form">
+            <div class="card-content">
+                Please complete the form below with any questions related to the DES Releases
+                that were not addressed by the socumentation pages.
+                Indicating one or more relevant topics will help us properly direct your question.
+            </div>
+            <hr>
+        </des-card>
+
+        <des-card class="helpform">
+
+
+            <div class="card-content">
+                <div class="horizontal layout center-justified" >
+                    <paper-card  elevation="4" style="padding:20px; width:100%; max-width:600px;">
+                        <iron-form class="ironformcontent" id="Helpform" >
+                            <form is="iron-form" method="post" action="/help/">
+                                <div style="text-align: center; font-size: larger; color:red; padding-top: 10px">Help Form</div>
+                                <div class="form1" id="form1" >
+                                    <p><b>Name:</b></p>
+                                    <paper-input name="name" label="First" required></paper-input>
+                                    <paper-input name="lastname" label="Last" required> </paper-input>
+                                </div>
+
+                                <div class="form1" id="form2"  >
+                                    <p><b>Contact Information:</b></p>
+                                    <paper-input name="email" label="Email" required ></paper-input>
+                                </div>
+
+                                <div class="form1" id="form3"  >
+                                    <p><b>Question Topic (Please Select All That Apply):</b></p>
+                                    <paper-checkbox name="topic" value="DR1 Release"> DR1 Release</paper-checkbox> <br>
+                                    <paper-checkbox name="topic" value="Interfaces"> User Interfaces </paper-checkbox> <br>
+                                    <paper-checkbox name="topic" value="User Accounts"> User Accounts </paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="Files format/access"> File formats / File access </paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="SVA1 Gold"> SVA1 Gold</paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="Y1A1 Gold"> Y1A1 Gold</paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="General Questions"> General questions </paper-checkbox><br>
+                                    <paper-checkbox name="topic" value="Other"> Other </paper-checkbox><br>
+                                    <paper-input name="topic"  label="Please supply topic if checked 'Other'"> </paper-input><br>
+
+                                </div>
+
+
+                                <div class="form1" id="form4"  >
+                                    <p><b>What's Your Question?</b></p>
+                                    <input type="hidden" id="hiddenEntry" name="question" value="">
+                                    <paper-input name="subject"  label="Subject" required> </paper-input><br>
+                                    <iron-autogrow-textarea id="questionEntry" name="question" rows="10"  style="width:100%"  required auto-validate invalid="{{invalid}}" placeholder="This section is required"></iron-autogrow-textarea><br><br>
+                                </div>
+
+                                <div style="text-align: center">
+                                    <paper-button class="desButton"  on-click="_submit">Submit Form</paper-button>
+                                </div>
+
+                            </form>
+                        </iron-form>
+                    </paper-card>
+                </div>
+            </div>
+
+        </des-card>
+        <paper-toast style="z-index: 9999; margin-left:260px;" id="toast1" text="Form has been submitted! Thanks"> </paper-toast>
+        <paper-toast style="z-index: 9999; margin-left:260px; color:red;" id="toast2" text="ERROR!, Please Check Form"> </paper-toast>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-help",
+            properties: {
+                invalid: {
+                    type: Boolean,
+                }
+            },
+            _submit: function() {
+                console.log('Submit!');
+                var form1 = this.$.Helpform;
+                var toast= this.$.toast1;
+
+                console.log(form1);
+                var valid = form1.validate();
+                if (valid) {
+                    var temp = this.$.questionEntry.value;
+                    this.$.hiddenEntry.value = temp;
+                    form1.submit();
+                    console.log('valid');
+                    this.$.toast1.open();
+                    form1.reset();
+                    this.$.questionEntry.value='';
+                    this.$.hiddenEntry.value='';
+                }
+                else{
+                    console.log('invalid');
+                    this.$.toast2.open();
+                }
+
+            },
+            patchOverlay: function (e) {
+                if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                }
+            },
+            _seeHelp: function(e){
+                e.preventDefault();
+                document.getElementById('jobHelpHelp').open();
+            },
+        });
+
+
+
+    </script>
+
+</dom-module>
