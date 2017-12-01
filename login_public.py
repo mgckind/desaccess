@@ -31,7 +31,8 @@ class SignupHandler(BaseHandler):
         firstname = self.get_argument("firstname", "")
         lastname = self.get_argument("lastname", "")
         email = self.get_argument("email", "").lower()
-        if db_utils.check_username(username):
+        valid = len(password) >= 6
+        if db_utils.check_username(username) and valid:
             if db_utils.check_email(email):
                 check, msgerr = db_utils.create_user(username, password, firstname, lastname, email, '', '')
                 if not check:
@@ -49,8 +50,13 @@ class SignupHandler(BaseHandler):
                 msg = 'Email address already exists in our database.'
                 err = '2'
         else:
-            msg = '{0} already exists. Try a different one'.format(username)
-            err = '1'
+            if valid:
+                msg = '{0} already exists. Try a different one'.format(username)
+                err = '1'
+            else:
+                msg = 'Password minimum length is 6.'
+                err = '3'
+
         self.write(json.dumps({'msg': msg, 'errno': err}))
 
 

@@ -65,13 +65,14 @@
           <paper-input id="form_last" name="lastname" label="Last" ></paper-input>
           </div>
           <paper-input id="form_email" name="email" label="Email" on-change="_enable" required auto-validate></paper-input><br>
-          <paper-input  id="form_user" name="username" label="Username" on-change="_enable" required auto-validate pattern="[a-zA-Z0-9]*" error-message="Can't be empty and include alphanumeric characters only" ></paper-input><br>
+          <paper-input  id="form_user" name="username" label="Username" on-change="_enable" required auto-validate pattern="[a-zA-Z0-9]*" char-counter minlength="3" error-message="Minimum length is 3. Include alphanumeric characters only" ></paper-input><br>
 
           <match-passwords-validator id="match-passwords-validator"
             password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input id="first_password" label="Password"
+          <paper-password-input id="first_password" label="Password (at least 6 characters)"
             value="{{password}}"
+            char-counter
              required>
           </paper-password-input>
           <paper-password-input id="form_password" on-invalid-changed="_enable" id="NewPass" name="password" label="Confirm Password"
