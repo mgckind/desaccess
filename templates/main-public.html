@@ -11,7 +11,7 @@
 <script src="/easyweb/static/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="import" href="/easyweb/static/elements/elements-built.html">
+<link rel="import" href="/easyweb/static/elements/elements.html">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
 <link rel="stylesheet" href="/easyweb/static/scripts/codemirror/lib/codemirror.css">
 <style is="custom-style">
@@ -25,24 +25,30 @@ app-drawer-layout:not([narrow]) [drawer-toggle] {
 <body unresolved>
 <template is="dom-bind" id="app">
 
-<app-drawer-layout id="drawerLayout" responsive-width="1000px">
+<app-header-layout style="margin:-8px;" has-scrolling-region fullbleed>
+
+     <app-header condenses slot="header" fixed>
+         <des-toolbar  class="paper-header" name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-toolbar>
+     </app-header>
+
+<app-drawer-layout id="drawerLayout" responsive-width="1000px" fullbleed>
+
 <!-- SIDE PANEL -->
-<app-drawer id="drawer" swipe-open slot="drawer">
+
+
+    <app-drawer id="drawer" swipe-open slot="drawer">
+        <app-toolbar></app-toolbar>
       <des-side-toolbar name={{username}} email={{email}}></des-side-toolbar>
-
-</app-drawer>
-
+</app-drawer><
 <!-- MAIn PANEL -->
-<app-header-layout style="margin:-8px;">
-<app-header condenses>
-      <des-toolbar  class="paper-header" name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-toolbar>
-      <des-mainpages name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-mainpages>
- </app-header>
+    <des-mainpages name={{name}} lastname={{lastname}} email={{email}} username={{username}} db={{db}}></des-mainpages>
+<des-credit-line version="{{version}}"></des-credit-line>
+    </app-drawer-layout>
 </app-header-layout>
-</app-drawer-layout>
+
 
 </template>
-<des-credit-line version="{{version}}"></des-credit-line>
+
   <script src="/easyweb/static/scripts/codemirror/lib/codemirror.js"></script>
  <script src="/easyweb/static/scripts/codemirror/mode/sql/sql.js"></script>
   <script src="/easyweb/static/scripts/app.min.js"></script>
