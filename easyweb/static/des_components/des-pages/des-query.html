@@ -252,6 +252,7 @@ Polymer({
             document.querySelector('#toast1').show();}
         }
         //document.querySelector('#toast1').show();
+
     },
     _request: function(e){
         var bbs = document.getElementsByClassName("queryButton");
@@ -277,6 +278,7 @@ Polymer({
         document.getElementById('inputOutputFile').value = '';
         document.getElementById('queryname').value = '';
         document.getElementById('checkemail').checked = false;
+        document.getElementById('compress-box').checked = false;
         document.getElementById('queryemail').value ='';
         document.getElementById('subQuery').disabled=true;
         this.outputfile = 'nofile';
@@ -304,7 +306,8 @@ Polymer({
         }
         if (valid) {
             queryform = document.getElementById("getQuery");
-            queryform.generateRequest();}
+            queryform.generateRequest();
+        }
     },
     _quickSubmit: function(event){
         document.getElementById('inputOutputCheck').checked = false;
