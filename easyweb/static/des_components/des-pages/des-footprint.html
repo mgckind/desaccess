@@ -17,6 +17,11 @@
         .flex {
       @apply --layout-horizontal;
         }
+
+        .flex2 {
+      @apply --layout-horizontal;
+      @apply(--layout-center-justified);
+        }
         .downloadTile {
             visibility: hidden;
         }
@@ -70,10 +75,13 @@
         </paper-dialog>
 
                 <des-card heading=[[header]]>
-                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px" required> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                    <div class="card content flex">
+                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-20px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
-                <paper-checkbox id="check_dr1" checked on-change="display_dr1">DR1 TILES</paper-checkbox>
-                <paper-checkbox id="check_h32" on-change="display_h32">HPIX_32</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_dr1" checked on-change="display_dr1">DR1 TILES</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
+                    </div>
                     <div class="card-content">
                  <div class="flex" >
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
@@ -259,88 +267,86 @@
                         globe.addLayer(vectorLayer);
                     });
 
+                        var coordLayer2 = new GlobWeb.VectorLayer({});
+
 
                         for (i=1; i< 7; i++) {
                             raco = 30*i
                             deco = 0
-                        var coordFeature = {
-                            "type": "Feature",
-                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
-                        var coordLayer = new GlobWeb.VectorLayer({
-                                style : new GlobWeb.FeatureStyle({
+                        var style = new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
                                 pointMaxSize : 500,
                                 fill:false,
                                 opacity:0.5,
                                 zIndex: 0,
                                 label: raco.toString(),
-                            })
                         });
-                        coordLayer.addFeature(coordFeature);
-                        coordLayer.visible(true);
-                        globe.addLayer(coordLayer );
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
                     };
+
+
+
                         for (i=1; i< 6; i++) {
                             raco = -30*i
                             deco = 0
-                        var coordFeature = {
-                            "type": "Feature",
-                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
-                        var coordLayer = new GlobWeb.VectorLayer({
-                                style : new GlobWeb.FeatureStyle({
+                        var style = new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
                                 pointMaxSize : 500,
                                 fill:false,
-                                zIndex: 0,
                                 opacity:0.5,
+                                zIndex: 0,
                                 label: raco.toString(),
-                            })
                         });
-                        coordLayer.addFeature(coordFeature);
-                        coordLayer.visible(true);
-                        globe.addLayer(coordLayer );
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
                     };
 
                         for (i=1; i< 7; i++) {
                             raco = 0
                             deco = -90 + 30*i
-                        var coordFeature = {
-                            "type": "Feature",
-                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
-                        var coordLayer = new GlobWeb.VectorLayer({
-                                style : new GlobWeb.FeatureStyle({
+                        var style = new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
                                 pointMaxSize : 500,
                                 fill:false,
-                                zIndex: 0,
                                 opacity:0.5,
-                                label: deco.toString(),
-                            })
+                                zIndex: 0,
+                                label: raco.toString(),
                         });
-                        coordLayer.addFeature(coordFeature);
-                        coordLayer.visible(true);
-                        globe.addLayer(coordLayer );
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
                     };
+
                         for (i=1; i< 7; i++) {
                             raco = 180
                             deco = -90 + 30*i
-                        var coordFeature = {
-                            "type": "Feature",
-                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
-                        var coordLayer = new GlobWeb.VectorLayer({
-                                style : new GlobWeb.FeatureStyle({
+                        var style = new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
                                 pointMaxSize : 500,
                                 fill:false,
                                 opacity:0.5,
                                 zIndex: 0,
-                                label: deco.toString(),
-                            })
+                                label: raco.toString(),
                         });
-                        coordLayer.addFeature(coordFeature);
-                        coordLayer.visible(true);
-                        globe.addLayer(coordLayer );
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
                     };
+                        coordLayer2.visible(true);
+                        globe.addLayer(coordLayer2);
+                        window.coords = coordLayer2;
+
                     loadTiles('/easyweb/static/tiles/footprint.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -570,6 +576,16 @@
                 }
                 else{
                     hpix32_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_coord: function(){
+            var checkcoord = document.getElementById("check_coord");
+                if (checkcoord.checked) {
+                    coords._visible = true;
+                }
+                else{
+                    coords._visible = false;
                 }
                 globe.refresh();
             },
