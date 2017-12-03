@@ -45,6 +45,15 @@ def create_db(delete=False):
     con.commit()
     con.close()
 
+
+class MyStaticFileHandler(tornado.web.StaticFileHandler):
+    def write_error(self, status_code, *args, **kwargs):
+        # custom 404 page
+        if status_code in [404]:
+            self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
+        else:
+            super().write_error(status_code, *args, **kwargs)
+
 class My404Handler(tornado.web.RequestHandler):
     def prepare(self):
         self.set_status(404)
@@ -82,7 +91,9 @@ class Application(tornado.web.Application):
             (r"/easyweb/delete/", api.DeleteHandler),
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),
-            (r"/easyweb/help/?", api.HelpHandler)
+            (r"/easyweb/help/?", api.HelpHandler),
+            (r"/easyweb/files/(.*)", MyStaticFileHandler,
+             {'path': Settings.STATIC_PATH+'/workdir'}),
         ]
         settings = {
             "template_path": Settings.TEMPLATE_PATH,

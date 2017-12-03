@@ -21,6 +21,17 @@ def replaceout(inputfile):
         for line in file:
             print(line.replace('app.min.js', 'app.js'), end='')
 
+def changedebug(mode):
+    if mode == 'build':
+        with fileinput.FileInput('Settings.py', inplace=True) as file:
+            for line in file:
+                print(line.replace('DEBUG = True', 'DEBUG = False'), end='')
+    if mode == 'dev':
+        with fileinput.FileInput('Settings.py', inplace=True) as file:
+            for line in file:
+                print(line.replace('DEBUG = False', 'DEBUG = True'), end='')
+
+
 def changeports(mode):
     if mode == 'build':
         with fileinput.FileInput('main.py', inplace=True) as file:
@@ -70,6 +81,7 @@ if __name__ == "__main__":
         replacein('templates/signup.html')
         replacein('templates/404.html')
         replacein('templates/service-down.html')
+        changedebug('build')
         #changeports('build')
 
 
@@ -81,4 +93,5 @@ if __name__ == "__main__":
         replaceout('templates/signup.html')
         replaceout('templates/404.html')
         replaceout('templates/service-down.html')
+        changedebug('dev')
         #changeports('dev')
