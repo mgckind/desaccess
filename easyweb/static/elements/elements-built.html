@@ -46202,6 +46202,11 @@ function keysrt(key,desc) {
         .flex {
       @apply --layout-horizontal;
         }
+
+        .flex2 {
+      @apply --layout-horizontal;
+      @apply(--layout-center-justified);
+        }
         .downloadTile {
             visibility: hidden;
         }
@@ -46249,8 +46254,13 @@ function keysrt(key,desc) {
         </paper-dialog>
 
                 <des-card heading="[[header]]">
-                    <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px" required=""> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                    <div class="card content flex">
+                    <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-20px; " required=""> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_coord" checked="" on-change="display_coord">Coordinates</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_dr1" checked="" on-change="display_dr1">DR1 TILES</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
+                    </div>
                     <div class="card-content">
                  <div class="flex">
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
@@ -46327,7 +46337,7 @@ function keysrt(key,desc) {
                 },
                 header:{
                     type: String,
-                    value:'DES Footprint',
+                    value:'DES DR1 Footprint',
                 },
                 tiledata:{
                     value: {},
@@ -46359,7 +46369,7 @@ function keysrt(key,desc) {
                 if (ra1 > 180.) {
                     ra1 = ra1 - 360.;
                 };
-                ra1 = 0. - ra1
+                //ra1 = 0. - ra1
                 //navigation.zoomTo([ra1,dec1],500000,1000);
                 PositionZoom(ra1,dec1);
             },
@@ -46436,11 +46446,91 @@ function keysrt(key,desc) {
                         globe.addLayer(vectorLayer);
                     });
 
+                        var coordLayer2 = new GlobWeb.VectorLayer({});
+
+
+                        for (i=1; i< 7; i++) {
+                            raco = 30*i
+                            deco = 0
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+
+
+
+                        for (i=1; i< 6; i++) {
+                            raco = -30*i
+                            deco = 0
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+
+                        for (i=1; i< 7; i++) {
+                            raco = 0
+                            deco = -90 + 30*i
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+
+                        for (i=1; i< 7; i++) {
+                            raco = 180
+                            deco = -90 + 30*i
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+                        coordLayer2.visible(true);
+                        globe.addLayer(coordLayer2);
+                        window.coords = coordLayer2;
+
                     loadTiles('/easyweb/static/tiles/footprint.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 strokeColor : mycolor,
-                                strokeWidth: 5.0,
+                                strokeWidth: 6.0,
                                 fill: false,
                                 label: 'footprint',
                                 zIndex: 100,
@@ -46454,9 +46544,10 @@ function keysrt(key,desc) {
                     loadTiles('/easyweb/static/tiles/all_tiles.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
-                                strokeColor : mycolor,
+                                strokeColor : [0.2980392156862745, 0.4470588235294118, 0.6901960784313725,1.0],
                                 strokeWidth: 0.0,
                                 fill: false,
+                                zIndex: 0,
                             })
                         });
                         vectorLayer.addFeatureCollection(JSON.parse(response));
@@ -46464,7 +46555,6 @@ function keysrt(key,desc) {
                         globe.addLayer(vectorLayer);
                         window.all_tiles = vectorLayer;
                     });
-
 
                     loadTiles('/easyweb/static/tiles/dr1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
@@ -46478,38 +46568,58 @@ function keysrt(key,desc) {
                         vectorLayer.addFeatureCollection(JSON.parse(response));
                         vectorLayer.visible(true);
                         globe.addLayer(vectorLayer);
-                        window.y3_tiles = vectorLayer;
+                        window.dr1_tiles = vectorLayer;
                     });
-
+                    loadTiles('/easyweb/static/tiles/hpix32.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor :  [0.7686274509803922, 0.3058823529411765, 0.3215686274509804,1.],
+                                strokeWidth: 6.0,
+                                fill: false,
+                                zIndex: 50,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.hpix32_tiles = vectorLayer;
+                    });
 
                     var PositionZoom = function(ra,dec) {
                         var _self = this;
                         var geojsonFeature = {
                             "type": "Feature",
-                            "properties": {"name": "hola"},
+                            "properties": {"name": "check"},
                             "geometry": {
                                 "type": "Point",
-                                "coordinates": [ra,dec]
+                                "coordinates": [0.-ra,dec]
                             }
                         };
-                        navigation.zoomTo([ra,dec],500000,1000);
+                        rat = 0.-ra
                         if (window.tempLayer === undefined){
                             var ju = 0;
                         }
                         else{
                             globe.removeLayer( window.tempLayer );
                         }
+                        var style_tile = new GlobWeb.FeatureStyle({
+                            fillColor: [0.,0.,0.,1.],
+                            pointMaxSize: 10,
+                            label: 'tilename'
+                        });
                         var tempLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
-                                pointMaxSize : 1000,
-                                //label: true,
+                                pointMaxSize : 500,
+                                //label: geojsonFeature['properties']['name'],
+
                             })
                         });
                         tempLayer.addFeature(geojsonFeature);
                         tempLayer.visible(true);
                         globe.addLayer( tempLayer );
                         window.tempLayer = tempLayer;
+                        navigation.zoomTo([rat,dec],500000,1000);
                             var max_d = Number.POSITIVE_INFINITY;
                             var tile = -1
                             for (i=0; i < all_tiles.features.length-1; i++){
@@ -46615,7 +46725,7 @@ function keysrt(key,desc) {
                                     style : new GlobWeb.FeatureStyle({
                                         fillColor: [1.,1.,0.,1.],
                                         strokeColor : [0.0,0.0,0.0,1.0],
-                                        strokeWidth: 3.5,
+                                        strokeWidth: 4.5,
                                         fill: false,
                                         zIndex: 90,
                                     })
@@ -46637,6 +46747,36 @@ function keysrt(key,desc) {
             _seeHelp: function(e){
                 e.preventDefault();
                 document.getElementById('jobHelpFootprint').open();
+            },
+            display_h32: function(){
+            var checkh32 = document.getElementById("check_h32");
+                if (checkh32.checked) {
+                    hpix32_tiles._visible = true;
+                }
+                else{
+                    hpix32_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_coord: function(){
+            var checkcoord = document.getElementById("check_coord");
+                if (checkcoord.checked) {
+                    coords._visible = true;
+                }
+                else{
+                    coords._visible = false;
+                }
+                globe.refresh();
+            },
+            display_dr1: function(){
+            var checkdr1 = document.getElementById("check_dr1");
+                if (checkdr1.checked) {
+                    dr1_tiles._visible = true;
+                }
+                else{
+                    dr1_tiles._visible = false;
+                }
+                globe.refresh();
             },
         });
 
@@ -47565,9 +47705,8 @@ function keysrt(key,desc) {
 
         <des-card heading="DES Release Help Form">
             <div class="card-content">
-                Please complete the form below with any questions related to the DES Releases
-                that were not addressed by the socumentation pages.
-                Indicating one or more relevant topics will help us properly direct your question.
+                Please complete the form below with any questions related to the DES Pucblic Releases. <br>
+                Please indicate one or more relevant topics which will help us properly channel your inquiry.
             </div>
             <hr>
         </des-card>
@@ -47579,7 +47718,7 @@ function keysrt(key,desc) {
                 <div class="horizontal layout center-justified">
                     <paper-card elevation="4" style="padding:20px; width:100%; max-width:600px;">
                         <iron-form class="ironformcontent" id="Helpform">
-                            <form is="iron-form" method="post" action="/help/">
+                            <form is="iron-form" method="post" action="/easyweb/help/">
                                 <div style="text-align: center; font-size: larger; color:red; padding-top: 10px">Help Form</div>
                                 <div class="form1" id="form1">
                                     <p><b>Name:</b></p>
@@ -47615,7 +47754,7 @@ function keysrt(key,desc) {
                                 </div>
 
                                 <div style="text-align: center">
-                                    <paper-button class="desButton" on-click="_submit">Submit Form</paper-button>
+                                    <paper-button class="indigo" on-click="_submit">Submit Form</paper-button>
                                 </div>
 
                             </form>

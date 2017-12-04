@@ -48,7 +48,6 @@ def create_db(delete=False):
 
 class MyStaticFileHandler(tornado.web.StaticFileHandler):
     def write_error(self, status_code, *args, **kwargs):
-        # custom 404 page
         if status_code in [404]:
             self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
         else:
