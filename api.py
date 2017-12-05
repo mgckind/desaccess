@@ -147,7 +147,7 @@ class GetTileHandler(BaseHandler):
         loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
         con = ea.connect(loc_db, user=loc_user, passwd=loc_passw)
         query = """select FITS_IMAGE_G, FITS_IMAGE_R, FITS_IMAGE_I, FITS_IMAGE_Z, FITS_IMAGE_Y,
-                   FITS_IMAGE_DET,FITS_CATALOG_DET, TIFF_COLOR_IMAGE
+                   FITS_IMAGE_DET, TIFF_COLOR_IMAGE, FITS_DR1_MAIN, FITS_DR1_MAGNITUDE, FITS_DR1_FLUX
                    from DR1_TILE_INFO where tilename = '{0}'""".format(tilename)
         temp_df = con.query_to_pandas(query)
         new = temp_df.transpose().reset_index()
