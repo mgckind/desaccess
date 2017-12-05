@@ -78,6 +78,12 @@
                     <div class="card content flex">
                     <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-20px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
+                    <paper-input  on-keydown="checkForEnter2" class="input_position" id="zoomtotile" label="Tilename" style="width: 200px; padding-left: 15px; margin-top:-20px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gototile"></paper-icon-button>
+                </paper-input>
+                <div id="errorTile" style="margin-left: 20px; margin-top:30px; color:red;"></div>
+            </div>
+
+                    <div class="card content flex">
                 <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
                 <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_dr1" checked on-change="display_dr1">DR1 TILES</paper-checkbox>
                 <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
@@ -183,8 +189,15 @@
                this.gotoposition();
              }
             },
+            checkForEnter2: function (e) {
+             if (e.keyCode === 13) {
+               this.gototile();
+             }
+            },
             gotoposition: function(){
                 var position = document.getElementById("zoomto").value.split(",");
+                document.getElementById("zoomtotile").value='';
+                document.getElementById('errorTile').innerHTML = ''
                 var ra1 = parseFloat(position[0]);
                 var dec1 = parseFloat(position[1]);
                 if (ra1 > 180.) {
@@ -193,6 +206,30 @@
                 //ra1 = 0. - ra1
                 //navigation.zoomTo([ra1,dec1],500000,1000);
                 PositionZoom(ra1,dec1);
+            },
+            gototile: function(){
+                var tname = document.getElementById("zoomtotile").value;
+                document.getElementById("zoomto").value='';
+                var found = false;
+                for (i=0; i < all_tiles.features.length-1; i++){
+                    var ra1 = all_tiles.features[i].properties.RA_C;
+                    var dec1 = all_tiles.features[i].properties.DEC_C;
+                    var tilename = all_tiles.features[i].properties.tilename;
+                    if  (tilename == tname) {
+                        found = true;
+                        break;}
+                }
+                if (ra1 > 180.) {
+                    ra1 = ra1 - 360.;
+                };
+                if (found) {
+                    document.getElementById('errorTile').innerHTML = ''
+                    PositionZoom(ra1,dec1);
+                }
+                else {
+                    document.getElementById('errorTile').innerHTML = 'Tile not found'
+                    console.log('tile not found');
+                }
             },
             _clear: function() {
                 var title =document.getElementById("tiletitleHelp");
@@ -491,6 +528,8 @@
                         event.stopImmediatePropagation();
                         event.preventDefault();
                         document.getElementById("zoomto").value='';
+                        document.getElementById("zoomtotile").value='';
+                        document.getElementById('errorTile').innerHTML = ''
                         clearSelection();
                         if (event.button == 0) {
                             var pos = navigation.globe.renderContext.getXYRelativeToCanvas(event);
