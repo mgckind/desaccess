@@ -110,8 +110,9 @@ def create_reset_url(email):
     check = "SELECT * from DES_ADMIN.DES_USERS where EMAIL = '{}'".format(email)
     df = con.query_to_pandas(check)
     if len(df) == 0:
-        return False, 'email is not valid'
+        return False, 'email is not valid',''
     username = df.USERNAME.ix[0]
+    firstname = df.FIRSTNAME.ix[0]
     delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
     con.query_and_print(delete_old, suc_arg='Delete old Url')
     now = dt.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -119,7 +120,7 @@ def create_reset_url(email):
     insert_url = "INSERT INTO DES_ADMIN.RESET_URL VALUES ('{0}', '{1}', to_date('{2}' , 'yyyy/mm/dd hh24:mi:ss'))".format(username, url, now)
     con.query_and_print(insert_url, suc_arg='Add new reset URL')
     con.close()
-    return True, url
+    return True, url, firstname
 
 
 def delete_url(url):

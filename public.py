@@ -83,6 +83,7 @@ class Application(tornado.web.Application):
             (r'/easyweb/pusher/?', pusher.PusherHandler),
             (r"/easyweb/query/?", queries.QueryHandler),
             (r"/easyweb/reset/(\w+)", login.ResetHandler),
+            (r"/easyweb/email/(.+)", login.EmailHandler),
             (r"/easyweb/reset/", login.ResetHandler),
             (r"/easyweb/activate/(\w+)", login.ActivateHandler),
             (r"/easyweb/signup/?", login.SignupHandler),

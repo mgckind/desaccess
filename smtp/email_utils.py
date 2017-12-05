@@ -4,6 +4,16 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from email.utils import formataddr
 import Settings
+import jinja2
+import os
+import uuid
+import base64
+
+def render(tpl_path, context):
+    path, filename = os.path.split(tpl_path)
+    return jinja2.Environment(
+        loader=jinja2.FileSystemLoader(path or './')
+    ).get_template(filename).render(context)
 
 
 def send_activation(firstname, username, email, url):
@@ -36,7 +46,7 @@ def send_activation(firstname, username, email, url):
     s.quit()
 
 
-def send_reset(email, url):
+def send_reset(email, username, url):
     toemail = email
     bcc = 'mgckind@gmail.com'
     fromemail = 'devnull@ncsa.illinois.edu'
@@ -57,6 +67,19 @@ def send_reset(email, url):
     </body>
     </html>
     """.format(link=link)
+
+    uid = str(uuid.uuid4())+'-r'+base64.b64encode(username.encode()).decode('ascii')
+    context = {
+        "email_link": Settings.ROOT_URL+'/easyweb/email/'+uid,
+        "username": username,
+        "msg": """You have have requested to reset your password <br > The reset link is valid
+        for the next few hours""",
+        "action": "Click Here To Reset Your Password",
+        "link": link,
+    }
+    html = render('easyweb/static/internal/templates/template.html', context)
+    with open('easyweb/static/internal/emails/'+uid+'.html', 'w') as ff:
+        ff.write(html)
     MP1 = MIMEText(html, 'html')
     msg = MIMEMultipart('alternative')
     msg['Subject'] = 'DESaccess DB Reset link'
@@ -114,7 +137,7 @@ def send_note(user, jobid, toemail):
     <head></head>
     <body>
          <b> Please do not reply to this email</b> <br><br>
-        <p> Dear User, <p> 
+        <p> Dear User, <p>
         <p>The job %s was completed, <br>
         the results can be retrieved from this <a href="%s">link</a> under My Jobs Tab.
         </p><br>

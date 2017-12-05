@@ -42,7 +42,7 @@ class SignupHandler(BaseHandler):
                     else:
                         msg = msgerr
                 else:
-                    check, url = db_utils.create_reset_url(email)
+                    check, url, checkuser = db_utils.create_reset_url(email)
                     email_utils.send_activation(firstname, username, email, url)
                     msg = 'Activation email sent!'
                     err = '0'
@@ -59,6 +59,17 @@ class SignupHandler(BaseHandler):
 
         self.write(json.dumps({'msg': msg, 'errno': err}))
 
+class EmailHandler(BaseHandler):
+    def get(self, slug):
+        htmlp = os.path.join(Settings.STATIC_PATH, 'internal/emails/'+slug+'.html')
+        try:
+            with open(htmlp, 'r') as fhtml:
+                msg = fhtml.read()
+            self.write(msg)
+        except:
+            self.set_status(404)
+            self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
+
 
 class ResetHandler(BaseHandler):
     def get(self, slug):
@@ -72,9 +83,9 @@ class ResetHandler(BaseHandler):
         email = self.get_argument("email", "").lower()
         print(email)
         print('Reset Password')
-        check, url = db_utils.create_reset_url(email)
+        check, url, checkuser = db_utils.create_reset_url(email)
         if check:
-            email_utils.send_reset(email, url)
+            email_utils.send_reset(email, checkuser, url)
             self.write(json.dumps({'msg': 'Reset email sent!', 'errno': '0'}))
         else:
             self.write(json.dumps({'msg': '{}'.format(url), 'errno': '1'}))
