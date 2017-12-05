@@ -92,8 +92,8 @@ class Application(tornado.web.Application):
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),
             (r"/easyweb/help/?", api.HelpHandler),
-            (r"/easyweb/files/(.*)", MyStaticFileHandler,
-             {'path': Settings.STATIC_PATH+'/workdir'}),
+            (r"/easyweb/files/dr1/(.*)", MyStaticFileHandler,
+             {'path': '/des004/despublic/dr1_tiles/'}),
         ]
         settings = {
             "template_path": Settings.TEMPLATE_PATH,
