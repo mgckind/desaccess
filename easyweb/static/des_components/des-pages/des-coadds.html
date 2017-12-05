@@ -24,12 +24,17 @@
         /*}*/
 
         .container {
+            margin-top: 10px;
             @apply(--layout-horizontal);
         }
 
         .container2 {
             @apply(--layout-horizontal);
             @apply(--layout-center-justified);
+        }
+        .container3 {
+            @apply(--layout-horizontal);
+            margin-right: 10px;
         }
 
         .left {
@@ -106,7 +111,7 @@
                                 <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
                             </paper-icon-item>
                         </div>
-                        <div class="right2">
+                        <div class="right">
                             <!-- version A -->
                             <paper-button raised class="indigo" id="uploadFile">
                                 <div id ="uploadicon" style="display: inline-block;">
@@ -133,7 +138,7 @@
                             </paper-icon-item>
 
                         </div>
-                        <div class="right2">
+                        <div class="right">
                             <!-- version A -->
                             <paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">
                                 <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
@@ -148,27 +153,35 @@
 
                     <!-- xslider -->
                     <div class="container">
-                        <div class="left">
-                            <div>xsize (in arcminutes, default is 1.0):
-                                <span id="xsizeLabel" class="caption">0</span></div><br>
+                        <div class="left" style="width: 500px;">
+                            <paper-icon-item>
+                                <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                            <div>Xsize (in arcminutes):
+                                <span id="xsizeLabel" class="caption">1.0</span></div>
+                            </paper-icon-item>
+                            <!--<div>xsize (in arcminutes, default is 1.0):
+                                <span id="xsizeLabel" class="caption">1.0</span></div><br>
+                            -->
                         </div>
 
                         <div class="right">
-                            <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand editable></paper-slider>
+                            <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
                         </div>
                     </div>
 
 
                     <!-- yslider -->
-                    <div class="container">
+                    <div class="container" style="margin-top: 20px;">
                         <div class="left">
-                            <div>ysize (in arcminutes, default is 1.0):
-                                <span id="ysizeLabel" class="caption">0</span>
-                            </div><br>
+                            <paper-icon-item>
+                                <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                            <div>Ysize (in arcminutes):
+                                <span id="ysizeLabel" class="caption">1.0</span></div>
+                            </paper-icon-item>
                         </div>
 
                         <div class="right">
-                            <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand editable></paper-slider>
+                            <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
                         </div>
                     </div>
 
@@ -183,7 +196,7 @@
                             </paper-icon-item>
                         </div>
                         <div class="right">
-                            <paper-input always-float-label id="validname" name="name" label="Job Name" value=""></paper-input>
+                            <paper-input always-float-label id="validname" name="name" label="Job Name" value="" style = "max-width: 500px;"></paper-input>
                         </div>
                     </div>
 
@@ -191,12 +204,21 @@
                     <!-- email -->
                     <div class="container">
                         <div class="left">
+                            <paper-icon-item>
+                                <iron-icon icon="mail" slot="item-icon"></iron-icon>
+                                Email Options
+                            </paper-icon-item>
+                            <!--
                             <paper-item>
                                 <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send email after completion</paper-checkbox>
-                            </paper-item>
+                            </paper-item> -->
+
                         </div>
                         <div class="right">
-                            <paper-input always-float-label id="validemail" name="email" label="Email" value=""></paper-input>
+                               <div class="container3" >
+                                <paper-checkbox style="font-size:16px; margin-top:30px; width: 200px;" id="sendemail" on-change="emailcheck">Send email on completion</paper-checkbox>
+                            <paper-input always-float-label id="validemail" name="email" label="Email" value="" style = "max-width: 800px; margin-left: 35px;"></paper-input>
+                               </div>
                         </div>
                     </div>
 
@@ -211,9 +233,7 @@
                             </paper-icon-item>
                         </div>
                         <div class="right">
-                            <paper-item>
-                                <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
-                            </paper-item>
+                                <paper-checkbox style="margin-top:20px;" id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
                         </div>
                     </div>
 
@@ -365,8 +385,10 @@
             document.getElementById("enterValues").disabled=false;
             document.getElementById("uploadFile").disabled=false;
             document.getElementById("keyboardicon").style.display='inline-block';
-            document.getElementById("xsizeSlider").value="0.0";
-            document.getElementById("ysizeSlider").value="0.0";
+            document.getElementById("xsizeSlider").value="1.0";
+            document.getElementById("ysizeSlider").value="1.0";
+            document.getElementById("ysizeLabel").innerHTML="1.0";
+            document.getElementById("xsizeLabel").innerHTML="1.0";
             document.getElementById("sendemail").checked=false;
             document.getElementById("onlyreturnlist").checked=false;
             document.getElementById("desPositions").clear();
