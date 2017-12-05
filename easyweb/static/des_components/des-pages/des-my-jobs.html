@@ -79,13 +79,24 @@
         <vaadin-grid items="{{myfiles}}" id="material">
 
 
-              <vaadin-grid-column flex-grow="1">
-                <template class="header">Filename</template>
+              <vaadin-grid-column width="450px" flex-grow="0">
+                <template class="header">
+
+
+            <vaadin-grid-filter aria-label="Filename" path="file" value="[[_filterFileName]]">
+            <input placeholder="Filename" value="{{_filterFileName::input}}" focus-target>
+                 <vaadin-grid-sorter path="file"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                      </vaadin-grid-filter>
+
+                </template>
                 <template>{{item.file}}</template>
               </vaadin-grid-column>
 
               <vaadin-grid-column flex-grow="1">
-                <template class="header">Size</template>
+                <template class="header">
+
+                 <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                </template>
                 <template>{{item.size}}</template>
               </vaadin-grid-column>
 
