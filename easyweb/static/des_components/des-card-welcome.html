@@ -87,13 +87,13 @@
 
             var tid = e.target.id;
             var sel = 0;
-            if (tid == 'query') sel = 1;
-            if (tid == 'allTables') sel = 2;
-            if (tid == 'example') sel = 3;
-            if (tid == 'coadd') sel = 4;
-            if (tid == 'footprint') sel = 5;
-            if (tid == 'desjobs') sel = 6;
-            if (tid == 'help') sel = 7;
+            if (tid == 'query') {sel = 1; window.history.pushState('m','title','/easyweb/db-access');};
+            if (tid == 'allTables') {sel = 2;window.history.pushState('m','title','/easyweb/db-schema');};
+            if (tid == 'example') {sel = 3;window.history.pushState('m','title','/easyweb/db-examples');};
+            if (tid == 'coadd') {sel = 4;window.history.pushState('m','title','/easyweb/cutouts');};
+            if (tid == 'footprint') {sel = 5;window.history.pushState('m','title','/easyweb/footprint');};
+            if (tid == 'desjobs') {sel = 6;window.history.pushState('m','title','/easyweb/my-jobs');};
+            if (tid == 'help') {sel = 7;window.history.pushState('m','title','/easyweb/help-form');};
 
             var app = document.querySelector('#app');
             var pages = document.getElementById("mainPages");

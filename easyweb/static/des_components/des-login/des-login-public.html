@@ -48,6 +48,7 @@
 
         <form id="userpass" action="/easyweb/login/" method="post">
           <input type="hidden" id="hiddenDB" name="database" value="test">
+          <input type="hidden" id="hiddenNext" name="next" value="test">
           <paper-input name="username" label="Username"
           required></paper-input><br>
           <paper-password-input name="password" label="Password"
@@ -95,6 +96,10 @@
         value: '',
       },
       error2 :{
+        type: String,
+        value: '',
+      },
+      next :{
         type: String,
         value: '',
       },
@@ -148,6 +153,7 @@
             return this._submitReset();
         };
       document.getElementById('hiddenDB').value = 'desdr';
+      document.getElementById('hiddenNext').value = this.next;
       var button1 = document.getElementById('LoginButton1');
       document.getElementById('LoginSpinner1').active = true;
       document.getElementById('userpass').submit();

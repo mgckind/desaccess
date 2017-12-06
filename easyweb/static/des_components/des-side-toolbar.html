@@ -60,14 +60,14 @@
     <paper-menu id="bigmenu"  selected="[[selection]]">
 
         <!-- Order is important, it needs to match des-mainpages -->
-        <paper-item> Home              </paper-item>
-        <paper-item> DB access           </paper-item>
-        <paper-item> DR1 Table Schema        </paper-item>
-        <paper-item> Example Queries     </paper-item>
-        <paper-item> Cutout Service     </paper-item>
-        <paper-item> DR1 Footprint     </paper-item>
-        <paper-item> My Jobs           </paper-item>
-        <paper-item> Help           </paper-item>
+        <paper-item on-tap="_home"> Home              </paper-item>
+        <paper-item on-tap="_dbaccess"> DB access           </paper-item>
+        <paper-item on-tap="_dbschema"> DR1 Table Schema        </paper-item>
+        <paper-item on-tap="_dbexamples"> Example Queries     </paper-item>
+        <paper-item on-tap="_cutouts"> Cutout Service     </paper-item>
+        <paper-item on-tap="_footprint"> DR1 Footprint     </paper-item>
+        <paper-item on-tap="_myjobs"> My Jobs           </paper-item>
+        <paper-item on-tap="_helpform"> Help           </paper-item>
 
     </paper-menu>
       </div>
@@ -87,7 +87,15 @@
                 type: String,
                 value:''
             },
-      }
+      },
+      _home: function(){window.history.pushState('m','title','/easyweb/');},
+      _dbaccess: function(){window.history.pushState('m','title','/easyweb/db-access');},
+      _dbschema: function(){window.history.pushState('m','title','/easyweb/db-schema');},
+      _dbexamples: function(){window.history.pushState('m','title','/easyweb/db-examples');},
+      _cutouts: function(){window.history.pushState('m','title','/easyweb/cutouts');},
+      _footprint: function(){window.history.pushState('m','title','/easyweb/footprint');},
+      _myjobs: function(){window.history.pushState('m','title','/easyweb/my-jobs');},
+      _helpform: function(){window.history.pushState('m','title','/easyweb/help-form');},
     });
 
 

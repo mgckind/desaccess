@@ -68,6 +68,13 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", login.MainHandler),
             (r"/easyweb/?", login.MainHandler),
+            (r"/easyweb/db-schema/?", login.MainHandler),
+            (r"/easyweb/db-access/?", login.MainHandler),
+            (r"/easyweb/db-examples/?", login.MainHandler),
+            (r"/easyweb/cutouts/?", login.MainHandler),
+            (r"/easyweb/footprint/?", login.MainHandler),
+            (r"/easyweb/my-jobs/?", login.MainHandler),
+            (r"/easyweb/help-form/?", login.MainHandler),
             (r"/easyweb/login/?", login.AuthLoginHandler),
             (r"/easyweb/changepass/?", login.ChangeAuthHandler),
             (r"/easyweb/changeinfo/?", login.UpdateInfoHandler),

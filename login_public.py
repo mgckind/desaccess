@@ -147,13 +147,14 @@ class MainHandler(BaseHandler):
                         email=cc[2], username=loc_user, version=__version__, db=loc_db)
         except:
             self.render("login-public.html", errormessage='',
-                        version=__version__, update='no', toast='no', db='')
+                        version=__version__, update='no', toast='no', db='', next='')
 
 
 class AuthLoginHandler(BaseHandler):
     def get(self):
         update = 'no'
         toast = 'no'
+        next = self.get_argument('next', u'/easyweb/')
         try:
             errormessage = self.get_argument("error")
             print(errormessage)
@@ -168,7 +169,7 @@ class AuthLoginHandler(BaseHandler):
         except:
             db = ""
         self.render("login-public.html", errormessage=errormessage, version=__version__,
-                    update=update, toast=toast, db=db)
+                    update=update, toast=toast, db=db, next=next)
 
     def check_permission(self, password, username, db):
         kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': db}
