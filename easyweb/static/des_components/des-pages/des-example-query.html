@@ -13,6 +13,11 @@
     debounce-duration="300">
     </iron-ajax>
 
+      <paper-dialog class="dialog-position" id="jobHelpExampleQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <p>Help goes here</p>
+    </paper-dialog>
+
+
     <paper-dialog class="dialog-position" id="ExampleQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>{{jobid}}</h2>
               <div class="insideDialog">
@@ -24,17 +29,14 @@
               </div>
     </paper-dialog>
 
-    <paper-dialog class="dialog-position" id="jobHelpExampleQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <p>Help goes here</p>
-    </paper-dialog>
 
 
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
-
+<paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 <des-card heading = "Example queries"></des-card>
-    <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-<div style="padding-right: 20px">
+
+<div style="padding-right: 20px;padding-left: 20px; padding-top:70px">
 <vaadin-grid items="{{data}}" id ="material">
 
     <vaadin-grid-column width="20px" flex-grow="0">
@@ -64,6 +66,8 @@
     </vaadin-grid>
 </div>
 </template>
+
+
 
 <script>
 function keysrt(key,desc) {
