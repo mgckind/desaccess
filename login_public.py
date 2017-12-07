@@ -112,7 +112,7 @@ class ActivateHandler(BaseHandler):
         username, msg = db_utils.valid_url(slug, 9000)
         if username is not None:
             db_utils.unlock_user(username)
-            msg = 'Thanks for activate your account'
+            msg = 'Thanks for activating your account'
             self.render('activate.html', version=__version__, errormessage=msg, username='')
         else:
             self.render('activate.html', version=__version__, errormessage=msg, username='')

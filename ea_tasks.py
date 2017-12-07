@@ -61,6 +61,10 @@ class CustomTask(Task):
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
+        cur = con.cursor()
+        cur.execute("SELECT name from Jobs where job = '{}'".format(task_id))
+        cc = cur.fetchone()
+        namejob = cc[0]
         file_list = json.dumps(retval['files'])
         size_list = json.dumps(retval['sizes'])
         if retval['status'] == 'ok':
@@ -69,7 +73,8 @@ class CustomTask(Task):
                 user = retval['user']
                 email = retval['email']
                 print('SEND EMAIL TO: ', email)
-                email_utils.send_note(user, task_id, email)
+                print(namejob)
+                email_utils.send_note(user, namejob, email)
             else:
                 print('NO EMAIL')
 
@@ -78,7 +83,6 @@ class CustomTask(Task):
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format(temp_status, task_id)
         q1 = "UPDATE Jobs SET files='{0}' where job = '{1}'".format(file_list, task_id)
         q2 = "UPDATE Jobs SET sizes='{0}' where job = '{1}'".format(size_list, task_id)
-        cur = con.cursor()
         cur.execute(q0)
         if retval['files'] is not None:
             cur.execute(q1)
