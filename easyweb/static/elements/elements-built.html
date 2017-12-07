@@ -39206,7 +39206,9 @@ paper-item {
 <paper-button class="indigo medium" raised="" on-tap="_checkSyntax">Check</paper-button>
 <paper-button class="indigo medium" raised="" on-tap="_quickSubmit">Quick</paper-button>
 <paper-spinner id="querySpinner" class="big"></paper-spinner>
-<paper-button style="position:absolute; right:10px" class="indigo medium" raised="" on-tap="_seeExample">See Examples</paper-button>
+<a href="/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">
+<paper-button style="position:absolute; right:10px" class="indigo medium" raised="">See Examples</paper-button>
+</a>
 <div style="width: 500px; padding-left: 10px; font-size: 15px;">
     <div class="container4">
 
@@ -39515,12 +39517,12 @@ Polymer({
     },
 
     _seeExample: function(e){
-        var app = document.querySelector('#app');
-        var pages = document.getElementById("mainPages");
-        var menu = document.querySelector('paper-menu');
-        app.selection=3;
-        pages.selected=3;
-        menu.selected=3;
+        //var app = document.querySelector('#app');
+        //var pages = document.getElementById("mainPages");
+        //var menu = document.querySelector('paper-menu');
+        //app.selection=3;
+        //pages.selected=3;
+        //menu.selected=3;
         app.editor.refresh();
     },
     _downloadFile: function(e){
@@ -39740,7 +39742,7 @@ Polymer({
         </paper-item>
         <paper-item>
         <a class="ahidden" href="/easyweb/help-form">
-            Help
+            <span style=" position: absolute; top:12px;">Help</span>
         </a>
         </paper-item>
 
@@ -46818,7 +46820,7 @@ function keysrt(key,desc) {
     <template is="dom-if" if="{{msg}}">
         <des-login-message title="Thanks!">
             <b> Activation Required:</b> {{text}} <br> <br>
-            Please activate your account.<br><br>
+            Please check your email and use the activation link provided.<br><br>
         </des-login-message>
     </template>
 
@@ -47264,6 +47266,7 @@ function keysrt(key,desc) {
       document.getElementById("getMyExamples").generateRequest();
     },
     _copyQuery: function(){
+        document.getElementById('desQuery').clearQueryBox();
         document.querySelector('#toastCopy').show();
         app.editor.setValue(app.examplequerybox.getValue());
         console.log("-> line number: ", app.editor.lineCount());
