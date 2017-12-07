@@ -39677,6 +39677,12 @@ Polymer({
        paper-item{
            font-size: 18px;
        }
+       .ahidden {
+           color: black;
+           text-decoration: none;
+           width: 100%;
+           height: 48px;
+       }
 
    </style>
   <app-header>
@@ -39694,17 +39700,49 @@ Polymer({
                     <div class="email">{{email}}</div>
                 </div>
 
-    <paper-menu id="bigmenu" selected="[[selection]]">
+    <paper-menu id="bigmenu" selected="[[selection]]" key-event-target="null">
 
         <!-- Order is important, it needs to match des-mainpages -->
-        <paper-item on-tap="_home"> Home              </paper-item>
-        <paper-item on-tap="_dbaccess"> DB access           </paper-item>
-        <paper-item on-tap="_dbschema"> DR1 Table Schema        </paper-item>
-        <paper-item on-tap="_dbexamples"> Example Queries     </paper-item>
-        <paper-item on-tap="_cutouts"> Cutout Service     </paper-item>
-        <paper-item on-tap="_footprint"> DR1 Footprint     </paper-item>
-        <paper-item on-tap="_myjobs"> My Jobs           </paper-item>
-        <paper-item on-tap="_helpform"> Help           </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/">
+            <span style=" position: absolute; top:12px;">Home</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/db-access">
+            <span style=" position: absolute; top:12px;">DB access</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/db-schema">
+            <span style=" position: absolute; top:12px;">DR1 Table Schema</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/db-examples">
+            <span style=" position: absolute; top:12px;">Example Queries</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/cutouts">
+            <span style=" position: absolute; top:12px;">Cutout Service</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/footprint">
+            <span style=" position: absolute; top:12px;">DR1 Footprint</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/my-jobs">
+            <span style=" position: absolute; top:12px;">My Jobs</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/help-form">
+            Help
+        </a>
+        </paper-item>
 
     </paper-menu>
       </div>
@@ -39725,14 +39763,6 @@ Polymer({
                 value:''
             },
       },
-      _home: function(){window.history.pushState('m','title','/easyweb/');},
-      _dbaccess: function(){window.history.pushState('m','title','/easyweb/db-access');},
-      _dbschema: function(){window.history.pushState('m','title','/easyweb/db-schema');},
-      _dbexamples: function(){window.history.pushState('m','title','/easyweb/db-examples');},
-      _cutouts: function(){window.history.pushState('m','title','/easyweb/cutouts');},
-      _footprint: function(){window.history.pushState('m','title','/easyweb/footprint');},
-      _myjobs: function(){window.history.pushState('m','title','/easyweb/my-jobs');},
-      _helpform: function(){window.history.pushState('m','title','/easyweb/help-form');},
     });
 
 
@@ -47370,13 +47400,27 @@ function keysrt(key,desc) {
             <des-card heading="Welcome [[name]]!" class="welcome">
             <div class="horizontal layout around justified">
 
+                <a style="text-transform: none; color:black;" href="/easyweb/db-access" tabindex="-1">
                 <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="SQL command line" name="query"></des-card-welcome>
+                </a>
+                <a style="text-transform: none; color:black;" href="/easyweb/db-schema">
                 <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables"></des-card-welcome>
+                </a>
+                <a style="text-transform: none; color:black;" href="/easyweb/db-examples" tabindex="-1">
                 <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example"></des-card-welcome>
+                </a>
+                <a style="text-transform: none; color:black;" href="/easyweb/cutouts" tabindex="-1">
                 <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd"></des-card-welcome>
+                </a>
+                <a style="text-transform: none; color:black;" href="/easyweb/footprint" tabindex="-1">
                 <des-card-welcome heading="DR1 FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint"></des-card-welcome>
+                </a>
+                <a style="text-transform: none; color:black;" href="/easyweb/my-jobs" tabindex="-1">
                 <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs"></des-card-welcome>
+                </a>
+                <a style="text-transform: none; color:black;" href="/easyweb/help-form" tabindex="-1">
                 <des-card-welcome heading="HELP" image="/easyweb/static/images/home-help.jpg" alt="Help" desc="Help form" name="help"></des-card-welcome>
+                </a>
 
 
             </div>
@@ -49340,22 +49384,22 @@ function keysrt(key,desc) {
         change: function(e){
 
             var tid = e.target.id;
-            var sel = 0;
-            if (tid == 'query') {sel = 1; window.history.pushState('m','title','/easyweb/db-access');};
-            if (tid == 'allTables') {sel = 2;window.history.pushState('m','title','/easyweb/db-schema');};
-            if (tid == 'example') {sel = 3;window.history.pushState('m','title','/easyweb/db-examples');};
-            if (tid == 'coadd') {sel = 4;window.history.pushState('m','title','/easyweb/cutouts');};
-            if (tid == 'footprint') {sel = 5;window.history.pushState('m','title','/easyweb/footprint');};
-            if (tid == 'desjobs') {sel = 6;window.history.pushState('m','title','/easyweb/my-jobs');};
-            if (tid == 'help') {sel = 7;window.history.pushState('m','title','/easyweb/help-form');};
+            //var sel = 0;
+            //if (tid == 'query') {sel = 1; window.history.pushState('m','title','/easyweb/db-access');};
+            //if (tid == 'allTables') {sel = 2;window.history.pushState('m','title','/easyweb/db-schema');};
+            //if (tid == 'example') {sel = 3;window.history.pushState('m','title','/easyweb/db-examples');};
+            //if (tid == 'coadd') {sel = 4;window.history.pushState('m','title','/easyweb/cutouts');};
+            //if (tid == 'footprint') {sel = 5;window.history.pushState('m','title','/easyweb/footprint');};
+            //if (tid == 'desjobs') {sel = 6;window.history.pushState('m','title','/easyweb/my-jobs');};
+            //if (tid == 'help') {sel = 7;window.history.pushState('m','title','/easyweb/help-form');};
 
-            var app = document.querySelector('#app');
-            var pages = document.getElementById("mainPages");
-            var menu = document.querySelector('paper-menu');
-            app.selection=sel;
-            pages.select(sel);
-            menu.select(sel);
-            console.log("selected: ", menu.selected);
+            //var app = document.querySelector('#app');
+            //var pages = document.getElementById("mainPages");
+            //var menu = document.querySelector('paper-menu');
+            //app.selection=sel;
+            //pages.select(sel);
+            //menu.select(sel);
+            //console.log("selected: ", menu.selected);
         },
 
     });
@@ -49408,7 +49452,7 @@ function keysrt(key,desc) {
     });
 </script><dom-module id="des-credit-line" assetpath="../des_components/">
 
-<style is="custom-style" include="shared-style">
+<style is="custom-style" include="shared-styles">
     footer {
         position: absolute;
         left: 44%;

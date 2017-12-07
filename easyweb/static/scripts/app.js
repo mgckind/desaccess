@@ -26,7 +26,9 @@
     menu.select(sel_page);
     // pages.selected="0";
     // menu.selected="0";
-    appr.addEventListener('data-changed', function() {
+    appr.addEventListener('data-changed', function(event) {
+        console.log(appr.data.view);
+        event.stopPropagation();
        if (appr.data.view == '') sel_page = "0";
     if (appr.data.view == 'db-access') sel_page = "1";
     if (appr.data.view == 'db-schema') sel_page = "2";

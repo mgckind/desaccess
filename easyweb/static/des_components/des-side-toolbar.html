@@ -37,6 +37,12 @@
        paper-item{
            font-size: 18px;
        }
+       .ahidden {
+           color: black;
+           text-decoration: none;
+           width: 100%;
+           height: 48px;
+       }
 
    </style>
   <app-header>
@@ -57,17 +63,49 @@
                     <div class="email">{{email}}</div>
                 </div>
 
-    <paper-menu id="bigmenu"  selected="[[selection]]">
+    <paper-menu id="bigmenu"  selected="[[selection]]" key-event-target="null">
 
         <!-- Order is important, it needs to match des-mainpages -->
-        <paper-item on-tap="_home"> Home              </paper-item>
-        <paper-item on-tap="_dbaccess"> DB access           </paper-item>
-        <paper-item on-tap="_dbschema"> DR1 Table Schema        </paper-item>
-        <paper-item on-tap="_dbexamples"> Example Queries     </paper-item>
-        <paper-item on-tap="_cutouts"> Cutout Service     </paper-item>
-        <paper-item on-tap="_footprint"> DR1 Footprint     </paper-item>
-        <paper-item on-tap="_myjobs"> My Jobs           </paper-item>
-        <paper-item on-tap="_helpform"> Help           </paper-item>
+        <paper-item>
+        <a class="ahidden" href="/easyweb/" >
+            <span style=" position: absolute; top:12px;">Home</span>
+        </a>
+        </paper-item>
+        <paper-item  >
+        <a class="ahidden" href="/easyweb/db-access" >
+            <span style=" position: absolute; top:12px;">DB access</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a  class="ahidden" href="/easyweb/db-schema" >
+            <span style=" position: absolute; top:12px;">DR1 Table Schema</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a  class="ahidden" href="/easyweb/db-examples" >
+            <span style=" position: absolute; top:12px;">Example Queries</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a  class="ahidden" href="/easyweb/cutouts" >
+            <span style=" position: absolute; top:12px;">Cutout Service</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a  class="ahidden" href="/easyweb/footprint" >
+            <span style=" position: absolute; top:12px;">DR1 Footprint</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a  class="ahidden" href="/easyweb/my-jobs" >
+            <span style=" position: absolute; top:12px;">My Jobs</span>
+        </a>
+        </paper-item>
+        <paper-item>
+        <a  class="ahidden" href="/easyweb/help-form" >
+            Help
+        </a>
+        </paper-item>
 
     </paper-menu>
       </div>
@@ -88,14 +126,6 @@
                 value:''
             },
       },
-      _home: function(){window.history.pushState('m','title','/easyweb/');},
-      _dbaccess: function(){window.history.pushState('m','title','/easyweb/db-access');},
-      _dbschema: function(){window.history.pushState('m','title','/easyweb/db-schema');},
-      _dbexamples: function(){window.history.pushState('m','title','/easyweb/db-examples');},
-      _cutouts: function(){window.history.pushState('m','title','/easyweb/cutouts');},
-      _footprint: function(){window.history.pushState('m','title','/easyweb/footprint');},
-      _myjobs: function(){window.history.pushState('m','title','/easyweb/my-jobs');},
-      _helpform: function(){window.history.pushState('m','title','/easyweb/help-form');},
     });
 
 
