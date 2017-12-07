@@ -105,7 +105,7 @@ def send_note(username, jobid, toemail):
         "Subject": "Job {} is completed".format(jobid),
         "email_link": Settings.ROOT_URL+'/easyweb/email/',
         "username": username,
-        "msg": """The job {} was completed sucesfully. <br>
+        "msg": """The job <b>{}</b> was completed. <br>
         The results can be retrieved from the link below""".format(jobid),
         "action": "Click Here To See Your Jobs",
         "link": link,
