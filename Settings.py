@@ -3,7 +3,7 @@ import os
 import random
 import string
 import logging
-DEBUG = False
+DEBUG = True
 DIRNAME = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
 LOG_PATH = os.path.join(DIRNAME, 'logs')
