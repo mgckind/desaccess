@@ -16,7 +16,7 @@ class DownHandler(tornado.web.RequestHandler):
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         #self.set_status(404)
-        self.render('service-down.html', errormessage='These services are down for the moment', username='')
+        self.render('service-down.html', version=__version__, errormessage='These services are down for the moment', username='')
 
 class Application(tornado.web.Application):
     """
