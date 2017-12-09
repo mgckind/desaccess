@@ -39407,6 +39407,7 @@ Polymer({
         if (this.querykind == 'submit') {
             if (_self.isOk){
             document.querySelector('#toast1').show();}
+            document.getElementById("getMyJobs").generateRequest();
         }
         //document.querySelector('#toast1').show();
 
@@ -48557,6 +48558,7 @@ function keysrt(key,desc) {
             document.getElementById('desCoadds').clear();
             document.querySelector('#toast1').show();
             document.querySelector('des-my-jobs')._refreshJobs();
+            document.getElementById("getMyJobs").generateRequest();
         },
         errorHandler: function(){
             console.log('NOOOO');
