@@ -14,7 +14,7 @@ import yaml
 
 
 def after_return(retval):
-    url = 'http://localhost:8080/easyweb/pusher/'
+    url = Settings.ROOT_URL+'/easyweb/pusher/'
     data = {'username': retval['user'], 'result': retval['data'], 'status': retval['status']}
     requests.post(url, data=data)
     return

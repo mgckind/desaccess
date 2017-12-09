@@ -3,7 +3,7 @@ import os
 import random
 import string
 import logging
-DEBUG = False
+DEBUG = True
 DIRNAME = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
 LOG_PATH = os.path.join(DIRNAME, 'logs')
@@ -12,7 +12,7 @@ if not os.path.exists(LOG_PATH):
 TEMPLATE_PATH = os.path.join(DIRNAME, 'templates')
 WORKDIR = os.path.join(STATIC_PATH, "workdir/")
 DBFILE = os.path.join(STATIC_PATH, "workdir/admin/users.db")
-ROOT_URL = 'http://desrelease.cosmology.illinois.edu:8080'
+ROOT_URL = 'http://desmaster.ncsa.illinois.edu'
 #ROOT_URL = 'http://localhost:8080'
 LOGFILE = os.path.join(LOG_PATH, "access.log")
 LOG_GENERALFILE = os.path.join(LOG_PATH, "general.log")
