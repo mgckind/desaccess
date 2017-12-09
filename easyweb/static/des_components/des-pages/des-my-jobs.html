@@ -337,7 +337,7 @@ function keysrt(key,desc) {
         var jobid = this.jobid;
         var user = this.username;
         var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
+        link.href = "http://desdr-server.ncsa.illinois.edu/workdir/"+user+"/"+jobid+"/"+filename;
               if (link.download !== undefined){
                   //Set HTML5 download attribute. This will prevent file from opening if supported.
                   var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
