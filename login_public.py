@@ -77,7 +77,7 @@ class ResetHandler(BaseHandler):
         if username is not None:
             self.render('reset.html', errormessage='', version=__version__, toast='no', url=slug, user=username)
         else:
-            self.write(msg)
+            self.render('activate.html', version=__version__, errormessage=msg, username='')
 
     def post(self):
         email = self.get_argument("email", "").lower()
