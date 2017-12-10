@@ -32,24 +32,6 @@ def changedebug(mode):
                 print(line.replace('DEBUG = False', 'DEBUG = True'), end='')
 
 
-def changeports(mode):
-    if mode == 'build':
-        with fileinput.FileInput('main.py', inplace=True) as file:
-            for line in file:
-                print(line.replace('default=8999', 'default=8999'), end='')
-        with fileinput.FileInput('Settings.py', inplace=True) as file:
-            for line in file:
-                print(line.replace('http://descut.cosmology.illinois.edu:8080', 'http://descut.cosmology.illinois.edu'), end='')
-    if mode == 'dev':
-        with fileinput.FileInput('main.py', inplace=True) as file:
-            for line in file:
-                print(line.replace('default=8999', 'default=8999'), end='')
-        with fileinput.FileInput('Settings.py', inplace=True) as file:
-            for line in file:
-                print(line.replace('http://descut.cosmology.illinois.edu', 'http://descut.cosmology.illinois.edu:8080'), end='')
-
-
-
 def vulcanize():
     os.system('rm -f easyweb/static/elements/elements-built.html')
     command = 'vulcanize easyweb/static/elements/elements.html --out-html easyweb/static/elements/elements-built.html'

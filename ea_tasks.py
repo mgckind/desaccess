@@ -37,7 +37,7 @@ class CustomTask(Task):
     abstract = None
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        url = 'http://localhost:8080/easyweb/pusher/'
+        url = Settings.ROOT_URL+'/easyweb/pusher/'
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
@@ -57,7 +57,7 @@ class CustomTask(Task):
             test = retval['status']
         except:
             return
-        url = 'http://localhost:8080/easyweb/pusher/'
+        url = Settings.ROOT_URL+'/easyweb/pusher/'
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)

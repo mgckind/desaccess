@@ -39407,6 +39407,7 @@ Polymer({
         if (this.querykind == 'submit') {
             if (_self.isOk){
             document.querySelector('#toast1').show();}
+            document.getElementById("getMyJobs").generateRequest();
         }
         //document.querySelector('#toast1').show();
 
@@ -46009,7 +46010,7 @@ function keysrt(key,desc) {
         var jobid = this.jobid;
         var user = this.username;
         var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
+        link.href = "http://desdr-server.ncsa.illinois.edu/workdir/"+user+"/"+jobid+"/"+filename;
               if (link.download !== undefined){
                   //Set HTML5 download attribute. This will prevent file from opening if supported.
                   var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
@@ -46360,7 +46361,7 @@ function keysrt(key,desc) {
       <div class="card-content">
         <span>Use your DES Public DB credentials. <br>
             Click <a href="/easyweb/signup/">here</a> to create a new account.</span><br><br>
-        <span> Fill this <a href="http://desrelease.cosmology.illinois.edu:8888/help" target="_blank">form</a>
+        <span> Fill this <a href="http://desmaster.ncsa.illinois.edu/help" target="_blank">form</a>
              if you have trouble accessing the server</span>
 
         <form id="userpass" action="/easyweb/login/" method="post">
@@ -46837,7 +46838,7 @@ function keysrt(key,desc) {
 
         <span>Please complete and submit this form. <br>
 
-        <span> Fill this <a href="http://desrelease.cosmology.illinois.edu:8888/help" target="_blank">form</a>
+        <span> Fill this <a href="http://desmaster.ncsa.illinois.edu/help" target="_blank">form</a>
              if you have trouble accessing the server</span><br><br>
             You need to read and accept the <a href="javascript:;" on-click="_readT">Terms of Service</a> to continue.</span><br>
 
@@ -48557,6 +48558,7 @@ function keysrt(key,desc) {
             document.getElementById('desCoadds').clear();
             document.querySelector('#toast1').show();
             document.querySelector('des-my-jobs')._refreshJobs();
+            document.getElementById("getMyJobs").generateRequest();
         },
         errorHandler: function(){
             console.log('NOOOO');
@@ -48761,7 +48763,7 @@ function keysrt(key,desc) {
                 var siid = this.jobid;
                 var user = this.username;
 
-                link.href = "/easyweb/static/workdir/"+user+"/"+siid+"/"+siid+".tar.gz";
+                link.href = "http://desdr-server.ncsa.illinois.edu/workdir/"+user+"/"+siid+"/"+siid+".tar.gz";
 
                 if (link.download !== undefined){
                     //Set HTML5 download attribute. This will prevent file from opening if supported.

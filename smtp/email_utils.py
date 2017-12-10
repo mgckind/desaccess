@@ -80,7 +80,7 @@ def send_reset(email, username, url):
 
 def send_test(username):
     bcc = 'mgckind@gmail.com'
-    link = 'http//localhost:8080'
+    link = 'http//localhost'
     context = {
         "Subject": "This is a test",
         "email_link": Settings.ROOT_URL+'/easyweb/email/',
