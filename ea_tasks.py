@@ -74,7 +74,10 @@ class CustomTask(Task):
                 email = retval['email']
                 print('SEND EMAIL TO: ', email)
                 print(namejob)
-                email_utils.send_note(user, namejob, email)
+                try:
+                    email_utils.send_note(user, namejob, email)
+                except Exception as e:
+                    print(str(e).strip())
             else:
                 print('NO EMAIL')
 
