@@ -6,9 +6,13 @@ import logging
 DEBUG = False
 DIRNAME = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
-LOG_PATH = os.path.join(DIRNAME, 'logs')
+try:
+    LOG_PATH = os.path.join(DIRNAME, 'logs', os.environ['POD_ID'])
+except:
+    LOG_PATH = os.path.join(DIRNAME, 'logs')
+
 if not os.path.exists(LOG_PATH):
-    os.mkdir(LOG_PATH)
+    os.makedirs(LOG_PATH)
 TEMPLATE_PATH = os.path.join(DIRNAME, 'templates')
 WORKDIR = os.path.join(STATIC_PATH, "workdir/")
 DBFILE = os.path.join(STATIC_PATH, "workdir/admin/users.db")
