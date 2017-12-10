@@ -21,7 +21,7 @@ class SingleEmailHeader(object):
     def __init__(self, username, toemail, context, char='r'):
         self.toemail = toemail
         self.server = 'smtp.ncsa.illinois.edu'
-        #self.server = ' localhost'
+        # self.server = 'localhost'
         self.fromemail = 'devnull@ncsa.illinois.edu'
         self.s = smtplib.SMTP(self.server)
         self.msg = MIMEMultipart('alternative')

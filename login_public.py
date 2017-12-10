@@ -14,7 +14,7 @@ import yaml
 from version import __version__
 
 dbConfig0 = Settings.dbConfig()
-
+app_log = Settings.app_log
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -83,9 +83,11 @@ class ResetHandler(BaseHandler):
         email = self.get_argument("email", "").lower()
         print(email)
         print('Reset Password')
+        app_log.info('Reset Password')
         check, url, checkuser = db_utils.create_reset_url(email)
         if check:
             email_utils.send_reset(email, checkuser, url)
+            app_log.info('{},{},{}'.format(email, url, checkuser))
             self.write(json.dumps({'msg': 'Reset email sent!', 'errno': '0'}))
         else:
             self.write(json.dumps({'msg': '{}'.format(url), 'errno': '1'}))
@@ -96,15 +98,19 @@ class ResetHandler(BaseHandler):
         valid = len(password) >= 6
         url = self.get_argument("url", "")
         print(username, password, url)
-        username2, msg = db_utils.valid_url(url, 3600+60)
+        username2, msg = db_utils.valid_url(url, 3600+120)
         print(username2, msg)
         if username == username2:
-            db_utils.update_password(username, password)
-            db_utils.unlock_user(username)
-            # DELETE URL
-            self.write(json.dumps({'msg': 'Password updated', 'errno': '0'}))
+            print('valid', valid)
+            if valid:
+                db_utils.update_password(username, password)
+                db_utils.unlock_user(username)
+                self.write(json.dumps({'msg': 'Password updated', 'errno': '0'}))
+            else:
+                msg = 'Password minimum length is 6.'
+                self.write(json.dumps({'msg': msg, 'errno': '1'}))
         else:
-            self.write(json.dumps({'msg': 'Something went wrong', 'errno': '1'}))
+            self.write(json.dumps({'msg': msg, 'errno': '1'}))
 
 
 class ActivateHandler(BaseHandler):
