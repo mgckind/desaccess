@@ -12,6 +12,8 @@
     var pages = document.getElementById("mainPages");
     var menu = document.querySelector('paper-menu');
     var appr = document.getElementById('approute');
+    // var tabs = document.getElementById('help-tabs');
+
     var sel_page = "0";
     if (appr.data.view == 'db-access') sel_page = "1";
     if (appr.data.view == 'db-schema') sel_page = "2";
@@ -23,7 +25,10 @@
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
-    // pages.selected="0";
+
+      // tabs.select(sel_page);
+
+      // pages.selected="0";
     // menu.selected="0";
     appr.addEventListener('data-changed', function(event) {
         event.stopPropagation();
@@ -38,6 +43,8 @@
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
+
+        // tabs.select(sel_page);
     });
         menu.addEventListener('iron-select', function() {
             app.selection=menu.selected;

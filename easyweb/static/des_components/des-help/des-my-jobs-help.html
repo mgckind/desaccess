@@ -29,26 +29,87 @@
 
         </style>
 
-        <des-card-help heading="Help">
+        <des-card class="sub-help" heading="Help">
             <div class="card-content" >
-                <p> Click on <iron-icon icon="launch"></iron-icon> or <iron-icon icon="assignment"></iron-icon> to see the results or log-file for an individual Job.
-                    Use <iron-icon icon="icons:highlight-off"></iron-icon> to stop a running Job.
-                    Click on
-                    <iron-icon icon="icons:create"></iron-icon>
-                    to view and edit the name for an individual Job.
+                <table class="crs-table" style="width:100%">
+                    <tr class="crs-tr">
+                        <th class="crs-th">Button</th>
+                        <th class="crs-th">Description</th>
+                    </tr>
 
-                    <hr class="des-hr">
-                    Query Job:
-                        - Click on
-                        <paper-button class="SeeFilesButton" raised >query</paper-button> to see the query.
-                        - CLick on
-                        <paper-button class="SeeFilesButton"  raised> Files</paper-button> to see the file.
-                    <hr class="des-hr">
-                    Cutouts Job:
-                    - Click on
-                    <paper-button class="SeeFilesButton" raised >cutouts</paper-button> to see the results.
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="launch"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            See the results on click
+                        </td>
+                    </tr>
 
-                </p>
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="assignment"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            See the log file on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="icons:highlight-off"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            Stop a running job on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="icons:create"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            View and edit job name on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <th colspan="2">Query Job</th>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <paper-button class="SeeFilesButton" raised >query</paper-button>
+                        </td>
+                        <td class="crs-td">
+                            See the query on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <paper-button class="SeeFilesButton"  raised> Files</paper-button>
+                        </td>
+                        <td class="crs-td">
+                            See the file on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <th colspan="2">Cutouts Job</th>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <paper-button class="SeeFilesButton" raised >cutouts</paper-button> to see the results.
+                        </td>
+                        <td class="crs-td">
+                            See the result on click
+                        </td>
+                    </tr>
+
+                </table>
+
 
                 <p>
                     Select one or more jobs for deletion.
@@ -85,7 +146,7 @@
                 </paper-icon-item>
                 <!--</div>-->
             </div>
-        </des-card-help>
+        </des-card>
 
 
 

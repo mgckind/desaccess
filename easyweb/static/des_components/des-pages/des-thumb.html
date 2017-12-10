@@ -100,7 +100,73 @@
                   </div>
             </paper-dialog>
           <paper-dialog class="dialog-position" id="jobHelpThumb" with-backdrop on-iron-overlay-opened="patchOverlay">
-              <des-thumb-help></des-thumb-help>
+              <des-card heading="Help">
+                  <div class="card-content">
+                      <paper-carousel id="thumb-crs" items="1" dotText="false" controls="true">
+                          <div class="carousel-item">
+                              <img src="/easyweb/static/images/demo1.gif" width="500px">
+                              <div class="desc">
+                                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+                          </div>
+
+                          <div class="carousel-item">
+                              <!--<div class="col">-->
+                              <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                              <div class="desc">
+                                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+
+                              <!--</div>-->
+                          </div>
+
+                          <div class="carousel-item">
+                              <div class="row">
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+                              </div>
+                              <div class="desc">
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+                          </div>
+
+                          <div class="carousel-item">
+                              <img src="/easyweb/static/images/demo1.gif">
+                              <div class="desc">
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                              </div>
+                          </div>
+
+                      </paper-carousel>
+                  </div>
+                  <div class="row">
+                      <paper-button on-tap="_prevPage">
+                          Prev
+                      </paper-button>
+
+                      <paper-button on-tap="_nextPage">
+                          Next
+                      </paper-button>
+                  </div>
+              </des-card>
           </paper-dialog>
 
 
@@ -136,6 +202,17 @@
             keyBindings:{
               'enter:keydown':'_gobackdialog',
             },
+
+
+                  _nextPage: function() {
+                  var crs = document.getElementById("thumb-crs");
+                  crs.goToNextPage();
+              },
+
+              _prevPage: function() {
+                  var crs = document.getElementById("thumb-crs");
+                  crs.goToPrevPage();
+              },
 
                   _mouseout: function(){
                       this._elevation = 0;
