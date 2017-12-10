@@ -13,6 +13,19 @@
     var menu = document.querySelector('paper-menu');
     var appr = document.getElementById('approute');
     // var tabs = document.getElementById('help-tabs');
+    //
+    // var prevButton = document.getElementById("prev");
+    // var nextButton = document.getElementById("next");
+    // var cid = "home-crs";
+    //
+    // if (appr.data.view == '') sel_page = "home-crs";
+    // if (appr.data.view == 'db-access') sel_page = "query-crs";
+    // if (appr.data.view == 'db-schema') sel_page = "all-crs";
+    // if (appr.data.view == 'db-examples') sel_page = "example-crs";
+    // if (appr.data.view == 'cutouts') sel_page = "coadd-crs";
+    // if (appr.data.view == 'footprint') sel_page = "footprint-crs";
+    // if (appr.data.view == 'my-jobs') sel_page = "jobs-crs";
+    // if (appr.data.view == 'help-form') sel_page = "help-crs";
 
     var sel_page = "0";
     if (appr.data.view == 'db-access') sel_page = "1";
@@ -94,6 +107,18 @@
                ysize.addEventListener('value-change', function() {
                    document.getElementById("ysizeLabel").textContent = ysize.value;
                });
+      //
+      // prevButton.addEventListener('focused-changed', function(){
+      //     console.log("=> page: ", cid);
+      //     var crs = document.getElementById(cid);
+      //     crs.goToPrevPage();
+      // });
+      //
+      // nextButton.addEventListener('focused-changed', function(){
+      //     console.log("=> page: ", cid);
+      //     var crs = document.getElementById(cid);
+      //     crs.goToPrevPage();
+      // });
 
 
 

@@ -263,7 +263,7 @@
                         </table>
 
 
-                        <div style="text-align: left;">
+                        <div>
                             Select one or more jobs for deletion.
                         </div>
 
@@ -313,13 +313,15 @@
 
                 </paper-carousel>
             </div>
-            <div class="row">
-                <paper-button on-tap="_prevPage">
+            <div class="row bottom">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
                     Prev
                 </paper-button>
 
-                <paper-button on-tap="_nextPage">
+                <paper-button class="next" on-tap="_nextPage">
                     Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
                 </paper-button>
             </div>
 
