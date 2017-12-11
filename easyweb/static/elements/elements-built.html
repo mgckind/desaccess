@@ -46307,7 +46307,12 @@ This program is available under Apache License Version 2.0, available at https:/
               </div>
               <div secondary="">
                   <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
-                  {{item.elapsed}}
+                  <template is="dom-if" if="{{item.jwarning}}">
+                   <span style="color:red;">{{item.elapsed}}</span>
+                  </template>
+                  <template is="dom-if" if="{{!item.jwarning}}">
+                   <span>{{item.elapsed}}</span>
+                  </template>
               </div>
           </paper-item-body>
           </template>

@@ -217,6 +217,7 @@ class MyJobsHandler(BaseHandler):
         jsizes = []
         jfiles_bool = []
         jquery_bool = []
+        jwarning = []
 
         for i in range(len(cc)):
             #dd = datetime.datetime.strptime(cc[i][3], '%Y-%m-%d %H:%M:%S')
@@ -238,11 +239,13 @@ class MyJobsHandler(BaseHandler):
                 jquery_bool.append(False)
             else:
                 jquery_bool.append(True)
-            jelapsed.append(humantime((datetime.datetime.now()-dd).total_seconds())+" ago")
+            delt = (datetime.datetime.now()-dd).total_seconds()
+            jelapsed.append(humantime(delt)+" ago")
+            jwarning.append(delt >= 10*60)
         out_dict = [dict(job=jjob[i], status=jstatus[i], time=jtime[i], elapsed=jelapsed[i],
                     jquery=jquery[i], jfiles=jfiles[i], jbool=jfiles_bool[i], user=loc_user,
                     jsizes=jsizes[i], jname=jname[i], jobtype=jobtype[i],
-                    jquerybool=jquery_bool[i]) for i in range(len(jjob))]
+                    jquerybool=jquery_bool[i], jwarning=jwarning[i]) for i in range(len(jjob))]
         temp = json.dumps(out_dict, indent=4)
         self.write(temp)
 
