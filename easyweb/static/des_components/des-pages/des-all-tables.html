@@ -26,7 +26,27 @@
     </iron-ajax>
 
     <paper-dialog class="dialog-position" id="jobHelpAllTables" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <des-all-tables-help></des-all-tables-help>
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="all-crs" items="1" dotText="false" controls="true">
+                    <div class="carousel-item">
+                        A complete list for all type of tables.
+                    </div>
+                </paper-carousel>
+            </div>
+            <div class="row">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+        </des-card>
+
     </paper-dialog>
 
     <paper-dialog class="dialog-position" id="scrollingAll" with-backdrop on-iron-overlay-opened="patchOverlay">
@@ -111,7 +131,7 @@
             </vaadin-grid-column>
 
     </vaadin-grid>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 </div>
     </des-card>
@@ -166,6 +186,17 @@
           e.preventDefault();
           document.getElementById('jobHelpAllTables').open();
       },
+
+
+      _nextPage: function() {
+          var crs = document.getElementById("all-crs");
+          crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("all-crs");
+          crs.goToPrevPage();
+      }
     });
 
 </script>

@@ -16,7 +16,69 @@
         </style>
 
         <paper-dialog class="dialog-position" id="jobHelpHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <des-help-help></des-help-help>
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="help-crs" items="1" dotText="false" controls="true">
+                        <div class="carousel-item">
+                            Use the form to submit your question.
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+            </des-card>
         </paper-dialog>
 
         <des-card  heading="DES Release Help Form">
@@ -82,7 +144,7 @@
         </des-card>
         <paper-toast style="z-index: 9999; margin-left:260px;" id="toast1" text="Form has been submitted! Thanks"> </paper-toast>
         <paper-toast style="z-index: 9999; margin-left:260px; color:red;" id="toast2" text="ERROR!, Please Check Form"> </paper-toast>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 
     </template>
@@ -127,6 +189,18 @@
                 e.preventDefault();
                 document.getElementById('jobHelpHelp').open();
             },
+
+            _nextPage: function() {
+                var crs = document.getElementById("help-crs");
+                crs.goToNextPage();
+            },
+
+            _prevPage: function() {
+                var crs = document.getElementById("help-crs");
+                crs.goToPrevPage();
+            }
+
+
         });
 
 

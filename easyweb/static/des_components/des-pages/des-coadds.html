@@ -23,7 +23,7 @@
         /*@apply(--layout-flex);*/
         /*}*/
 
-        .container {
+        .coadd-container {
             margin-top: 10px;
             @apply(--layout-horizontal);
         }
@@ -34,7 +34,7 @@
         }
         .container3 {
             @apply(--layout-horizontal);
-            margin-right: 10px;
+            @apply(--layout-around-justified);
         }
 
         .left {
@@ -46,7 +46,7 @@
 
         }
         .right {
-            @apply(--layout-flex-2);
+            @apply(--layout-flex);
 
         }
 
@@ -78,7 +78,7 @@
         }
 
         paper-icon-item {
-            background: linear-gradient(to right, #efeaf4, white);
+            /*background: linear-gradient(to right, #efeaf4, white);*/
         }
 
         .buttonLook{
@@ -87,10 +87,86 @@
             border-radius: 10px;
         }
 
+
+
+        .btcell {
+            text-align: center;
+        }
+
+        .around-cell {
+            @apply(--layout-horizontal);
+            @apply(--layout-around-justified);
+        }
+
+
     </style>
     <template>
         <paper-dialog class="dialog-position" id="jobHelpCoadds" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <des-coadds-help></des-coadds-help>
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="coadd-crs" items="1" dotText="false" controls="true">
+                        <div class="carousel-item">
+                            You can upload a csv file with positions or enter a list manually. The jobs is submitted asynchronously.
+                            Check <b>My Jobs</b> tab to see the status of your jobs.
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+
+            </des-card>
         </paper-dialog>
         <section>
             <des-card heading = "Coadds Images Cutout Form" >
@@ -99,213 +175,131 @@
                         Upload the file with the positions or enter the positions by hand and run the desthumb generator
                     </div>
 
-                    <!-- file -->
-                    <div class="container">
-                        <div class="left">
-                            <!-- version B -->
-                            <paper-icon-item>
-                                <iron-icon icon="backup" slot="item-icon"></iron-icon>
-                                <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                Upload File
-                                </span>
-                                <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                            </paper-icon-item>
-                        </div>
-                        <div class="right">
-                            <!-- version A -->
-                            <paper-button raised class="indigo" id="uploadFile">
-                                <div id ="uploadicon" style="display: inline-block;">
-                                    <i class="fa fa-cloud-upload"></i>
-                                    &nbsp;  &nbsp;
-                                </div>
-                                <span style="overflow-x: auto; overflow-wrap: break-word;">
+                    <!-- table -->
+                    <table id="coadd-table" style="width:100%">
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                    Upload File
+                                    </span>
+                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <paper-button raised class="indigo" id="uploadFile">
+                                    <div id ="uploadicon" style="display: inline-block;">
+                                        <i class="fa fa-cloud-upload"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
                                     [[file_name]]
                                 </span>
-                                <input type="file" class="upload" id="file" on-change="_fileChange" />
-                            </paper-button>
-                        </div>
-                    </div>
+                                    <input type="file" class="upload" id="file" on-change="_fileChange" />
+                                </paper-button>
+                            </td>
+                        </tr>
 
-                    <br>
-                    <!-- value -->
-                    <div class="container">
-                        <div class="left">
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    Enter Values
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">
+                                    <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span>[[enter_values]]</span>
+                                </paper-button>
+                            </td>
+                        </tr>
 
-                            <!-- version B -->
-                            <paper-icon-item>
-                                <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
-                                Enter Values
-                            </paper-icon-item>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Xsize (in arcminutes):
+                                        <span id="xsizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
+                            </td>
+                        </tr>
 
-                        </div>
-                        <div class="right">
-                            <!-- version A -->
-                            <paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">
-                                <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                                    &nbsp;  &nbsp;
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Ysize (in arcminutes):
+                                        <span id="ysizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
+                            </td>
+                        </tr>
+
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="create" slot="item-icon"></iron-icon>
+                                    Job Name
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-input always-float-label id="validname" name="name" label="Job Name" value="" style = "max-width: 500px;"></paper-input>
+                            </td>
+                        </tr>
+
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="mail" slot="item-icon"></iron-icon>
+                                    Email Options
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:25px;" id="sendemail" on-change="emailcheck">Send email on completion</paper-checkbox>
+                                    </div>
+                                    <div class="right">
+                                        <paper-input always-float-label id="validemail" name="email" label="Email" value="" ></paper-input>
+                                    </div>
                                 </div>
-                                <span>[[enter_values]]</span>
-                            </paper-button>
-                        </div>
-                    </div>
+                            </td>
+                        </tr>
 
-                    <br>
-
-                    <!-- xslider -->
-                    <div class="container">
-                        <div class="left" style="width: 500px;">
-                            <paper-icon-item>
-                                <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-                            <div>Xsize (in arcminutes):
-                                <span id="xsizeLabel" class="caption">1.0</span></div>
-                            </paper-icon-item>
-                            <!--<div>xsize (in arcminutes, default is 1.0):
-                                <span id="xsizeLabel" class="caption">1.0</span></div><br>
-                            -->
-                        </div>
-
-                        <div class="right">
-                            <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
-                        </div>
-                    </div>
-
-
-                    <!-- yslider -->
-                    <div class="container" style="margin-top: 20px;">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-                            <div>Ysize (in arcminutes):
-                                <span id="ysizeLabel" class="caption">1.0</span></div>
-                            </paper-icon-item>
-                        </div>
-
-                        <div class="right">
-                            <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <!-- job name -->
-                    <div class="container">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="create" slot="item-icon"></iron-icon>
-                                Job Name
-                            </paper-icon-item>
-                        </div>
-                        <div class="right">
-                            <paper-input always-float-label id="validname" name="name" label="Job Name" value="" style = "max-width: 500px;"></paper-input>
-                        </div>
-                    </div>
-
-
-                    <!-- email -->
-                    <div class="container">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="mail" slot="item-icon"></iron-icon>
-                                Email Options
-                            </paper-icon-item>
-                            <!--
-                            <paper-item>
-                                <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send email after completion</paper-checkbox>
-                            </paper-item> -->
-
-                        </div>
-                        <div class="right">
-                               <div class="container3" >
-                                <paper-checkbox style="font-size:16px; margin-top:30px; width: 200px;" id="sendemail" on-change="emailcheck">Send email on completion</paper-checkbox>
-                            <paper-input always-float-label id="validemail" name="email" label="Email" value="" style = "max-width: 800px; margin-left: 35px;"></paper-input>
-                               </div>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <!-- return -->
-                    <div class="container">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="save" slot="item-icon"></iron-icon>
-                                Return Type
-                            </paper-icon-item>
-                        </div>
-                        <div class="right">
-                                <paper-checkbox style="margin-top:20px;" id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <!-- buttons -->
-                    <div class="container">
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="save" slot="item-icon"></iron-icon>
+                                    Return Type
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-checkbox style="font-size:16px;" id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="coadd-container">
                         <div class="left">
                             <paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">
-                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
+                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
                             </paper-button>
-                        </div>
+                            </div>
                         <div class="right">
                             <paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">
-                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
+                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
                             </paper-button>
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="card-content">-->
-                    <!--<div class="" >-->
-                        <!--<paper-button raised  class="indigo"  id="uploadFile">-->
-                            <!--<div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>-->
-                                <!--&nbsp;  &nbsp;-->
-                            <!--</div>-->
-                            <!--<span style="overflow-x: auto; overflow-wrap: break-word;">-->
-                                <!--[[file_name]]-->
-                            <!--</span>-->
-                            <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                        <!--</paper-button>-->
-
-                        <!--<paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">-->
-                            <!--<div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>-->
-                                <!--&nbsp;  &nbsp;-->
-                            <!--</div>-->
-                            <!--<span>[[enter_values]]</span>-->
-                        <!--</paper-button>-->
-                    <!--</div>-->
-
-                    <!--<hr>-->
-
-                    <!--<div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>-->
-                    <!--<paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>-->
-                    <!--<div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>-->
-                    <!--<paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>-->
-
-                    <!--<hr>-->
-
-                    <!--<paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>-->
-
-                    <!--<hr>-->
-
-                    <!--<div class="flex2" >-->
-                        <!--<paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>-->
-                        <!--&nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>-->
-                        <!--<paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>-->
-                        <!--<br>-->
-                    <!--</div>-->
-
-                    <!--<div>-->
-
-                        <!--<paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">-->
-                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form-->
-                        <!--</paper-button>-->
-
-                        <!--<paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">-->
-                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job-->
-                        <!--</paper-button>-->
-                    <!--</div>-->
-                <!--</div>-->
-
             </des-card>
 
             <des-positions id="desPositions"></des-positions>
@@ -321,7 +315,7 @@
                 </paper-card>
             </paper-dialog>
         </section>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
 
@@ -473,6 +467,18 @@
             e.preventDefault();
             document.getElementById('jobHelpCoadds').open();
         },
+
+
+        _nextPage: function() {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function() {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToPrevPage();
+        },
+
     });
 
 

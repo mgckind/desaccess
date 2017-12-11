@@ -53,7 +53,9 @@
     "vaadin-form-layout": "vaadin/vaadin-form-layout#^1.0.4",
     "s-table": "StartPolymer/s-table#^0.2.2",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
-    "app-route": "PolymerElements/app-route#^2.0.3"
+    "app-route": "PolymerElements/app-route#^2.0.3",
+    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "paper-carousel": "Redbility/paper-carousel#^1.2.5"
   },
   "resolutions": {
     "polymer": "^1.9.0",

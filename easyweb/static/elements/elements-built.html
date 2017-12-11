@@ -12,6 +12,32 @@
 <!-- App Elements -->
 <!-- Iron Elements -->
 <!-- DES Elements -->
+<!--<link rel="import" href="../des_components/des-card-help.html">-->
+<!-- help page -->
+
+<!--<link rel="import" href="../des_components/des-help/des-all-tables-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-coadds-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-example-query-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-footprint-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-home-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-my-jobs-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-my-tables-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-positions-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-query-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-results-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-thumb-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-help-help.html">-->
+
+
+
+<!-- ADDED BY ZOE IN THIS PULL REQUEST-->
+
+<!-- tab -->
+<!-- MAY USE LATER -->
+<!-- carousel -->
+<!-- USING IT RIGHT NOW -->
+<!-- nav button -->
+<!-- fail attampt-->
 </head><body><div hidden="" by-vulcanize=""><!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
@@ -21241,8 +21267,8 @@ Custom property | Description | Default
   <template>
     <style>
       :host {
-        @apply --layout-inline;
-        @apply --layout-center-center;
+        @apply(--layout-inline);
+        @apply(--layout-center-center);
         position: relative;
 
         vertical-align: middle;
@@ -21252,11 +21278,7 @@ Custom property | Description | Default
 
         width: var(--iron-icon-width, 24px);
         height: var(--iron-icon-height, 24px);
-        @apply --iron-icon;
-      }
-
-      :host([hidden]) {
-        display: none;
+        @apply(--iron-icon);
       }
     </style>
   </template>
@@ -38940,24 +38962,24 @@ app-toolbar.black {
         width: 100%;
         text-align: left;
     }
-    table, th, td {
+    table#t01, th.t01-th, td.t01-td {
         font-size:  10px;
-    border: 1px solid black;
-    border-collapse: collapse;
+        border: 1px solid black;
+        border-collapse: collapse;
         text-align: left;
-}
-table#t01 tr:nth-child(even) {
-    background-color: #eee;
-}
-table#t01 tr:nth-child(odd) {
-   background-color:#fff;
-}
-table#t01 th {
-    background-color: black;
-    color: white;
-    border: solid white;
+    }
+    table#t01 tr.t01-tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr.t01-tr:nth-child(odd) {
+       background-color:#fff;
+    }
+    table#t01 th.t01-th {
+        background-color: black;
+        color: white;
+        border: solid white;
 
-}
+    }
 
 vaadin-grid#material {
 
@@ -39062,6 +39084,14 @@ vaadin-grid#material {
     margin-top: 20px;
     position: absolute;
 }
+.dialog-help {
+    width: 100%;
+    height: 90%;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 20px;
+    position: absolute;
+}
 .dialog-position-query {
     width: 100%;
     height: 500px;
@@ -39124,35 +39154,116 @@ paper-item {
         cursor: pointer;
     }
 
-    /*!** DES-HELP **!*/
-    /*.status {*/
+
+/* ADDED BY ZOE IN THIS PULL REQUEST*/
+
+    .carousel-item {
+        width: 100%;
+        text-align: center;
+    }
+    .paper-carousel {
+        width: 100%;
+        height: 100%;
+
+    }
+
+    .col {
+        @apply(--layout-vertical);
+    }
+
+    .row {
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+    }
+
+    .layout-item {
+        @apply(--layout-flex);
+    }
+
+    /* carousel table design*/
+    table.crs-table {
+        border: 1px solid black;
+        text-align: center;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th.crs-th, td.crs-td {
+        border: 1px solid #dddddd;
+        padding: 8px;
+        /*text-align: center;*/
+    }
+
+    tr.crs-tr:nth-child(even) {
+        /*background-color: #dddddd;*/
+        background-color: #f2f2f2;
+    }
+
+    /*tr.crs-table:last-child {*/
+        /*border-bottom: 1px solid black;*/
+    /*}*/
+
+    /* coadd table layout */
+    table#coadd-table {
+        /*border: 1px solid #ddd;*/
+    }
+
+    th.coadd-th, td.coadd-td {
+        padding: 5px;
+        text-align: left;
+        border: 1px solid white;
+        vertical-align: middle;
+    }
+
+    td.coadd-td:nth-child(odd) {
+        background: linear-gradient(to right, #efeaf4, white);
+    }
+
+    paper-button.prev {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: #efeaf4;
+        z-index: 1000;
+    }
+
+    paper-button.next {
+        position: absolute;
+       background-color: #efeaf4;
+        bottom: 0;
+        right: 0;
+        z-index: 1000;
+    }
+
+    /*!** LEGEND **!*/
+    /*div.status {*/
         /*display: inline-block;*/
         /*box-sizing: border-box;*/
         /*border-radius: 50%;*/
         /*background: var(--paper-yellow-500);*/
     /*}*/
-    /*.green {*/
+    /*div.green {*/
         /*background: var(--paper-green-500);*/
     /*}*/
-    /*.red {*/
+    /*div.red {*/
         /*background: var(--paper-red-500);*/
     /*}*/
-    /*.des-hr {*/
+    /*hr.des-hr {*/
         /*color:black;*/
         /*border-color:black;*/
         /*background-color:black;*/
     /*}*/
 
-/*paper-icon-item {*/
+    /*paper-icon-item.legend {*/
         /*--paper-item-disabled-color: black;*/
     /*}*/
-    /*paper-item {*/
+    /*paper-item.legend {*/
         /*--paper-item-disabled-color: black;*/
         /*color: black;*/
         /*--paper-item-focused: {*/
         /*};*/
         /*--paper-item-selected: {*/
-            /*background: var(--paper-amber-50) ;*/
+        /*background: var(--paper-amber-50) ;*/
         /*};*/
         /*--paper-item-focused-before: {*/
             /*opacity:0.0;*/
@@ -39172,7 +39283,9 @@ paper-item {
 </dom-module>
 <dom-module id="des-query" assetpath="../des_components/des-pages/">
 <template>
-<style include="shared-styles"></style>
+<style include="shared-styles">
+
+</style>
 
 <iron-ajax id="getQuery" url="/easyweb/query/" method="POST" contenttype="application/json" params="{{_getQuery(querystr,querykind,outputfile, queryname, queryemail, querycomp)}}" handle-as="json" on-response="_complete" on-request="_request" on-error="_error" debounce-duration="300">
 </iron-ajax>
@@ -39180,7 +39293,120 @@ paper-item {
 <iron-ajax id="getMyResponse" url="/easyweb/myresponse/" method="POST" contenttype="application/json" params="{{_getJobid(jobid)}}" handle-as="json" on-response="_complete" debounce-duration="300">
 </iron-ajax>
     <paper-dialog class="dialog-position" id="jobHelpQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-query-help></des-query-help>
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="query-crs" items="1" dottext="false" controls="true">
+                    <div class="carousel-item">
+                        <table class="crs-table">
+                            <tbody><tr class="crs-tr">
+                                <th class="crs-th">Button</th>
+                                <th class="crs-th">Description</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="indigo" raised="">Submit Job</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    Submit a job on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="indigo" raised="">Clear</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    Clear the form on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="indigo" raised="">Check</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    Check valid input on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="indigo" raised="">Quick</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    Quick peek of the query result on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="indigo" raised="">Example Query</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See example queries on click
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+
+                    <div class="carousel-item">
+                        <!--<div class="col">-->
+                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+                        </div>
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif">
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </div>
+                    </div>
+
+                </paper-carousel>
+            </div>
+            <div class="row">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+        </des-card>
+
     </paper-dialog>
     <des-card heading=" Query box">
     <div class="content">
@@ -39234,24 +39460,24 @@ paper-item {
     <paper-button raised="" class="SeeFilesButton" on-tap="_downloadFile">Download File</paper-button>
     <div class="scrollTable">
 <table id="t01" style="width:100%">
-    <tbody><tr>
-    <th>
+    <tbody><tr class="t01-tr">
+    <th class="t01-th">
         {{idx}}
     </th>
     <template is="dom-repeat" items="{{keys}}" as="key">
-        <th>&nbsp;{{key}}&nbsp;</th>
+        <th class="t01-th">&nbsp;{{key}}&nbsp;</th>
     </template>
     </tr>
 <!--</table>-->
 
     <!--<table id="t01" style="width:100%">-->
         <template is="dom-repeat" id="pandas" items="{{mydata}}">
-            <tr>
-                <td>
+            <tr class="t01-tr">
+                <td class="t01-td">
                 {{index}}
                 </td>
                 <template is="dom-repeat" items="{{keys}}" as="key">
-                    <td>{{_returnVal(item,key)}}</td>
+                    <td class="t01-td">{{_returnVal(item,key)}}</td>
                 </template>
             </tr>
         </template>
@@ -39266,7 +39492,7 @@ paper-item {
 <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
 <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 </div>
     
@@ -39526,28 +39752,38 @@ Polymer({
         //menu.selected=3;
         app.editor.refresh();
     },
-    _downloadFile: function(e){
+    _downloadFile: function(e) {
         e.preventDefault();
-        var filename =  'quickResults.csv'
+        var filename = 'quickResults.csv'
         var user = this.username;
         console.log(user);
         var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+user+"/"+filename;
-              if (link.download !== undefined){
-                  //Set HTML5 download attribute. This will prevent file from opening if supported.
-                  var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
-                  link.download = fileName;
-                }
-                if (document.createEvent) {
-                  var e = document.createEvent('MouseEvents');
-                  e.initEvent('click' ,true ,true);
-                  link.dispatchEvent(e);
-                  return true;
-                }
-                  var query = '?download';
-                  window.open(link.href + query);
+        link.href = "/easyweb/static/workdir/" + user + "/" + filename;
+        if (link.download !== undefined) {
+            //Set HTML5 download attribute. This will prevent file from opening if supported.
+            var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+            link.download = fileName;
+        }
+        if (document.createEvent) {
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            link.dispatchEvent(e);
+            return true;
+        }
+        var query = '?download';
+        window.open(link.href + query);
 
-    }
+    },
+
+    _nextPage: function() {
+        var crs = document.getElementById("query-crs");
+        crs.goToNextPage();
+    },
+
+    _prevPage: function() {
+        var crs = document.getElementById("query-crs");
+        crs.goToPrevPage();
+    },
 });
 </script>
 </dom-module>
@@ -45705,7 +45941,33 @@ This program is available under Apache License Version 2.0, available at https:/
 <template>
 <style include="shared-styles">
 
+    /* carousel table design*/
 
+    paper-icon-item {
+        --paper-item-disabled-color: black;
+    }
+    paper-item {
+        --paper-item-disabled-color: black;
+        color: black;
+        --paper-item-focused: {
+        };
+        --paper-item-selected: {
+            background: var(--paper-amber-50) ;
+        };
+        --paper-item-focused-before: {
+            opacity:0.0;
+        };
+    }
+    .status {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--paper-yellow-500);
+    }
+    .green {background: var(--paper-green-500);}
+    .red {background: var(--paper-red-500);}
 
 </style>
     <iron-ajax id="getMyJobs" auto="" url="/easyweb/myjobs/" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
@@ -45791,7 +46053,188 @@ This program is available under Apache License Version 2.0, available at https:/
 
 
     <paper-dialog class="dialog-position" id="jobHelpMyJobs" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-my-jobs-help></des-my-jobs-help>
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="jobs-crs" items="1" dottext="false" controls="true">
+                    <div class="carousel-item">
+                        <table class="crs-table" style="width:100%">
+
+                            <tbody><tr class="crs-tr">
+                                <th class="crs-th" colspan="2">General Instruction</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th">Button</th>
+                                <th class="crs-th">Description</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="launch"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    See the results on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="assignment"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    See the log file on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="icons:highlight-off"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    Stop a running job on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="icons:create"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    View and edit job name on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th" colspan="2">Query Job</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="SeeFilesButton" raised="">Query</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See the query on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="SeeFilesButton" raised=""> Files</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See the file on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th" colspan="2">Cutouts Job</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="SeeFilesButton" raised="">cutouts</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See the result on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th" colspan="2">Legend</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td" colspan="2">
+                                    <div class="row">
+                                        <paper-icon-item disabled="">
+                                            <div class="status green" item-icon=""></div>
+                                            <paper-item-body>
+                                                Completed
+                                            </paper-item-body>
+                                        </paper-icon-item>
+
+                                        <paper-icon-item disabled="">
+                                            <div class="status" item-icon=""></div>
+                                            <paper-item-body>
+                                                Running
+                                            </paper-item-body>
+                                        </paper-icon-item>
+
+                                        <paper-icon-item disabled="">
+                                            <div class="status red" item-icon=""></div>
+                                            <paper-item-body>
+                                                Canceled
+                                            </paper-item-body>
+                                        </paper-icon-item>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody></table>
+
+
+                        <div>
+                            Select one or more jobs for deletion.
+                        </div>
+
+                    </div>
+
+                    <div class="carousel-item">
+                        <!--<div class="col">-->
+                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <!--<div class="layout-item">-->
+                                <img src="/easyweb/static/images/demo1.gif">
+                            <!--</div>-->
+
+                            <!--<div class="layout-item">-->
+                                <img src="/easyweb/static/images/demo1.gif">
+                            <!--</div>-->
+
+                            <!--<div class="layout-item">-->
+                                <img src="/easyweb/static/images/demo1.gif">
+                            <!--</div>-->
+                        </div>
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif">
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </div>
+                    </div>
+
+                </paper-carousel>
+            </div>
+            <div class="row bottom">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+
+        </des-card>
     </paper-dialog>
 
 
@@ -45892,7 +46335,7 @@ This program is available under Apache License Version 2.0, available at https:/
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
-                <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">query</paper-button>
+                <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -45916,7 +46359,7 @@ This program is available under Apache License Version 2.0, available at https:/
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </div>
 
@@ -46162,7 +46605,15 @@ function keysrt(key,desc) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
      },
+      _nextPage: function() {
+          var crs = document.getElementById("jobs-crs");
+          crs.goToNextPage();
+      },
 
+    _prevPage: function() {
+      var crs = document.getElementById("jobs-crs");
+      crs.goToPrevPage();
+    }
 
     });
 
@@ -46179,7 +46630,27 @@ function keysrt(key,desc) {
     </iron-ajax>
 
     <paper-dialog class="dialog-position" id="jobHelpAllTables" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-all-tables-help></des-all-tables-help>
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="all-crs" items="1" dottext="false" controls="true">
+                    <div class="carousel-item">
+                        A complete list for all type of tables.
+                    </div>
+                </paper-carousel>
+            </div>
+            <div class="row">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+        </des-card>
+
     </paper-dialog>
 
     <paper-dialog class="dialog-position" id="scrollingAll" with-backdrop="" on-iron-overlay-opened="patchOverlay">
@@ -46264,7 +46735,7 @@ function keysrt(key,desc) {
             </vaadin-grid-column>
 
     </vaadin-grid>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 </div>
     </des-card>
@@ -46319,6 +46790,17 @@ function keysrt(key,desc) {
           e.preventDefault();
           document.getElementById('jobHelpAllTables').open();
       },
+
+
+      _nextPage: function() {
+          var crs = document.getElementById("all-crs");
+          crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("all-crs");
+          crs.goToPrevPage();
+      }
     });
 
 </script>
@@ -47197,7 +47679,93 @@ function keysrt(key,desc) {
               </div>
     </paper-dialog>
     <paper-dialog class="dialog-position" id="jobHelpExampleQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-example-query-help></des-example-query-help>
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="example-crs" items="1" dottext="false" controls="true">
+                    <div class="carousel-item">
+                        <table class="crs-table" style="width:100%">
+                            <tbody><tr class="crs-tr">
+                                <th class="crs-th">Button</th>
+                                <th class="crs-th">Description</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="SeeFilesButton" raised="">See query</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See the SQL code on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="indigo" raised="">Copy query</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    Extract the query command to DB access page in detailed page on click
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+
+                    <div class="carousel-item">
+                        <!--<div class="col">-->
+                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+                        </div>
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif">
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </div>
+                    </div>
+
+                </paper-carousel>
+            </div>
+            <div class="row">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+
+        </des-card>
     </paper-dialog>
 
 
@@ -47232,7 +47800,7 @@ function keysrt(key,desc) {
 
     </vaadin-grid>
 </div>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 </des-card>
 </template>
 
@@ -47308,6 +47876,17 @@ function keysrt(key,desc) {
       },
 
 
+      _nextPage: function() {
+          var crs = document.getElementById("example-crs");
+          crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("example-crs");
+          crs.goToPrevPage();
+      }
+
+
     });
 
 
@@ -47318,28 +47897,6 @@ function keysrt(key,desc) {
         :hover {
             cursor: pointer;
         }
-
-
-
-        div.gallery {
-            display: inline-block;
-            margin:5px;
-            border: 1px solid #CCCCCC;
-            /*float: left;*/
-            width: 100%;
-            max-height: 95%;
-            padding-bottom:50px;
-        }
-
-
-        div.gallery:hover {
-            border: 2px solid black;
-
-        }
-
-
-
-
 
         input {
             width: 100%;
@@ -47405,9 +47962,79 @@ function keysrt(key,desc) {
     </style>
 
     <template>
-        <paper-dialog class="dialog-position" id="jobHelpHome" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-            <des-home-help></des-home-help>
+        <paper-dialog class="dialog-help" id="jobHelpHome" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="home-crs" items="1" dottext="false" controls="true">
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif" width="500px" height="500px">
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+
+            </des-card>
         </paper-dialog>
+
         <section>
             <des-card heading="Welcome [[name]]!" class="welcome">
             <div class="horizontal layout around justified">
@@ -47440,7 +48067,7 @@ function keysrt(key,desc) {
 
         </section>
 
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
     </template>
 
 </dom-module>
@@ -47487,6 +48114,17 @@ function keysrt(key,desc) {
             e.preventDefault();
             document.getElementById('jobHelpHome').open();
         },
+
+        _nextPage: function() {
+            var crs = document.getElementById("home-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function() {
+            var crs = document.getElementById("home-crs");
+            crs.goToPrevPage();
+        }
+
 
     });
 </script>
@@ -47563,7 +48201,69 @@ function keysrt(key,desc) {
               </div>
     </paper-dialog>
         <paper-dialog class="dialog-position" id="jobHelpFootprint" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-            <des-footprint-help></des-footprint-help>
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="footprint-crs" items="1" dottext="false" controls="true">
+                        <div class="carousel-item">
+                            Search a position to see the results.
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+            </des-card>
         </paper-dialog>
 
                 <des-card heading="[[header]]">
@@ -47602,7 +48302,7 @@ function keysrt(key,desc) {
                 </div>
                     </div>
                 </des-card>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
 
@@ -48130,6 +48830,16 @@ function keysrt(key,desc) {
                 }
                 globe.refresh();
             },
+
+            _nextPage: function() {
+            var crs = document.getElementById("footprint-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function() {
+            var crs = document.getElementById("footprint-crs");
+            crs.goToPrevPage();
+        }
         });
 
 
@@ -48160,7 +48870,7 @@ function keysrt(key,desc) {
         /*@apply(--layout-flex);*/
         /*}*/
 
-        .container {
+        .coadd-container {
             margin-top: 10px;
             @apply(--layout-horizontal);
         }
@@ -48171,7 +48881,7 @@ function keysrt(key,desc) {
         }
         .container3 {
             @apply(--layout-horizontal);
-            margin-right: 10px;
+            @apply(--layout-around-justified);
         }
 
         .left {
@@ -48183,7 +48893,7 @@ function keysrt(key,desc) {
 
         }
         .right {
-            @apply(--layout-flex-2);
+            @apply(--layout-flex);
 
         }
 
@@ -48215,7 +48925,7 @@ function keysrt(key,desc) {
         }
 
         paper-icon-item {
-            background: linear-gradient(to right, #efeaf4, white);
+            /*background: linear-gradient(to right, #efeaf4, white);*/
         }
 
         .buttonLook{
@@ -48224,10 +48934,86 @@ function keysrt(key,desc) {
             border-radius: 10px;
         }
 
+
+
+        .btcell {
+            text-align: center;
+        }
+
+        .around-cell {
+            @apply(--layout-horizontal);
+            @apply(--layout-around-justified);
+        }
+
+
     </style>
     <template>
         <paper-dialog class="dialog-position" id="jobHelpCoadds" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-            <des-coadds-help></des-coadds-help>
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="coadd-crs" items="1" dottext="false" controls="true">
+                        <div class="carousel-item">
+                            You can upload a csv file with positions or enter a list manually. The jobs is submitted asynchronously.
+                            Check <b>My Jobs</b> tab to see the status of your jobs.
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+
+            </des-card>
         </paper-dialog>
         <section>
             <des-card heading="Coadds Images Cutout Form">
@@ -48236,213 +49022,131 @@ function keysrt(key,desc) {
                         Upload the file with the positions or enter the positions by hand and run the desthumb generator
                     </div>
 
-                    <!-- file -->
-                    <div class="container">
-                        <div class="left">
-                            <!-- version B -->
-                            <paper-icon-item>
-                                <iron-icon icon="backup" slot="item-icon"></iron-icon>
-                                <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                Upload File
-                                </span>
-                                <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                            </paper-icon-item>
-                        </div>
-                        <div class="right">
-                            <!-- version A -->
-                            <paper-button raised="" class="indigo" id="uploadFile">
-                                <div id="uploadicon" style="display: inline-block;">
-                                    <i class="fa fa-cloud-upload"></i>
-                                    &nbsp;  &nbsp;
-                                </div>
-                                <span style="overflow-x: auto; overflow-wrap: break-word;">
+                    <!-- table -->
+                    <table id="coadd-table" style="width:100%">
+                        <tbody><tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                    Upload File
+                                    </span>
+                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <paper-button raised="" class="indigo" id="uploadFile">
+                                    <div id="uploadicon" style="display: inline-block;">
+                                        <i class="fa fa-cloud-upload"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
                                     [[file_name]]
                                 </span>
-                                <input type="file" class="upload" id="file" on-change="_fileChange">
-                            </paper-button>
-                        </div>
-                    </div>
+                                    <input type="file" class="upload" id="file" on-change="_fileChange">
+                                </paper-button>
+                            </td>
+                        </tr>
 
-                    <br>
-                    <!-- value -->
-                    <div class="container">
-                        <div class="left">
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    Enter Values
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <paper-button raised="" class="indigo" id="enterValues" on-tap="_openPositions">
+                                    <div id="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span>[[enter_values]]</span>
+                                </paper-button>
+                            </td>
+                        </tr>
 
-                            <!-- version B -->
-                            <paper-icon-item>
-                                <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
-                                Enter Values
-                            </paper-icon-item>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Xsize (in arcminutes):
+                                        <span id="xsizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="xsizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
+                            </td>
+                        </tr>
 
-                        </div>
-                        <div class="right">
-                            <!-- version A -->
-                            <paper-button raised="" class="indigo" id="enterValues" on-tap="_openPositions">
-                                <div id="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                                    &nbsp;  &nbsp;
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Ysize (in arcminutes):
+                                        <span id="ysizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="ysizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
+                            </td>
+                        </tr>
+
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="create" slot="item-icon"></iron-icon>
+                                    Job Name
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-input always-float-label="" id="validname" name="name" label="Job Name" value="" style="max-width: 500px;"></paper-input>
+                            </td>
+                        </tr>
+
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="mail" slot="item-icon"></iron-icon>
+                                    Email Options
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:25px;" id="sendemail" on-change="emailcheck">Send email on completion</paper-checkbox>
+                                    </div>
+                                    <div class="right">
+                                        <paper-input always-float-label="" id="validemail" name="email" label="Email" value=""></paper-input>
+                                    </div>
                                 </div>
-                                <span>[[enter_values]]</span>
-                            </paper-button>
-                        </div>
-                    </div>
+                            </td>
+                        </tr>
 
-                    <br>
-
-                    <!-- xslider -->
-                    <div class="container">
-                        <div class="left" style="width: 500px;">
-                            <paper-icon-item>
-                                <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-                            <div>Xsize (in arcminutes):
-                                <span id="xsizeLabel" class="caption">1.0</span></div>
-                            </paper-icon-item>
-                            <!--<div>xsize (in arcminutes, default is 1.0):
-                                <span id="xsizeLabel" class="caption">1.0</span></div><br>
-                            -->
-                        </div>
-
-                        <div class="right">
-                            <paper-slider id="xsizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
-                        </div>
-                    </div>
-
-
-                    <!-- yslider -->
-                    <div class="container" style="margin-top: 20px;">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-                            <div>Ysize (in arcminutes):
-                                <span id="ysizeLabel" class="caption">1.0</span></div>
-                            </paper-icon-item>
-                        </div>
-
-                        <div class="right">
-                            <paper-slider id="ysizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <!-- job name -->
-                    <div class="container">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="create" slot="item-icon"></iron-icon>
-                                Job Name
-                            </paper-icon-item>
-                        </div>
-                        <div class="right">
-                            <paper-input always-float-label="" id="validname" name="name" label="Job Name" value="" style="max-width: 500px;"></paper-input>
-                        </div>
-                    </div>
-
-
-                    <!-- email -->
-                    <div class="container">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="mail" slot="item-icon"></iron-icon>
-                                Email Options
-                            </paper-icon-item>
-                            <!--
-                            <paper-item>
-                                <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send email after completion</paper-checkbox>
-                            </paper-item> -->
-
-                        </div>
-                        <div class="right">
-                               <div class="container3">
-                                <paper-checkbox style="font-size:16px; margin-top:30px; width: 200px;" id="sendemail" on-change="emailcheck">Send email on completion</paper-checkbox>
-                            <paper-input always-float-label="" id="validemail" name="email" label="Email" value="" style="max-width: 800px; margin-left: 35px;"></paper-input>
-                               </div>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <!-- return -->
-                    <div class="container">
-                        <div class="left">
-                            <paper-icon-item>
-                                <iron-icon icon="save" slot="item-icon"></iron-icon>
-                                Return Type
-                            </paper-icon-item>
-                        </div>
-                        <div class="right">
-                                <paper-checkbox style="margin-top:20px;" id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <!-- buttons -->
-                    <div class="container">
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="save" slot="item-icon"></iron-icon>
+                                    Return Type
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-checkbox style="font-size:16px;" id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <div class="coadd-container">
                         <div class="left">
                             <paper-button raised="" class="indigo" id="clearFormButton" on-tap="_clearForm">
-                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
+                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
                             </paper-button>
-                        </div>
+                            </div>
                         <div class="right">
                             <paper-button raised="" class="indigo" id="submitJobButton" disabled="" on-tap="_submitJob">
-                                <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
+                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
                             </paper-button>
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="card-content">-->
-                    <!--<div class="" >-->
-                        <!--<paper-button raised  class="indigo"  id="uploadFile">-->
-                            <!--<div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>-->
-                                <!--&nbsp;  &nbsp;-->
-                            <!--</div>-->
-                            <!--<span style="overflow-x: auto; overflow-wrap: break-word;">-->
-                                <!--[[file_name]]-->
-                            <!--</span>-->
-                            <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                        <!--</paper-button>-->
-
-                        <!--<paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">-->
-                            <!--<div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>-->
-                                <!--&nbsp;  &nbsp;-->
-                            <!--</div>-->
-                            <!--<span>[[enter_values]]</span>-->
-                        <!--</paper-button>-->
-                    <!--</div>-->
-
-                    <!--<hr>-->
-
-                    <!--<div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>-->
-                    <!--<paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>-->
-                    <!--<div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>-->
-                    <!--<paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>-->
-
-                    <!--<hr>-->
-
-                    <!--<paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>-->
-
-                    <!--<hr>-->
-
-                    <!--<div class="flex2" >-->
-                        <!--<paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>-->
-                        <!--&nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>-->
-                        <!--<paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>-->
-                        <!--<br>-->
-                    <!--</div>-->
-
-                    <!--<div>-->
-
-                        <!--<paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">-->
-                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form-->
-                        <!--</paper-button>-->
-
-                        <!--<paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">-->
-                            <!--<i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job-->
-                        <!--</paper-button>-->
-                    <!--</div>-->
-                <!--</div>-->
-
             </des-card>
 
             <des-positions id="desPositions"></des-positions>
@@ -48458,7 +49162,7 @@ function keysrt(key,desc) {
                 </paper-card>
             </paper-dialog>
         </section>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
 
@@ -48610,6 +49314,18 @@ function keysrt(key,desc) {
             e.preventDefault();
             document.getElementById('jobHelpCoadds').open();
         },
+
+
+        _nextPage: function() {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function() {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToPrevPage();
+        },
+
     });
 
 
@@ -48635,7 +49351,75 @@ function keysrt(key,desc) {
       </paper-card>
     </paper-dialog>
     <paper-dialog class="dialog-position" id="jobHelpPositions" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-positions-help></des-positions-help>
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif" width="500px">
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <!--<div class="col">-->
+                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+                        </div>
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif">
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </div>
+                    </div>
+
+                </paper-carousel>
+            </div>
+            <div class="row">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+        </des-card>
     </paper-dialog>
 
 </template>
@@ -48671,6 +49455,16 @@ function keysrt(key,desc) {
               e.preventDefault();
               document.getElementById('jobHelpPositions').open();
           },
+
+          _nextPage: function() {
+          var crs = document.getElementById("position-crs");
+          crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("position-crs");
+          crs.goToPrevPage();
+      }
     });
 
 
@@ -48924,7 +49718,75 @@ function keysrt(key,desc) {
                   </div>
             </paper-dialog>
           <paper-dialog class="dialog-position" id="jobHelpThumb" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <des-thumb-help></des-thumb-help>
+              <des-card heading="Help">
+                  <div class="card-content">
+                      <paper-carousel id="thumb-crs" items="1" dottext="false" controls="true">
+                          <div class="carousel-item">
+                              <img src="/easyweb/static/images/demo1.gif" width="500px">
+                              <div class="desc">
+                                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+                          </div>
+
+                          <div class="carousel-item">
+                              <!--<div class="col">-->
+                              <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                              <div class="desc">
+                                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+
+                              <!--</div>-->
+                          </div>
+
+                          <div class="carousel-item">
+                              <div class="row">
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+                              </div>
+                              <div class="desc">
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+                          </div>
+
+                          <div class="carousel-item">
+                              <img src="/easyweb/static/images/demo1.gif">
+                              <div class="desc">
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                              </div>
+                          </div>
+
+                      </paper-carousel>
+                  </div>
+                  <div class="row">
+                      <paper-button class="prev" on-tap="_prevPage">
+                          <iron-icon icon="image:navigate-before"></iron-icon>
+                          Prev
+                      </paper-button>
+
+                      <paper-button class="next" on-tap="_nextPage">
+                          Next
+                          <iron-icon icon="image:navigate-next"></iron-icon>
+                      </paper-button>
+                  </div>
+              </des-card>
           </paper-dialog>
 
 
@@ -48960,6 +49822,17 @@ function keysrt(key,desc) {
             keyBindings:{
               'enter:keydown':'_gobackdialog',
             },
+
+
+                  _nextPage: function() {
+                  var crs = document.getElementById("thumb-crs");
+                  crs.goToNextPage();
+              },
+
+              _prevPage: function() {
+                  var crs = document.getElementById("thumb-crs");
+                  crs.goToPrevPage();
+              },
 
                   _mouseout: function(){
                       this._elevation = 0;
@@ -49074,7 +49947,69 @@ function keysrt(key,desc) {
         </style>
 
         <paper-dialog class="dialog-position" id="jobHelpHelp" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-            <des-help-help></des-help-help>
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="help-crs" items="1" dottext="false" controls="true">
+                        <div class="carousel-item">
+                            Use the form to submit your question.
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+            </des-card>
         </paper-dialog>
 
         <des-card heading="DES Release Help Form">
@@ -49140,7 +50075,7 @@ function keysrt(key,desc) {
         </des-card>
         <paper-toast style="z-index: 9999; margin-left:260px;" id="toast1" text="Form has been submitted! Thanks"> </paper-toast>
         <paper-toast style="z-index: 9999; margin-left:260px; color:red;" id="toast2" text="ERROR!, Please Check Form"> </paper-toast>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 
     </template>
@@ -49185,6 +50120,18 @@ function keysrt(key,desc) {
                 e.preventDefault();
                 document.getElementById('jobHelpHelp').open();
             },
+
+            _nextPage: function() {
+                var crs = document.getElementById("help-crs");
+                crs.goToNextPage();
+            },
+
+            _prevPage: function() {
+                var crs = document.getElementById("help-crs");
+                crs.goToPrevPage();
+            }
+
+
         });
 
 
@@ -49416,53 +50363,7 @@ function keysrt(key,desc) {
 
     });
 </script>
-<dom-module id="des-card-help" assetpath="../des_components/">
-    <style include="shared-styles">
-        :host{
-            display: flex;
-        }
-        paper-card {
-            /*margin-left: 0px;*/
-            width: 100%;
-            height: 100%;
-            border-top: 1px solid var(--paper-blue-200);
-            --paper-card-header-color: var(--paper-red-500);
-            --paper-card-background-color: var(--paper-grey-100) ;
-        }
-
-        iron-icon {
-            position: absolute;
-            top: 20px;
-            right: 10px;
-        }
-
-
-
-
-    </style>
-
-    <template>
-        <paper-card elevation="2" heading="{{heading}}">
-            <iron-icon icon="info"></iron-icon>
-            <content>
-            </content>
-        </paper-card>
-
-
-    </template>
-</dom-module>
-
-<script>
-    Polymer({
-        is: "des-card-help",
-        properties:{
-            heading:{
-                type: String,
-                value: '',
-            }
-        },
-    });
-</script><dom-module id="des-credit-line" assetpath="../des_components/">
+<dom-module id="des-credit-line" assetpath="../des_components/">
 
 <style is="custom-style" include="shared-styles">
     footer {
@@ -49521,381 +50422,976 @@ function keysrt(key,desc) {
     });
   })();
 </script>
-<dom-module id="des-all-tables-help" assetpath="../des_components/des-help/">
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
+Material design: [Tabs](https://www.google.com/design/spec/components/tabs.html)
+
+`paper-tabs` makes it easy to explore and switch between different views or functional aspects of
+an app, or to browse categorized data sets.
+
+Use `selected` property to get or set the selected tab.
+
+Example:
+
+    <paper-tabs selected="0">
+      <paper-tab>TAB 1</paper-tab>
+      <paper-tab>TAB 2</paper-tab>
+      <paper-tab>TAB 3</paper-tab>
+    </paper-tabs>
+
+See <a href="?active=paper-tab">paper-tab</a> for more information about
+`paper-tab`.
+
+A common usage for `paper-tabs` is to use it along with `iron-pages` to switch
+between different views.
+
+    <paper-tabs selected="{{selected}}">
+      <paper-tab>Tab 1</paper-tab>
+      <paper-tab>Tab 2</paper-tab>
+      <paper-tab>Tab 3</paper-tab>
+    </paper-tabs>
+
+    <iron-pages selected="{{selected}}">
+      <div>Page 1</div>
+      <div>Page 2</div>
+      <div>Page 3</div>
+    </iron-pages>
+
+
+To use links in tabs, add `link` attribute to `paper-tab` and put an `<a>`
+element in `paper-tab` with a `tabindex` of -1.
+
+Example:
+
+<pre><code>
+&lt;style is="custom-style">
+  .link {
+    &#64;apply --layout-horizontal;
+    &#64;apply --layout-center-center;
+  }
+&lt;/style>
+
+&lt;paper-tabs selected="0">
+  &lt;paper-tab link>
+    &lt;a href="#link1" class="link" tabindex="-1">TAB ONE&lt;/a>
+  &lt;/paper-tab>
+  &lt;paper-tab link>
+    &lt;a href="#link2" class="link" tabindex="-1">TAB TWO&lt;/a>
+  &lt;/paper-tab>
+  &lt;paper-tab link>
+    &lt;a href="#link3" class="link" tabindex="-1">TAB THREE&lt;/a>
+  &lt;/paper-tab>
+&lt;/paper-tabs>
+</code></pre>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-tabs-selection-bar-color` | Color for the selection bar | `--paper-yellow-a100`
+`--paper-tabs-selection-bar` | Mixin applied to the selection bar | `{}`
+`--paper-tabs` | Mixin applied to the tabs | `{}`
+`--paper-tabs-content` | Mixin applied to the content container of tabs | `{}`
+`--paper-tabs-container` | Mixin applied to the layout container of tabs | `{}`
+
+@hero hero.svg
+@demo demo/index.html
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><script>
+
+  /**
+   * `Polymer.IronMenubarBehavior` implements accessible menubar behavior.
+   *
+   * @polymerBehavior Polymer.IronMenubarBehavior
+   */
+  Polymer.IronMenubarBehaviorImpl = {
+
+    hostAttributes: {
+      'role': 'menubar'
+    },
+
+    keyBindings: {
+      'left': '_onLeftKey',
+      'right': '_onRightKey'
+    },
+
+    _onUpKey: function(event) {
+      this.focusedItem.click();
+      event.detail.keyboardEvent.preventDefault();
+    },
+
+    _onDownKey: function(event) {
+      this.focusedItem.click();
+      event.detail.keyboardEvent.preventDefault();
+    },
+
+    get _isRTL() {
+      return window.getComputedStyle(this)['direction'] === 'rtl';
+    },
+
+    _onLeftKey: function(event) {
+      if (this._isRTL) {
+        this._focusNext();
+      } else {
+        this._focusPrevious();
+      }
+      event.detail.keyboardEvent.preventDefault();
+    },
+
+    _onRightKey: function(event) {
+      if (this._isRTL) {
+        this._focusPrevious();
+      } else {
+        this._focusNext();
+      }
+      event.detail.keyboardEvent.preventDefault();
+    },
+
+    _onKeydown: function(event) {
+      if (this.keyboardEventMatchesKeys(event, 'up down left right esc')) {
+        return;
+      }
+
+      // all other keys focus the menu item starting with that character
+      this._focusWithKeyboardEvent(event);
+    }
+
+  };
+
+  /** @polymerBehavior Polymer.IronMenubarBehavior */
+  Polymer.IronMenubarBehavior = [
+    Polymer.IronMenuBehavior,
+    Polymer.IronMenubarBehaviorImpl
+  ];
+
+</script><!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><iron-iconset-svg name="paper-tabs" size="24">
+<svg><defs>
+<g id="chevron-left"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></g>
+<g id="chevron-right"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></g>
+</defs></svg>
+</iron-iconset-svg>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
+`paper-tab` is styled to look like a tab.  It should be used in conjunction with
+`paper-tabs`.
+
+Example:
+
+    <paper-tabs selected="0">
+      <paper-tab>TAB 1</paper-tab>
+      <paper-tab>TAB 2</paper-tab>
+      <paper-tab>TAB 3</paper-tab>
+    </paper-tabs>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-tab-ink` | Ink color | `--paper-yellow-a100`
+`--paper-tab` | Mixin applied to the tab | `{}`
+`--paper-tab-content` | Mixin applied to the tab content | `{}`
+`--paper-tab-content-unselected` | Mixin applied to the tab content when the tab is not selected | `{}`
+
+This element applies the mixin `--paper-font-common-base` but does not import `paper-styles/typography.html`.
+In order to apply the `Roboto` font to this element, make sure you've imported `paper-styles/typography.html`.
+
+-->
+
+<dom-module id="paper-tab" assetpath="../bower_components/paper-tabs/">
+  <template>
+    <style>
+      :host {
+        @apply --layout-inline;
+        @apply --layout-center;
+        @apply --layout-center-justified;
+        @apply --layout-flex-auto;
+
+        position: relative;
+        padding: 0 12px;
+        overflow: hidden;
+        cursor: pointer;
+        vertical-align: middle;
+
+        @apply --paper-font-common-base;
+        @apply --paper-tab;
+      }
+
+      :host(:focus) {
+        outline: none;
+      }
+
+      :host([link]) {
+        padding: 0;
+      }
+
+      .tab-content {
+        height: 100%;
+        transform: translateZ(0);
+          -webkit-transform: translateZ(0);
+        transition: opacity 0.1s cubic-bezier(0.4, 0.0, 1, 1);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+        @apply --layout-flex-auto;
+        @apply --paper-tab-content;
+      }
+
+      :host(:not(.iron-selected)) > .tab-content {
+        opacity: 0.8;
+
+        @apply --paper-tab-content-unselected;
+      }
+
+      :host(:focus) .tab-content {
+        opacity: 1;
+        font-weight: 700;
+      }
+
+      paper-ripple {
+        color: var(--paper-tab-ink, var(--paper-yellow-a100));
+      }
+
+      .tab-content > ::slotted(a) {
+        @apply --layout-flex-auto;
+
+        height: 100%;
+      }
+    </style>
+
+    <div class="tab-content">
+      <slot></slot>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-tab',
+
+      behaviors: [
+        Polymer.IronControlState,
+        Polymer.IronButtonState,
+        Polymer.PaperRippleBehavior
+      ],
+
+      properties: {
+
+        /**
+         * If true, the tab will forward keyboard clicks (enter/space) to
+         * the first anchor element found in its descendants
+         */
+        link: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        }
+
+      },
+
+      hostAttributes: {
+        role: 'tab'
+      },
+
+      listeners: {
+        down: '_updateNoink',
+        tap: '_onTap'
+      },
+
+      attached: function() {
+        this._updateNoink();
+      },
+
+      get _parentNoink () {
+        var parent = Polymer.dom(this).parentNode;
+        return !!parent && !!parent.noink;
+      },
+
+      _updateNoink: function() {
+        this.noink = !!this.noink || !!this._parentNoink;
+      },
+
+      _onTap: function(event) {
+        if (this.link) {
+          var anchor = this.queryEffectiveChildren('a');
+
+          if (!anchor) {
+            return;
+          }
+
+          // Don't get stuck in a loop delegating
+          // the listener from the child anchor
+          if (event.target === anchor) {
+            return;
+          }
+
+          anchor.click();
+        }
+      }
+
+    });
+  </script>
+</dom-module>
+<dom-module id="paper-tabs" assetpath="../bower_components/paper-tabs/">
+  <template>
+    <style>
+      :host {
+        @apply --layout;
+        @apply --layout-center;
+
+        height: 48px;
+        font-size: 14px;
+        font-weight: 500;
+        overflow: hidden;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+
+        /* NOTE: Both values are needed, since some phones require the value to be `transparent`. */
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-tap-highlight-color: transparent;
+
+        @apply --paper-tabs;
+      }
+
+      :host-context([dir=rtl]) {
+        @apply --layout-horizontal-reverse;
+      }
+
+      #tabsContainer {
+        position: relative;
+        height: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        @apply --layout-flex-auto;
+        @apply --paper-tabs-container;
+      }
+
+      #tabsContent {
+        height: 100%;
+        -moz-flex-basis: auto;
+        -ms-flex-basis: auto;
+        flex-basis: auto;
+        @apply --paper-tabs-content;
+      }
+
+      #tabsContent.scrollable {
+        position: absolute;
+        white-space: nowrap;
+      }
+
+      #tabsContent:not(.scrollable),
+      #tabsContent.scrollable.fit-container {
+        @apply --layout-horizontal;
+      }
+
+      #tabsContent.scrollable.fit-container {
+        min-width: 100%;
+      }
+
+      #tabsContent.scrollable.fit-container > ::slotted(*) {
+        /* IE - prevent tabs from compressing when they should scroll. */
+        -ms-flex: 1 0 auto;
+        -webkit-flex: 1 0 auto;
+        flex: 1 0 auto;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .not-visible {
+        opacity: 0;
+        cursor: default;
+      }
+
+      paper-icon-button {
+        width: 48px;
+        height: 48px;
+        padding: 12px;
+        margin: 0 4px;
+      }
+
+      #selectionBar {
+        position: absolute;
+        height: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-bottom: 2px solid var(--paper-tabs-selection-bar-color, var(--paper-yellow-a100));
+          -webkit-transform: scale(0);
+        transform: scale(0);
+          -webkit-transform-origin: left center;
+        transform-origin: left center;
+          transition: -webkit-transform;
+        transition: transform;
+
+        @apply --paper-tabs-selection-bar;
+      }
+
+      #selectionBar.align-bottom {
+        top: 0;
+        bottom: auto;
+      }
+
+      #selectionBar.expand {
+        transition-duration: 0.15s;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 1, 1);
+      }
+
+      #selectionBar.contract {
+        transition-duration: 0.18s;
+        transition-timing-function: cubic-bezier(0.0, 0.0, 0.2, 1);
+      }
+
+      #tabsContent > ::slotted(:not(#selectionBar)) {
+        height: 100%;
+      }
+    </style>
+
+    <paper-icon-button icon="paper-tabs:chevron-left" class$="[[_computeScrollButtonClass(_leftHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onLeftScrollButtonDown" tabindex="-1"></paper-icon-button>
+
+    <div id="tabsContainer" on-track="_scroll" on-down="_down">
+      <div id="tabsContent" class$="[[_computeTabsContentClass(scrollable, fitContainer)]]">
+        <div id="selectionBar" class$="[[_computeSelectionBarClass(noBar, alignBottom)]]" on-transitionend="_onBarTransitionEnd"></div>
+        <slot></slot>
+      </div>
+    </div>
+
+    <paper-icon-button icon="paper-tabs:chevron-right" class$="[[_computeScrollButtonClass(_rightHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onRightScrollButtonDown" tabindex="-1"></paper-icon-button>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-tabs',
+
+      behaviors: [
+        Polymer.IronResizableBehavior,
+        Polymer.IronMenubarBehavior
+      ],
+
+      properties: {
+        /**
+         * If true, ink ripple effect is disabled. When this property is changed,
+         * all descendant `<paper-tab>` elements have their `noink` property
+         * changed to the new value as well.
+         */
+        noink: {
+          type: Boolean,
+          value: false,
+          observer: '_noinkChanged'
+        },
+
+        /**
+         * If true, the bottom bar to indicate the selected tab will not be shown.
+         */
+        noBar: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * If true, the slide effect for the bottom bar is disabled.
+         */
+        noSlide: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * If true, tabs are scrollable and the tab width is based on the label width.
+         */
+        scrollable: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * If true, tabs expand to fit their container. This currently only applies when
+         * scrollable is true.
+         */
+        fitContainer: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * If true, dragging on the tabs to scroll is disabled.
+         */
+        disableDrag: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * If true, scroll buttons (left/right arrow) will be hidden for scrollable tabs.
+         */
+        hideScrollButtons: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * If true, the tabs are aligned to bottom (the selection bar appears at the top).
+         */
+        alignBottom: {
+          type: Boolean,
+          value: false
+        },
+
+        selectable: {
+          type: String,
+          value: 'paper-tab'
+        },
+
+        /**
+         * If true, tabs are automatically selected when focused using the
+         * keyboard.
+         */
+        autoselect: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * The delay (in milliseconds) between when the user stops interacting
+         * with the tabs through the keyboard and when the focused item is
+         * automatically selected (if `autoselect` is true).
+         */
+        autoselectDelay: {
+          type: Number,
+          value: 0
+        },
+
+        _step: {
+          type: Number,
+          value: 10
+        },
+
+        _holdDelay: {
+          type: Number,
+          value: 1
+        },
+
+        _leftHidden: {
+          type: Boolean,
+          value: false
+        },
+
+        _rightHidden: {
+          type: Boolean,
+          value: false
+        },
+
+        _previousTab: {
+          type: Object
+        }
+      },
+
+      hostAttributes: {
+        role: 'tablist'
+      },
+
+      listeners: {
+        'iron-resize': '_onTabSizingChanged',
+        'iron-items-changed': '_onTabSizingChanged',
+        'iron-select': '_onIronSelect',
+        'iron-deselect': '_onIronDeselect'
+      },
+
+      keyBindings: {
+        'left:keyup right:keyup': '_onArrowKeyup'
+      },
+
+      created: function() {
+        this._holdJob = null;
+        this._pendingActivationItem = undefined;
+        this._pendingActivationTimeout = undefined;
+        this._bindDelayedActivationHandler = this._delayedActivationHandler.bind(this);
+        this.addEventListener('blur', this._onBlurCapture.bind(this), true);
+      },
+
+      ready: function() {
+        this.setScrollDirection('y', this.$.tabsContainer);
+      },
+
+      detached: function() {
+        this._cancelPendingActivation();
+      },
+
+      _noinkChanged: function(noink) {
+        var childTabs = Polymer.dom(this).querySelectorAll('paper-tab');
+        childTabs.forEach(noink ? this._setNoinkAttribute : this._removeNoinkAttribute);
+      },
+
+      _setNoinkAttribute: function(element) {
+        element.setAttribute('noink', '');
+      },
+
+      _removeNoinkAttribute: function(element) {
+        element.removeAttribute('noink');
+      },
+
+      _computeScrollButtonClass: function(hideThisButton, scrollable, hideScrollButtons) {
+        if (!scrollable || hideScrollButtons) {
+          return 'hidden';
+        }
+
+        if (hideThisButton) {
+          return 'not-visible';
+        }
+
+        return '';
+      },
+
+      _computeTabsContentClass: function(scrollable, fitContainer) {
+        return scrollable ? 'scrollable' + (fitContainer ? ' fit-container' : '') : ' fit-container';
+      },
+
+      _computeSelectionBarClass: function(noBar, alignBottom) {
+        if (noBar) {
+          return 'hidden';
+        } else if (alignBottom) {
+          return 'align-bottom';
+        }
+
+        return '';
+      },
+
+      // TODO(cdata): Add `track` response back in when gesture lands.
+
+      _onTabSizingChanged: function() {
+        this.debounce('_onTabSizingChanged', function() {
+          this._scroll();
+          this._tabChanged(this.selectedItem);
+        }, 10);
+      },
+
+      _onIronSelect: function(event) {
+        this._tabChanged(event.detail.item, this._previousTab);
+        this._previousTab = event.detail.item;
+        this.cancelDebouncer('tab-changed');
+      },
+
+      _onIronDeselect: function(event) {
+        this.debounce('tab-changed', function() {
+          this._tabChanged(null, this._previousTab);
+          this._previousTab = null;
+        // See polymer/polymer#1305
+        }, 1);
+      },
+
+      _activateHandler: function() {
+        // Cancel item activations scheduled by keyboard events when any other
+        // action causes an item to be activated (e.g. clicks).
+        this._cancelPendingActivation();
+
+        Polymer.IronMenuBehaviorImpl._activateHandler.apply(this, arguments);
+      },
+
+      /**
+       * Activates an item after a delay (in milliseconds).
+       */
+      _scheduleActivation: function(item, delay) {
+        this._pendingActivationItem = item;
+        this._pendingActivationTimeout = this.async(
+            this._bindDelayedActivationHandler, delay);
+      },
+
+      /**
+       * Activates the last item given to `_scheduleActivation`.
+       */
+      _delayedActivationHandler: function() {
+        var item = this._pendingActivationItem;
+        this._pendingActivationItem = undefined;
+        this._pendingActivationTimeout = undefined;
+        item.fire(this.activateEvent, null, {
+          bubbles: true,
+          cancelable: true
+        });
+      },
+
+      /**
+       * Cancels a previously scheduled item activation made with
+       * `_scheduleActivation`.
+       */
+      _cancelPendingActivation: function() {
+        if (this._pendingActivationTimeout !== undefined) {
+          this.cancelAsync(this._pendingActivationTimeout);
+          this._pendingActivationItem = undefined;
+          this._pendingActivationTimeout = undefined;
+        }
+      },
+
+      _onArrowKeyup: function(event) {
+        if (this.autoselect) {
+          this._scheduleActivation(this.focusedItem, this.autoselectDelay);
+        }
+      },
+
+      _onBlurCapture: function(event) {
+        // Cancel a scheduled item activation (if any) when that item is
+        // blurred.
+        if (event.target === this._pendingActivationItem) {
+          this._cancelPendingActivation();
+        }
+      },
+
+      get _tabContainerScrollSize () {
+        return Math.max(
+          0,
+          this.$.tabsContainer.scrollWidth -
+            this.$.tabsContainer.offsetWidth
+        );
+      },
+
+      _scroll: function(e, detail) {
+        if (!this.scrollable) {
+          return;
+        }
+
+        var ddx = (detail && -detail.ddx) || 0;
+        this._affectScroll(ddx);
+      },
+
+      _down: function(e) {
+        // go one beat async to defeat IronMenuBehavior
+        // autorefocus-on-no-selection timeout
+        this.async(function() {
+          if (this._defaultFocusAsync) {
+            this.cancelAsync(this._defaultFocusAsync);
+            this._defaultFocusAsync = null;
+          }
+        }, 1);
+      },
+
+      _affectScroll: function(dx) {
+        this.$.tabsContainer.scrollLeft += dx;
+
+        var scrollLeft = this.$.tabsContainer.scrollLeft;
+
+        this._leftHidden = scrollLeft === 0;
+        this._rightHidden = scrollLeft === this._tabContainerScrollSize;
+      },
+
+      _onLeftScrollButtonDown: function() {
+        this._scrollToLeft();
+        this._holdJob = setInterval(this._scrollToLeft.bind(this), this._holdDelay);
+      },
+
+      _onRightScrollButtonDown: function() {
+        this._scrollToRight();
+        this._holdJob = setInterval(this._scrollToRight.bind(this), this._holdDelay);
+      },
+
+      _onScrollButtonUp: function() {
+        clearInterval(this._holdJob);
+        this._holdJob = null;
+      },
+
+      _scrollToLeft: function() {
+        this._affectScroll(-this._step);
+      },
+
+      _scrollToRight: function() {
+        this._affectScroll(this._step);
+      },
+
+      _tabChanged: function(tab, old) {
+        if (!tab) {
+          // Remove the bar without animation.
+          this.$.selectionBar.classList.remove('expand');
+          this.$.selectionBar.classList.remove('contract');
+          this._positionBar(0, 0);
+          return;
+        }
+
+        var r = this.$.tabsContent.getBoundingClientRect();
+        var w = r.width;
+        var tabRect = tab.getBoundingClientRect();
+        var tabOffsetLeft = tabRect.left - r.left;
+
+        this._pos = {
+          width: this._calcPercent(tabRect.width, w),
+          left: this._calcPercent(tabOffsetLeft, w)
+        };
+
+        if (this.noSlide || old == null) {
+          // Position the bar without animation.
+          this.$.selectionBar.classList.remove('expand');
+          this.$.selectionBar.classList.remove('contract');
+          this._positionBar(this._pos.width, this._pos.left);
+          return;
+        }
+
+        var oldRect = old.getBoundingClientRect();
+        var oldIndex = this.items.indexOf(old);
+        var index = this.items.indexOf(tab);
+        var m = 5;
+
+        // bar animation: expand
+        this.$.selectionBar.classList.add('expand');
+
+        var moveRight = oldIndex < index;
+        var isRTL = this._isRTL;
+        if (isRTL) {
+          moveRight = !moveRight;
+        }
+
+        if (moveRight) {
+          this._positionBar(this._calcPercent(tabRect.left + tabRect.width - oldRect.left, w) - m,
+              this._left);
+        } else {
+          this._positionBar(this._calcPercent(oldRect.left + oldRect.width - tabRect.left, w) - m,
+              this._calcPercent(tabOffsetLeft, w) + m);
+        }
+
+        if (this.scrollable) {
+          this._scrollToSelectedIfNeeded(tabRect.width, tabOffsetLeft);
+        }
+      },
+
+      _scrollToSelectedIfNeeded: function(tabWidth, tabOffsetLeft) {
+        var l = tabOffsetLeft - this.$.tabsContainer.scrollLeft;
+        if (l < 0) {
+          this.$.tabsContainer.scrollLeft += l;
+        } else {
+          l += (tabWidth - this.$.tabsContainer.offsetWidth);
+          if (l > 0) {
+            this.$.tabsContainer.scrollLeft += l;
+          }
+        }
+      },
+
+      _calcPercent: function(w, w0) {
+        return 100 * w / w0;
+      },
+
+      _positionBar: function(width, left) {
+        width = width || 0;
+        left = left || 0;
+
+        this._width = width;
+        this._left = left;
+        this.transform(
+            'translateX(' + left + '%) scaleX(' + (width / 100) + ')',
+            this.$.selectionBar);
+      },
+
+      _onBarTransitionEnd: function(e) {
+        var cl = this.$.selectionBar.classList;
+        // bar animation: expand -> contract
+        if (cl.contains('expand')) {
+          cl.remove('expand');
+          cl.add('contract');
+          this._positionBar(this._pos.width, this._pos.left);
+        // bar animation done
+        } else if (cl.contains('contract')) {
+          cl.remove('contract');
+        }
+      }
+    });
+  </script>
+</dom-module>
+<dom-module id="paper-carousel" assetpath="../bower_components/paper-carousel/">
+  <template>
+    <style>:host{display:block;position:relative;overflow:hidden;--dot-background-color:#ffffff;--dot-active-extra-item:hidden}:host::content .paper-carousel_wrapper{text-align:center;position:relative;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-flow:row nowrap;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-justify-content:space-around;-ms-flex-pack:distribute;justify-content:space-around;-webkit-align-items:flex-start;-ms-flex-align:start;align-items:flex-start;-webkit-align-content:flex-start;-ms-flex-line-pack:start;align-content:flex-start;width:100%;z-index:1;transition:-webkit-transform var(--transition-speed,500ms) ease-in-out;transition:transform var(--transition-speed,500ms) ease-in-out;transition:transform var(--transition-speed,500ms) ease-in-out,-webkit-transform var(--transition-speed,500ms) ease-in-out;-ms-touch-action:pan-y;touch-action:pan-y;will-change:transform}:host::content .paper-carousel_controls{position:absolute;width:auto;top:50%;right:10px;left:10px;-webkit-transform:translateY(-50%);transform:translateY(-50%);text-align:center;z-index:1;pointer-events:none}:host::content [class*=paper-carousel_controls_arrow]{color:var(--dot-background-color);pointer-events:auto}:host::content [class*=paper-carousel_controls_arrow].paper-carousel_controls_arrow--disabled{pointer-events:none;cursor:default}:host::content [class*=paper-carousel_controls_arrow] iron-icon{opacity:var(--light-secondary-opacity);-webkit-filter:drop-shadow(0 0 1px rgba(0, 0, 0, .4));filter:drop-shadow(0 0 1px rgba(0, 0, 0, .4));-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-transform:scale(1);transform:scale(1);transition:opacity .2s ease-out,-webkit-filter .2s ease-out,-webkit-transform .2s ease-out;transition:opacity .2s ease-out,filter .2s ease-out,transform .2s ease-out;transition:opacity .2s ease-out,filter .2s ease-out,transform .2s ease-out,-webkit-filter .2s ease-out,-webkit-transform .2s ease-out}:host::content [class*=paper-carousel_controls_arrow] iron-icon:hover{opacity:var(--light-primary-opacity);-webkit-transform:scale(1.15);transform:scale(1.15);-webkit-filter:drop-shadow(0 2px 2px rgba(0, 0, 0, .4));filter:drop-shadow(0 2px 2px rgba(0, 0, 0, .4))}:host::content .paper-carousel_controls_arrow-next{float:right}:host::content .paper-carousel_controls_arrow-prev{float:left}:host::content .paper-carousel_dots_wrapper{position:relative;display:inline-block;margin:0;padding:0;z-index:2}:host::content .paper-carousel_dots{position:absolute;width:100%;text-align:center;z-index:1;bottom:10px;pointer-events:none}:host::content .paper-carousel_dot-line{visibility:var(--dot-active-extra-item);position:absolute;top:0;padding:6px;z-index:2;pointer-events:none;transition:-webkit-transform .2s ease-in-out;transition:transform .2s ease-in-out;transition:transform .2s ease-in-out,-webkit-transform .2s ease-in-out}:host::content .paper-carousel_dot-line::before{content:'';display:block;width:10px;height:10px;background-color:var(--color-red);border-radius:10px}:host::content .paper-carousel_dot{display:inline-block;pointer-events:auto;opacity:var(--light-secondary-opacity);-webkit-filter:drop-shadow(0 0 2px rgba(0, 0, 0, .4));filter:drop-shadow(0 0 2px rgba(0, 0, 0, .4));-webkit-transform-origin:center;transform-origin:center;-webkit-transform:scale(1);transform:scale(1);transition:opacity .6s cubic-bezier(.25,.8,.25,1),-webkit-transform .6s cubic-bezier(.25,.8,.25,1),-webkit-filter .6s cubic-bezier(.25,.8,.25,1);transition:transform .6s cubic-bezier(.25,.8,.25,1),opacity .6s cubic-bezier(.25,.8,.25,1),filter .6s cubic-bezier(.25,.8,.25,1);transition:transform .6s cubic-bezier(.25,.8,.25,1),opacity .6s cubic-bezier(.25,.8,.25,1),filter .6s cubic-bezier(.25,.8,.25,1),-webkit-transform .6s cubic-bezier(.25,.8,.25,1),-webkit-filter .6s cubic-bezier(.25,.8,.25,1);-webkit-backface-visibility:hidden;backface-visibility:hidden}:host::content .paper-carousel_dot.active{opacity:var(--light-primary-opacity);-webkit-filter:drop-shadow(0 1px 3px rgba(0, 0, 0, .4));filter:drop-shadow(0 1px 3px rgba(0, 0, 0, .4));-webkit-transform:scale(1.15);transform:scale(1.15)}:host::content .paper-carousel_dot a{position:relative;display:block;padding:6px;color:var(--dot-background-color);font-size:.8125em;line-height:2em;font-weight:400;text-decoration:none}:host::content .paper-carousel_dot a::before{content:'';display:block;width:8px;height:8px;background-color:var(--dot-background-color);border-radius:8px}:host::content [class*=paper-carousel-demo]{position:relative;height:400px}:host::content [class*=paper-carousel-demo]::before{position:absolute;content:attr(data-text);color:var(--dot-background-color);font-size:3rem;font-weight:700;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}:host::content .paper-carousel-demo-indigo{background-color:var(--paper-indigo-500)}:host::content .paper-carousel-demo-pink{background-color:var(--paper-pink-500)}:host::content .paper-carousel-demo-teal{background-color:var(--paper-teal-500)}:host::content .paper-carousel-demo-amber{background-color:var(--paper-amber-500)}:host::content .paper-carousel-demo-green{background-color:var(--paper-green-500)}:host::content .paper-carousel-demo-blue{background-color:var(--paper-blue-500)}</style>
+    <div class="paper-carousel_wrapper">
+      <content></content>
+    </div>
+  </template>
+  <script>(function(){Polymer({is:"paper-carousel",behaviors:[Polymer.IronResizableBehavior],listeners:{"iron-resize":"_onResize"},items:function(){var t,e,o,i,r,s;if(i=this,r=i.getBoundingClientRect(),null!==i.getAttribute("responsive"))for(o=i.getAttribute("responsive").replace(/\s/g,"").split(","),e=0;e<o.length;){if(t=o[e].split(":"),s=o[e+1]?o[e+1].split(":"):{0:0},r.width<=t[0]&&r.width>s[0])return t[1];e++}return null!==i.getAttribute("items")?i.getAttribute("items"):1},_dotText:function(){var t,e;return t=this,e=t.getAttribute("dotText"),null===e||"false"!==e},_isLoop:function(){var t,e;return t=this,e=t.getAttribute("loop"),null!==e&&"true"===e},_transitionSpeed:function(){var t,e;if(t=this,e=t.getAttribute("transitionspeed"),null!==e&&void 0!==e)return t.customStyle["--transition-speed"]=e+"ms",t.updateStyles()},_isAutoplay:function(){var t,e;return t=this,e=t.getAttribute("autoplay"),null!==e&&"true"===e},getTotalItems:function(){var t,e,o,i,r,s,n,a,l,h;if(s=this,n=s.querySelector(".paper-carousel_wrapper"),h=0,s._isLoop())for(a=n.children,e=0,i=a.length;e<i;e++)t=a[e],"template"===t.localName||t.classList.contains("cloned")||h++;else for(l=n.children,o=0,r=l.length;o<r;o++)t=l[o],"template"!==t.localName&&h++;return h},_getRealTotalItems:function(){var t,e,o,i,r,s,n;for(i=this,r=i.querySelector(".paper-carousel_wrapper"),n=0,s=r.children,e=0,o=s.length;e<o;e++)t=s[e],"template"!==t.localName&&n++;return n},getPages:function(){var t,e,o,i;for(e=this,t=1,o=[],i=[];t<=this.getTotalItems();)o.push(t-1),t%this.items()===0&&(i.push(o),o=[]),t===this.getTotalItems()&&i.push(o),t++;return i},getTotalPages:function(){var t;return t=this,Math.ceil(this.getTotalItems()/this.items())},getContainerPosition:function(){var t,e,o,i,r;return t=this,e=t.querySelector(".paper-carousel_wrapper"),o=e.style.transform,r=0,""!==o&&(i=o.match(/translateX\((.*)/)[0],r=i.match(/\((.*)\)/)[0],r=r.substr(1,r.length-2),r=parseFloat(r)),r},getCurrentItem:function(){var t,e,o,i;if(i=this,e=Math.round(100/this.getTotalItems()*1e3)/1e3,o=Math.round(100/this._getRealTotalItems()*1e3)/1e3,t=0,this._isLoop)for(;t<=this._getRealTotalItems();){if(Math.round(o*t*1e3)/1e3===-this.getContainerPosition())return i.currentItem=t-this.itemsToPrepend.length,t-this.itemsToPrepend.length;t++}else for(;t<=this.getTotalItems();){if(Math.round(e*t*1e3)/1e3===-this.getContainerPosition())return i.currentItem=t,t;t++}},goToItem:function(t){var e,o,i,r;return o=this,i=o.querySelector(".paper-carousel_wrapper"),this._isLoop()?(e=Math.round(100/this._getRealTotalItems()*1e3)/1e3,r=Math.round((t+this.itemsToPrepend.length)*-e*1e3)/1e3):(e=Math.round(100/this.getTotalItems()*1e3)/1e3,r=Math.round(t*-e*1e3)/1e3),this._isLoop()?i.style.transform="translateX("+r+"%)":t<this.getTotalItems()&&t>=0&&this.items()<this.getTotalItems()&&(i.style.transform="translateX("+r+"%)"),this._setActiveDot(this.getCurrentPage()),this._setDisabledControls(),this._fireOnMoveEvent()},goToNextItem:function(){var t,e,o,i;if(o=this,i=o.querySelector(".paper-carousel_wrapper"),t=Math.round(100/this.getTotalItems()*1e3)/1e3,e=Math.round(100/this._getRealTotalItems()*1e3)/1e3,this._isLoop()){if(this.goToItem(this.getCurrentItem()+1),this.getCurrentItem()===this.getTotalItems())return i.style.transition="none",this.goToItem(-1),i.style.transition="",this.goToItem(0)}else if(this.getContainerPosition()>-(this.getTotalItems()-this.items()-1)*t-5)return this.goToItem(this.getCurrentItem()+1)},goToPrevItem:function(){var t,e,o,i;if(o=this,i=o.querySelector(".paper-carousel_wrapper"),t=Math.round(100/this.getTotalItems()*1e3)/1e3,e=Math.round(100/this._getRealTotalItems()*1e3)/1e3,this._isLoop){if(this.goToItem(this.getCurrentItem()-1),this.getCurrentItem()===-1)return i.style.transition="none",this.goToItem(this.getTotalItems()),i.style.transition="",this.goToItem(this.getTotalItems()-1)}else if(this.getContainerPosition()<0)return this.goToItem(this.getCurrentItem()-1)},getCurrentPage:function(){var t,e,o,i,r;for(t=Math.round(100/this.getTotalItems()*1e3)/1e3,r=t*this.items(),i=0;i<this.getPages().length;){if(o=this.getPages()[i],e=parseFloat(this.getCurrentItem())+parseFloat(this.items()),e>=this.getTotalItems())return this._isLoop()||this.goToPage(this.getTotalPages()-1),this.getTotalPages()-1;if(o.indexOf(this.getCurrentItem())!==-1)return i;i++}},goToPage:function(t){var e,o,i,r,s,n,a,l,h;return i=this,r=i.querySelector(".paper-carousel_wrapper"),e=Math.round(100/this.getTotalItems()*1e3)/1e3,o=Math.round(100/this._getRealTotalItems()*1e3)/1e3,l=(this.items()-this.getPages()[t].length)*e,h=(this.items()-this.getPages()[t].length)*o,n=-e*this.items(),a=-o*this.items(),s=this._isLoop()?Math.round(1e3*(t*a+h))/1e3+a:Math.round(1e3*(t*n+l))/1e3,this._isLoop()?r.style.transform="translateX("+s+"%)":t<this.getTotalPages()&&t>=0&&this.items()<this.getTotalItems()&&(r.style.transform="translateX("+s+"%)"),this._setActiveDot(t),this._setDisabledControls(),this._fireOnMoveEvent()},goToNextPage:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()>-(this.getTotalItems()-this.items()-1)*t-5)return this.goToPage(this.getCurrentPage()+1)},goToPrevPage:function(){var t;if(t=Math.round(100/this.getTotalItems()*1e3)/1e3,this.getContainerPosition()<-5)return this.goToPage(this.getCurrentPage()-1)},_createOnMoveEvent:function(){var t;return t=this,t.onMove=void 0,document.createEvent?(t.onMove=document.createEvent("HTMLEvents"),t.onMove.initEvent("onmove",!0,!0)):(t.onMove=document.createEventObject(),t.onMove.eventType="onmove"),t.onMove.eventName="onmove"},_fireOnMoveEvent:function(){var t;return t=this,document.createEvent?t.dispatchEvent(t.onMove):t.fireEvent("on"+t.onMove.eventType,t.onMove)},_setContainerSize:function(){var t,e,o,i,r,s,n,a,l;for(s=this,a=s.querySelector(".paper-carousel_wrapper"),n=s.getBoundingClientRect(),o=this._isLoop()?n.width*s._getRealTotalItems()/this.items():n.width*s.getTotalItems()/this.items(),e=this._isLoop?Math.round(100/this._getRealTotalItems()*1e4)/1e4:Math.round(100/this.getTotalItems()*1e4)/1e4,l=a.children,i=0,r=l.length;i<r;i++)t=l[i],"template"!==t.localName&&(t.style.width=e+"%");return a.style.minWidth=o+"px"},_setActiveDot:function(t){var e,o,i,r;for(r=this,o=r.querySelectorAll(".paper-carousel_dot"),e=r.querySelector(".paper-carousel_dot-line"),i=0;i<o.length;)i===parseInt(t)?o[t].classList.add("active"):o[i].classList.remove("active"),i++;if(e&&this.items()<this.getTotalItems())return e.style.transform="translateX("+t+"00%)"},_printControls:function(t){var e,o,i,r,s,n,a,l;if(r=this,i=1,"false"!==r.getAttribute("controls")&&(t===!0||r.tpages!==this.items()))return r.querySelector(".paper-carousel_controls")&&r.querySelector(".paper-carousel_controls").remove(),e=document.createElement("div"),e.classList.add("paper-carousel_controls"),o=document.createElement("div"),o.classList.add("paper-carousel_controls_wrapper"),s=document.createElement("a"),n=document.createElement("iron-icon"),null!==r.getAttribute("nextIcon")?n.setAttribute("icon",r.getAttribute("nextIcon")):n.setAttribute("icon","image:navigate-next"),a=document.createElement("a"),l=document.createElement("iron-icon"),null!==r.getAttribute("prevIcon")?l.setAttribute("icon",r.getAttribute("prevIcon")):l.setAttribute("icon","image:navigate-before"),s.setAttribute("href",""),s.classList.add("paper-carousel_controls_arrow-next"),a.setAttribute("href",""),a.classList.add("paper-carousel_controls_arrow-prev"),s.addEventListener("click",function(t){return t.preventDefault(),r._disableAutoPlay()}),a.addEventListener("click",function(t){return t.preventDefault(),r._disableAutoPlay()}),r.listen(s,"tap","goToNextItem"),r.listen(a,"tap","goToPrevItem"),Polymer.dom(s).appendChild(n),Polymer.dom(a).appendChild(l),Polymer.dom(e).appendChild(o),Polymer.dom(o).appendChild(a),Polymer.dom(o).appendChild(s),this.getTotalPages()>1&&Polymer.dom(r.root).appendChild(e),this._setDisabledControls()},_setDisabledControls:function(t){var e,o,i,r,s;if(s=this,i=Math.round(100/this.getTotalItems()*1e3)/1e3,r=Math.round(100/this._getRealTotalItems()*1e3)/1e3,e=s.querySelector(".paper-carousel_controls_arrow-prev"),o=s.querySelector(".paper-carousel_controls_arrow-next"),!this._isLoop()&&null!==o&&null!==e)return this.getContainerPosition()>-.5?e.classList.add("paper-carousel_controls_arrow--disabled"):e.classList.remove("paper-carousel_controls_arrow--disabled"),this.getContainerPosition()<-(this.getTotalItems()-this.items()-1)*i?o.classList.add("paper-carousel_controls_arrow--disabled"):o.classList.remove("paper-carousel_controls_arrow--disabled")},_printDots:function(t){var e,o,i,r,s,n,a;if(a=this,n=1,"false"!==a.getAttribute("dots")){if(r=document.createElement("div"),r.classList.add("paper-carousel_dots"),s=document.createElement("ul"),s.classList.add("paper-carousel_dots_wrapper"),Polymer.dom(r).appendChild(s),t!==!0){if(a.tpages===this.items())return;a.tpages=this.items()}for(a.querySelector(".paper-carousel_dots")&&a.querySelector(".paper-carousel_dots").remove();n<=this.getTotalPages();)o=document.createElement("li"),o.classList.add("paper-carousel_dot"),i=document.createElement("a"),i.setAttribute("href",""),i.setAttribute("data-rel",n-1),a.clickDotsEvent=function(t){var e;return e=t.target.getAttribute("data-rel"),this.goToPage(e)},i.addEventListener("click",function(t){return t.preventDefault(),a._disableAutoPlay()}),a.listen(i,"tap","clickDotsEvent"),this._dotText()===!0&&(i.textContent=n),e=document.createElement("li"),e.classList.add("paper-carousel_dot-line"),Polymer.dom(o).appendChild(i),Polymer.dom(s).appendChild(o),n===this.getTotalPages()&&Polymer.dom(s).appendChild(e),n++;return this.getTotalPages()>1&&Polymer.dom(a.root).appendChild(r),this._setActiveDot(this.getCurrentPage())}},_getDragState:function(t){var e,o,i,r,s,n,a,l,h,u,c,g,d,m,p,f,v,_,T;switch(u=this,c=u.querySelector(".paper-carousel_wrapper"),g=c.getBoundingClientRect(),d=Math.round(100*t.detail.dx/g.width*1e3)/1e3,s=Math.round(100/this.getTotalItems()*1e3)/1e3,n=Math.round(100/this._getRealTotalItems()*1e3)/1e3,l=Math.round(s*(this.getTotalItems()-this.items())*1e3)/1e3,h=Math.round(n*(this._getRealTotalItems()-this.items())*1e3)/1e3,i=0,T=t.detail.dx,t.detail.state){case"start":return u.startTime=(new Date).getTime(),u.dragPosition=this.getContainerPosition(),window.touching=!0,c.style.transitionDuration="0s",window.addEventListener("scroll",function(){return clearInterval(window.scrollingInterval),window.scrolling=!0,window.touchScroll=!0,window.scrollingInterval=setTimeout(function(){if(window.scrolling=!1,window.touching===!1)return window.touchScroll=!1},50)});case"track":return p=Math.round(1e3*(u.dragPosition+d))/1e3,p=Math.min(p,0),p=this._isLoop()?Math.max(p,-h):Math.max(p,-l),window.scrolling!==!1&&void 0!==window.scrolling||window.touchScroll!==!1&&void 0!==window.touchScroll||(T>2||T<-2)&&(this.items()<this.getTotalItems()&&window.movingCarousel===!0&&(c.style.transform="translateX("+p+"%) translateY(0) translateZ(0)"),window.movingCarousel=!0),window.addEventListener("touchmove",function(t){if(window.movingCarousel===!0)return t.preventDefault()});case"end":if(i=(new Date).getTime(),_=i-u.startTime,a=Math.max(Math.min(_,500),100),r=this._isLoop()?-1:0,this.getContainerPosition()>-5&&(a=500),this._isLoop()?this.getContainerPosition()<-(this._getRealTotalItems()-this.items())*s+5&&(a=500):this.getContainerPosition()<-(this.getTotalItems()-this.items())*s+5&&(a=500),T<30&&T>-30&&(a=500),c.style.transitionDuration=a+"ms",u.resetTransition=function(){return u._isLoop()&&(u.getCurrentItem()===u.getTotalItems()&&(c.style.transition="none",u.goToItem(0),c.style.transition=""),this.getCurrentItem()===-1&&(c.style.transition="none",this.goToItem(this.getTotalItems()-1),c.style.transition="")),c.style.transitionDuration=""},u.listen(c,"transitionend","resetTransition"),!(window.scrolling!==!1&&void 0!==window.scrolling||window.touchScroll!==!1&&void 0!==window.touchScroll)&&(T>2||T<-2))if(this._isLoop())for(;r<this._getRealTotalItems();)f=-Math.round(n*(r+this.itemsToPrepend.length)*1e3)/1e3,e=-Math.round(n*(r+this.itemsToPrepend.length+1)*1e3)/1e3,m=Math.round(1e3*(f-e))/1e3,o=e+m/2,v=f-m/2,d<0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r+1),d>0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r),this.getContainerPosition()<f&&this.getContainerPosition()>=o&&this.goToItem(r),this.getContainerPosition()<v&&this.getContainerPosition()>=e&&this.goToItem(r+1),r++;else for(;r<this.getTotalItems();)f=-Math.round(s*r*1e3)/1e3,e=-Math.round(s*(r+1)*1e3)/1e3,m=Math.round(1e3*(f-e))/1e3,o=e+m/2,v=f-m/2,d<0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r+1),d>0&&_<150&&this.getContainerPosition()<f&&this.getContainerPosition()>=e&&this.goToItem(r),this.getContainerPosition()<f&&this.getContainerPosition()>=o&&this.goToItem(r),this.getContainerPosition()<v&&this.getContainerPosition()>=e&&this.goToItem(r+1),r++;return window.movingCarousel=!1,window.touchScroll=!1,window.touching=!1}},_loop:function(){var t,e,o,i,r;if(o=this,o._isLoop())return i=o.querySelector(".paper-carousel_wrapper"),r=0,o.itemsToAppend=[],o.itemsToPrepend=[],e=o.querySelectorAll(".paper-carousel_wrapper .cloned"),t=function(){var t;return t=[],[].forEach.call(i.children,function(e,i){var r;if(i<o.items()&&(r=e.cloneNode(!0),r.classList.add("cloned"),o.itemsToAppend.push(r)),i>=o.getTotalItems()-o.items()&&i<=o.getTotalItems())return t.push(e)}),[].forEach.call(t,function(t,e){var i;if(e<o.items())return i=t.cloneNode(!0),i.classList.add("cloned"),o.itemsToPrepend.push(i)})},e.length>0?[].forEach.call(e,function(o,i){if(o.remove(),i===e.length-1)return t()}):t(),[].forEach.call(o.itemsToAppend,function(t,e){return i.appendChild(t)}),[].forEach.call(o.itemsToPrepend.reverse(),function(t,e){return i.insertBefore(t.cloneNode(!0),i.children[0])})},_autoPlay:function(){var t,e;if(e=this,t=null!==e.getAttribute("autoplaytime")&&void 0!==e.getAttribute("autoplaytime")?e.getAttribute("autoplaytime"):6e3,e._isAutoplay())return e.autoPlayInterval=setInterval(function(){return e._isLoop()?e.goToNextItem():e.getCurrentItem()+1<e.getTotalItems()?e.goToNextItem():e.goToItem(0)},t)},_disableAutoPlay:function(){var t;if(t=this,t._isAutoplay())return clearInterval(t.autoPlayInterval),t._isAutoplay=function(){return!1}},_onDrag:function(){var t,e;return t=this,e=t.querySelector(".paper-carousel_wrapper"),t.listen(this.$$(".paper-carousel_wrapper"),"track","_getDragState"),e.style.touchAction=""},_setInitialPosition:function(){var t,e;return t=this,e=t.querySelector(".paper-carousel_wrapper"),e.style.transition="none",t.goToItem(0),e.style.transition="",t.initialize=!0},refresh:function(){return this._setContainerSize(),this._printControls(!0),this._printDots(!0),this._onResize()},ready:function(){return this.itemsToAppend=[],this.itemsToPrepend=[],this._createOnMoveEvent()},attached:function(){var t;return t=this,this.async(function(){return setTimeout(function(){return t._onLoad()},0)})},_onLoad:function(){return this._onDrag(),this._onResize(),this._setInitialPosition(),this._transitionSpeed(),this._autoPlay()},_onResize:function(){if(this._loop(),this._setContainerSize(),this._printControls(),this._printDots(),this.initialize===!0)return this.goToItem(this.currentItem)}})}).call(this);</script>
+</dom-module><dom-module id="des-prev-button" assetpath="../des_components/">
+    <style>
+    </style>
+
     <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                A complete list for all type of tables.
-            </div>
-        </des-card-help>
-
-
+        <paper-button id="prev" onclick="_prevPage">
+            <iron-icon icon="image:navigate-before"></iron-icon>
+            Prev
+        </paper-button>
 
     </template>
 
     <script>
+
         Polymer({
-            is: "des-all-tables-help",
-            properties: {}
+            is: "des-prev-button",
+            properties:{
+                cid:{
+                    type: String,
+                    value: '',
+                },
+            },
 
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-coadds-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                    You can upload a csv file with positions or enter a list manually. The jobs is submitted asynchronously.
-                    Check <b>My Jobs</b> tab to see the status of your jobs.
-        
-
-
-
-    </div></des-card-help></template>
-
-    <script>
-        Polymer({
-            is: "des-coadds-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-example-query-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                Click on
-                <paper-button class="SeeFilesButton" raised="">See query</paper-button>  button to see the SQL code.
-                Inside the detail page, click on
-                <paper-button class="indigo" raised="">Copy query</paper-button> to extract the query command to DB access page.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-example-query-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-footprint-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                Search a position to see the results.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-footprint-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-home-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                This help box contains tips and basic information on each page as well as some actionable items.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-home-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-my-jobs-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles">
-            paper-icon-item {
-                --paper-item-disabled-color: black;
+            _prevPage: function() {
+                document.getElementById(this.cid).goToPrevPage();
             }
-            paper-item {
-                --paper-item-disabled-color: black;
-                color: black;
-                --paper-item-focused: {
-                };
-                --paper-item-selected: {
-                    background: var(--paper-amber-50) ;
-                };
-                --paper-item-focused-before: {
-                    opacity:0.0;
-                };
-            }
-            .status {
-                display: inline-block;
-                box-sizing: border-box;
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                background: var(--paper-yellow-500);
-            }
-            .green {background: var(--paper-green-500);}
-            .red {background: var(--paper-red-500);}
-
-        </style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                <p> Click on <iron-icon icon="launch"></iron-icon> or <iron-icon icon="assignment"></iron-icon> to see the results or log-file for an individual Job.
-                    Use <iron-icon icon="icons:highlight-off"></iron-icon> to stop a running Job.
-                    Click on
-                    <iron-icon icon="icons:create"></iron-icon>
-                    to view and edit the name for an individual Job.
-
-                    </p><hr class="des-hr">
-                    Query Job:
-                        - Click on
-                        <paper-button class="SeeFilesButton" raised="">query</paper-button> to see the query.
-                        - CLick on
-                        <paper-button class="SeeFilesButton" raised=""> Files</paper-button> to see the file.
-                    <hr class="des-hr">
-                    Cutouts Job:
-                    - Click on
-                    <paper-button class="SeeFilesButton" raised="">cutouts</paper-button> to see the results.
-
-                <p></p>
-
-                <p>
-                    Select one or more jobs for deletion.
-                    See legends below.
-                </p>
-
-                <hr class="des-hr">
-
-                <paper-item disabled="">
-                    <paper-item-body>
-                        Legends
-                    </paper-item-body>
-                </paper-item>
-                <!--<div class="horizontal layout start justified">-->
-                <paper-icon-item disabled="">
-                    <div class="status green" item-icon=""></div>
-                    <paper-item-body>
-                        Completed
-                    </paper-item-body>
-                </paper-icon-item>
-
-                <paper-icon-item disabled="">
-                    <div class="status" item-icon=""></div>
-                    <paper-item-body>
-                        Running
-                    </paper-item-body>
-                </paper-icon-item>
-
-                <paper-icon-item disabled="">
-                    <div class="status red" item-icon=""></div>
-                    <paper-item-body>
-                        Canceled
-                    </paper-item-body>
-                </paper-icon-item>
-                <!--</div>-->
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-my-jobs-help",
-            properties: {}
-
         });
-
     </script>
 </dom-module>
-<dom-module id="des-my-tables-help" assetpath="../des_components/des-help/">
+<dom-module id="des-next-button" assetpath="../des_components/">
+    <style>
+    </style>
+
     <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                This is a complete list of your tables only.
-            </div>
-        </des-card-help>
-
+        <paper-button class="next" on-tap="_nextPage">
+            Next
+            <iron-icon icon="image:navigate-next"></iron-icon>
+        </paper-button>
 
 
     </template>
 
     <script>
         Polymer({
-            is: "des-my-tables-help",
-            properties: {}
+            is: "des-next-button",
+            properties:{
+                cid:{
+                    type: String,
+                    value: '',
+                },
+            },
 
+            _nextPage: function() {
+                console.log(this.cid);
+                document.getElementById(this.cid).goToNextPage();
+            },
         });
-
-    </script>
-</dom-module>
-<dom-module id="des-positions-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                Enter the value of coordinates, separate them by comma.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-positions-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-query-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                Type SQL command in the query box.
-                <hr class="des-hr">
-
-                Click on
-                <paper-button id="subQueryHelp" class="indigo" raised="">Submit Job</paper-button> to submit a job.
-                <hr class="des-hr">
-                Click on
-                <paper-button class="indigo" raised="">Clear</paper-button> to clear all the input.<br>
-                <hr class="des-hr">
-
-                Click on
-                <paper-button class="indigo" raised="">Check</paper-button> to check valid input.<br>
-                <hr class="des-hr">
-
-                Click on
-                <paper-button class="indigo" raised="">Quick</paper-button> to get a quick peek of the query result.<br>
-
-                <hr class="des-hr">
-                Click on
-                <paper-button class="indigo" raised="">Example Query</paper-button> to see some example queries.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-query-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-results-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                This is the help for results.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-results-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-thumb-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                This is the help for thumb.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-thumb-help",
-            properties: {}
-
-        });
-
-    </script>
-</dom-module>
-<dom-module id="des-help-help" assetpath="../des_components/des-help/">
-    <template>
-        <style include="shared-styles"></style>
-
-        <des-card-help heading="Help">
-            <div class="card-content">
-                Use the form to submit your question.
-            </div>
-        </des-card-help>
-
-
-
-    </template>
-
-    <script>
-        Polymer({
-            is: "des-help-help",
-            properties: {}
-
-        });
-
     </script>
 </dom-module>
 </div></body></html>
