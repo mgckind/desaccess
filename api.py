@@ -242,6 +242,11 @@ class MyJobsHandler(BaseHandler):
             delt = (datetime.datetime.now()-dd).total_seconds()
             jelapsed.append(humantime(delt)+" ago")
             jwarning.append(delt >= 10*60)
+            if delt >= 30*60:
+                jfiles_bool.pop()
+                jfiles_bool.append(False)
+                jelapsed.pop()
+                jelapsed.append(humantime(delt)+" ago (Expired)")
         out_dict = [dict(job=jjob[i], status=jstatus[i], time=jtime[i], elapsed=jelapsed[i],
                     jquery=jquery[i], jfiles=jfiles[i], jbool=jfiles_bool[i], user=loc_user,
                     jsizes=jsizes[i], jname=jname[i], jobtype=jobtype[i],
