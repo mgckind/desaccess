@@ -324,7 +324,7 @@ def run_quick(query, filename, db, username, lp, jid, email, compression):
                 df = cursor.execute(query)
                 connection.con.commit()
                 response['status'] = 'ok'
-                response['data'] = 'Done!'
+                response['data'] = 'Done! (See results below)'
             except Exception as e:
                 response['status'] = 'error'
                 response['data'] = str(e).strip()
