@@ -241,8 +241,8 @@ class MyJobsHandler(BaseHandler):
                 jquery_bool.append(True)
             delt = (datetime.datetime.now()-dd).total_seconds()
             jelapsed.append(humantime(delt)+" ago")
-            jwarning.append(delt >= 10*60)
-            if delt >= 30*60:
+            jwarning.append(delt >= 3600*24)
+            if delt >= 3600*24*2:
                 jfiles_bool.pop()
                 jfiles_bool.append(False)
                 jelapsed.pop()
