@@ -127,7 +127,7 @@ class QueryHandler(BaseHandler):
             try:
                 run = ea_tasks.run_query.apply_async(args=[query, filename, db,
                                                      loc_user, lp.decode(), jobid,
-                                                     query_email, compression], task_id=jobid)
+                                                     query_email, compression], retry=True, task_id=jobid)
             except:
                 pass
             response['data'] = 'Job {0} submitted'.format(jobid)
@@ -139,7 +139,7 @@ class QueryHandler(BaseHandler):
                 json.dump(response, fp)
         elif query_kind == "quick":
             run = ea_tasks.run_query(query, filename, db, loc_user, lp.decode(), jobid,
-                                     query_email, compression, timeout=60)
+                                     query_email, compression, timeout=30)
             response = run
         elif query_kind == "check":
             run = ea_tasks.check_query(query, db, loc_user, lp.decode())
