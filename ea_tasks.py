@@ -101,6 +101,21 @@ class CustomTask(Task):
         con.close()
         requests.post(url, data=retval, verify=False)
 
+class CustomTask2(Task):
+
+    abstract = None
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        url = Settings.ROOT_URL+'/easyweb/pusher/'
+        requests.post(url, data={'jobid': task_id}, verify=False)
+
+    def after_return(self, status, retval, task_id, args, kwargs, einfo):
+        try:
+            test = retval['status']
+        except:
+            return
+        url = Settings.ROOT_URL+'/easyweb/pusher/'
+        requests.post(url, data=retval, verify=False)
 
 def check_query(query, db, username, lp):
     response = {}
@@ -257,6 +272,73 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
         print('Exiting')
         raise
 
+def notify(jobid):
+    print('*****')
+    url = Settings.ROOT_URL+'/easyweb/pusher/'
+    resp = {}
+    resp['status'] = 'error'
+    resp['data'] = 'Time Exceeded (30 sec)'
+    resp['kind'] = 'query'
+    resp['jobid'] = jobid
+    resp['stopJob'] = 'yes'
+    requests.post(url, data=resp, verify=False)
+
+@app.task(base=CustomTask2, soft_time_limit=25, time_limit=35)
+def run_quick(query, filename, db, username, lp, jid, email, compression):
+    response = {}
+    response['user'] = username
+    response['elapsed'] = 0
+    response['jobid'] = jid
+    response['files'] = None
+    response['sizes'] = None
+    response['email'] = 'no'
+    try:
+        user_folder = os.path.join(Settings.WORKDIR, username)+'/'
+        if filename is not None:
+            if not os.path.exists(os.path.join(user_folder, jid)):
+                os.mkdir(os.path.join(user_folder, jid))
+        jsonfile = os.path.join(user_folder, jid+'.json')
+        cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
+        dlp = cipher.decrypt(base64.b64decode(lp)).strip()
+        tt = threading.Timer(25, notify, [jid])
+        connection = ea.connect(db, user=username, passwd=dlp.decode())
+        cursor = connection.cursor()
+        tt.start()
+        if query.lower().lstrip().startswith('select'):
+            response['kind'] = 'select'
+            try:
+                df = connection.query_to_pandas(query)
+                data = df.to_json(orient='records')
+                df.to_csv(os.path.join(user_folder, 'quickResults.csv'), index=False)
+                response['status'] = 'ok'
+                response['data'] = data
+            except Exception as e:
+                print('query job finished')
+                print(str(e).strip())
+                response['status'] = 'error'
+                response['data'] = str(e).strip()
+                response['kind'] = 'query'
+        else:
+            response['kind'] = 'query'
+            try:
+                df = cursor.execute(query)
+                connection.con.commit()
+                response['status'] = 'ok'
+                response['data'] = 'Done!'
+            except Exception as e:
+                response['status'] = 'error'
+                response['data'] = str(e).strip()
+        with open(jsonfile, 'w') as fp:
+            json.dump(response, fp)
+        cursor.close()
+        connection.close()
+    except Exception as e:
+        print('tiimes')
+        response['status'] = 'error'
+        response['data'] = str(e).strip()
+        response['kind'] = 'query'
+    tt.cancel()
+    return response
 
 
 #@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)

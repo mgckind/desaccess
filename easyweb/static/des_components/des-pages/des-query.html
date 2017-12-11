@@ -144,7 +144,7 @@
     </paper-dialog>
     <des-card heading=" Query box">
     <div class="content">
-    Insert your query in the box below. Data results for "Quick" Jobs (~1 min.) will be displayed at the bottom.
+    Insert your query in the box below. Data results for "Quick" Jobs (30 sec.) will be displayed at the bottom.
     </div>
 <div class="query-box" style="padding-right:0px">
 <!--
@@ -157,14 +157,14 @@
         <span class="queryMsg" style="color: green"> {{msg}}</span>
     </template>
     <template is="dom-if" if={{!isOk}} >
-        <span class="queryMsg" style="color: red"> {{msg}}</span>
+        <span id="errqueryMsg" class="queryMsg" style="color: red"> {{msg}}</span>
     </template>
 </template>
 <hr />
 <paper-button id="subQuery" class="indigo medium" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
 <paper-button class="indigo medium" raised on-tap="clearQueryBox">Clear</paper-button>
 <paper-button class="indigo medium" raised on-tap="_checkSyntax">Check</paper-button>
-<paper-button class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>
+<paper-button id="QuickQuery" class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>
 <paper-spinner id="querySpinner" class="big"></paper-spinner>
 <a href = "/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">
 <paper-button style="position:absolute; right:10px" class="indigo medium" raised >See Examples</paper-button>
@@ -299,9 +299,19 @@ Polymer({
                 return
             }
             _self.jobid = tmp.out;
-            console.log(_self.jobid)
+            console.log(_self.jobid+'from socket');
+            if (tmp.stopJob == 'yes') {
+
+                document.getElementById("querySpinner").active = false;
+                document.getElementById('QuickQuery').disabled=false;
+                _self.msg = 'Time Exceeded (30 sec), Please try to re-submit the job';
+                _self.isQuery = true;
+                _self.isOk = false;
+            }
+            else{
             document.getElementById("getMyResponse").generateRequest();
                 _self.msg = tmp.result;
+            }
             }
     },
     _returnVal: function(item,key) {return item[key];},
@@ -333,10 +343,11 @@ Polymer({
     },
     _complete: function(e){
         var _self = this;
-        document.getElementById("querySpinner").active = false;
         _self.data = e.detail.response;
         _self.isOk = true;
         if (_self.data.kind == 'select') {
+        document.getElementById("querySpinner").active = false;
+        document.getElementById('QuickQuery').disabled=false;
             _self.isSelect = true;
             _self.isQuery = true;
             _self.msg = 'Done!';
@@ -346,6 +357,8 @@ Polymer({
             _self.idx = "IDX";
         };
         if (_self.data.kind == 'query') {
+        document.getElementById("querySpinner").active = false;
+        document.getElementById('QuickQuery').disabled=false;
             _self.isQuery = true;
             _self.isSelect = false;
             _self.msg = _self.data.data;
@@ -353,6 +366,8 @@ Polymer({
             if (_self.data.status != 'ok') {_self.isOk = false;}
         };
         if (_self.data.kind == 'check') {
+        document.getElementById("querySpinner").active = false;
+        document.getElementById('QuickQuery').disabled=false;
             _self.isQuery = true;
             _self.isSelect = false;
             _self.msg = _self.data.data;
@@ -365,6 +380,7 @@ Polymer({
             bbs[i].disabled = false;
         };
         if (this.querykind == 'submit') {
+           document.getElementById("querySpinner").active = false;
             if (_self.isOk){
             document.querySelector('#toast1').show();}
             document.getElementById("getMyJobs").generateRequest();
@@ -392,6 +408,8 @@ Polymer({
         app.editor.focus();
         app.editor.execCommand('goLineDown');
         document.getElementById('inputOutputFile').disabled = true;
+        document.getElementById("querySpinner").active = false;
+        document.getElementById('QuickQuery').disabled=false;
         document.getElementById('inputOutputCheck').checked = false;
         document.getElementById('inputOutputFile').value = '';
         document.getElementById('queryname').value = '';
@@ -431,6 +449,7 @@ Polymer({
         document.getElementById('inputOutputCheck').checked = false;
         document.getElementById('inputOutputFile').disabled = true;
         document.getElementById('subQuery').disabled=true;
+        document.getElementById('QuickQuery').disabled=true;
         this.msg='';
         this.querystr = app.editor.getValue();
         this.querykind = 'quick';

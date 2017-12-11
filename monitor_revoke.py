@@ -1,7 +1,18 @@
-from celery import Celery
-import Settings
+
 import yaml
 import MySQLdb as mydb
+import requests
+import json
+
+
+def notify():
+    print('*****')
+    url=Settings.ROOT_URL+'/easyweb/pusher/'   
+    resp = {}
+    resp['status'] = 'error'
+    resp['data'] = 'Time Exceeded (30 sec)'
+    resp['kind'] = 'query'
+    requests.post(url, data=resp, verify=False)
 
 
 def my_monitor(app):
@@ -24,6 +35,7 @@ def my_monitor(app):
 
         print('TASK REVOKED: %s[%s] %s' % (
             task.name, task.uuid, task.info(),))
+        print(task.exception)
 
     with app.connection() as connection:
         recv = app.events.Receiver(connection, handlers={
