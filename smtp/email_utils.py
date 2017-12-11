@@ -66,7 +66,7 @@ def send_reset(email, username, url):
         "email_link": Settings.ROOT_URL+'/easyweb/email/',
         "username": username,
         "msg": """You have have requested to reset your password <br > The reset link is valid
-        for the next 12 hours""",
+        for the next 24 hours""",
         "action": "Click Here To Reset Your Password",
         "link": link,
     }
@@ -86,7 +86,7 @@ def send_test(username):
         "email_link": Settings.ROOT_URL+'/easyweb/email/',
         "username": username,
         "msg": """You have have requested to reset your password <br > The reset link is valid
-        for the next 12 hours""",
+        for the next 24 hours""",
         "action": "Click Here To Reset Your Password",
         "link": link,
     }

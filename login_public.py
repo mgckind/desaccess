@@ -73,7 +73,7 @@ class EmailHandler(BaseHandler):
 
 class ResetHandler(BaseHandler):
     def get(self, slug):
-        username, msg = db_utils.valid_url(slug, 3600)
+        username, msg = db_utils.valid_url(slug, 24*3600)
         if username is not None:
             self.render('reset.html', errormessage='', version=__version__, toast='no', url=slug, user=username)
         else:
@@ -98,7 +98,7 @@ class ResetHandler(BaseHandler):
         valid = len(password) >= 6
         url = self.get_argument("url", "")
         print(username, password, url)
-        username2, msg = db_utils.valid_url(url, 3600+120)
+        username2, msg = db_utils.valid_url(url, 24.5*3600)
         print(username2, msg)
         if username == username2:
             print('valid', valid)
@@ -115,7 +115,7 @@ class ResetHandler(BaseHandler):
 
 class ActivateHandler(BaseHandler):
     def get(self, slug):
-        username, msg = db_utils.valid_url(slug, 9000)
+        username, msg = db_utils.valid_url(slug, 24*3600)
         if username is not None:
             db_utils.unlock_user(username)
             msg = 'Thanks for activating your account'
