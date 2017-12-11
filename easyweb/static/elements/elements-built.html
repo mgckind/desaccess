@@ -47019,7 +47019,7 @@ function keysrt(key,desc) {
          <form>
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="New Password" value="{{password}}" required="">
+          <paper-password-input label="New Password  (Minimum 6 characters)" value="{{password}}" required="">
           </paper-password-input>
           <paper-password-input id="form_newpassword" on-invalid-changed="_enable" name="password" label="Confirm New Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -47113,8 +47113,16 @@ function keysrt(key,desc) {
     afterNewPasswordForm: function(e){
      var _self = this;
      document.getElementById('LoginSpinnerReset').active = false;
+     _self.data = e.detail.response;
+     console.log(_self.data.msg);
+         if (_self.data.errno == '0') {
      window.location.href = "/easyweb/logout/";
-
+      }
+      else {
+      var button = document.getElementById('NewPassButton');
+      button.disabled = false;
+     this.error = _self.data.msg;
+      }
     },
     _updateToast: function(e) {
       if (this.toastpass=='yes'){
