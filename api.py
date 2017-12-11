@@ -181,7 +181,7 @@ class MyJobsHandler(BaseHandler):
         jobid = self.get_argument('jobid')
         app = Celery()
         app.config_from_object('config.celeryconfig')
-        app.control.revoke(jobid, terminate=True)
+        app.control.revoke(jobid, terminate=True, signal='SIGUSR1')
         app.close()
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
