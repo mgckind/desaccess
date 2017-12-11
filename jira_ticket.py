@@ -67,5 +67,12 @@ def create_ticket(first, last, email, topics, subject, question):
         'description' : body,
         #'reporter' : {'name': 'desdm-wufoo'},
         }
-    jira.create_issue(fields=issue)
+    temp = jira.create_issue(fields=issue)
+    try:
+        ticket = temp.key
+        valid = True
+    except:
+        ticket = ''
+        valid = False
+    return valid, ticket
     #send_email()

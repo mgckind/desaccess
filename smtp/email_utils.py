@@ -18,10 +18,10 @@ def render(tpl_path, context):
 
 
 class SingleEmailHeader(object):
-    def __init__(self, username, toemail, context, char='r'):
+    def __init__(self, username, toemail, context, char='r', ps=None):
         self.toemail = toemail
-        self.server = 'smtp.ncsa.illinois.edu'
-        # self.server = 'localhost'
+        #self.server = 'smtp.ncsa.illinois.edu'
+        self.server = 'localhost'
         self.fromemail = 'devnull@ncsa.illinois.edu'
         self.s = smtplib.SMTP(self.server)
         self.msg = MIMEMultipart('alternative')
@@ -31,6 +31,11 @@ class SingleEmailHeader(object):
         self.uid = str(uuid.uuid4())+'-{0}'.format(char)+base64.b64encode(username.encode()).decode('ascii')
         self.context = context
         self.context['email_link'] += self.uid
+        if ps is None:
+            self.ps = 'PS: This is the full link you can copy/paste into the browser:<br /> <span style="font-size: 11px">{link}</span>'.format(link=self.context['link'])
+        else:
+            self.ps = ps
+        self.context['ps'] = self.ps
         self.html = render('easyweb/static/internal/templates/template.html', self.context)
         with open('easyweb/static/internal/emails/'+self.uid+'.html', 'w') as ff:
             ff.write(self.html)
@@ -111,6 +116,26 @@ def send_note(username, jobid, toemail):
         "link": link,
     }
     header = SingleEmailHeader(username, toemail, context, char='c')
+    MP1 = MIMEText(header.html, 'html')
+    header.msg.attach(MP1)
+    header.s.sendmail(header.fromemail, [header.toemail, bcc], header.msg.as_string())
+    header.s.quit()
+    return "Email Sent to %s" % header.toemail
+
+
+def send_thanks(name, email, subject, ticket):
+    bcc = 'mgckind@gmail.com'
+    context = {
+        "Subject": "[{0}] : {1} ".format(ticket, subject),
+        "email_link": Settings.ROOT_URL+'/easyweb/email/',
+        "username": name,
+        "msg": """We have received your form and a ticket with name <b>{ticket}</b> <br>
+         was created. We will get in touch with you soon. Please use the ticket <br>
+         name and number  for  future communications.""".format(ticket=ticket),
+        "action": "No extra action is required",
+        "link": "#",
+    }
+    header = SingleEmailHeader(name, email, context, char='j', ps='')
     MP1 = MIMEText(header.html, 'html')
     header.msg.attach(MP1)
     header.s.sendmail(header.fromemail, [header.toemail, bcc], header.msg.as_string())

@@ -10,6 +10,7 @@ import MySQLdb as mydb
 from celery import Celery
 import yaml
 import jira_ticket
+from smtp import email_utils
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -395,7 +396,7 @@ class HelpHandler(tornado.web.RequestHandler):
     def post(self):
         arguments = { k.lower(): self.get_argument(k) for k in self.request.arguments }
         print(arguments)
-        name = self.get_argument("name", "")
+        name = self.get_argument("name", "User")
         last = self.get_argument("lastname", "")
         email = self.get_argument("email", "")
         subject = self.get_argument("subject", "")
@@ -403,7 +404,9 @@ class HelpHandler(tornado.web.RequestHandler):
         topic = self.get_argument("topic", "")
         topics = topic.replace(',', '\n')
         print(name, last, email, topic, question)
-        jira_ticket.create_ticket(name, last, email, topics, subject, question)
+        valid, ticket = jira_ticket.create_ticket(name, last, email, topics, subject, question)
+        print(valid)
+        email_utils.send_thanks(name, email, subject, ticket)
         self.set_status(200)
         self.flush()
         self.finish()
