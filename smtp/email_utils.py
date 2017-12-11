@@ -20,8 +20,8 @@ def render(tpl_path, context):
 class SingleEmailHeader(object):
     def __init__(self, username, toemail, context, char='r', ps=None):
         self.toemail = toemail
-        #self.server = 'smtp.ncsa.illinois.edu'
-        self.server = 'localhost'
+        self.server = 'smtp.ncsa.illinois.edu'
+        # self.server = 'localhost'
         self.fromemail = 'devnull@ncsa.illinois.edu'
         self.s = smtplib.SMTP(self.server)
         self.msg = MIMEMultipart('alternative')
