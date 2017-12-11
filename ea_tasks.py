@@ -52,6 +52,8 @@ class CustomTask(Task):
         requests.post(url, data={'jobid': task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
+        print(einfo)
+        print(status)
         print('Done?')
         try:
             test = retval['status']
@@ -62,13 +64,18 @@ class CustomTask(Task):
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         cur = con.cursor()
-        cur.execute("SELECT name from Jobs where job = '{}'".format(task_id))
+        cur.execute("SELECT status,name from Jobs where job = '{}'".format(task_id))
         cc = cur.fetchone()
-        namejob = cc[0]
+        statusjob = cc[0]
+        print(statusjob)
+        namejob = cc[1]
         file_list = json.dumps(retval['files'])
         size_list = json.dumps(retval['sizes'])
         if retval['status'] == 'ok':
-            temp_status = 'SUCCESS'
+            if statusjob == 'REVOKE':
+                temp_status = 'REVOKE'
+            else:
+                temp_status = 'SUCCESS'
             if retval['email'] != 'no':
                 user = retval['user']
                 email = retval['email']
@@ -122,7 +129,8 @@ def check_query(query, db, username, lp):
     return response
 
 
-@app.task(base=CustomTask)
+@app.task(base=CustomTask, soft_time_limit=3000, time_limit=3600)
+#@app.task(base=CustomTask)
 def run_query(query, filename, db, username, lp, jid, email, compression, timeout=None):
     """
     Run a query
@@ -153,92 +161,102 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
         - sizes   : list of  sizes of created filenames
 
     """
-    response = {}
-    response['user'] = username
-    response['elapsed'] = 0
-    response['jobid'] = jid
-    response['files'] = None
-    response['sizes'] = None
-    response['email'] = 'no'
-    if email != "":
-        response['email'] = email
-    user_folder = os.path.join(Settings.WORKDIR, username)+'/'
-    if filename is not None:
-        if not os.path.exists(os.path.join(user_folder, jid)):
-            os.mkdir(os.path.join(user_folder, jid))
-    jsonfile = os.path.join(user_folder, jid+'.json')
-    cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
-    dlp = cipher.decrypt(base64.b64decode(lp)).strip()
     try:
-        connection = ea.connect(db, user=username, passwd=dlp.decode())
-        cursor = connection.cursor()
-    except Exception as e:
-            response['status'] = 'error'
-            response['data'] = str(e).strip()
-            response['kind'] = 'query'
-            with open(jsonfile, 'w') as fp:
-                json.dump(response, fp)
-            return response
-    if timeout is not None:
-        tt = threading.Timer(timeout, connection.con.cancel)
-        tt.start()
-    t1 = time.time()
-    if query.lower().lstrip().startswith('select'):
-        response['kind'] = 'select'
+        response = {}
+        response['user'] = username
+        response['elapsed'] = 0
+        response['jobid'] = jid
+        response['files'] = None
+        response['sizes'] = None
+        response['email'] = 'no'
+        if email != "":
+            response['email'] = email
+        user_folder = os.path.join(Settings.WORKDIR, username)+'/'
+        if filename is not None:
+            if not os.path.exists(os.path.join(user_folder, jid)):
+                os.mkdir(os.path.join(user_folder, jid))
+        jsonfile = os.path.join(user_folder, jid+'.json')
+        cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
+        dlp = cipher.decrypt(base64.b64decode(lp)).strip()
         try:
-            if filename is not None:
-                outfile = os.path.join(user_folder, jid, filename)
-                if compression:
-                    connection.compression = True
-                connection.query_and_save(query, outfile)
-                if timeout is not None:
-                    tt.cancel()
-                t2 = time.time()
-                job_folder = os.path.join(user_folder, jid)+'/'
-                files = glob.glob(job_folder+'*')
-                response['files'] = [os.path.basename(i) for i in files]
-                response['sizes'] = [get_filesize(i) for i in files]
-                data = 'Job {0} done'.format(jid)
+            connection = ea.connect(db, user=username, passwd=dlp.decode())
+            cursor = connection.cursor()
+        except Exception as e:
+                print(str(e).strip())
+                response['status'] = 'error'
+                response['data'] = str(e).strip()
                 response['kind'] = 'query'
-            else:
-                df = connection.query_to_pandas(query)
+                with open(jsonfile, 'w') as fp:
+                    json.dump(response, fp)
+                return response
+        if timeout is not None:
+            tt = threading.Timer(timeout, connection.con.cancel)
+            tt.start()
+        t1 = time.time()
+        if query.lower().lstrip().startswith('select'):
+            response['kind'] = 'select'
+            try:
+                if filename is not None:
+                    outfile = os.path.join(user_folder, jid, filename)
+                    if compression:
+                        connection.compression = True
+                    connection.query_and_save(query, outfile)
+                    if timeout is not None:
+                        tt.cancel()
+                    t2 = time.time()
+                    job_folder = os.path.join(user_folder, jid)+'/'
+                    files = glob.glob(job_folder+'*')
+                    response['files'] = [os.path.basename(i) for i in files]
+                    response['sizes'] = [get_filesize(i) for i in files]
+                    data = 'Job {0} done'.format(jid)
+                    response['kind'] = 'query'
+                else:
+                    df = connection.query_to_pandas(query)
+                    if timeout is not None:
+                        tt.cancel()
+                    data = df.to_json(orient='records')
+                    df.to_csv(os.path.join(user_folder, 'quickResults.csv'), index=False)
+                    t2 = time.time()
+                response['status'] = 'ok'
+                response['data'] = data
+            except Exception as e:
                 if timeout is not None:
                     tt.cancel()
-                data = df.to_json(orient='records')
-                df.to_csv(os.path.join(user_folder, 'quickResults.csv'), index=False)
                 t2 = time.time()
-            response['status'] = 'ok'
-            response['data'] = data
-        except Exception as e:
-            if timeout is not None:
-                tt.cancel()
-            t2 = time.time()
-            response['status'] = 'error'
-            response['data'] = str(e).strip()
+                print('query job finished')
+                print(str(e).strip())
+                response['status'] = 'error'
+                response['data'] = str(e).strip()
+                response['kind'] = 'query'
+                raise
+        else:
             response['kind'] = 'query'
-    else:
-        response['kind'] = 'query'
-        try:
-            df = cursor.execute(query)
-            connection.con.commit()
-            if timeout is not None:
-                tt.cancel()
-            t2 = time.time()
-            response['status'] = 'ok'
-            response['data'] = 'Done!'
-        except Exception as e:
-            if timeout is not None:
-                tt.cancel()
-            t2 = time.time()
-            response['status'] = 'error'
-            response['data'] = str(e).strip()
+            try:
+                df = cursor.execute(query)
+                connection.con.commit()
+                if timeout is not None:
+                    tt.cancel()
+                t2 = time.time()
+                response['status'] = 'ok'
+                response['data'] = 'Done!'
+            except Exception as e:
+                if timeout is not None:
+                    tt.cancel()
+                t2 = time.time()
+                response['status'] = 'error'
+                response['data'] = str(e).strip()
 
-    response['elapsed'] = t2 - t1
-    with open(jsonfile, 'w') as fp:
-        json.dump(response, fp)
-    cursor.close()
-    connection.close()
-    return response
+        response['elapsed'] = t2 - t1
+        with open(jsonfile, 'w') as fp:
+            json.dump(response, fp)
+        cursor.close()
+        connection.close()
+        return response
+    except Exception as e:
+        print(str(e).strip())
+        print('Exiting')
+        raise
+
 
 
 #@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)
