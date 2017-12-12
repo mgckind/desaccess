@@ -37,7 +37,7 @@ class CustomTask(Task):
     abstract = None
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        url = Settings.ROOT_URL+'/easyweb/pusher/'
+        url = 'http://localhost:8080/easyweb/pusher/'
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
@@ -59,7 +59,7 @@ class CustomTask(Task):
             test = retval['status']
         except:
             return
-        url = Settings.ROOT_URL+'/easyweb/pusher/'
+        url = 'http://localhost:8080/easyweb/pusher/'
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
@@ -106,7 +106,7 @@ class CustomTask2(Task):
     abstract = None
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        url = Settings.ROOT_URL+'/easyweb/pusher/'
+        url = 'http://localhost:8080/easyweb/pusher/'
         requests.post(url, data={'jobid': task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
@@ -114,7 +114,7 @@ class CustomTask2(Task):
             test = retval['status']
         except:
             return
-        url = Settings.ROOT_URL+'/easyweb/pusher/'
+        url = 'http://localhost:8080/easyweb/pusher/'
         requests.post(url, data=retval, verify=False)
 
 def check_query(query, db, username, lp):

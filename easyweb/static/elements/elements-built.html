@@ -39555,7 +39555,8 @@ Polymer({
 
         var _self = this;
         loc = window.location.host;
-        var ws = new WebSocket("wss://"+loc+"/easyweb/websocket/");
+        //var ws = new WebSocket("wss://"+loc+"/easyweb/websocket/");
+        var ws = new WebSocket("ws://localhost:8080/easyweb/websocket/");
         ws.onmessage = function(e) {
             document.getElementById("getMyJobs").generateRequest();
             try {
