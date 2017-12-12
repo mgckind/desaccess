@@ -1,4 +1,4 @@
-
+import Celery
 import yaml
 import MySQLdb as mydb
 import requests
