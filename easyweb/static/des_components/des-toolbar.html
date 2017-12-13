@@ -39,19 +39,26 @@
         }
        app-toolbar{
            height: 73px;
-           margin-top: 6px;
+           margin-top: 7px;
        }
+
    </style>
 
    <app-toolbar sticky id="mainToolbar" class="black">
         <paper-icon-button class="smallScreen" icon="menu" onclick="drawer.toggle()" drawer-toggle ></paper-icon-button>
+       <a href="/easyweb/">
        <iron-image class = "wideScreen" style="width:60px; height:60px; margin-right:10px" sizing="cover" src="/easyweb/static/images/DESDM_logo.png"></iron-image>
+       </a>
+       <a href="/easyweb/" style="text-decoration: none; color: white">
       <div main-title class="wideScreen">DARK ENERGY SURVEY desaccess </div>
+       </a>
+       <a href="/easyweb/" style="text-decoration: none; color: white">
       <div main-title drawer-toggle class="smallScreen">DES desaccess</div>
+       </a>
 
 
 
-            <paper-menu-button id="profileMenu" no-overlap horizontal-offset="-100" no-animations close-on-activate>
+            <paper-menu-button id="profileMenu" no-overlap horizontal-offset="-100" no-animations close-on-activate style="margin-right: 0px; margin-left:auto;">
               <paper-icon-button icon="social:person" slot="dropdown-trigger" alt="menu" style="width:50px;height: 50px;"></paper-icon-button>
              <iron-icon style="margin-left:-15px;" icon="arrow-drop-down" slot="dropdown-trigger" alt="menu"></iron-icon>
               <paper-listbox slot="dropdown-content">
