@@ -1,0 +1,163 @@
+<dom-module id="des-my-jobs-help">
+    <template>
+        <style include="shared-styles">
+            paper-icon-item {
+                --paper-item-disabled-color: black;
+            }
+            paper-item {
+                --paper-item-disabled-color: black;
+                color: black;
+                --paper-item-focused: {
+                };
+                --paper-item-selected: {
+                    background: var(--paper-amber-50) ;
+                };
+                --paper-item-focused-before: {
+                    opacity:0.0;
+                };
+            }
+            .status {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: var(--paper-yellow-500);
+            }
+            .green {background: var(--paper-green-500);}
+            .red {background: var(--paper-red-500);}
+
+        </style>
+
+        <des-card class="sub-help" heading="Help">
+            <div class="card-content" >
+                <table class="crs-table" style="width:100%">
+                    <tr class="crs-tr">
+                        <th class="crs-th">Button</th>
+                        <th class="crs-th">Description</th>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="launch"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            See the results on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="assignment"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            See the log file on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="icons:highlight-off"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            Stop a running job on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <iron-icon icon="icons:create"></iron-icon>
+                        </td>
+                        <td class="crs-td">
+                            View and edit job name on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <th colspan="2">Query Job</th>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <paper-button class="SeeFilesButton" raised >query</paper-button>
+                        </td>
+                        <td class="crs-td">
+                            See the query on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <paper-button class="SeeFilesButton"  raised> Files</paper-button>
+                        </td>
+                        <td class="crs-td">
+                            See the file on click
+                        </td>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <th colspan="2">Cutouts Job</th>
+                    </tr>
+
+                    <tr class="crs-tr">
+                        <td class="crs-td">
+                            <paper-button class="SeeFilesButton" raised >cutouts</paper-button> to see the results.
+                        </td>
+                        <td class="crs-td">
+                            See the result on click
+                        </td>
+                    </tr>
+
+                </table>
+
+
+                <p>
+                    Select one or more jobs for deletion.
+                    See legends below.
+                </p>
+
+                <hr class="des-hr">
+
+                <paper-item disabled>
+                    <paper-item-body>
+                        Legends
+                    </paper-item-body>
+                </paper-item>
+                <!--<div class="horizontal layout start justified">-->
+                <paper-icon-item disabled>
+                    <div class="status green" item-icon></div>
+                    <paper-item-body>
+                        Completed
+                    </paper-item-body>
+                </paper-icon-item>
+
+                <paper-icon-item disabled>
+                    <div class="status" item-icon></div>
+                    <paper-item-body>
+                        Running
+                    </paper-item-body>
+                </paper-icon-item>
+
+                <paper-icon-item disabled>
+                    <div class="status red" item-icon></div>
+                    <paper-item-body>
+                        Canceled
+                    </paper-item-body>
+                </paper-icon-item>
+                <!--</div>-->
+            </div>
+        </des-card>
+
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-my-jobs-help",
+            properties: {}
+
+        });
+
+    </script>
+</dom-module>

@@ -2,6 +2,7 @@ __pycache__
 *.pyc
 static/workdir/*
 easyweb/static/workdir/*
+easyweb/static/internal/emails/*
 celeryconfig.py
 supervisord.conf
 config/*
@@ -15,3 +16,4 @@ versions/
 venv/
 dump.rdb
 setup.sh
+.access

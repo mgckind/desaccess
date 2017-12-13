@@ -1,0 +1,108 @@
+<dom-module id="des-card-welcome">
+    <style include="shared-styles">
+
+        paper-card {
+            margin: 0 15px 15px 0;
+            border-bottom: 1px solid var(--paper-blue-200);
+            --paper-card-header-color: var(--paper-red-500);
+            --paper-card-background-color: var(--paper-grey-100);
+        }
+        paper-card:hover{
+            box-shadow: 3px 3px 3px 3px #ccc;
+        }
+
+        iron-image {
+            pointer-events: none;
+            @apply --paper-card-header-image;
+        }
+
+
+
+        .card-header {
+            @apply --paper-font-headline;
+        }
+        .card-light {
+            color: var(--paper-grey-600);
+        }
+
+        .card-explore {
+            color: var(--google-blue-500);
+        }
+    </style>
+
+    <template>
+
+        <paper-card id="{{name}}" on-click="change">
+            <iron-image
+                    hidden$="[[!image]]"
+                    src="[[image]]"
+                    alt="[[alt]]"
+                    style="width:300px; height:150px;" sizing="cover"></iron-image>
+
+            <div class="card-content" id="{{name}}" on-click="change" >
+                <div class="card-header" id="{{name}}" on-click="change">{{heading}}
+                </div>
+                <p class="card-light" id="{{name}}" on-click="change">{{desc}}</p>
+            </div>
+            <div class="card-actions" id="{{name}}" on-click="change">
+                <paper-button style="text-transform: none;" id="{{name}}" on-click="change" class="card-explore">More...</paper-button>
+                <!--<paper-button class="card-explore">Explore!</paper-button>-->
+            </div>
+        </paper-card>
+
+
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: "des-card-welcome",
+        properties:{
+            name:{
+                type: String,
+                value: '',
+            },
+            heading:{
+                type: String,
+                value: '',
+            },
+
+            image:{
+                type: String,
+                value: '',
+            },
+
+            alt:{
+                type: String,
+                value: '',
+            },
+
+            desc:{
+                type: String,
+                value: '',
+            }
+
+        },
+        change: function(e){
+
+            var tid = e.target.id;
+            //var sel = 0;
+            //if (tid == 'query') {sel = 1; window.history.pushState('m','title','/easyweb/db-access');};
+            //if (tid == 'allTables') {sel = 2;window.history.pushState('m','title','/easyweb/db-schema');};
+            //if (tid == 'example') {sel = 3;window.history.pushState('m','title','/easyweb/db-examples');};
+            //if (tid == 'coadd') {sel = 4;window.history.pushState('m','title','/easyweb/cutouts');};
+            //if (tid == 'footprint') {sel = 5;window.history.pushState('m','title','/easyweb/footprint');};
+            //if (tid == 'desjobs') {sel = 6;window.history.pushState('m','title','/easyweb/my-jobs');};
+            //if (tid == 'help') {sel = 7;window.history.pushState('m','title','/easyweb/help-form');};
+
+            //var app = document.querySelector('#app');
+            //var pages = document.getElementById("mainPages");
+            //var menu = document.querySelector('paper-menu');
+            //app.selection=sel;
+            //pages.select(sel);
+            //menu.select(sel);
+            //console.log("selected: ", menu.selected);
+        },
+
+    });
+</script>

@@ -1,0 +1,30 @@
+<dom-module id="des-next-button">
+    <style>
+    </style>
+
+    <template>
+        <paper-button class="next" on-tap="_nextPage">
+            Next
+            <iron-icon icon="image:navigate-next"></iron-icon>
+        </paper-button>
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-next-button",
+            properties:{
+                cid:{
+                    type: String,
+                    value: '',
+                },
+            },
+
+            _nextPage: function() {
+                console.log(this.cid);
+                document.getElementById(this.cid).goToNextPage();
+            },
+        });
+    </script>
+</dom-module>

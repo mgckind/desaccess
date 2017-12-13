@@ -36,18 +36,19 @@
 
   <div style="cursor:default;" class="container">
     <!-- https://elements.polymer-project.org/guides/flex-layout -->
-    <paper-card style="cursor:default;" heading="The content of Easyweb are restricted."
+    <paper-card style="cursor:default;" heading="The content of these pages are restricted."
     class="temp">
 
       <div style="cursor:default;" class="box-watermark-logo"></div>
       <div class="card-content">
         <span>Use your DES Public DB credentials. <br />
-            Click <a href="/easyweb/signup/">here</a> to create a new account.</span><br>
-        <span> Fill this <a href='http://desrelease.cosmology.illinois.edu:8888/help' target="_blank">form</a>
+            Click <a href="/easyweb/signup/">here</a> to create a new account.</span><br><br />
+        <span> Fill this <a href='http://des.ncsa.illinois.edu/help' target="_blank">form</a>
              if you have trouble accessing the server</span>
 
         <form id="userpass" action="/easyweb/login/" method="post">
           <input type="hidden" id="hiddenDB" name="database" value="test">
+          <input type="hidden" id="hiddenNext" name="next" value="test">
           <paper-input name="username" label="Username"
           required></paper-input><br>
           <paper-password-input name="password" label="Password"
@@ -84,17 +85,19 @@
 <script>
   Polymer({
     is: "des-login-public",
-
     behaviors: [
       Polymer.IronA11yKeysBehavior
     ],
-
     properties : {
       error :{
         type: String,
         value: '',
       },
       error2 :{
+        type: String,
+        value: '',
+      },
+      next :{
         type: String,
         value: '',
       },
@@ -108,11 +111,9 @@
         value: '',
       }
     },
-
     keyBindings:{
       'enter:keydown':'_clickSubmit1',
     },
-
     _resetForm: function(){
         document.getElementById('resetDialog').open();
     },
@@ -141,13 +142,13 @@
       document.getElementById('ResetFormButton').disabled = true;
       document.getElementById('ResetSpinner').active = true;
     },
-
     _clickSubmit1: function(e) {
         var dd= document.getElementById('resetDialog').opened;
         if (dd) {
             return this._submitReset();
         };
       document.getElementById('hiddenDB').value = 'desdr';
+      document.getElementById('hiddenNext').value = this.next;
       var button1 = document.getElementById('LoginButton1');
       document.getElementById('LoginSpinner1').active = true;
       document.getElementById('userpass').submit();
@@ -155,7 +156,6 @@
       var errm = document.getElementById('divError');
       errm.style.display = "none";
     },
-
     _updateToast: function(e) {
       if (this.toastpass=='yes'){
         console.log('password changed');
@@ -165,9 +165,6 @@
       home: function(event){
         window.open('/easyweb/','_self',false);
       },
-
   });
-
-
 </script>
 </dom-module>

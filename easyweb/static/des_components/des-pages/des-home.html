@@ -1,109 +1,8 @@
 <dom-module id="des-home">
-    <style >
+    <style include="shared-styles">
         :hover {
             cursor: pointer;
         }
-
-        .fabHelp {
-            --paper-fab-background: var(--paper-light-blue-500);
-            position: fixed;
-            top: 85px;
-            right:5px;
-            }
-        div.gallery {
-            display: inline-block;
-            margin:5px;
-            border: 1px solid #CCCCCC;
-            /*float: left;*/
-            width: 100%;
-            max-height: 95%;
-            padding-bottom:50px;
-        }
-
-        div#desjobs {
-            background: url("../../images/jobs.png");
-            background-size:100%;
-            width: 250px;
-            height: 150px;
-            /*height: inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        div#coadd {
-            background: url("../../images/coaadimage.jpg");
-            background-size: cover;
-            width: 250px;
-            height: 150px;
-            /*height: inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-
-
-        }
-
-
-
-        div#footprint {
-            background-image: url("../../images/footprint.png");
-            background-size: cover;
-            width: 250px;
-            /*height:  inherit;*/
-            height: 150px;
-            background-position: center;
-            background-repeat: no-repeat;
-
-        }
-
-        div#query {
-            background-image: url("../../images/sqlquery.jpg");
-            background-size: cover;
-            width: 250px;
-            height: 150px;
-            /*height:  inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-
-
-        }
-
-        /*div#easyjobs {*/
-            /*background: url("../../images/home-easyjobs.png");*/
-            /*width: 450px;*/
-            /*height: 350px;*/
-            /*!*height: inherit;*!*/
-            /*background-position: center;*/
-            /*background-repeat: no-repeat;*/
-        /*}*/
-
-        div#allTables {
-            background-image: url("../../images/dr1logo.png");
-            background-size: 85%;
-            width: 250px;
-            height: 150px;
-            /*height:  inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        div#example {
-            background: url("../../images/questionmark.jpeg");
-            background-size: cover;
-            width: 250px;
-            height: 150px;
-            /*height:  inherit;*/
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-
-
-        div.gallery:hover {
-            border: 2px solid black;
-
-        }
-
-
 
         input {
             width: 100%;
@@ -131,7 +30,7 @@
             }
 
             .foobar {
-                padding: 16px;
+                padding: 18px;
                 margin: 60px 0;
                 line-height: inherit;
                 font-size: 20px;
@@ -140,68 +39,144 @@
                 font-family: 'Roboto', 'Noto', sans-serif;
                 /*visibility: hidden;*/
                 /*color: transparent;*  /
-                /*display: none;*/
+            /*display: none;*/
                 color: black;
-                background-color: rgba(211, 211, 211, 0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                background-color: rgba(211, 211, 211, 0.7);
             }
 
+            paper-item#coadd1 {
+                padding-left: 40px;
+            }
+             paper-item#query1 {
+                padding-left: 90px;
+            }
+              paper-item#allTables1 {
+                padding-left: 60px;
+            }
+              paper-item#footprint1 {
+                padding-left: 65px;
+            }
+              paper-item#example1 {
+                padding-left: 40px;
+            }
+               paper-item#desjobs1 {
+                padding-left: 95px;
+            }
         }
 
 
     </style>
 
     <template>
+        <paper-dialog class="dialog-help" id="jobHelpHome" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="home-crs" items="1" dotText="false" controls="true">
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif" width="500px" height="500px">
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
 
-         <paper-dialog class="dialog-position" id="jobHelpHome" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <p>Help goes here</p>
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+
+            </des-card>
         </paper-dialog>
 
         <section>
-            <div class="horizontal layout around justified" >
             <des-card heading="Welcome [[name]]!" class="welcome">
+            <div class="horizontal layout around justified">
 
-                <div class="gallery" id="query" on-click="change" >
-                    <paper-item class="foobar" id="query" >QUERY</paper-item>
-                </div>
+                <a style = "text-transform: none; color:black;" href="/easyweb/db-access" tabindex="-1">
+                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="SQL command line" name="query" ></des-card-welcome>
+                </a>
+                <a style = "text-transform: none; color:black;" href="/easyweb/db-schema" >
+                <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables" ></des-card-welcome>
+                </a>
+                <a style = "text-transform: none; color:black;" href="/easyweb/db-examples" tabindex="-1">
+                <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example" ></des-card-welcome>
+                </a>
+                <a style = "text-transform: none; color:black;" href="/easyweb/cutouts" tabindex="-1">
+                <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd" ></des-card-welcome>
+                </a>
+                <a style = "text-transform: none; color:black;" href="/easyweb/footprint" tabindex="-1">
+                <des-card-welcome heading="DR1 FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint" ></des-card-welcome>
+                </a>
+                <a style = "text-transform: none; color:black;" href="/easyweb/my-jobs" tabindex="-1">
+                <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs" ></des-card-welcome>
+                </a>
+                <a style = "text-transform: none; color:black;" href="/easyweb/help-form" tabindex="-1">
+                <des-card-welcome heading="HELP" image="/easyweb/static/images/home-help.jpg" alt="Help" desc="Help form" name="help" ></des-card-welcome>
+                </a>
 
-                <div class="gallery" id="allTables" on-click="change">
-                    <paper-item class="foobar" id="allTables">DR1 TABLES</paper-item>
-                </div>
-
-                <div class="gallery" id="example" on-click="change">
-                     <paper-item class="foobar" id="example">EXAMPLE QUERY</paper-item>
-                </div>
-
-
-                <div class="gallery" id="coadd" on-click="change">
-                     <paper-item class="foobar" id="coadd">COADDS IMAGES</paper-item>
-                </div>
-
-                <div class="gallery" id="footprint" on-click="change">
-                     <paper-item class="foobar" id="footprint">FOOTPRINT</paper-item>
-                </div>
-
-                <div class="gallery" id="desjobs" on-click="change">
-                    <paper-item class="foobar" id="desjobs">JOBS</paper-item>
-                </div>
-
-
-
-            </des-card>
 
             </div>
+            </des-card>
 
         </section>
 
-         <!-- <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab> -->
-
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
     </template>
 
 </dom-module>
-
 
 <script>
     Polymer({
@@ -214,34 +189,47 @@
                 value:''
             },
         },
-        change: function(e){
 
-           var tid = e.target.id;
-           var sel = 0;
-           if (tid == 'query') sel = 1;
-           if (tid == 'allTables') sel = 2;
-           if (tid == 'example') sel = 3;
-           if (tid == 'coadd') sel = 4;
-           if (tid == 'footprint') sel = 5;
-           if (tid == 'desjobs') sel = 6;
+//        change: function(e){
+//
+//            var tid = e.target.id;
+//            var sel = 0;
+//            if (tid == 'query') sel = 1;
+//            if (tid == 'allTables') sel = 2;
+//            if (tid == 'example') sel = 3;
+//            if (tid == 'coadd') sel = 4;
+//            if (tid == 'footprint') sel = 5;
+//            if (tid == 'desjobs') sel = 6;
+//
+//            var app = document.querySelector('#app');
+//            var pages = document.getElementById("mainPages");
+//            var menu = document.querySelector('paper-menu');
+//            app.selection=sel;
+//            pages.selected=sel;
+//            menu.selected=sel;
+//
+//        },
 
-           var app = document.querySelector('#app');
-           var pages = document.getElementById("mainPages");
-           var menu = document.querySelector('paper-menu');
-          app.selection=sel;
-          pages.selected=sel;
-          menu.selected=sel;
-
-        },
-         patchOverlay: function (e) {
+        patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
             }
         },
+
         _seeHelp: function(e){
             e.preventDefault();
             document.getElementById('jobHelpHome').open();
         },
+
+        _nextPage: function() {
+            var crs = document.getElementById("home-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function() {
+            var crs = document.getElementById("home-crs");
+            crs.goToPrevPage();
+        }
 
 
     });

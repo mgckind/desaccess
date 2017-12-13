@@ -14,7 +14,7 @@ import yaml
 
 
 def after_return(retval):
-    url = 'http://localhost:8080/easyweb/pusher/'
+    url = Settings.ROOT_URL+'/easyweb/pusher/'
     data = {'username': retval['user'], 'result': retval['data'], 'status': retval['status']}
     requests.post(url, data=data)
     return
@@ -48,6 +48,9 @@ class QueryHandler(BaseHandler):
         original_query = query
         query_kind = self.get_argument("querykind", "")
         filename = self.get_argument("filename", "")
+        query_name = self.get_argument("queryname", "")
+        query_email = self.get_argument("queryemail", "")
+        compression = self.get_argument("querycomp", "") == "true"
         if query == "":
             print('No query string')
             return
@@ -63,18 +66,23 @@ class QueryHandler(BaseHandler):
         print(query)
         print('*******')
         print(query_kind)
+        print(query_name)
+        print(query_email)
+        print(compression)
+        print('*******')
         file_error = False
+        tf = filename
         if filename == "nofile":
             filename = None
             if query_kind == "submit":
                 file_error = True
         elif filename == "":
             file_error = True
-        elif not filename.endswith('.csv') and not filename.endswith('.fits'):
+        elif not tf.endswith('.csv') and not tf.endswith('.fits') and not tf.endswith('.h5'):
             file_error = True
         print(filename)
         if file_error:
-            response['data'] = 'ERROR: File format allowed : .csv and .fits'
+            response['data'] = 'ERROR: File format allowed : .csv, .fits and .h5'
             response['kind'] = 'query'
             with open(jsonfile, 'w') as fp:
                 json.dump(response, fp)
@@ -88,7 +96,9 @@ class QueryHandler(BaseHandler):
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             # copy the jobid to initial name
-            tup = tuple([loc_user, jobid, jobid, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
+            if query_name == "":
+                query_name = jobid
+            tup = tuple([loc_user, jobid, query_name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                          'query', original_query, '', ''])
             cur = con.cursor()
             try:
@@ -106,11 +116,18 @@ class QueryHandler(BaseHandler):
                     self.write(response)
                     self.finish()
                     return
+            run_check = ea_tasks.check_query(query, db, loc_user, lp.decode())
+            if run_check['status'] == 'error':
+                self.flush()
+                self.write(run_check)
+                self.finish()
+                return
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
             con.commit()
             try:
                 run = ea_tasks.run_query.apply_async(args=[query, filename, db,
-                                                     loc_user, lp.decode(), jobid], task_id=jobid)
+                                                     loc_user, lp.decode(), jobid,
+                                                     query_email, compression], retry=True, task_id=jobid)
             except:
                 pass
             response['data'] = 'Job {0} submitted'.format(jobid)
@@ -121,8 +138,15 @@ class QueryHandler(BaseHandler):
             with open(jsonfile, 'w') as fp:
                 json.dump(response, fp)
         elif query_kind == "quick":
-            run = ea_tasks.run_query(query, filename, db, loc_user, lp.decode(), jobid, timeout=20)
-            response = run
+            run_check = ea_tasks.check_query(query, db, loc_user, lp.decode())
+            if run_check['status'] == 'error':
+                self.flush()
+                self.write(run_check)
+                self.finish()
+                return
+            run = ea_tasks.run_quick.apply_async(args=[query, filename, db, loc_user, lp.decode(), jobid,
+                                                 query_email, compression], retry=True, task_id=jobid)
+            response = ''
         elif query_kind == "check":
             run = ea_tasks.check_query(query, db, loc_user, lp.decode())
             response = run

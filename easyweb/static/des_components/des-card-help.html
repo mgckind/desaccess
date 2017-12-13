@@ -1,0 +1,86 @@
+<dom-module id="des-card-help">
+    <style include="shared-styles">
+        :host{
+            display: flex;
+        }
+
+        iron-icon {
+            position: absolute;
+            top: 20px;
+            right: 10px;
+        }
+        paper-carousel {
+            text-align: left;
+            width: 100%;
+        }
+
+
+
+
+
+
+    </style>
+
+    <template>
+        <paper-carousel id="help-pages" items="1" dotText="false" controls="true">
+            <div class="carousel-item">
+                <des-home-help></des-home-help>
+            </div>
+
+            <div class="carousel-item">
+                <des-query-help></des-query-help>
+            </div>
+
+            <div class="carousel-item">
+                <des-all-tables-help></des-all-tables-help>
+            </div>
+
+            <div class="carousel-item">
+                <des-coadds-help></des-coadds-help>
+            </div>
+
+            <div class="carousel-item">
+                <des-footprint-help></des-footprint-help>
+            </div>
+
+            <div class="carousel-item">
+                <des-my-jobs-help></des-my-jobs-help>
+            </div>
+
+            <div class="carousel-item">
+                <des-help-help></des-help-help>
+            </div>
+        </paper-carousel>
+        <!--<iron-pages id="help-pages" selected="[[selection]]">-->
+            <!--<des-home-help></des-home-help>-->
+            <!--<des-query-help></des-query-help>-->
+            <!--<des-all-tables-help></des-all-tables-help>-->
+            <!--<des-example-query-help></des-example-query-help>-->
+            <!--<des-coadds-help></des-coadds-help>-->
+            <!--<des-footprint-help></des-footprint-help>-->
+            <!--<des-my-jobs-help></des-my-jobs-help>-->
+            <!--<des-help-help></des-help-help>-->
+        <!--</iron-pages>-->
+
+
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: "des-card-help",
+        properties:{
+            heading:{
+                type: String,
+                value: '',
+            },
+
+            content:{
+                type: String,
+                value: '',
+            }
+        },
+
+
+    });
+</script>

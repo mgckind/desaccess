@@ -82,7 +82,7 @@ class FileHandler(BaseHandler):
         input_csv = user_folder + jobid + '.csv'
         run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
                                                   folder2, xs, ys, jobid, list_only,
-                                                  send_email, email], task_id=jobid)
+                                                  send_email, email], retry=True, task_id=jobid)
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)

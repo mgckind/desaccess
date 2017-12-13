@@ -22,8 +22,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         open_sockets.add(self)
 
     def on_message(self, message):
-        pass
 
+        pass
     def on_close(self):
         print("WebSocket closed")
 
@@ -33,9 +33,10 @@ class PusherHandler(tornado.web.RequestHandler):
 
     def post(self):
         data = self.get_argument('jobid')
+        stopJ = self.get_argument('stopJob','no')
         try:
             data2 = json.loads(data)
         except:
             data2 = data
-        msg = {'out': data2}
+        msg = {'out': data2, 'stopJob': stopJ}
         SendMessage(json.dumps(msg))

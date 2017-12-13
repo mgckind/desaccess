@@ -9,6 +9,8 @@ import easyaccess as ea
 import MySQLdb as mydb
 from celery import Celery
 import yaml
+import jira_ticket
+from smtp import email_utils
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -43,8 +45,88 @@ class MyExamplesHandler(BaseHandler):
 -- This query selects 1% of the data
 SELECT RA, DEC, MAG_AUTO_G from DR1_MAIN sample(0.0001)
 """
+        query1 = """--
+-- Example Query --
+-- This query creates a Helpix map of number of starts
+-- and their mean magnitude on a resolution of NSIDE = 1024
+-- using NEST Schema
+SELECT
+count(main.MAG_AUTO_I) COUNT,
+avg(main.MAG_AUTO_I) COUNT,
+hp.HPIX_1024
+FROM DR1_MAIN main
+JOIN  DR1_HPIX hp ON hp.COADD_OBJECT_ID = main.COADD_OBJECT_ID
+WHERE
+  main.WAVG_SPREAD_MODEL_I + 3.0*main.WAVG_SPREADERR_MODEL_I < 0.005 and
+  main.WAVG_SPREAD_MODEL_I > -1 and
+  main.IMAFLAGS_ISO_I = 0 and
+  main.MAG_AUTO_I < 21
+GROUP BY hp.HPIX_1024
+"""
+        query2 = """--
+-- Example Query --
+-- This query selects stars around the center of glubular cluster M2
+SELECT
+  COADD_OBJECT_ID,RA,DEC,
+  MAG_AUTO_G G,
+  MAG_AUTO_R R,
+  WAVG_MAG_PSF_G G_PSF,
+  WAVG_MAG_PSF_R R_PSF
+FROM DR1_MAIN
+WHERE
+   RA between 323.36-0.12 and 323.36+0.12 and
+   DEC between -0.82-0.12 and -0.82+0.12 and
+   WAVG_SPREAD_MODEL_I + 3.0*WAVG_SPREADERR_MODEL_I < 0.005 and
+   WAVG_SPREAD_MODEL_I > -1 and
+   IMAFLAGS_ISO_G = 0 and
+   IMAFLAGS_ISO_R = 0 and
+   FLAGS_G < 4 and
+   FLAGS_R < 4
+"""
+        query3 = """--
+-- Example Query --
+-- This query selects  a sample of bright galaxies
+SELECT dr1.RA,dr1.DEC,dr1.COADD_OBJECT_ID
+FROM dr1_main sample(0.01) dr1
+WHERE
+dr1.MAG_AUTO_G < 18 and
+dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
+dr1.WAVG_SPREAD_MODEL_I + 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.003 and
+dr1.WAVG_SPREAD_MODEL_I - 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.001 and
+dr1.WAVG_SPREAD_MODEL_I > -1 and
+dr1.IMAFLAGS_ISO_G = 0 and
+dr1.IMAFLAGS_ISO_R = 0 and
+dr1.IMAFLAGS_ISO_I = 0 and
+dr1.FLAGS_G < 4 and
+dr1.FLAGS_R < 4 and
+dr1.FLAGS_I < 4 and
+dr1.NEPOCHS_G > 0 and
+dr1.NEPOCHS_R > 0 and
+dr1.NEPOCHS_I > 0
+        """
+        query4 = """--
+-- Example Query --
+-- This query creates a Helpix map of number of galaxies
+-- and their mean magnitude on a resolution of NSIDE = 1024
+-- using NEST Schema
+SELECT count(dr1.MAG_AUTO_I),avg(dr1.MAG_AUTO_I),hp.HPIX_1024
+FROM DR1_MAIN dr1
+JOIN  DR1_HPIX hp ON hp.COADD_OBJECT_ID = dr1.COADD_OBJECT_ID
+where
+dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
+dr1.WAVG_SPREAD_MODEL_I + 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.003 and
+dr1.WAVG_SPREAD_MODEL_I - 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.001 and
+dr1.WAVG_SPREAD_MODEL_I > -1 and
+dr1.IMAFLAGS_ISO_I = 0 and
+dr1.MAG_AUTO_I < 23
+group by hp.HPIX_1024
+        """
         queries = []
-        queries.append({'desc':'Sample Basic information', 'query': query0})
+        queries.append({'desc': 'Sample Basic information', 'query': query0})
+        queries.append({'desc': 'Create stellar density healpix map', 'query': query1})
+        queries.append({'desc': 'Select stars from M2 Globular Cluster', 'query': query2})
+        queries.append({'desc': 'Sample of bright galaxies', 'query': query3})
+        queries.append({'desc': 'Create galaxy density healpix map', 'query': query4})
         jjob = []
         jquery = []
 
@@ -65,7 +147,8 @@ class GetTileHandler(BaseHandler):
         loc_passw = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
         loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
         con = ea.connect(loc_db, user=loc_user, passwd=loc_passw)
-        query = """select FITS_IMAGE_G, FITS_IMAGE_R, FITS_IMAGE_I, FITS_IMAGE_Z, FITS_IMAGE_Y
+        query = """select FITS_IMAGE_G, FITS_IMAGE_R, FITS_IMAGE_I, FITS_IMAGE_Z, FITS_IMAGE_Y,
+                   FITS_IMAGE_DET, TIFF_COLOR_IMAGE, FITS_DR1_MAIN, FITS_DR1_MAGNITUDE, FITS_DR1_FLUX
                    from DR1_TILE_INFO where tilename = '{0}'""".format(tilename)
         temp_df = con.query_to_pandas(query)
         new = temp_df.transpose().reset_index()
@@ -98,7 +181,7 @@ class MyJobsHandler(BaseHandler):
         jobid = self.get_argument('jobid')
         app = Celery()
         app.config_from_object('config.celeryconfig')
-        app.control.revoke(jobid, terminate=True)
+        app.control.revoke(jobid, terminate=True, signal='SIGUSR1')
         app.close()
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
@@ -134,6 +217,7 @@ class MyJobsHandler(BaseHandler):
         jsizes = []
         jfiles_bool = []
         jquery_bool = []
+        jwarning = []
 
         for i in range(len(cc)):
             #dd = datetime.datetime.strptime(cc[i][3], '%Y-%m-%d %H:%M:%S')
@@ -155,11 +239,18 @@ class MyJobsHandler(BaseHandler):
                 jquery_bool.append(False)
             else:
                 jquery_bool.append(True)
-            jelapsed.append(humantime((datetime.datetime.now()-dd).total_seconds())+" ago")
+            delt = (datetime.datetime.now()-dd).total_seconds()
+            jelapsed.append(humantime(delt)+" ago")
+            jwarning.append(delt >= 3600*24)
+            if delt >= 3600*24*2:
+                jfiles_bool.pop()
+                jfiles_bool.append(False)
+                jelapsed.pop()
+                jelapsed.append(humantime(delt)+" ago (Expired)")
         out_dict = [dict(job=jjob[i], status=jstatus[i], time=jtime[i], elapsed=jelapsed[i],
                     jquery=jquery[i], jfiles=jfiles[i], jbool=jfiles_bool[i], user=loc_user,
                     jsizes=jsizes[i], jname=jname[i], jobtype=jobtype[i],
-                    jquerybool=jquery_bool[i]) for i in range(len(jjob))]
+                    jquerybool=jquery_bool[i], jwarning=jwarning[i]) for i in range(len(jjob))]
         temp = json.dumps(out_dict, indent=4)
         self.write(temp)
 
@@ -302,4 +393,28 @@ class ChangeHandler(BaseHandler):
         con.commit()
         con.close()
 
+        self.finish()
+
+class HelpHandler(tornado.web.RequestHandler):
+    """
+    This class is special as it also include a post request to
+    deal with the form submission
+    """
+    @tornado.web.asynchronous
+    def post(self):
+        arguments = { k.lower(): self.get_argument(k) for k in self.request.arguments }
+        print(arguments)
+        name = self.get_argument("name", "User")
+        last = self.get_argument("lastname", "")
+        email = self.get_argument("email", "")
+        subject = self.get_argument("subject", "")
+        question = self.get_argument("question", "")
+        topic = self.get_argument("topic", "")
+        topics = topic.replace(',', '\n')
+        print(name, last, email, topic, question)
+        valid, ticket = jira_ticket.create_ticket(name, last, email, topics, subject, question)
+        print(valid)
+        email_utils.send_thanks(name, email, subject, ticket)
+        self.set_status(200)
+        self.flush()
         self.finish()

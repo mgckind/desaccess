@@ -1,0 +1,29 @@
+<dom-module id="des-prev-button">
+    <style>
+    </style>
+
+    <template>
+        <paper-button id="prev" onclick="_prevPage">
+            <iron-icon icon="image:navigate-before"></iron-icon>
+            Prev
+        </paper-button>
+
+    </template>
+
+    <script>
+
+        Polymer({
+            is: "des-prev-button",
+            properties:{
+                cid:{
+                    type: String,
+                    value: '',
+                },
+            },
+
+            _prevPage: function() {
+                document.getElementById(this.cid).goToPrevPage();
+            }
+        });
+    </script>
+</dom-module>

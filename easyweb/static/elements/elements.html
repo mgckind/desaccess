@@ -1,9 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
-<!-- other -- >
-<link rel="import" href="../styles/shared-styles.html">
-<link rel="import" href="../bower_components/grid-element/grid-element.html">
-<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<!-- other -->
+<!--<link rel="import" href="../styles/shared-styles.html">-->
+<!--<link rel="import" href="../bower_components/grid-element/grid-element.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-valo-theme/vaadin-text-field.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-text-field/vaadin-text-field.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-valo-theme/color.html">-->
+<!--<link rel="import" href="../bower_components/vaadin-form-layout/vaadin-form-layout.html">-->
 
 
 <!-- Paper Elements -->
@@ -22,6 +26,10 @@
 <link rel="import" href="../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
@@ -29,6 +37,8 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-password-input/paper-password-input.html">
 <link rel="import" href="../bower_components/paper-password-input/match-passwords-validator.html">
+<link rel="import" href="../bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="../bower_components/paper-styles/default-theme.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 
@@ -39,9 +49,9 @@
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../../../bower_components/app-route/app-route.html">
-<link rel="import" href="../../../bower_components/app-route/index.html">
-<link rel="import" href="../../../bower_components/app-route">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+
 <!-- Iron Elements -->
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
@@ -63,6 +73,7 @@
 <link rel="import" href="../des_components/des-login/des-login-public.html">
 <link rel="import" href="../des_components/des-login/des-login-update.html">
 <link rel="import" href="../des_components/des-login/des-login-activate.html">
+<link rel="import" href="../des_components/des-login/des-login-message.html">
 <link rel="import" href="../des_components/des-login/des-login-update-info.html">
 <link rel="import" href="../des_components/des-login/des-login-signup.html">
 <link rel="import" href="../des_components/des-login/des-login-reset.html">
@@ -74,8 +85,45 @@
 <link rel="import" href="../des_components/des-pages/des-positions.html">
 <link rel="import" href="../des_components/des-pages/des-results.html">
 <link rel="import" href="../des_components/des-pages/des-thumb.html">
+<link rel="import" href="../des_components/des-pages/des-help.html">
 <link rel="import" href="../des_components/des-card-intro.html">
 <link rel="import" href="../des_components/des-card.html">
+<link rel="import" href="../des_components/des-card-welcome.html">
+<!--<link rel="import" href="../des_components/des-card-help.html">-->
 <link rel="import" href="../des_components/des-credit-line.html">
 <link rel="import" href="../des_components/des-html.html">
 
+<!-- help page -->
+
+<!--<link rel="import" href="../des_components/des-help/des-all-tables-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-coadds-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-example-query-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-footprint-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-home-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-my-jobs-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-my-tables-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-positions-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-query-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-results-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-thumb-help.html">-->
+<!--<link rel="import" href="../des_components/des-help/des-help-help.html">-->
+
+
+
+<!-- ADDED BY ZOE IN THIS PULL REQUEST-->
+
+<!-- tab -->
+<!-- MAY USE LATER -->
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs-icons.html">
+
+
+<!-- carousel -->
+<!-- USING IT RIGHT NOW -->
+<link rel="import" href="../bower_components/paper-carousel/paper-carousel.html">
+
+<!-- nav button -->
+<!-- fail attampt-->
+<link rel="import" href="../des_components/des-prev-button.html">
+<link rel="import" href="../des_components/des-next-button.html">

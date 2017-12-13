@@ -12,8 +12,9 @@ import Settings
 import yaml
 import backup
 import cutout
+from version import __version__
 
-define("port", default=8081, help="run on the given port", type=int)
+define("port", default=8080, help="run on the given port", type=int)
 
 def create_db(delete=False):
     with open('config/mysqlconfig.yaml', 'r') as cfile:
@@ -44,10 +45,18 @@ def create_db(delete=False):
     con.commit()
     con.close()
 
+
+class MyStaticFileHandler(tornado.web.StaticFileHandler):
+    def write_error(self, status_code, *args, **kwargs):
+        if status_code in [404]:
+            self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
+        else:
+            super().write_error(status_code, *args, **kwargs)
+
 class My404Handler(tornado.web.RequestHandler):
     def prepare(self):
         self.set_status(404)
-        self.render('404.html', errormessage='404: Page Not Found', username='')
+        self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
 
 
 class Application(tornado.web.Application):
@@ -59,6 +68,13 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", login.MainHandler),
             (r"/easyweb/?", login.MainHandler),
+            (r"/easyweb/db-schema/?", login.MainHandler),
+            (r"/easyweb/db-access/?", login.MainHandler),
+            (r"/easyweb/db-examples/?", login.MainHandler),
+            (r"/easyweb/cutouts/?", login.MainHandler),
+            (r"/easyweb/footprint/?", login.MainHandler),
+            (r"/easyweb/my-jobs/?", login.MainHandler),
+            (r"/easyweb/help-form/?", login.MainHandler),
             (r"/easyweb/login/?", login.AuthLoginHandler),
             (r"/easyweb/changepass/?", login.ChangeAuthHandler),
             (r"/easyweb/changeinfo/?", login.UpdateInfoHandler),
@@ -74,6 +90,7 @@ class Application(tornado.web.Application):
             (r'/easyweb/pusher/?', pusher.PusherHandler),
             (r"/easyweb/query/?", queries.QueryHandler),
             (r"/easyweb/reset/(\w+)", login.ResetHandler),
+            (r"/easyweb/email/(.+)", login.EmailHandler),
             (r"/easyweb/reset/", login.ResetHandler),
             (r"/easyweb/activate/(\w+)", login.ActivateHandler),
             (r"/easyweb/signup/?", login.SignupHandler),
@@ -81,6 +98,9 @@ class Application(tornado.web.Application):
             (r"/easyweb/delete/", api.DeleteHandler),
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),
+            (r"/easyweb/help/?", api.HelpHandler),
+            (r"/easyweb/files/dr1/(.*)", MyStaticFileHandler,
+             {'path': '/des004/despublic/dr1_tiles/'}),
         ]
         settings = {
             "template_path": Settings.TEMPLATE_PATH,

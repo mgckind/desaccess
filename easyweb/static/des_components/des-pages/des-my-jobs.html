@@ -9,6 +9,37 @@
 <template>
 <style include="shared-styles">
 
+<<<<<<< HEAD
+=======
+    /* carousel table design*/
+
+    paper-icon-item {
+        --paper-item-disabled-color: black;
+    }
+    paper-item {
+        --paper-item-disabled-color: black;
+        color: black;
+        --paper-item-focused: {
+        };
+        --paper-item-selected: {
+            background: var(--paper-amber-50) ;
+        };
+        --paper-item-focused-before: {
+            opacity:0.0;
+        };
+    }
+    .status {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--paper-yellow-500);
+    }
+    .green {background: var(--paper-green-500);}
+    .red {background: var(--paper-red-500);}
+
+>>>>>>> 18bb298395ee539da5103adc22084579696b9080
 </style>
 
     <iron-ajax id="getMyJobs"
@@ -80,13 +111,24 @@
         <vaadin-grid items="{{myfiles}}" id="material">
 
 
-              <vaadin-grid-column flex-grow="1">
-                <template class="header">Filename</template>
+              <vaadin-grid-column width="450px" flex-grow="0">
+                <template class="header">
+
+
+            <vaadin-grid-filter aria-label="Filename" path="file" value="[[_filterFileName]]">
+            <input placeholder="Filename" value="{{_filterFileName::input}}" focus-target>
+                 <vaadin-grid-sorter path="file"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                      </vaadin-grid-filter>
+
+                </template>
                 <template>{{item.file}}</template>
               </vaadin-grid-column>
 
               <vaadin-grid-column flex-grow="1">
-                <template class="header">Size</template>
+                <template class="header">
+
+                 <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                </template>
                 <template>{{item.size}}</template>
               </vaadin-grid-column>
 
@@ -108,7 +150,192 @@
 
 
     <paper-dialog class="dialog-position" id="jobHelpMyJobs" with-backdrop on-iron-overlay-opened="patchOverlay">
+<<<<<<< HEAD
         <p style="text-align: center; padding-top: 20px; font-size: 16px;">This page contains the jobs you've run from Easyaccess Web  along with additional information</p>
+=======
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="jobs-crs" items="1" dotText="false" controls="true">
+                    <div class="carousel-item" >
+                        <table class="crs-table" style="width:100%">
+
+                            <tr class="crs-tr">
+                                <th class="crs-th" colspan="2">General Instruction</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th">Button</th>
+                                <th class="crs-th">Description</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="launch"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    See the results on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="assignment"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    See the log file on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="icons:highlight-off"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    Stop a running job on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <iron-icon icon="icons:create"></iron-icon>
+                                </td>
+                                <td class="crs-td">
+                                    View and edit job name on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th" colspan="2">Query Job</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="SeeFilesButton" raised >Query</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See the query on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="SeeFilesButton"  raised> Files</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See the file on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th" colspan="2">Cutouts Job</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td">
+                                    <paper-button class="SeeFilesButton" raised >cutouts</paper-button>
+                                </td>
+                                <td class="crs-td">
+                                    See the result on click
+                                </td>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <th class="crs-th" colspan="2">Legend</th>
+                            </tr>
+
+                            <tr class="crs-tr">
+                                <td class="crs-td" colspan="2">
+                                    <div class="row">
+                                        <paper-icon-item disabled>
+                                            <div class="status green" item-icon></div>
+                                            <paper-item-body>
+                                                Completed
+                                            </paper-item-body>
+                                        </paper-icon-item>
+
+                                        <paper-icon-item disabled>
+                                            <div class="status" item-icon></div>
+                                            <paper-item-body>
+                                                Running
+                                            </paper-item-body>
+                                        </paper-icon-item>
+
+                                        <paper-icon-item disabled>
+                                            <div class="status red" item-icon></div>
+                                            <paper-item-body>
+                                                Canceled
+                                            </paper-item-body>
+                                        </paper-icon-item>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div>
+                            Select one or more jobs for deletion.
+                        </div>
+
+                    </div>
+
+                    <div class="carousel-item">
+                        <!--<div class="col">-->
+                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <!--<div class="layout-item">-->
+                                <img src="/easyweb/static/images/demo1.gif">
+                            <!--</div>-->
+
+                            <!--<div class="layout-item">-->
+                                <img src="/easyweb/static/images/demo1.gif">
+                            <!--</div>-->
+
+                            <!--<div class="layout-item">-->
+                                <img src="/easyweb/static/images/demo1.gif">
+                            <!--</div>-->
+                        </div>
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif">
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </div>
+                    </div>
+
+                </paper-carousel>
+            </div>
+            <div class="row bottom">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+
+        </des-card>
+>>>>>>> 18bb298395ee539da5103adc22084579696b9080
     </paper-dialog>
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
@@ -170,7 +397,12 @@
               </div>
               <div secondary>
                   <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
-                  {{item.elapsed}}
+                  <template is="dom-if" if="{{item.jwarning}}">
+                   <span style="color:red;">{{item.elapsed}}</span>
+                  </template>
+                  <template is="dom-if" if="{{!item.jwarning}}">
+                   <span>{{item.elapsed}}</span>
+                  </template>
               </div>
           </paper-item-body>
           </template>
@@ -195,7 +427,11 @@
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
+<<<<<<< HEAD
                 <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
+=======
+                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
+>>>>>>> 18bb298395ee539da5103adc22084579696b9080
               </template>
             </vaadin-grid-column>
 
@@ -219,7 +455,11 @@
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
+<<<<<<< HEAD
         <paper-fab class='fabHelp' icon="help"  title='Help' on-tap="_seeHelp" style="float: right;"></paper-fab>
+=======
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+>>>>>>> 18bb298395ee539da5103adc22084579696b9080
 
     </div>
 
@@ -289,8 +529,10 @@ function keysrt(key,desc) {
           }
       },
     _copyQuery: function(){
+        document.getElementById("desQuery").clearQueryBox();
         document.querySelector('#toastCopy').show();
         app.editor.setValue(app.jobquerybox.getValue());
+
         console.log("-> line number: ", app.editor.lineCount());
         setTimeout(function() {
             app.editor.refresh();
@@ -308,7 +550,7 @@ function keysrt(key,desc) {
         var jobid = this.jobid;
         var user = this.username;
         var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
+        link.href = "http://desdr-server.ncsa.illinois.edu/workdir/"+user+"/"+jobid+"/"+filename;
               if (link.download !== undefined){
                   //Set HTML5 download attribute. This will prevent file from opening if supported.
                   var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
@@ -460,8 +702,21 @@ function keysrt(key,desc) {
          if (e.target.withBackdrop) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
+<<<<<<< HEAD
 
      },
+=======
+     },
+      _nextPage: function() {
+          var crs = document.getElementById("jobs-crs");
+          crs.goToNextPage();
+      },
+
+    _prevPage: function() {
+      var crs = document.getElementById("jobs-crs");
+      crs.goToPrevPage();
+    }
+>>>>>>> 18bb298395ee539da5103adc22084579696b9080
 
     });
 

@@ -11,88 +11,301 @@
             bottom: 0;
             left: 0;
             right: 0;
+            /*border: 2px dotted #8da6ce;*/
+            /*border-style: outset;*/
         }
-        .flex2 {
+
+        .card-content {
             @apply(--layout-vertical);
         }
 
-        paper-slider {
-            width: 80%;
+        /*.middle {*/
+        /*@apply(--layout-flex);*/
+        /*}*/
+
+        .coadd-container {
+            margin-top: 10px;
+            @apply(--layout-horizontal);
         }
+
+        .container2 {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-justified);
+        }
+        .container3 {
+            @apply(--layout-horizontal);
+            @apply(--layout-around-justified);
+        }
+
+        .left {
+            @apply(--layout-flex);
+        }
+        .left2 {
+            @apply(--layout-flex);
+            text-align: center;
+
+        }
+        .right {
+            @apply(--layout-flex);
+
+        }
+
+        .right2 {
+            @apply(--layout-flex-2);
+            text-align: center;
+
+        }
+
+        .mid {
+            @apply(--layout-flex);
+        }
+        .flex3child {
+            @apply(--layout-flex-3);
+        }
+        .flex4child {
+            @apply(--layout-flex-4);
+        }
+
+        paper-slider {
+            width: 100%;
+        }
+
         hr {
             display: block;
             border: 1px solid gray;
             opacity: 0.2;
 
         }
+
+        paper-icon-item {
+            /*background: linear-gradient(to right, #efeaf4, white);*/
+        }
+
+        .buttonLook{
+            border: 4px solid #ccc;
+            border-style: outset;
+            border-radius: 10px;
+        }
+
+
+
+        .btcell {
+            text-align: center;
+        }
+
+        .around-cell {
+            @apply(--layout-horizontal);
+            @apply(--layout-around-justified);
+        }
+
+
     </style>
     <template>
         <paper-dialog class="dialog-position" id="jobHelpCoadds" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <p>Help goes here</p>
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="coadd-crs" items="1" dotText="false" controls="true">
+                        <div class="carousel-item">
+                            You can upload a csv file with positions or enter a list manually. The jobs is submitted asynchronously.
+                            Check <b>My Jobs</b> tab to see the status of your jobs.
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+
+            </des-card>
         </paper-dialog>
         <section>
             <des-card heading = "Coadds Images Cutout Form" >
                 <div class="card-content">
-                    Upload the file with the positions or enter the positions by hand and run the desthumb generator
-                </div>
-                <div class="card-content">
-                    <div class="horizontal layout around-justified" >
-                        <paper-button raised  class="indigo"  id="uploadFile">
-                            <div id ="uploadicon" style="display: inline-block;"> <i class="fa fa-cloud-upload"></i>
-                                &nbsp;  &nbsp;
-                            </div>
-                            <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                [[file_name]]
-                            </span>
-                            <input type="file" class="upload" id="file" on-change="_fileChange"/>
-                        </paper-button>
-
-                        <paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">
-                            <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                                &nbsp;  &nbsp;
-                            </div>
-                            <span>[[enter_values]]</span>
-                        </paper-button>
+                    <div class="top">
+                        Upload the file with the positions or enter the positions by hand and run the desthumb generator
                     </div>
 
-                    <hr>
+                    <!-- table -->
+                    <table id="coadd-table" style="width:100%">
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                    Upload File
+                                    </span>
+                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <paper-button raised class="indigo" id="uploadFile">
+                                    <div id ="uploadicon" style="display: inline-block;">
+                                        <i class="fa fa-cloud-upload"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                    [[file_name]]
+                                </span>
+                                    <input type="file" class="upload" id="file" on-change="_fileChange" />
+                                </paper-button>
+                            </td>
+                        </tr>
 
-                    <div>xsize (arcmin, if not selected default is from file or 1.0): <span id="xsizeLabel" class="caption">0</span></div><br>
-                    <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="0" expand></paper-slider>
-                    <div>ysize (arcmin, if not selected default is from file or 1.0): <span id="ysizeLabel" class="caption">0</span></div><br>
-                    <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value = "0" expand ></paper-slider>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    Enter Values
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <paper-button raised  class="indigo" id="enterValues" on-tap="_openPositions">
+                                    <div id ="keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span>[[enter_values]]</span>
+                                </paper-button>
+                            </td>
+                        </tr>
 
-                    <hr>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Xsize (in arcminutes):
+                                        <span id="xsizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="xsizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
+                            </td>
+                        </tr>
 
-                    <paper-checkbox id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Ysize (in arcminutes):
+                                        <span id="ysizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
+                            </td>
+                        </tr>
 
-                    <hr>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="create" slot="item-icon"></iron-icon>
+                                    Job Name
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-input always-float-label id="validname" name="name" label="Job Name" value="" style = "max-width: 500px;"></paper-input>
+                            </td>
+                        </tr>
 
-                    <div class="flex2" >
-                        <paper-checkbox style="font-size:16px;" id="sendemail" on-change="emailcheck">Send me an email after job completion </paper-checkbox>
-            &nbsp;  &nbsp;        <paper-input  id="validemail" name="email" label="Email" value=""></paper-input>
-                        <paper-input  id="validname" name="name" label="Job Name" value=""></paper-input>
-                        <br>
-                    </div>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="mail" slot="item-icon"></iron-icon>
+                                    Email Options
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:25px;" id="sendemail" on-change="emailcheck">Send email on completion</paper-checkbox>
+                                    </div>
+                                    <div class="right">
+                                        <paper-input always-float-label id="validemail" name="email" label="Email" value="" ></paper-input>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
 
-                    <div>
-
-                        <paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="save" slot="item-icon"></iron-icon>
+                                    Return Type
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-checkbox style="font-size:16px;" id="onlyreturnlist">Return just list of files (do not produce and display pngs, i.e. faster)</paper-checkbox>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="coadd-container">
+                        <div class="left">
+                            <paper-button raised class="indigo"  id="clearFormButton" on-tap="_clearForm">
                             <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
-                        </paper-button>
-
-                        <paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">
-                        <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
-                        </paper-button>
+                            </paper-button>
+                            </div>
+                        <div class="right">
+                            <paper-button raised  class="indigo"  id="submitJobButton" disabled on-tap="_submitJob">
+                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
+                            </paper-button>
+                        </div>
                     </div>
                 </div>
-
             </des-card>
 
             <des-positions id="desPositions"></des-positions>
 
-            <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
-            <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position" id="toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position" id="toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
             <paper-dialog class="size-position2" id="emaildialog" with-backdrop on-iron-overlay-opened="patchOverlay">
                 <paper-card elevation="0">
@@ -102,14 +315,11 @@
                 </paper-card>
             </paper-dialog>
         </section>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
 
 </dom-module>
-
-
 
 <script>
 
@@ -124,6 +334,7 @@
                 type : String,
                 value : "Enter Values"
             },
+
             submit_type : {
                 type: String,
                 value: "csvfile",
@@ -145,11 +356,11 @@
             var edialog = document.getElementById("emaildialog");
             document.getElementById("validemail").value=this.email;
             if (emailbox.checked == true){
-                edialog.open();
+                //edialog.open();
             }
             else
             {
-            document.getElementById("validemail").value='';
+                document.getElementById("validemail").value='';
             }
         },
         _fileChange: function(){
@@ -157,21 +368,36 @@
             console.log('File to read : ' + this.file_name );
             document.getElementById("submitJobButton").disabled=false;
             document.getElementById("enterValues").disabled=true;
-            document.getElementById("uploadicon").style.display='none';
+//            document.getElementById("uploadicon").style.display='none';
+            document.getElementById("uploadicon").icon = "done";
+
             this.submit_type = 'csvfile';
+//            document.getElementById("filename").value = this.file_name;
         },
         clear: function(){
             document.getElementById("submitJobButton").disabled=true;
             document.getElementById("enterValues").disabled=false;
             document.getElementById("uploadFile").disabled=false;
             document.getElementById("keyboardicon").style.display='inline-block';
-            document.getElementById("xsizeSlider").value="0.0";
-            document.getElementById("ysizeSlider").value="0.0";
+            document.getElementById("xsizeSlider").value="1.0";
+            document.getElementById("ysizeSlider").value="1.0";
+            document.getElementById("ysizeLabel").innerHTML="1.0";
+            document.getElementById("xsizeLabel").innerHTML="1.0";
             document.getElementById("sendemail").checked=false;
             document.getElementById("onlyreturnlist").checked=false;
             document.getElementById("desPositions").clear();
             document.getElementById("validemail").value='';
-//            document.getElementById("coaddTag").selected="0";
+            document.getElementById("validname").value='';
+//            document.getElementById("filename").value = '';
+//            document.getElementById("coords").value = '';
+            document.getElementById("uploadicon").icon = "backup";
+            document.getElementById("keyboardicon").icon = "hardware:keyboard";
+
+
+
+
+
+            //            document.getElementById("coaddTag").selected="0";
             this.file_name = "Upload File";
             this.job_comment = "";
 //            document.getElementById("jobcommentcoadds").value="";
@@ -181,27 +407,27 @@
             //$('#dothis')[0].checked=false;
             this.$.file.value = "";
         },
+        _countCoords: function(coords) {
+            console.log(coords);
+        },
+
         _openPositions: function(){
             var inputDialog = document.getElementById("inputValuesDialog");
             inputDialog.open();
             this.submit_type = 'manual';
+
+
         },
         completeHandler: function(){
             console.log('YESSSSS');
             document.getElementById('desCoadds').clear();
-            //document.getElementById("getData").generateRequest();
-            document.querySelector('#toast1').show();
-//            document.querySelector('des-my-jobs').show();
-            document.querySelector('des-my-jobs')._refreshJobs();
-
-
-//            req = document.getElementById("getData");
-//            req.generateRequest();
+            document.querySelector('#toast1coadd').show();
+            document.getElementById("getMyJobs").generateRequest();
         },
         errorHandler: function(){
             console.log('NOOOO');
             document.getElementById('desCoadds').clear();
-            document.querySelector('#toast2').show();
+            document.querySelector('#toast2coadd').show();
         },
         _submitJob: function(event){
             var formdata = new FormData();
@@ -232,15 +458,27 @@
             desCoadds=document.getElementById('desCoadds');
             desCoadds.clear();
         },
-         patchOverlay: function (e) {
-             if (e.target.withBackdrop) {
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-             }
-         },
-         _seeHelp: function(e){
+            }
+        },
+        _seeHelp: function(e){
             e.preventDefault();
             document.getElementById('jobHelpCoadds').open();
         },
+
+
+        _nextPage: function() {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function() {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToPrevPage();
+        },
+
     });
 
 

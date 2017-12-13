@@ -17,8 +17,24 @@
         .flex {
       @apply --layout-horizontal;
         }
+
+        .flex2 {
+      @apply --layout-horizontal;
+      @apply(--layout-center-justified);
+        }
         .downloadTile {
             visibility: hidden;
+        }
+        .localTable tr td{
+        font-size:  18px;
+        border: 1px solid white;
+        }
+        .download {
+            --paper-button {
+                color: black;
+                text-decoration: none;
+
+            }
         }
     </style>
 
@@ -51,7 +67,9 @@
                 <vaadin-grid-column>
                       <template class="header">Download </template>
                       <template>
-                      <a style="text-decoration: none;" href="{{item.path}}" target="_blank"><paper-button raised >Download</paper-button></a>
+                          <paper-button class="describeButton download" raised >
+                      <a style="color:black; text-decoration:none" href="{{item.path}}" target="_blank"> Download</a>
+                      </paper-button>
                       </template>
                     </vaadin-grid-column>
 
@@ -61,28 +79,112 @@
                   <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
               </div>
     </paper-dialog>
+        <paper-dialog class="dialog-position" id="jobHelpFootprint" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="footprint-crs" items="1" dotText="false" controls="true">
+                        <div class="carousel-item">
+                            Search a position to see the results.
+                        </div>
 
-         <paper-dialog class="dialog-position" id="jobHelpFootprint" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <p>Footprint help</p>
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+            </des-card>
         </paper-dialog>
 
                 <des-card heading=[[header]]>
-                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px"> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                    <div class="card content flex">
+                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-20px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
+                    <paper-input  on-keydown="checkForEnter2" class="input_position" id="zoomtotile" label="Tilename" style="width: 200px; padding-left: 15px; margin-top:-20px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gototile"></paper-icon-button>
+                </paper-input>
+                <div id="errorTile" style="margin-left: 20px; margin-top:30px; color:red;"></div>
+            </div>
+
+                    <div class="card content flex">
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_dr1" checked on-change="display_dr1">DR1 TILES</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
+                    </div>
                     <div class="card-content">
                  <div class="flex" >
                         <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
                         <des-card heading="Tile properties">
-                            <div id="tiletitleHelp"></div>
-                            <paper-button class="indigo downloadTile" raised on-tap="_getTiles" id ="downloadTile"> Get Files</paper-button>
+                            <div id="tiletitleHelp" class="card-content">
+                                <table id="tileTable" class="localTable">
+                                <tr><td>Name</td><td>:</td></tr>
+                                <tr><td>Tile Center</td><td>:</td></tr>
+                                <tr><td>No Objects</td><td>:</td></tr>
+                                <tr><td>RA Corners</td><td>:</td></tr>
+                                <tr><td>DEC Corners</td><td>:</td></tr>
+                                </table>
+                            </div>
+                            <div class="card-content">
+
+                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Files</paper-button>
+                            </div>
 
                         </des-card>
                 </div>
                     </div>
                 </des-card>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;">
-        </paper-fab>
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
     </template>
+
 
 
     <script>
@@ -103,10 +205,11 @@
             if (ra > 180.) {
                 ra = ra - 360.;
             };
-            return ra;
+            return 0.-ra;
         }
 
         function restoreRA(ra) {
+            ra = 0. -ra
             if (ra < 0) {
                 ra = ra + 360.;
             };
@@ -132,7 +235,7 @@
                 },
                 header:{
                     type: String,
-                    value:'DES Footprint',
+                    value:'DES DR1 Footprint',
                 },
                 tiledata:{
                     value: {},
@@ -157,15 +260,47 @@
                this.gotoposition();
              }
             },
+            checkForEnter2: function (e) {
+             if (e.keyCode === 13) {
+               this.gototile();
+             }
+            },
             gotoposition: function(){
                 var position = document.getElementById("zoomto").value.split(",");
+                document.getElementById("zoomtotile").value='';
+                document.getElementById('errorTile').innerHTML = ''
                 var ra1 = parseFloat(position[0]);
                 var dec1 = parseFloat(position[1]);
                 if (ra1 > 180.) {
                     ra1 = ra1 - 360.;
                 };
+                //ra1 = 0. - ra1
                 //navigation.zoomTo([ra1,dec1],500000,1000);
                 PositionZoom(ra1,dec1);
+            },
+            gototile: function(){
+                var tname = document.getElementById("zoomtotile").value;
+                document.getElementById("zoomto").value='';
+                var found = false;
+                for (i=0; i < all_tiles.features.length-1; i++){
+                    var ra1 = all_tiles.features[i].properties.RA_C;
+                    var dec1 = all_tiles.features[i].properties.DEC_C;
+                    var tilename = all_tiles.features[i].properties.tilename;
+                    if  (tilename == tname) {
+                        found = true;
+                        break;}
+                }
+                if (ra1 > 180.) {
+                    ra1 = ra1 - 360.;
+                };
+                if (found) {
+                    document.getElementById('errorTile').innerHTML = ''
+                    PositionZoom(ra1,dec1);
+                }
+                else {
+                    document.getElementById('errorTile').innerHTML = 'Tile not found'
+                    console.log('tile not found');
+                }
             },
             _clear: function() {
                 var title =document.getElementById("tiletitleHelp");
@@ -189,12 +324,6 @@
              updateTile: function(tile){
                  this.tilename = tile;
              },
-
-             _seeHelp: function(e){
-             e.preventDefault();
-            document.getElementById('jobHelpFootprint').open();
-                },
-
             attached: function(){
                 require.config({
                     baseUrl: '/easyweb/static/scripts/src/'
@@ -212,9 +341,12 @@
                         defaultColor: [220.,220.,220.,255.]
                     } );
                     var navigation = new GlobWeb.Navigation(globe, {
-                        inertia: false, minDistance: 100000
+                        inertia: false,
+                        minDistance: 100000,
                     });
+                    navigation.zoomTo([-25,-25],20000000,10);
                     var canvas = navigation.renderContext.canvas;
+
                     loadTiles('/easyweb/static/tiles/grid.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -243,11 +375,91 @@
                         globe.addLayer(vectorLayer);
                     });
 
+                        var coordLayer2 = new GlobWeb.VectorLayer({});
+
+
+                        for (i=1; i< 7; i++) {
+                            raco = 30*i
+                            deco = 0
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+
+
+
+                        for (i=1; i< 6; i++) {
+                            raco = -30*i
+                            deco = 0
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+
+                        for (i=1; i< 7; i++) {
+                            raco = 0
+                            deco = -90 + 30*i
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+
+                        for (i=1; i< 7; i++) {
+                            raco = 180
+                            deco = -90 + 30*i
+                        var style = new GlobWeb.FeatureStyle({
+                                fillColor: [0.,0.,0.,1.],
+                                pointMaxSize : 500,
+                                fill:false,
+                                opacity:0.5,
+                                zIndex: 0,
+                                label: raco.toString(),
+                        });
+                        var coordFeature = {
+                            "type": "Feature",
+                            "properties": {"style": style},
+                            "geometry": {"type": "Point","coordinates": [0.-raco,deco]}};
+                        coordLayer2.addFeature(coordFeature);
+                    };
+                        coordLayer2.visible(true);
+                        globe.addLayer(coordLayer2);
+                        window.coords = coordLayer2;
+
                     loadTiles('/easyweb/static/tiles/footprint.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 strokeColor : mycolor,
-                                strokeWidth: 5.0,
+                                strokeWidth: 6.0,
                                 fill: false,
                                 label: 'footprint',
                                 zIndex: 100,
@@ -261,9 +473,10 @@
                     loadTiles('/easyweb/static/tiles/all_tiles.json',[0.0,0.0,0.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
-                                strokeColor : mycolor,
+                                strokeColor : [0.2980392156862745, 0.4470588235294118, 0.6901960784313725,1.0],
                                 strokeWidth: 0.0,
                                 fill: false,
+                                zIndex: 0,
                             })
                         });
                         vectorLayer.addFeatureCollection(JSON.parse(response));
@@ -272,8 +485,7 @@
                         window.all_tiles = vectorLayer;
                     });
 
-
-                    loadTiles('/easyweb/static/tiles/y3a2_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                    loadTiles('/easyweb/static/tiles/dr1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 strokeColor : [0.2980392156862745, 0.4470588235294118, 0.6901960784313725,1.0],
@@ -285,37 +497,58 @@
                         vectorLayer.addFeatureCollection(JSON.parse(response));
                         vectorLayer.visible(true);
                         globe.addLayer(vectorLayer);
-                        window.y3_tiles = vectorLayer;
+                        window.dr1_tiles = vectorLayer;
                     });
-
+                    loadTiles('/easyweb/static/tiles/hpix32.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor :  [0.7686274509803922, 0.3058823529411765, 0.3215686274509804,1.],
+                                strokeWidth: 6.0,
+                                fill: false,
+                                zIndex: 50,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.hpix32_tiles = vectorLayer;
+                    });
 
                     var PositionZoom = function(ra,dec) {
                         var _self = this;
                         var geojsonFeature = {
                             "type": "Feature",
-                            "properties": {},
+                            "properties": {"name": "check"},
                             "geometry": {
                                 "type": "Point",
-                                "coordinates": [ra,dec]
+                                "coordinates": [0.-ra,dec]
                             }
                         };
-                        navigation.zoomTo([ra,dec],500000,1000);
+                        rat = 0.-ra
                         if (window.tempLayer === undefined){
                             var ju = 0;
                         }
                         else{
                             globe.removeLayer( window.tempLayer );
                         }
+                        var style_tile = new GlobWeb.FeatureStyle({
+                            fillColor: [0.,0.,0.,1.],
+                            pointMaxSize: 10,
+                            label: 'tilename'
+                        });
                         var tempLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
                                 fillColor: [0.,0.,0.,1.],
-                                pointMaxSize : 1000
+                                pointMaxSize : 500,
+                                //label: geojsonFeature['properties']['name'],
+
                             })
                         });
                         tempLayer.addFeature(geojsonFeature);
                         tempLayer.visible(true);
                         globe.addLayer( tempLayer );
                         window.tempLayer = tempLayer;
+                        navigation.zoomTo([rat,dec],500000,1000);
                             var max_d = Number.POSITIVE_INFINITY;
                             var tile = -1
                             for (i=0; i < all_tiles.features.length-1; i++){
@@ -333,19 +566,30 @@
                             document.getElementById('FootprintPage').updateTile(tilename);
                             var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                             var dec_t = all_tiles.features[tile].properties.DEC_C;
+                            var count = all_tiles.features[tile].properties.COUNT;
+                            var ra_corner = all_tiles.features[tile].properties.RA_CORNER;
+                            var dec_corner = all_tiles.features[tile].properties.DEC_CORNER;
                             var titleHelp = document.getElementById("tiletitleHelp");
                             this.xvalue = restoreRA(ra_t);
                             this.yvalue = dec_t;
                             this.data = restoreRA(ra_t)+", "+dec_t;
                             var x_part = this.xvalue.toFixed(5);
                             var y_part = this.yvalue.toFixed(5);
-                            titleHelp.innerHTML =
-                            "Name       : " + tilename  + "<br />" +
-                            "Tile Center : " + x_part +", "+y_part + "<br />" +
-                            "No Objects   : " + "<br />" +
-                            "RA Corners   : " + "<br />" +
-                            "DEC Corners  : " + "<br /> <br /> <br />";
-                             document.getElementById('downloadTile').style.visibility = 'visible';
+                            var tileTable = document.getElementById("tileTable");
+                            tileTable.rows[0].cells[1].innerHTML = ': '+tilename;
+                            tileTable.rows[1].cells[1].innerHTML = ': '+x_part + ", " + y_part;
+                            tileTable.rows[2].cells[1].innerHTML = ': '+count;
+                            tileTable.rows[3].cells[1].innerHTML = ': '+ra_corner;
+                            tileTable.rows[4].cells[1].innerHTML = ': '+dec_corner;
+                            //titleHelp.innerHTML =
+                            //"Name       : " + tilename  + "<br />" +
+                            //"Tile Center : " + x_part +", "+y_part + "<br />" +
+                            //"No Objects   : " + count +"<br />" +
+                            //"RA Corners   : " + ra_corner + "<br />" +
+                            //"DEC Corners  : " + dec_corner + "<br /> <br /> <br />";
+
+                             //document.getElementById('downloadTile').style.visibility = 'visible';
+                             document.getElementById('downloadTile').disabled = false;
 
 
                     };
@@ -355,6 +599,8 @@
                         event.stopImmediatePropagation();
                         event.preventDefault();
                         document.getElementById("zoomto").value='';
+                        document.getElementById("zoomtotile").value='';
+                        document.getElementById('errorTile').innerHTML = ''
                         clearSelection();
                         if (event.button == 0) {
                             var pos = navigation.globe.renderContext.getXYRelativeToCanvas(event);
@@ -375,6 +621,9 @@
                                 document.getElementById('FootprintPage').updateTile(tilename);
                                 var ra_t = checkRA(all_tiles.features[tile].properties.RA_C);
                                 var dec_t = all_tiles.features[tile].properties.DEC_C;
+                                var count = all_tiles.features[tile].properties.COUNT;
+                                var ra_corner = all_tiles.features[tile].properties.RA_CORNER;
+                                var dec_corner = all_tiles.features[tile].properties.DEC_CORNER;
                                 navigation.zoomTo([ra_t,dec_t],500000,1000);
 //                            var title =document.getElementById("tiletitle");
                                 var titleHelp =document.getElementById("tiletitleHelp");
@@ -383,13 +632,20 @@
                                 this.data = restoreRA(ra_t)+", "+dec_t;
                                 var x_part = this.xvalue.toFixed(5);
                                 var y_part = this.yvalue.toFixed(5);
-                                titleHelp.innerHTML =
-                                "Name       : " + tilename  + "<br />" +
-                                "Tile Center : " + x_part +", "+y_part + "<br />" +
-                                "No Objects   : " + "<br />" +
-                                "RA Corners   : " + "<br />" +
-                                "DEC Corners  : " + "<br /> <br /> <br />";
-                                 document.getElementById('downloadTile').style.visibility = 'visible';
+                                var tileTable = document.getElementById("tileTable");
+                                tileTable.rows[0].cells[1].innerHTML = ': '+tilename;
+                                tileTable.rows[1].cells[1].innerHTML = ': '+x_part + ", " + y_part;
+                                tileTable.rows[2].cells[1].innerHTML = ': '+count;
+                                tileTable.rows[3].cells[1].innerHTML = ': '+ra_corner;
+                                tileTable.rows[4].cells[1].innerHTML = ': '+dec_corner;
+                                //titleHelp.innerHTML =
+                                //"Name       : " + tilename  + "<br />" +
+                                //"Tile Center : " + x_part +", "+y_part + "<br />" +
+                                //"No Objects   : " + count +"<br />" +
+                                //"RA Corners   : " + ra_corner +"<br />" +
+                                //"DEC Corners  : " + dec_corner +"<br /> <br /> <br />";
+                                 //document.getElementById('downloadTile').style.visibility = 'visible';
+                                 document.getElementById('downloadTile').disabled=false;
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }
@@ -400,7 +656,7 @@
                                     style : new GlobWeb.FeatureStyle({
                                         fillColor: [1.,1.,0.,1.],
                                         strokeColor : [0.0,0.0,0.0,1.0],
-                                        strokeWidth: 3.5,
+                                        strokeWidth: 4.5,
                                         fill: false,
                                         zIndex: 90,
                                     })
@@ -419,6 +675,50 @@
 
                 });
             },
+            _seeHelp: function(e){
+                e.preventDefault();
+                document.getElementById('jobHelpFootprint').open();
+            },
+            display_h32: function(){
+            var checkh32 = document.getElementById("check_h32");
+                if (checkh32.checked) {
+                    hpix32_tiles._visible = true;
+                }
+                else{
+                    hpix32_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_coord: function(){
+            var checkcoord = document.getElementById("check_coord");
+                if (checkcoord.checked) {
+                    coords._visible = true;
+                }
+                else{
+                    coords._visible = false;
+                }
+                globe.refresh();
+            },
+            display_dr1: function(){
+            var checkdr1 = document.getElementById("check_dr1");
+                if (checkdr1.checked) {
+                    dr1_tiles._visible = true;
+                }
+                else{
+                    dr1_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+
+            _nextPage: function() {
+            var crs = document.getElementById("footprint-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function() {
+            var crs = document.getElementById("footprint-crs");
+            crs.goToPrevPage();
+        }
         });
 
 

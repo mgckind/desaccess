@@ -1,0 +1,160 @@
+<dom-module id="des-query-help">
+    <template>
+        <style include="shared-styles">
+            .card-content {
+                @apply(--layout-vertical);
+            }
+
+            .row {
+                margin-top: 10px;
+                @apply(--layout-horizontal);
+            }
+
+            .left {
+                @apply(--layout-flex);
+                text-align: center;
+            }
+
+            .right {
+                @apply(--layout-flex-2);
+                vertical-align: middle;
+
+            }
+
+            table {
+                border: 1px solid black;
+            }
+
+            th, td {
+                padding: 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            tr:nth-last-child(1) {
+                border-bottom: 1px solid black;
+            }
+        </style>
+
+        <des-card class="sub-help" heading="Help">
+            <div class="card-content">
+                <table style="width:100%">
+                    <tr>
+                        <th>Button</th>
+                        <th>Description</th>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <paper-button class="indigo" raised>Submit Job</paper-button>
+                        </td>
+                        <td>
+                            Submit a job on click
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <paper-button class="indigo" raised>Clear</paper-button>
+                        </td>
+                        <td>
+                            Clear the form on click
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <paper-button class="indigo" raised>Check</paper-button>
+                        </td>
+                        <td>
+                            Check valid input on click
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <paper-button class="indigo" raised>Quick</paper-button>
+                        </td>
+                        <td>
+                            Quick peek of the query result on click
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <paper-button class="indigo" raised>Example Query</paper-button>
+                        </td>
+                        <td>
+                            See example queries on click
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!--<div class="card-content">-->
+                <!--<div class="row">-->
+                    <!--Type SQL command in the query box.-->
+                <!--</div>-->
+                <!--<div class="row">-->
+                    <!--<div class="left">-->
+                        <!--<paper-button id="subQueryHelp" class="indigo" raised>Submit Job</paper-button>-->
+                    <!--</div>-->
+                    <!--<div class="right">-->
+                        <!--Submit a job on click-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="row">-->
+                    <!--<div class="left">-->
+                        <!--<paper-button class="indigo" raised>Clear</paper-button>-->
+                    <!--</div>-->
+                    <!--<div class="right">-->
+                        <!--Clear form on click-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="row">-->
+                    <!--<div class="left">-->
+                        <!--<paper-button class="indigo" raised>Check</paper-button>-->
+                    <!--</div>-->
+                    <!--<div class="right">-->
+                        <!--Check valid input on click-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="row">-->
+                    <!--<div class="left">-->
+                        <!--<paper-button class="indigo" raised>Quick</paper-button>-->
+                    <!--</div>-->
+                    <!--<div class="right">-->
+                        <!--Quick peek of the query result on click-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="row">-->
+                    <!--<div class="left">-->
+                        <!--<paper-button class="indigo" raised>Example Query</paper-button>-->
+                    <!--</div>-->
+                    <!--<div class="right">-->
+                        <!--See example queries on click-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </des-card>
+
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-query-help",
+            properties: {}
+
+        });
+
+    </script>
+</dom-module>

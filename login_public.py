@@ -14,7 +14,7 @@ import yaml
 from version import __version__
 
 dbConfig0 = Settings.dbConfig()
-
+app_log = Settings.app_log
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -23,7 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class SignupHandler(BaseHandler):
     def get(self):
-        self.render('signup.html', errormessage='', toast='no')
+        self.render('signup.html', errormessage='', version=__version__, toast='no')
 
     def post(self):
         username = self.get_argument("username", "").lower()
@@ -31,37 +31,63 @@ class SignupHandler(BaseHandler):
         firstname = self.get_argument("firstname", "")
         lastname = self.get_argument("lastname", "")
         email = self.get_argument("email", "").lower()
-        if db_utils.check_username(username):
+        valid = len(password) >= 6
+        if db_utils.check_username(username) and valid:
             if db_utils.check_email(email):
-                db_utils.create_user(username, password, firstname, lastname, email, '', '')
-                check, url = db_utils.create_reset_url(email)
-                email_utils.send_activation(firstname, username, email, url)
-                msg = 'Activation email sent!'
-                err = '0'
+                check, msgerr = db_utils.create_user(username, password, firstname, lastname, email, '', '')
+                if not check:
+                    err = '3'
+                    if '911' or '922' in msgerr:
+                        msg = 'Invalid character in password.'
+                    else:
+                        msg = msgerr
+                else:
+                    check, url, checkuser = db_utils.create_reset_url(email)
+                    email_utils.send_activation(firstname, username, email, url)
+                    msg = 'Activation email sent!'
+                    err = '0'
             else:
                 msg = 'Email address already exists in our database.'
-                err = '1'
+                err = '2'
         else:
-            msg = '{0} already exists. Try a different one'.format(username)
-            err = '1'
+            if valid:
+                msg = '{0} already exists. Try a different one'.format(username)
+                err = '1'
+            else:
+                msg = 'Password minimum length is 6.'
+                err = '3'
+
         self.write(json.dumps({'msg': msg, 'errno': err}))
+
+class EmailHandler(BaseHandler):
+    def get(self, slug):
+        htmlp = os.path.join(Settings.STATIC_PATH, 'internal/emails/'+slug+'.html')
+        try:
+            with open(htmlp, 'r') as fhtml:
+                msg = fhtml.read()
+            self.write(msg)
+        except:
+            self.set_status(404)
+            self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
 
 
 class ResetHandler(BaseHandler):
     def get(self, slug):
-        username, msg = db_utils.valid_url(slug, 3600)
+        username, msg = db_utils.valid_url(slug, 24*3600)
         if username is not None:
-            self.render('reset.html', errormessage='', toast='no', url=slug, user=username)
+            self.render('reset.html', errormessage='', version=__version__, toast='no', url=slug, user=username)
         else:
-            self.write(msg)
+            self.render('activate.html', version=__version__, errormessage=msg, username='')
 
     def post(self):
         email = self.get_argument("email", "").lower()
         print(email)
         print('Reset Password')
-        check, url = db_utils.create_reset_url(email)
+        app_log.info('Reset Password')
+        check, url, checkuser = db_utils.create_reset_url(email)
         if check:
-            email_utils.send_reset(email, url)
+            email_utils.send_reset(email, checkuser, url)
+            app_log.info('{},{},{}'.format(email, url, checkuser))
             self.write(json.dumps({'msg': 'Reset email sent!', 'errno': '0'}))
         else:
             self.write(json.dumps({'msg': '{}'.format(url), 'errno': '1'}))
@@ -69,28 +95,33 @@ class ResetHandler(BaseHandler):
     def put(self):
         username = self.get_argument("username", "")
         password = self.get_argument("password", "")
+        valid = len(password) >= 6
         url = self.get_argument("url", "")
         print(username, password, url)
-        username2, msg = db_utils.valid_url(url, 3600+60)
+        username2, msg = db_utils.valid_url(url, 24.5*3600)
         print(username2, msg)
         if username == username2:
-            db_utils.update_password(username, password)
-            db_utils.unlock_user(username)
-            # DELETE URL
-            self.write(json.dumps({'msg': 'Password updated', 'errno': '0'}))
+            print('valid', valid)
+            if valid:
+                db_utils.update_password(username, password)
+                db_utils.unlock_user(username)
+                self.write(json.dumps({'msg': 'Password updated', 'errno': '0'}))
+            else:
+                msg = 'Password minimum length is 6.'
+                self.write(json.dumps({'msg': msg, 'errno': '1'}))
         else:
-            self.write(json.dumps({'msg': 'Something went wrong', 'errno': '1'}))
+            self.write(json.dumps({'msg': msg, 'errno': '1'}))
 
 
 class ActivateHandler(BaseHandler):
     def get(self, slug):
-        username, msg = db_utils.valid_url(slug, 9000)
+        username, msg = db_utils.valid_url(slug, 24*3600)
         if username is not None:
             db_utils.unlock_user(username)
-            msg = 'Thanks for activate your account'
-            self.render('activate.html', errormessage=msg, username='')
+            msg = 'Thanks for activating your account'
+            self.render('activate.html', version=__version__, errormessage=msg, username='')
         else:
-            self.render('activate.html', errormessage=msg, username='')
+            self.render('activate.html', version=__version__, errormessage=msg, username='')
 
 
 class MainHandler(BaseHandler):
@@ -122,13 +153,14 @@ class MainHandler(BaseHandler):
                         email=cc[2], username=loc_user, version=__version__, db=loc_db)
         except:
             self.render("login-public.html", errormessage='',
-                        version=__version__, update='no', toast='no', db='')
+                        version=__version__, update='no', toast='no', db='', next='')
 
 
 class AuthLoginHandler(BaseHandler):
     def get(self):
         update = 'no'
         toast = 'no'
+        next = self.get_argument('next', u'/easyweb/')
         try:
             errormessage = self.get_argument("error")
             print(errormessage)
@@ -143,7 +175,7 @@ class AuthLoginHandler(BaseHandler):
         except:
             db = ""
         self.render("login-public.html", errormessage=errormessage, version=__version__,
-                    update=update, toast=toast, db=db)
+                    update=update, toast=toast, db=db, next=next)
 
     def check_permission(self, password, username, db):
         kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': db}
@@ -218,7 +250,12 @@ class ChangeAuthHandler(BaseHandler):
         oldpassword = self.get_argument("oldpassword", "")
         password = self.get_argument("password", "")
         db = self.get_argument("database", "")
-        auth, err = self.check_permission_new(oldpassword, password, username, db)
+        valid = len(password) >= 6
+        if valid:
+            auth, err = self.check_permission_new(oldpassword, password, username, db)
+        else:
+            auth = False
+            err = 'Password minimum length is 6.'
         if auth:
             self.clear_cookie("usera")
             self.clear_cookie("userb")

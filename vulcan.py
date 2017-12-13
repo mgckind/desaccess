@@ -8,7 +8,7 @@ from jsmin import jsmin
 def replacein(inputfile):
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
-            print(line.replace('elements.html', 'elements-built.html'), end='')
+            print(line.replace('elements-built.html', 'elements-built.html'), end='')
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
             print(line.replace('app.js', 'app.min.js'), end='')
@@ -16,32 +16,25 @@ def replacein(inputfile):
 def replaceout(inputfile):
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
-            print(line.replace('elements-built.html', 'elements.html'), end='')
+            print(line.replace('elements-built.html', 'elements-built.html'), end='')
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
             print(line.replace('app.min.js', 'app.js'), end='')
 
-def changeports(mode):
+def changedebug(mode):
     if mode == 'build':
-        with fileinput.FileInput('main.py', inplace=True) as file:
-            for line in file:
-                print(line.replace('default=8999', 'default=8999'), end='')
         with fileinput.FileInput('Settings.py', inplace=True) as file:
             for line in file:
-                print(line.replace('http://descut.cosmology.illinois.edu:8080', 'http://descut.cosmology.illinois.edu'), end='')
+                print(line.replace('DEBUG = True', 'DEBUG = False'), end='')
     if mode == 'dev':
-        with fileinput.FileInput('main.py', inplace=True) as file:
-            for line in file:
-                print(line.replace('default=8999', 'default=8999'), end='')
         with fileinput.FileInput('Settings.py', inplace=True) as file:
             for line in file:
-                print(line.replace('http://descut.cosmology.illinois.edu', 'http://descut.cosmology.illinois.edu:8080'), end='')
-
+                print(line.replace('DEBUG = False', 'DEBUG = True'), end='')
 
 
 def vulcanize():
     os.system('rm -f easyweb/static/elements/elements-built.html')
-    command = 'vulcanize easyweb/static/elements/elements.html --out-html easyweb/static/elements/elements-built.html'
+    command = 'vulcanize easyweb/static/elements/elements-built.html --out-html easyweb/static/elements/elements-built.html'
     os.system(command)
 
 def minimize():
@@ -70,6 +63,7 @@ if __name__ == "__main__":
         replacein('templates/signup.html')
         replacein('templates/404.html')
         replacein('templates/service-down.html')
+        changedebug('build')
         #changeports('build')
 
 
@@ -81,4 +75,5 @@ if __name__ == "__main__":
         replaceout('templates/signup.html')
         replaceout('templates/404.html')
         replaceout('templates/service-down.html')
+        changedebug('dev')
         #changeports('dev')
