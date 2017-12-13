@@ -176,6 +176,7 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
 
     """
     try:
+        t1 = time.time()
         response = {}
         response['user'] = username
         response['elapsed'] = 0
@@ -206,7 +207,6 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
         if timeout is not None:
             tt = threading.Timer(timeout, connection.con.cancel)
             tt.start()
-        t1 = time.time()
         if query.lower().lstrip().startswith('select'):
             response['kind'] = 'select'
             try:

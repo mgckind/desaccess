@@ -392,17 +392,18 @@
               <div>
                   <!--{{returnName(item.job)}}-->
                   <!--it can be changed in api.py-->
-                  {{item.jname}}
+                  <span style="font-size: 10px"> Name: {{item.jname}} </span> <br />
+                  <span style="font-size: 10px"> Job id: {{item.job}} </span>
                   <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
 
               </div>
               <div secondary>
                   <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
                   <template is="dom-if" if="{{item.jwarning}}">
-                   <span style="color:red;">{{item.elapsed}}</span>
+                   <span style="color:red; font-size: 10px;">{{item.elapsed}}</span>
                   </template>
                   <template is="dom-if" if="{{!item.jwarning}}">
-                   <span>{{item.elapsed}}</span>
+                   <span style="font-size: 10px;">{{item.elapsed}}</span>
                   </template>
               </div>
           </paper-item-body>
@@ -410,7 +411,7 @@
 
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="0" width="120px">
+      <vaadin-grid-column flex-grow="0" width="110px">
 
         <template class="header" style="padding-left: 5px">
          <vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
@@ -422,14 +423,14 @@
       <vaadin-grid-column flex-grow="0" width="120px">
 
         <template class="header" style="padding-left: 5px">
-         <vaadin-grid-sorter path="jobtype">Execution time (s)<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+         Execution time (s)
         </template>
         <template>{{item.jruntime}}<br />
         </template>
       </vaadin-grid-column>
 
     <!--Cancel job button-->
-      <vaadin-grid-column flex-grow="0" width="120px">
+      <vaadin-grid-column flex-grow="0" width="80px">
         <template class="header">Cancel Job</template>
           <template>
 

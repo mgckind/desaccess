@@ -96,8 +96,8 @@ class QueryHandler(BaseHandler):
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             # copy the jobid to initial name
-            if query_name == "":
-                query_name = jobid
+            #if query_name == "":
+            #    query_name = jobid
             tup = tuple([loc_user, jobid, query_name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                          'query', original_query, '', '', -1])
             cur = con.cursor()
