@@ -46891,10 +46891,10 @@ function keysrt(key,desc) {
 
           <br>
           <div class="container">
-            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinner1" class="big"></paper-spinner>
             <paper-button class="custom indigo" id="LoginButton1" on-tap="_clickSubmit1" raised="">
               Log in
             </paper-button>
+            <paper-spinner id="LoginSpinner1" class="big"></paper-spinner>
           </div>
 
           <div>
@@ -47039,9 +47039,9 @@ function keysrt(key,desc) {
           </paper-password-input>
           <br>
           <div class="container">
-          <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerChange" class="big"></paper-spinner>
           <paper-button raised="" disabled="" class="custom indigo" id="SendNewPassword" on-tap="_clickSubmitChange">Accept</paper-button>
           <paper-button raised="" class="custom indigo" dialog-dismiss="">Cancel</paper-button>
+          <paper-spinner id="LoginSpinnerChange" class="big"></paper-spinner>
           </div>
 
 
@@ -47260,9 +47260,9 @@ function keysrt(key,desc) {
           <paper-input id="Changeemail" name="email" value="{{email}}" label="Email"></paper-input>
           <br>
           <div class="container">
-          <paper-spinner style="position: fixed; z-index:1000;" id="SpinnerUpdate" class="big"></paper-spinner>
           <paper-button raised="" class="custom indigo" id="UpdateInfoButton" on-tap="_clickUpdateInfo">Accept</paper-button>
           <paper-button raised="" class="custom indigo" dialog-dismiss="">Cancel</paper-button>
+          <paper-spinner id="SpinnerUpdate" class="big"></paper-spinner>
           </div>
 
 
@@ -47419,10 +47419,10 @@ function keysrt(key,desc) {
           <br>
           <paper-checkbox id="readTerms" name="read" on-change="_enable" required="">I agree to the </paper-checkbox> <a href="javascript:;" on-click="_readT">Terms of Service</a><br>
           <div class="container">
-            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerSignup" class="big"></paper-spinner>
             <paper-button class="custom indigo" id="SignButton" on-tap="_clickSubmit" raised="" disabled="">
               Submit
             </paper-button>
+            <paper-spinner id="LoginSpinnerSignup" class="big"></paper-spinner>
           </div>
 
         </form>
@@ -47584,10 +47584,10 @@ function keysrt(key,desc) {
           </paper-password-input>
           <br>
           <div class="container">
-            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerReset" class="big"></paper-spinner>
             <paper-button class="custom indigo" id="NewPassButton" on-tap="_clickSubmitNew" raised="" disabled="">
               Submit
             </paper-button>
+            <paper-spinner id="LoginSpinnerReset" class="big"></paper-spinner>
           </div>
 
         </form>
@@ -48117,7 +48117,7 @@ function keysrt(key,desc) {
             <div class="horizontal layout around justified">
 
                 <a style="text-transform: none; color:black;" href="/easyweb/db-access" tabindex="-1">
-                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="SQL command line" name="query"></des-card-welcome>
+                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="Oracle SQL web- client" name="query"></des-card-welcome>
                 </a>
                 <a style="text-transform: none; color:black;" href="/easyweb/db-schema">
                 <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables"></des-card-welcome>
