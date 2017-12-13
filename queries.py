@@ -99,7 +99,7 @@ class QueryHandler(BaseHandler):
             if query_name == "":
                 query_name = jobid
             tup = tuple([loc_user, jobid, query_name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
-                         'query', original_query, '', ''])
+                         'query', original_query, '', '', -1])
             cur = con.cursor()
             try:
                 cur.execute("SELECT * from Jobs where user = '%s' order "

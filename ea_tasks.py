@@ -72,6 +72,7 @@ class CustomTask(Task):
         namejob = cc[1]
         file_list = json.dumps(retval['files'])
         size_list = json.dumps(retval['sizes'])
+        elapsed = int(retval['elapsed'])
         if retval['status'] == 'ok':
             if statusjob == 'REVOKE':
                 temp_status = 'REVOKE'
@@ -94,7 +95,10 @@ class CustomTask(Task):
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format(temp_status, task_id)
         q1 = "UPDATE Jobs SET files='{0}' where job = '{1}'".format(file_list, task_id)
         q2 = "UPDATE Jobs SET sizes='{0}' where job = '{1}'".format(size_list, task_id)
+        q3 = "UPDATE Jobs SET runtime='{0}' where job = '{1}'".format(elapsed, task_id)
         cur.execute(q0)
+        cur.execute(q3)
+        print(elapsed)
         if retval['files'] is not None:
             cur.execute(q1)
             cur.execute(q2)

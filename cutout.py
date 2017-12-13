@@ -88,7 +88,7 @@ class FileHandler(BaseHandler):
         con = mydb.connect(**conf)
 
         tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
-                     'cutout', '', '', ''])
+                     'cutout', '', '', '', -1])
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))

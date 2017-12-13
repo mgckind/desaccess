@@ -40,7 +40,8 @@ def create_db(delete=False):
     type text,
     query mediumtext,
     files mediumtext,
-    sizes text
+    sizes text,
+    runtime int
     )""")
     con.commit()
     con.close()
