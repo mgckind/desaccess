@@ -4,6 +4,7 @@
 <template>
 <style include="shared-styles">
 </style>
+
     <iron-ajax id="getMyExamples"
     auto
     url="/easyweb/myexamples/"
@@ -116,8 +117,8 @@
 
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
-
-<des-card heading = "Example queries">
+<h2>title</h2>
+<des-card heading="Example queries">
 <div style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id ="material">
 
