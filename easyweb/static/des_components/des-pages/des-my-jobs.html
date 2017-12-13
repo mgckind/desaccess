@@ -9,8 +9,6 @@
 <template>
 <style include="shared-styles">
 
-<<<<<<< HEAD
-=======
     /* carousel table design*/
 
     paper-icon-item {
@@ -39,7 +37,7 @@
     .green {background: var(--paper-green-500);}
     .red {background: var(--paper-red-500);}
 
->>>>>>> 18bb298395ee539da5103adc22084579696b9080
+
 </style>
 
     <iron-ajax id="getMyJobs"
@@ -150,9 +148,7 @@
 
 
     <paper-dialog class="dialog-position" id="jobHelpMyJobs" with-backdrop on-iron-overlay-opened="patchOverlay">
-<<<<<<< HEAD
-        <p style="text-align: center; padding-top: 20px; font-size: 16px;">This page contains the jobs you've run from Easyaccess Web  along with additional information</p>
-=======
+
         <des-card heading="Help">
             <div class="card-content">
                 <paper-carousel id="jobs-crs" items="1" dotText="false" controls="true">
@@ -335,7 +331,7 @@
             </div>
 
         </des-card>
->>>>>>> 18bb298395ee539da5103adc22084579696b9080
+
     </paper-dialog>
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
@@ -427,11 +423,9 @@
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
-<<<<<<< HEAD
-                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">See query</paper-button>
-=======
+
                 <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
->>>>>>> 18bb298395ee539da5103adc22084579696b9080
+
               </template>
             </vaadin-grid-column>
 
@@ -455,11 +449,9 @@
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-<<<<<<< HEAD
-        <paper-fab class='fabHelp' icon="help"  title='Help' on-tap="_seeHelp" style="float: right;"></paper-fab>
-=======
+
         <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
->>>>>>> 18bb298395ee539da5103adc22084579696b9080
+
 
     </div>
 
@@ -702,10 +694,7 @@ function keysrt(key,desc) {
          if (e.target.withBackdrop) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
-<<<<<<< HEAD
 
-     },
-=======
      },
       _nextPage: function() {
           var crs = document.getElementById("jobs-crs");
@@ -716,7 +705,7 @@ function keysrt(key,desc) {
       var crs = document.getElementById("jobs-crs");
       crs.goToPrevPage();
     }
->>>>>>> 18bb298395ee539da5103adc22084579696b9080
+
 
     });
 
