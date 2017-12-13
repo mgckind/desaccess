@@ -1,4 +1,5 @@
 from celery import Celery, Task
+from celery.result import AsyncResult, allow_join_result
 import easyaccess as ea
 import requests
 from Crypto.Cipher import AES
@@ -101,21 +102,6 @@ class CustomTask(Task):
         con.close()
         requests.post(url, data=retval, verify=False)
 
-class CustomTask2(Task):
-
-    abstract = None
-
-    def on_failure(self, exc, task_id, args, kwargs, einfo):
-        url = 'http://localhost:8080/easyweb/pusher/'
-        requests.post(url, data={'jobid': task_id}, verify=False)
-
-    def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        try:
-            test = retval['status']
-        except:
-            return
-        url = 'http://localhost:8080/easyweb/pusher/'
-        requests.post(url, data=retval, verify=False)
 
 def check_query(query, db, username, lp):
     response = {}
@@ -144,8 +130,17 @@ def check_query(query, db, username, lp):
     return response
 
 
-@app.task(base=CustomTask, soft_time_limit=3000, time_limit=3600)
+@app.task(ignore_result=True)
+def error_handler(uuid):
+    result = AsyncResult(uuid)
+    with allow_join_result():
+        exc = result.get(propagate=False)
+    print('Task {0} raised exception: {1!r}\n{2!r}'.format(
+          uuid, exc, result.traceback))
+
+
 #@app.task(base=CustomTask)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def run_query(query, filename, db, username, lp, jid, email, compression, timeout=None):
     """
     Run a query
@@ -283,40 +278,36 @@ def notify(jobid):
     resp['stopJob'] = 'yes'
     requests.post(url, data=resp, verify=False)
 
-@app.task(base=CustomTask2, soft_time_limit=25, time_limit=35)
-def run_quick(query, filename, db, username, lp, jid, email, compression):
+
+def run_quick(query, db, username, lp):
     response = {}
     response['user'] = username
     response['elapsed'] = 0
-    response['jobid'] = jid
-    response['files'] = None
-    response['sizes'] = None
-    response['email'] = 'no'
     try:
         user_folder = os.path.join(Settings.WORKDIR, username)+'/'
-        if filename is not None:
-            if not os.path.exists(os.path.join(user_folder, jid)):
-                os.mkdir(os.path.join(user_folder, jid))
-        jsonfile = os.path.join(user_folder, jid+'.json')
         cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
         dlp = cipher.decrypt(base64.b64decode(lp)).strip()
-        tt = threading.Timer(25, notify, [jid])
         connection = ea.connect(db, user=username, passwd=dlp.decode())
         cursor = connection.cursor()
+        tt = threading.Timer(25, connection.con.cancel)
         tt.start()
         if query.lower().lstrip().startswith('select'):
             response['kind'] = 'select'
             try:
                 df = connection.query_to_pandas(query)
-                data = df.to_json(orient='records')
                 df.to_csv(os.path.join(user_folder, 'quickResults.csv'), index=False)
+                df = df[0:1000]
+                data = df.to_json(orient='records')
                 response['status'] = 'ok'
                 response['data'] = data
             except Exception as e:
                 print('query job finished')
                 print(str(e).strip())
                 response['status'] = 'error'
-                response['data'] = str(e).strip()
+                err_out = str(e).strip()
+                if 'ORA-01013' in err_out:
+                    err_out = 'Time Exceeded (30 seconds). Please try submitting the job'
+                response['data'] = err_out
                 response['kind'] = 'query'
         else:
             response['kind'] = 'query'
@@ -327,13 +318,13 @@ def run_quick(query, filename, db, username, lp, jid, email, compression):
                 response['data'] = 'Done! (See results below)'
             except Exception as e:
                 response['status'] = 'error'
-                response['data'] = str(e).strip()
-        with open(jsonfile, 'w') as fp:
-            json.dump(response, fp)
+                err_out = str(e).strip()
+                if 'ORA-01013' in err_out:
+                    err_out = 'Time Exceeded (30 seconds). Please try submitting this query as job'
+                response['data'] = err_out
         cursor.close()
         connection.close()
     except Exception as e:
-        print('tiimes')
         response['status'] = 'error'
         response['data'] = str(e).strip()
         response['kind'] = 'query'

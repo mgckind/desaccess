@@ -39457,7 +39457,7 @@ paper-item {
 <hr><br>
 <div id="response" class="results">
 <template is="dom-if" if="{{isSelect}}">
-    <paper-button raised="" class="SeeFilesButton" on-tap="_downloadFile">Download File</paper-button>
+    <paper-button raised="" class="indigo" on-tap="_downloadFile">Download File</paper-button>
     <div class="scrollTable">
 <table id="t01" style="width:100%">
     <tbody><tr class="t01-tr">
@@ -39617,7 +39617,7 @@ Polymer({
         document.getElementById('QuickQuery').disabled=false;
             _self.isSelect = true;
             _self.isQuery = true;
-            _self.msg = 'Done!';
+            _self.msg = 'Done! Results below (only 1000 rows are shown, complete result in file)' ;
             document.getElementById('response2').scrollIntoView();
             _self.mydata = JSON.parse(_self.data.data);
             _self.keys = Object.keys(_self.mydata[0]);
