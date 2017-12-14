@@ -1,4 +1,6 @@
 <link rel="import" href="../../styles/shared-styles.html">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 <dom-module id="des-query">
 <template>
 <style include="shared-styles">
@@ -9,7 +11,7 @@
     .query-row {
         @apply(--layout-horizontal);
         @apply(--layout-around-justified);
-        height: 60%;
+        height: 70%;
 
     }
 
@@ -52,6 +54,114 @@
     .btn-wrap {
         margin-top: 5px;
     }
+
+    .query-table {
+        height: 60%;
+        /*border: 1px solid black;*/
+    }
+
+    .query-tr {
+    }
+
+    .query-td {
+     }
+    
+    .query-td-2 {
+        text-align: center;
+        line-height: 15%;
+    }
+
+    /*.querySpinner {*/
+        /*position: absolute;*/
+        /*right: 50px;*/
+    /*}*/
+
+    #response {
+        border: 1px solid blue;
+        margin-top: 40px;
+    }
+
+    @media all and (max-width: 1000px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 600px;
+        }
+    }
+
+
+    @media all and (max-width: 800px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 800px;
+        }
+    }
+
+    @media all and (max-width: 450px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 1000px;
+        }
+    }
+
+    @media all and (max-height: 700px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 1200px;
+        }
+    }
+
 
 
 </style>
@@ -213,167 +323,136 @@
                 </div>
 
                 <div class="query-right">
-                    <div class="query-row-2">
-                        <div class="query-btn">
-                            <div class="btn-wrap">
-                                <paper-button id="subQuery" class="indigo medium" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
-                            </div>
+                    <table class="query-table" id="query-table">
+                        <col width="70%">
+                        <col width="30%">
+                        <tr class="query-tr">
+                            <td class="query-td-2">
+                                <div class="query-btn">
+                                    <div class="btn-wrap">
+                                    <paper-button id="subQuery" class="indigo medium" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
+                                    </div>
 
-                            <div class="btn-wrap">
-                                <paper-button class="indigo medium" raised on-tap="clearQueryBox">Clear</paper-button>
-                            </div>
+                                    <div class="btn-wrap">
+                                    <paper-button class="indigo medium" raised on-tap="clearQueryBox">Clear</paper-button>
+                                    </div>
 
-                            <div class="btn-wrap">
-                                <paper-button class="indigo medium" raised on-tap="_checkSyntax">Check</paper-button>
-                            </div>
+                                    <div class="btn-wrap">
+                                    <paper-button class="indigo medium" raised on-tap="_checkSyntax">Check</paper-button>
+                                    </div>
 
-                            <div class="btn-wrap">
-                                <paper-button id="QuickQuery" class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>
-                                <paper-spinner id="querySpinner" class="big"></paper-spinner>
-                            </div>
+                                    <div class="btn-wrap">
+                                        <paper-button id="QuickQuery" class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>
+                                    </div>
 
-                            <div class="btn-wrap">
-                                <a href = "/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">
+                                    <div class="btn-wrap">
+                                    <a href = "/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">
                                     <paper-button class="indigo medium" raised >See Examples</paper-button>
-                                </a>
-                            </div>
+                                    </a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="query-td">
+                                <div class="btn-wrap">
+                                    <paper-spinner id="querySpinner" class="big"></paper-spinner>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="query-tr">
+                            <td class="query-td">
+                                <paper-input id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
+                            </td>
+                            <td class="query-td">
+                                <paper-toggle-button style="margin-top: 10px;" class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file</paper-toggle-button>
+                            </td>
+                        </tr>
 
-                        </div>
+                        <tr class="query-tr">
+                            <td class="query-td">
+                                Options:
+                            </td>
+                        </tr>
 
+                        <tr class="query-tr">
 
-                    </div>
+                            <td class="query-td">
+                                <paper-checkbox id="compress-box" style="margin-top: 10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>
+                            </td>
+                        </tr>
 
+                        <tr class="query-tr">
+                            <td class="query-td">
+                                <paper-input  id="queryname" name="name" label="Job Name" value=""></paper-input>
+                            </td>
 
-                    <div class="query-cb">
-                        <div class="container4">
-                            <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file
-                            </paper-toggle-button>
-                            <paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
-                        </div>
-                    </div>
+                        </tr>
 
-                    <div class="query-op">
-                        Options:
-                        <div class="container4" style="font-size: 15px;">
-                            <paper-input  id="queryname" name="name" label="Job Name" value=""></paper-input>
-                            <paper-checkbox id="compress-box" style="margin-top: 38px; margin-left:10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>
-                        </div>
-                        <div class="container4" style="font-size: 15px;">
-                            <paper-input  id="queryemail" name="email" label="Email" value="" ></paper-input>
-                            <paper-checkbox id="checkemail" style="margin-top: 38px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
-                        </div>
-                    </div>
+                        <tr class="query-tr">
+                            <td class="query-td">
+                                <paper-checkbox id="checkemail" style="margin-top: 10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
+                            </td>
+                        </tr>
+
+                        <tr class="query-tr">
+                            <td class="query-td">
+                                <paper-input  id="queryemail" name="email" label="Email" value="" ></paper-input>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
-            <div id="response" class="results">
-                <template is="dom-if" if={{isSelect}} >
-                    <paper-button raised class="SeeFilesButton" on-tap='_downloadFile'>Download File</paper-button>
-                    <div class="scrollTable">
-                        <table id="t01" style="width:100%">
-                            <tr class="t01-tr">
-                                <th class="t01-th">
-                                    {{idx}}
-                                </th>
-                                <template is="dom-repeat" items="{{keys}}" as="key">
-                                    <th class="t01-th">&nbsp;{{key}}&nbsp;</th>
-                                </template>
-                            </tr>
-                            <!--</table>-->
 
-                            <!--<table id="t01" style="width:100%">-->
-                            <template is="dom-repeat" id="pandas" items="{{mydata}}">
+            </div>
+
+            <div class="query-row">
+                <div id="response" class="results">
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    <template is="dom-if" if={{isSelect}} >
+                        <paper-button raised class="SeeFilesButton" on-tap='_downloadFile'>Download File</paper-button>
+                        <div class="scrollTable">
+                            <table id="t01" style="width:100%">
                                 <tr class="t01-tr">
-                                    <td class="t01-td">
-                                        {{index}}
-                                    </td>
+                                    <th class="t01-th">
+                                        {{idx}}
+                                    </th>
                                     <template is="dom-repeat" items="{{keys}}" as="key">
-                                        <td class="t01-td">{{_returnVal(item,key)}}</td>
+                                        <th class="t01-th">&nbsp;{{key}}&nbsp;</th>
                                     </template>
                                 </tr>
-                            </template>
-                        </table>
-                    </div>
-                </template>
+                                <!--</table>-->
+
+                                <!--<table id="t01" style="width:100%">-->
+                                <template is="dom-repeat" id="pandas" items="{{mydata}}">
+                                    <tr class="t01-tr">
+                                        <td class="t01-td">
+                                            {{index}}
+                                        </td>
+                                        <template is="dom-repeat" items="{{keys}}" as="key">
+                                            <td class="t01-td">{{_returnVal(item,key)}}</td>
+                                        </template>
+                                    </tr>
+                                </template>
+                            </table>
+                        </div>
+                    </template>
+                </div>
             </div>
         </div>
-            <!---->
-<!--<div class="query-box" style="padding-right:0px">-->
-<!--&lt;!&ndash;-->
-<!--<paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>-->
-<!--</paper-textarea>&ndash;&gt;-->
-<!--<textarea style="border: 1px solid red;" id="queryBox" autofocus placeholder="Query box"></textarea>-->
-<!--<hr />-->
-<!--<template is="dom-if" if={{isQuery}} >-->
-    <!--<template is="dom-if" if={{isOk}} >-->
-        <!--<span class="queryMsg" style="color: green"> {{msg}}</span>-->
-    <!--</template>-->
-    <!--<template is="dom-if" if={{!isOk}} >-->
-        <!--<span id="errqueryMsg" class="queryMsg" style="color: red"> {{msg}}</span>-->
-    <!--</template>-->
-<!--</template>-->
-<!--<hr />-->
-<!--<paper-button id="subQuery" class="indigo medium" raised disabled on-tap="_submitQuery">Submit Job</paper-button>-->
-<!--<paper-button class="indigo medium" raised on-tap="clearQueryBox">Clear</paper-button>-->
-<!--<paper-button class="indigo medium" raised on-tap="_checkSyntax">Check</paper-button>-->
-<!--<paper-button id="QuickQuery" class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>-->
-<!--<paper-spinner id="querySpinner" class="big"></paper-spinner>-->
-<!--<a href = "/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">-->
-<!--<paper-button style="position:absolute; right:10px" class="indigo medium" raised >See Examples</paper-button>-->
-<!--</a>-->
-    <!--<div style="width: 500px; padding-left: 10px; font-size: 15px;" >-->
-        <!--<div class="container4">-->
-
-        <!--<paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file-->
-        <!--</paper-toggle-button>-->
-        <!--<paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div style="padding-left: 10px; font-size: 15px;" >-->
-    <!--Options:-->
-    <!--<div class="container4" style="font-size: 15px;">-->
-        <!--<paper-input  id="queryname" name="name" label="Job Name" value=""></paper-input>-->
-        <!--<paper-checkbox id="compress-box" style="margin-top: 38px; margin-left:10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>-->
-    <!--</div>-->
-    <!--<div class="container4" style="font-size: 15px;">-->
-        <!--<paper-input  id="queryemail" name="email" label="Email" value="" ></paper-input>-->
-        <!--<paper-checkbox id="checkemail" style="margin-top: 38px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>-->
-     <!--</div>-->
-
-<!--<hr /><br>-->
 
 
-<!--<div id="response" class="results">-->
-<!--<template is="dom-if" if={{isSelect}} >-->
-    <!--<paper-button raised class="SeeFilesButton" on-tap='_downloadFile'>Download File</paper-button>-->
-    <!--<div class="scrollTable">-->
-<!--<table id="t01" style="width:100%">-->
-    <!--<tr class="t01-tr">-->
-    <!--<th class="t01-th">-->
-        <!--{{idx}}-->
-    <!--</th>-->
-    <!--<template is="dom-repeat" items="{{keys}}" as="key">-->
-        <!--<th class="t01-th">&nbsp;{{key}}&nbsp;</th>-->
-    <!--</template>-->
-    <!--</tr>-->
-<!--&lt;!&ndash;</table>&ndash;&gt;-->
-
-    <!--&lt;!&ndash;<table id="t01" style="width:100%">&ndash;&gt;-->
-        <!--<template is="dom-repeat" id="pandas" items="{{mydata}}">-->
-            <!--<tr class="t01-tr">-->
-                <!--<td class="t01-td">-->
-                <!--{{index}}-->
-                <!--</td>-->
-                <!--<template is="dom-repeat" items="{{keys}}" as="key">-->
-                    <!--<td class="t01-td">{{_returnVal(item,key)}}</td>-->
-                <!--</template>-->
-            <!--</tr>-->
-        <!--</template>-->
-    <!--</table>-->
-<!--</div>-->
-
-
-<!--</template>-->
-<!--</div>-->
         <div id="response2" >
 
                 <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
@@ -387,7 +466,7 @@
 
 <script>
 
-Polymer({
+    Polymer({
     is: "des-query",
     properties: {
         querystr :{
