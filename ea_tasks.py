@@ -73,6 +73,8 @@ class CustomTask(Task):
         statusjob = cc[0]
         print(statusjob)
         namejob = cc[1]
+        if namejob == '':
+            namejob = task_id
         file_list = json.dumps(retval['files'])
         size_list = json.dumps(retval['sizes'])
         elapsed = int(retval['elapsed'])
