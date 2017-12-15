@@ -52,12 +52,13 @@ class CustomTask(Task):
         cur.execute(q0)
         con.commit()
         con.close()
-        requests.post(url, data={'jobid': task_id}, verify=False)
+        #requests.post(url, data={'jobid': task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         print(einfo)
         print(status)
         print('Done?')
+        failed_job = False
         try:
             test = retval['status']
         except:
@@ -78,6 +79,7 @@ class CustomTask(Task):
         if retval['status'] == 'ok':
             if statusjob == 'REVOKE':
                 temp_status = 'REVOKE'
+                failed_job = True
             else:
                 temp_status = 'SUCCESS'
             if retval['email'] != 'no':
@@ -86,7 +88,10 @@ class CustomTask(Task):
                 print('SEND EMAIL TO: ', email)
                 print(namejob)
                 try:
-                    email_utils.send_note(user, namejob, email)
+                    if failed_job:
+                        email_utils.send_fail(user, namejob, email)
+                    else:
+                        email_utils.send_note(user, namejob, email)
                 except Exception as e:
                     print(str(e).strip())
             else:
@@ -106,7 +111,7 @@ class CustomTask(Task):
             cur.execute(q2)
         con.commit()
         con.close()
-        requests.post(url, data=retval, verify=False)
+        #requests.post(url, data=retval, verify=False)
 
 
 def check_query(query, db, username, lp):
@@ -282,7 +287,7 @@ def notify(jobid):
     resp['kind'] = 'query'
     resp['jobid'] = jobid
     resp['stopJob'] = 'yes'
-    requests.post(url, data=resp, verify=False)
+    #requests.post(url, data=resp, verify=False)
 
 
 def run_quick(query, db, username, lp):
