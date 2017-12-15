@@ -19,7 +19,7 @@ from smtp import email_utils
 
 app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
-
+app.conf.broker_transport_options = {'visibility_timeout': 3600}
 
 def get_filesize(filename):
     size = os.path.getsize(filename)
@@ -36,8 +36,8 @@ def get_filesize(filename):
 class CustomTask(Task):
 
     abstract = None
-    acks_late = True
-    reject_on_worker_lost = True
+    #acks_late = True
+    #reject_on_worker_lost = True
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         url = 'http://localhost:8080/easyweb/pusher/'
