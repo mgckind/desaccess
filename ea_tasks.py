@@ -36,6 +36,8 @@ def get_filesize(filename):
 class CustomTask(Task):
 
     abstract = None
+    acks_late = True
+    reject_on_worker_lost = True
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         url = 'http://localhost:8080/easyweb/pusher/'
