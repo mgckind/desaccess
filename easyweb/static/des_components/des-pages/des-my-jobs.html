@@ -37,11 +37,7 @@
     .green {background: var(--paper-green-500);}
     .red {background: var(--paper-red-500);}
 
-
 </style>
-
-    <h2>Title</h2>
-
     <iron-ajax id="getMyJobs"
     auto
     url="/easyweb/myjobs/"
@@ -77,14 +73,14 @@
                debounce-duration="300">
     </iron-ajax>
 
-    <paper-dialog class="dialog-position" id="JobQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+    <paper-dialog class="dialog-position-query" id="JobQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>Job id: {{jobid}}</h2>
-              <div class="insideDialog">
+              <div class="insideDialog" >
                   <textarea id="jobQueryBox" autofocus></textarea>
               </div>
               <div class="buttons" on-iron-overlay-opened="patchOverlay">
                   <paper-button class="indigo" raised dialog-confirm on-tap="_copyQuery">Copy query</paper-button>
-                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+                  <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
               </div>
     </paper-dialog>
 
@@ -92,22 +88,20 @@
               <des-results id="desTiles" username={{username}} jobid={{jobid}}></des-results>
     </paper-dialog>
 
-    <paper-dialog class="dialog-position" id="JobName" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <h2>{{jobname}}</h2>
-        <p>{{jobid}}</p>
-        <paper-input  id="newname" name="name" label="New Name" value=""></paper-input>
+    <paper-dialog class="dialog-position-small" id="JobName" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <b>Job id: {{jobid}} </b><br />
+        <paper-input style="font-size: 10px;" id="newname" name="name" label="New Name" value="{{jobname}}"></paper-input>
         <div class="buttons" on-iron-overlay-opened="patchOverlay">
             <paper-button class="indigo" raised dialog-confirm on-tap="_genChangeReq">Change Name</paper-button>
-            <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+            <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
         </div>
     </paper-dialog>
 
 
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop on-iron-overlay-opened="patchOverlay">
               <h2>Job id: {{jobid}}</h2>
+              <p> {{nfiles}} files generated  </p>
               <div>
-
-
         <vaadin-grid items="{{myfiles}}" id="material">
 
 
@@ -143,14 +137,13 @@
             </vaadin-grid>
               </div>
 
-              <div class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised dialog-confirm>Ok</paper-button><br />
+              <div style="bottom: 20px;" class="buttons" on-iron-overlay-opened="patchOverlay">
+                  <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
               </div>
     </paper-dialog>
 
 
     <paper-dialog class="dialog-position" id="jobHelpMyJobs" with-backdrop on-iron-overlay-opened="patchOverlay">
-
         <des-card heading="Help">
             <div class="card-content">
                 <paper-carousel id="jobs-crs" items="1" dotText="false" controls="true">
@@ -333,12 +326,12 @@
             </div>
 
         </des-card>
-
     </paper-dialog>
+
 
 <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
-<des-card heading = "My Jobs"></des-card>
+<des-card heading = "My Jobs">
 
 <div  style="padding-right: 20px">
 <vaadin-grid items="{{data}}" id ="material">
@@ -359,7 +352,10 @@
       </vaadin-grid-column>
 
       <vaadin-grid-column width="80px" flex-grow="0">
-        <template class="header">Status</template>
+        <!--<template class="header">Status</template>-->
+          <template class="header" style="padding-left: 5px">
+              <vaadin-grid-sorter path="status">Status<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+          </template>
 
           <template>
               <template is="dom-if" if="{{_completed(item.status)}}">
@@ -382,24 +378,32 @@
         <!--</template>-->
     <!--</vaadin-grid-column>-->
 
-      <vaadin-grid-column flex-grow="2" width = 200px>
-        <template class="header">Job Name</template>
+      <vaadin-grid-column flex-grow="0" width="290px">
+        <template class="header">
+
+            <vaadin-grid-filter aria-label="Job Name" path="jname" value="[[_filterJobName]]">
+            <input placeholder="Job Name" value="{{_filterJobName::input}}" focus-target>
+                      </vaadin-grid-filter>
+
+
+        </template>
           <template>
           <paper-item-body two-line>
               <div>
                   <!--{{returnName(item.job)}}-->
                   <!--it can be changed in api.py-->
-                  {{item.jname}}
+                  <span style="font-size: 10px"> Name: {{item.jname}} </span> <br />
+                  <span style="font-size: 10px"> Job id: {{item.job}} </span>
                   <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
 
               </div>
               <div secondary>
                   <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
                   <template is="dom-if" if="{{item.jwarning}}">
-                   <span style="color:red;">{{item.elapsed}}</span>
+                   <span style="color:red; font-size: 10px;">{{item.elapsed}}</span>
                   </template>
                   <template is="dom-if" if="{{!item.jwarning}}">
-                   <span>{{item.elapsed}}</span>
+                   <span style="font-size: 10px;">{{item.elapsed}}</span>
                   </template>
               </div>
           </paper-item-body>
@@ -407,14 +411,26 @@
 
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="1">
-        <template class="header" style="padding-left: 5px">Job type</template>
+      <vaadin-grid-column flex-grow="0" width="110px">
+
+        <template class="header" style="padding-left: 5px">
+         <vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+        </template>
         <template>{{item.jobtype}}<br />
         </template>
       </vaadin-grid-column>
 
+      <vaadin-grid-column flex-grow="0" width="120px">
+
+        <template class="header" style="padding-left: 5px">
+         Execution time (s)
+        </template>
+        <template>{{item.jruntime}}<br />
+        </template>
+      </vaadin-grid-column>
+
     <!--Cancel job button-->
-      <vaadin-grid-column flex-grow="1">
+      <vaadin-grid-column flex-grow="0" width="80px">
         <template class="header">Cancel Job</template>
           <template>
 
@@ -425,16 +441,14 @@
         <vaadin-grid-column flex-grow="1">
               <template class="header">Queries</template>
               <template>
-
                 <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
-
               </template>
             </vaadin-grid-column>
 
         <vaadin-grid-column flex-grow="1">
               <template class="header">Results</template>
               <template>
-                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">See Tiles</paper-button>
+                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -442,7 +456,7 @@
               <template class="header">Files</template>
               <template>
 
-                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles">See Files</paper-button>
+                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles"> Files</paper-button>
               </template>
             </vaadin-grid-column>
 
@@ -451,15 +465,13 @@
     <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
         <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
         <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-
         <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
 
     </div>
 
     <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
     <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-
+</des-card>
 </template>
 
 <script>
@@ -482,6 +494,9 @@ function keysrt(key,desc) {
         jobid: {
             type: String,
             value: '',
+        },
+        nfiles: {
+            value: 0,
         },
         jobquery: {
             type: String,
@@ -619,6 +634,7 @@ function keysrt(key,desc) {
         this.username = e.model.item.user;
         this.jobfiles = JSON.parse(e.model.item.jfiles);
         this.jobsizes = JSON.parse(e.model.item.jsizes);
+        this.nfiles = this.jobfiles.length;
         this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
         for (i=0; i< this.jobfiles.length; i++){
             this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
@@ -636,6 +652,10 @@ function keysrt(key,desc) {
         //document.getElementById('desTiles').jobid = this.jobid;
         document.getElementById('JobTiles').open();
      },
+      _seeHelp: function(e){
+          e.preventDefault();
+          document.getElementById('jobHelpMyJobs').open();
+      },
 
       _seeName: function(e){
           e.preventDefault();
@@ -686,17 +706,10 @@ function keysrt(key,desc) {
               console.log('NOOOO');
               document.querySelector('#toast-nm-bad').show();
           },
-
-          _seeHelp: function(e){
-          e.preventDefault();
-          document.getElementById('jobHelpMyJobs').open();
-      },
-
      patchOverlay: function (e) {
          if (e.target.withBackdrop) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
-
      },
       _nextPage: function() {
           var crs = document.getElementById("jobs-crs");
@@ -707,7 +720,6 @@ function keysrt(key,desc) {
       var crs = document.getElementById("jobs-crs");
       crs.goToPrevPage();
     }
-
 
     });
 

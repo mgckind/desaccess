@@ -11,7 +11,7 @@ import datetime
 import requests
 import MySQLdb as mydb
 import yaml
-
+from Settings import app_log
 
 def after_return(retval):
     url = Settings.ROOT_URL+'/easyweb/pusher/'
@@ -96,10 +96,10 @@ class QueryHandler(BaseHandler):
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             # copy the jobid to initial name
-            if query_name == "":
-                query_name = jobid
+            #if query_name == "":
+            #    query_name = jobid
             tup = tuple([loc_user, jobid, query_name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
-                         'query', original_query, '', ''])
+                         'query', original_query, '', '', -1])
             cur = con.cursor()
             try:
                 cur.execute("SELECT * from Jobs where user = '%s' order "
@@ -144,9 +144,9 @@ class QueryHandler(BaseHandler):
                 self.write(run_check)
                 self.finish()
                 return
-            run = ea_tasks.run_quick.apply_async(args=[query, filename, db, loc_user, lp.decode(), jobid,
-                                                 query_email, compression], retry=True, task_id=jobid)
-            response = ''
+            app_log.info('QUICK[{0}]: {1}'.format(loc_user, query))
+            run = ea_tasks.run_quick(query, db, loc_user, lp.decode())
+            response = run
         elif query_kind == "check":
             run = ea_tasks.check_query(query, db, loc_user, lp.decode())
             response = run

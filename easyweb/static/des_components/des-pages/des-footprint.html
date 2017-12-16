@@ -63,7 +63,7 @@
               <vaadin-grid-column>
                 <template class="header"> Name
                 </template>
-                <template>{{item.name}}</template>
+                <template>{{tilename}}--{{item.name}}</template>
               </vaadin-grid-column>
 
                 <vaadin-grid-column>
@@ -148,24 +148,34 @@
         </paper-dialog>
 
                 <des-card heading=[[header]]>
-                    <div class="card content flex">
-                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-20px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                        <div  class="flex" style="display: inline-block;">
+                        <div style="display: inline-block; vertical-align: top; margin-right:15px; margin-bottom:10px;">
+
+                        <canvas id="GlobWebCanvas" class="box" width="500px" height="500px"  style="text-align: center; vertical-align: top;"></canvas>
+                        </div>
+                        <div style="display: inline-block;">
+
+                        <div>
+                            <div class="card-content">
+                            Use the footprint tool to search a tile by position or name. <br />
+                            Double click to select a tile. <br />
+                            </div>
+                    <div class="flex">
+                    <paper-input  on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-15px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
-                    <paper-input  on-keydown="checkForEnter2" class="input_position" id="zoomtotile" label="Tilename" style="width: 200px; padding-left: 15px; margin-top:-20px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gototile"></paper-icon-button>
+                    <paper-input  on-keydown="checkForEnter2" class="input_position" id="zoomtotile" label="Tilename" style="width: 200px; padding-left: 15px; margin-top:-15px; " required> <paper-icon-button slot="suffix" icon="search" on-tap="gototile"></paper-icon-button>
                 </paper-input>
                 <div id="errorTile" style="margin-left: 20px; margin-top:30px; color:red;"></div>
             </div>
 
-                    <div class="card content flex">
-                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
-                <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_dr1" checked on-change="display_dr1">DR1 TILES</paper-checkbox>
-                <paper-checkbox style="margin-left: 20px; margin-top: 30px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
-                    </div>
+                    <div class=" flex">
+                <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 20px;"  id="check_dr1" checked on-change="display_dr1">DR1 TILES</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 20px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
+            </div>
                     <div class="card-content">
-                 <div class="flex" >
-                        <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
-                        <des-card heading="Tile properties">
                             <div id="tiletitleHelp" class="card-content">
+                                <h2> <u>Tile properties</u></h2>
                                 <table id="tileTable" class="localTable">
                                 <tr><td>Name</td><td>:</td></tr>
                                 <tr><td>Tile Center</td><td>:</td></tr>
@@ -174,12 +184,15 @@
                                 <tr><td>DEC Corners</td><td>:</td></tr>
                                 </table>
                             </div>
+                        </div>
                             <div class="card-content">
-
-                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Files</paper-button>
+                                <br />
+                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Tile Files</paper-button> <br /> <br />
+                            Click <a href="http://desdr-server.ncsa.illinois.edu/despublic/dr1_tiles/" target="_blank"> here </a> to get access to all the tiles
                             </div>
 
-                        </des-card>
+                        </div>
+
                 </div>
                     </div>
                 </des-card>
@@ -327,11 +340,25 @@
                  this.tilename = tile;
              },
             attached: function(){
+                window.addEventListener('resize', resizeCanvas, false);
+                function  resizeCanvas() {
+                    var caa = document.getElementById("GlobWebCanvas");
+                    var wwidth = window.innerWidth*0.8
+                    var wheight = window.innerHeight*0.65
+
+                    caa.width = Math.min(wwidth,wheight,500);
+                    caa.height = Math.min(wwidth,wheight,500);
+                    globe.refresh();
+                }
                 require.config({
                     baseUrl: '/easyweb/static/scripts/src/'
                 });
                 require(['GlobWeb'], function (GlobWeb) {
                     var cvs = document.getElementById("GlobWebCanvas");
+                    var wwidth = window.innerWidth*0.8
+                    var wheight = window.innerHeight*0.65
+                    cvs.width = Math.min(wwidth,wheight,500);
+                    cvs.height = Math.min(wwidth,wheight,500);
                     //cvs.width = window.innerWidth;
                     //cvs.height = window.innerHeight;
                     var globe = new GlobWeb.Globe({

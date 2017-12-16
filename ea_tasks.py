@@ -1,4 +1,5 @@
 from celery import Celery, Task
+from celery.result import AsyncResult, allow_join_result
 import easyaccess as ea
 import requests
 from Crypto.Cipher import AES
@@ -18,7 +19,7 @@ from smtp import email_utils
 
 app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
-
+app.conf.broker_transport_options = {'visibility_timeout': 3600}
 
 def get_filesize(filename):
     size = os.path.getsize(filename)
@@ -35,6 +36,8 @@ def get_filesize(filename):
 class CustomTask(Task):
 
     abstract = None
+    #acks_late = True
+    #reject_on_worker_lost = True
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         url = 'http://localhost:8080/easyweb/pusher/'
@@ -49,12 +52,13 @@ class CustomTask(Task):
         cur.execute(q0)
         con.commit()
         con.close()
-        requests.post(url, data={'jobid': task_id}, verify=False)
+        #requests.post(url, data={'jobid': task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         print(einfo)
         print(status)
         print('Done?')
+        failed_job = False
         try:
             test = retval['status']
         except:
@@ -69,11 +73,15 @@ class CustomTask(Task):
         statusjob = cc[0]
         print(statusjob)
         namejob = cc[1]
+        if namejob == '':
+            namejob = task_id
         file_list = json.dumps(retval['files'])
         size_list = json.dumps(retval['sizes'])
+        elapsed = int(retval['elapsed'])
         if retval['status'] == 'ok':
             if statusjob == 'REVOKE':
                 temp_status = 'REVOKE'
+                failed_job = True
             else:
                 temp_status = 'SUCCESS'
             if retval['email'] != 'no':
@@ -82,7 +90,10 @@ class CustomTask(Task):
                 print('SEND EMAIL TO: ', email)
                 print(namejob)
                 try:
-                    email_utils.send_note(user, namejob, email)
+                    if failed_job:
+                        email_utils.send_fail(user, namejob, email)
+                    else:
+                        email_utils.send_note(user, namejob, email)
                 except Exception as e:
                     print(str(e).strip())
             else:
@@ -93,29 +104,17 @@ class CustomTask(Task):
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format(temp_status, task_id)
         q1 = "UPDATE Jobs SET files='{0}' where job = '{1}'".format(file_list, task_id)
         q2 = "UPDATE Jobs SET sizes='{0}' where job = '{1}'".format(size_list, task_id)
+        q3 = "UPDATE Jobs SET runtime='{0}' where job = '{1}'".format(elapsed, task_id)
         cur.execute(q0)
+        cur.execute(q3)
+        print(elapsed)
         if retval['files'] is not None:
             cur.execute(q1)
             cur.execute(q2)
         con.commit()
         con.close()
-        requests.post(url, data=retval, verify=False)
+        #requests.post(url, data=retval, verify=False)
 
-class CustomTask2(Task):
-
-    abstract = None
-
-    def on_failure(self, exc, task_id, args, kwargs, einfo):
-        url = 'http://localhost:8080/easyweb/pusher/'
-        requests.post(url, data={'jobid': task_id}, verify=False)
-
-    def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        try:
-            test = retval['status']
-        except:
-            return
-        url = 'http://localhost:8080/easyweb/pusher/'
-        requests.post(url, data=retval, verify=False)
 
 def check_query(query, db, username, lp):
     response = {}
@@ -144,8 +143,17 @@ def check_query(query, db, username, lp):
     return response
 
 
-@app.task(base=CustomTask, soft_time_limit=3000, time_limit=3600)
+@app.task(ignore_result=True)
+def error_handler(uuid):
+    result = AsyncResult(uuid)
+    with allow_join_result():
+        exc = result.get(propagate=False)
+    print('Task {0} raised exception: {1!r}\n{2!r}'.format(
+          uuid, exc, result.traceback))
+
+
 #@app.task(base=CustomTask)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def run_query(query, filename, db, username, lp, jid, email, compression, timeout=None):
     """
     Run a query
@@ -177,6 +185,7 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
 
     """
     try:
+        t1 = time.time()
         response = {}
         response['user'] = username
         response['elapsed'] = 0
@@ -207,7 +216,6 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
         if timeout is not None:
             tt = threading.Timer(timeout, connection.con.cancel)
             tt.start()
-        t1 = time.time()
         if query.lower().lstrip().startswith('select'):
             response['kind'] = 'select'
             try:
@@ -281,42 +289,38 @@ def notify(jobid):
     resp['kind'] = 'query'
     resp['jobid'] = jobid
     resp['stopJob'] = 'yes'
-    requests.post(url, data=resp, verify=False)
+    #requests.post(url, data=resp, verify=False)
 
-@app.task(base=CustomTask2, soft_time_limit=25, time_limit=35)
-def run_quick(query, filename, db, username, lp, jid, email, compression):
+
+def run_quick(query, db, username, lp):
     response = {}
     response['user'] = username
     response['elapsed'] = 0
-    response['jobid'] = jid
-    response['files'] = None
-    response['sizes'] = None
-    response['email'] = 'no'
     try:
         user_folder = os.path.join(Settings.WORKDIR, username)+'/'
-        if filename is not None:
-            if not os.path.exists(os.path.join(user_folder, jid)):
-                os.mkdir(os.path.join(user_folder, jid))
-        jsonfile = os.path.join(user_folder, jid+'.json')
         cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
         dlp = cipher.decrypt(base64.b64decode(lp)).strip()
-        tt = threading.Timer(25, notify, [jid])
         connection = ea.connect(db, user=username, passwd=dlp.decode())
         cursor = connection.cursor()
+        tt = threading.Timer(25, connection.con.cancel)
         tt.start()
         if query.lower().lstrip().startswith('select'):
             response['kind'] = 'select'
             try:
                 df = connection.query_to_pandas(query)
-                data = df.to_json(orient='records')
                 df.to_csv(os.path.join(user_folder, 'quickResults.csv'), index=False)
+                df = df[0:1000]
+                data = df.to_json(orient='records')
                 response['status'] = 'ok'
                 response['data'] = data
             except Exception as e:
                 print('query job finished')
                 print(str(e).strip())
                 response['status'] = 'error'
-                response['data'] = str(e).strip()
+                err_out = str(e).strip()
+                if 'ORA-01013' in err_out:
+                    err_out = 'Time Exceeded (30 seconds). Please try submitting the job'
+                response['data'] = err_out
                 response['kind'] = 'query'
         else:
             response['kind'] = 'query'
@@ -327,13 +331,13 @@ def run_quick(query, filename, db, username, lp, jid, email, compression):
                 response['data'] = 'Done! (See results below)'
             except Exception as e:
                 response['status'] = 'error'
-                response['data'] = str(e).strip()
-        with open(jsonfile, 'w') as fp:
-            json.dump(response, fp)
+                err_out = str(e).strip()
+                if 'ORA-01013' in err_out:
+                    err_out = 'Time Exceeded (30 seconds). Please try submitting this query as job'
+                response['data'] = err_out
         cursor.close()
         connection.close()
     except Exception as e:
-        print('tiimes')
         response['status'] = 'error'
         response['data'] = str(e).strip()
         response['kind'] = 'query'
