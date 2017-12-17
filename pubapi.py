@@ -123,9 +123,9 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         folder2 = user_folder+jobid+'/'
         os.system('mkdir -p '+folder2)
         now = datetime.datetime.now()
-        #run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
-        #                                          folder2, xs, ys, jobid, list_only,
-        #                                          send_email, email], retry=True, task_id=jobid)
+        run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
+                                                  folder2, xs, ys, jobid, list_only,
+                                                  send_email, email], retry=True, task_id=jobid)
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
@@ -283,7 +283,8 @@ class ApiJobHandler(tornado.web.RequestHandler):
             cc = cur.fetchone()
             files = cc[7]
             ff = files[1:-1].replace('"', '').split(',')
-            final = ['host/'+f for f in ff]
+            host = 'http://desdr-server.ncsa.illinois.edu/workdir/{0}/{1}/'.format(cc[0], jobid)
+            final = [host+f for f in ff]
             response['msg'] = 'Job summary'
             response['job_status'] = cc[3]
             response['files'] = final
