@@ -13,7 +13,7 @@ import ea_tasks
 import pandas as pd
 import numpy as np
 
-def create_token(delete=False):
+def create_token_table(delete=False):
     with open('config/mysqlconfig.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['mysql']
     conf.pop('db', None)
@@ -125,7 +125,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         os.system('mkdir -p '+folder2)
         now = datetime.datetime.now()
         run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
-                                                  folder2, xs, ys, jobid, list_only,
+                                                  folder2, '', '', jobid, list_only,
                                                   send_email, email], retry=True, task_id=jobid)
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
