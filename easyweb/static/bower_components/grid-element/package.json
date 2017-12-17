@@ -1,0 +1,35 @@
+{
+  "name": "grid-element",
+  "version": "0.4.4",
+  "description": "Responsive grid custom element using Polymer and Flexbox",
+  "main": "grid-element.html",
+  "scripts": {
+    "serve": "polymer serve -o",
+    "lint": "polymer lint grid-element.html grid-col.html",
+    "preversion": "npm run lint",
+    "version": "git add -A .",
+    "postversion": "git push --follow-tags && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charbelrami/grid-element.git"
+  },
+  "keywords": [
+    "grid",
+    "flexbox",
+    "polymer",
+    "custom-element",
+    "custom-elements",
+    "web-component",
+    "web-components"
+  ],
+  "author": "Charbel Rami",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/charbelrami/grid-element/issues"
+  },
+  "homepage": "https://github.com/charbelrami/grid-element#readme",
+  "devDependencies": {
+    "polymer-cli": "^0.12.0"
+  }
+}

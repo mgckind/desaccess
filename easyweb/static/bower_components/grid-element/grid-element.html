@@ -1,0 +1,133 @@
+<!--
+@license
+Copyright (c) 2015-2016 Charbel Rami. All rights reserved.
+MIT
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+<link rel="import" href="grid-col.html">
+<dom-module id="grid-element">
+  <template>
+    <style>
+      :host {
+        --grid-gutter: 10px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+      }
+      :host([gho]) {
+        padding-left: var(--grid-gutter-ho, --grid-gutter);
+        padding-right: var(--grid-gutter-ho, --grid-gutter);
+      }
+      :host([gvo]) {
+        padding-top: var(--grid-gutter-vo, --grid-gutter);
+        padding-bottom: var(--grid-gutter-vo, --grid-gutter);
+      }
+      :host([match]) {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+      }
+      :host([center][match]) {
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -ms-grid-row-align: center;
+        align-items: center;
+      }
+      :host([start][match]) {
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+        -ms-grid-row-align: flex-start;
+        align-items: flex-start;
+      }
+      :host([end][match]) {
+        -webkit-box-align: end;
+        -ms-flex-align: end;
+        -ms-grid-row-align: flex-end;
+        align-items: flex-end;
+      }
+      :host([ghi][match]) > ::content > grid-col {
+        margin-left: var(--grid-gutter-hi, --grid-gutter);
+      }
+      :host([ghi][match]) > ::content > .first {
+        margin-left: 0 !important;
+      }
+      :host([gvi]:not([match])) > ::content > grid-col {
+        margin-top: var(--grid-gutter-vi, --grid-gutter);
+      }
+      :host([gvi]:not([match])) > ::content > .first {
+        margin-top: 0 !important;
+      }
+    </style>
+    <iron-media-query query="{{mq}}" query-matches="{{match}}"></iron-media-query>
+
+    <content></content>
+  </template>
+  <script>
+    Polymer({
+      is: 'grid-element',
+      properties: {
+        /** all gutters. Equivalent to `gho gvo ghi gvi`*/
+        ga: {
+          type: String,
+          observer: '_allGutters'
+        },
+        /** gutter size */
+        gs: String,
+        /** outer horizontal gutter size */
+        gho: String,
+        /** outer vertical gutter size */
+        gvo: String,
+        /** inner horizontal gutter size */
+        ghi: String,
+        /** inner vertical gutter size */
+        gvi: String,
+        /** media query boolean */
+        match: {
+          type: Boolean,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_isMatch'
+        },
+        /**
+         * media query
+         *
+         * @default '(min-width: 48em)'
+         */
+        mq: {
+          type: String,
+          value: '(min-width: 48em)'
+        }
+      },
+      ready: function() {
+        this.customStyle['--grid-gutter'] = this.gs;
+        this.customStyle['--grid-gutter-ho'] = this.gho;
+        this.customStyle['--grid-gutter-vo'] = this.gvo;
+        this.customStyle['--grid-gutter-hi'] = this.ghi;
+        this.customStyle['--grid-gutter-vi'] = this.gvi;
+        this.updateStyles();
+        Polymer.dom(this).firstElementChild.classList.add('first');
+      },
+      attached: function() {
+        this._isMatch();
+      },
+      _isMatch: function() {
+        this.match ? this.fire('mq-match', {match: true}) : this.fire('mq-match', {match: false});
+      },
+      _allGutters: function() {
+        this.toggleAttribute('gho');
+        this.toggleAttribute('gvo');
+        this.toggleAttribute('ghi');
+        this.toggleAttribute('gvi');
+        this.gs = this.ga;
+      }
+    });
+  </script>
+</dom-module>
