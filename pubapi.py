@@ -140,6 +140,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         response['msg'] = 'Job {0} submitted'.format(jobid)
         response['status'] = 'ok'
         response['kind'] = 'cutout'
+        response['jobid'] = jobid
         self.write(response)
         self.flush()
         self.finish()
@@ -285,7 +286,7 @@ class ApiJobHandler(tornado.web.RequestHandler):
             files = cc[7]
             ff = files[1:-1].replace('"', '').split(',')
             host = 'http://desdr-server.ncsa.illinois.edu/workdir/{0}/{1}/'.format(cc[0], jobid)
-            final = [host+f for f in ff]
+            final = [host+f.replace(' ','') for f in ff]
             response['msg'] = 'Job summary'
             response['job_status'] = cc[3]
             response['files'] = final
