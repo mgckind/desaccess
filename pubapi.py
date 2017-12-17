@@ -68,6 +68,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         loc_user = arguments["username"]
         loc_passw = arguments["password"]
         email = arguments["email"]
+        send_email = False
         if email != '':
             send_email = True
         jobname = arguments["jobname"]
