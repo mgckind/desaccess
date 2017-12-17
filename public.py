@@ -6,6 +6,7 @@ import pusher
 import queries
 import login_public as login
 import api
+import pubapi
 import MySQLdb as mydb
 from tornado.options import define, options
 import Settings
@@ -100,6 +101,9 @@ class Application(tornado.web.Application):
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),
             (r"/easyweb/help/?", api.HelpHandler),
+            (r"/easyweb/api/v1/cutout/", pubapi.ApiCutoutHandler),
+            (r"/easyweb/api/v1/query/", pubapi.ApiQueryHandler),
+            (r"/easyweb/api/v1/jobs/", pubapi.ApiJobHandler),
             (r"/easyweb/files/dr1/(.*)", MyStaticFileHandler,
              {'path': '/des004/despublic/dr1_tiles/'}),
         ]

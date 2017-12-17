@@ -92,6 +92,7 @@ class FileHandler(BaseHandler):
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
+        con.close()
         self.set_status(200)
         self.flush()
         self.finish()
