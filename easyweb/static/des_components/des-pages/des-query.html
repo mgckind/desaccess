@@ -1,7 +1,168 @@
 <link rel="import" href="../../styles/shared-styles.html">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 <dom-module id="des-query">
 <template>
 <style include="shared-styles">
+    .query-container {
+        @apply(--layout-vertical);
+    }
+
+    .query-row {
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+        height: 70%;
+
+    }
+
+    .query-row-2 {
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+
+    }
+
+    .query-left {
+        @apply(--layout-flex-2);
+        width: 60%;
+        border: 1px solid #CCCCCC;
+    }
+
+    .query-right {
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+    }
+
+    .query-btn {
+        @apply(--layout-vertical);
+        @apply(--layout-flex-4);
+        text-align: center;
+    }
+
+    .query-op {
+        @apply(--layout-around-justified);
+
+    }
+
+    .query-cb {
+        @apply(--layout-around-justified);
+    }
+
+    .query-item {
+        /*@apply(--layout-flex);*/
+        text-align: left;
+    }
+    .btn-wrap {
+        margin-top: 5px;
+    }
+
+    .query-table {
+        height: 60%;
+        /*border: 1px solid black;*/
+    }
+
+    .query-tr {
+    }
+
+    .query-td {
+     }
+    
+    .query-td-2 {
+        text-align: center;
+        line-height: 15%;
+    }
+
+    /*.querySpinner {*/
+        /*position: absolute;*/
+        /*right: 50px;*/
+    /*}*/
+
+    #response {
+        /*border: 1px solid blue;*/
+        margin-top: 40px;
+    }
+
+    @media all and (max-width: 1000px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 600px;
+        }
+    }
+
+
+    @media all and (max-width: 800px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 800px;
+        }
+    }
+
+    @media all and (max-width: 450px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 1000px;
+        }
+    }
+
+    @media all and (max-height: 700px) {
+        .query-row {
+            @apply(--layout-vertical);
+        }
+        .query-btn {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+        .query-left {
+            width: 100%;
+        }
+        .query-right {
+            width: 100%;
+        }
+
+        #response {
+            margin-top: 1200px;
+        }
+    }
+
+
 
 </style>
 
@@ -218,22 +379,20 @@
     </table>
 </div>
 
+        <div id="response2" >
 
-</template>
-</div>
-<div id="response2" >
+                <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
+                <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
-<paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
-<paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+                <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
-        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
-</div>
+        </div>
     </des-card>
 </template>
 
 <script>
-Polymer({
+
+    Polymer({
     is: "des-query",
     properties: {
         querystr :{
