@@ -52,8 +52,8 @@ class FileHandler(BaseHandler):
         print(email, 'email')
         print(name, 'name')
         jobid = str(uuid.uuid4())
-        if name == '':
-            name = jobid
+        #if name == '':
+        #    name = jobid
         if xs == 0.0:
             xs = ''
         if ys == 0.0:
@@ -88,10 +88,11 @@ class FileHandler(BaseHandler):
         con = mydb.connect(**conf)
 
         tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
-                     'cutout', '', '', ''])
+                     'cutout', '', '', '', -1])
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
+        con.close()
         self.set_status(200)
         self.flush()
         self.finish()

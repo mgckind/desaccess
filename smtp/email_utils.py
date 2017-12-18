@@ -122,6 +122,25 @@ def send_note(username, jobid, toemail):
     header.s.quit()
     return "Email Sent to %s" % header.toemail
 
+def send_fail(username, jobid, toemail):
+    bcc = 'mgckind@gmail.com'
+    link = Settings.ROOT_URL+'/easyweb/my-jobs'
+    context = {
+        "Subject": "Job {} failed".format(jobid),
+        "email_link": Settings.ROOT_URL+'/easyweb/email/',
+        "username": username,
+        "msg": """The job <b>{}</b> was canceled or failed. <br>
+        The log can be retrieved from the link below""".format(jobid),
+        "action": "Click Here To See Your Jobs/Logs",
+        "link": link,
+    }
+    header = SingleEmailHeader(username, toemail, context, char='c')
+    MP1 = MIMEText(header.html, 'html')
+    header.msg.attach(MP1)
+    header.s.sendmail(header.fromemail, [header.toemail, bcc], header.msg.as_string())
+    header.s.quit()
+    return "Email Sent to %s" % header.toemail
+
 
 def send_thanks(name, email, subject, ticket):
     bcc = 'mgckind@gmail.com'

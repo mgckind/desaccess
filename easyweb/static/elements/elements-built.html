@@ -39438,7 +39438,7 @@ paper-item {
 <div style="width: 500px; padding-left: 10px; font-size: 15px;">
     <div class="container4">
 
-    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink="" on-tap="_enableOutputFile"> Output file
+    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink="" on-tap="_enableOutputFile"> Output file (.csv, .fits, .h5)
     </paper-toggle-button>
     <paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled="" required="" auto-validate="" label="Output file"></paper-input>
     </div>
@@ -39457,7 +39457,7 @@ paper-item {
 <hr><br>
 <div id="response" class="results">
 <template is="dom-if" if="{{isSelect}}">
-    <paper-button raised="" class="SeeFilesButton" on-tap="_downloadFile">Download File</paper-button>
+    <paper-button raised="" class="indigo" on-tap="_downloadFile">Download File</paper-button>
     <div class="scrollTable">
 <table id="t01" style="width:100%">
     <tbody><tr class="t01-tr">
@@ -39617,7 +39617,7 @@ Polymer({
         document.getElementById('QuickQuery').disabled=false;
             _self.isSelect = true;
             _self.isQuery = true;
-            _self.msg = 'Done!';
+            _self.msg = 'Done! Results below (only 1000 rows are shown, complete result in file)' ;
             document.getElementById('response2').scrollIntoView();
             _self.mydata = JSON.parse(_self.data.data);
             _self.keys = Object.keys(_self.mydata[0]);
@@ -46323,17 +46323,18 @@ This program is available under Apache License Version 2.0, available at https:/
               <div>
                   <!--{{returnName(item.job)}}-->
                   <!--it can be changed in api.py-->
-                  {{item.jname}}
+                  <span style="font-size: 10px"> Name: {{item.jname}} </span> <br>
+                  <span style="font-size: 10px"> Job id: {{item.job}} </span>
                   <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
 
               </div>
               <div secondary="">
                   <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
                   <template is="dom-if" if="{{item.jwarning}}">
-                   <span style="color:red;">{{item.elapsed}}</span>
+                   <span style="color:red; font-size: 10px;">{{item.elapsed}}</span>
                   </template>
                   <template is="dom-if" if="{{!item.jwarning}}">
-                   <span>{{item.elapsed}}</span>
+                   <span style="font-size: 10px;">{{item.elapsed}}</span>
                   </template>
               </div>
           </paper-item-body>
@@ -46341,7 +46342,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="0" width="120px">
+      <vaadin-grid-column flex-grow="0" width="110px">
 
         <template class="header" style="padding-left: 5px">
          <vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
@@ -46350,8 +46351,17 @@ This program is available under Apache License Version 2.0, available at https:/
         </template>
       </vaadin-grid-column>
 
-    <!--Cancel job button-->
       <vaadin-grid-column flex-grow="0" width="120px">
+
+        <template class="header" style="padding-left: 5px">
+         Execution time (s)
+        </template>
+        <template>{{item.jruntime}}<br>
+        </template>
+      </vaadin-grid-column>
+
+    <!--Cancel job button-->
+      <vaadin-grid-column flex-grow="0" width="80px">
         <template class="header">Cancel Job</template>
           <template>
 
@@ -46881,10 +46891,10 @@ function keysrt(key,desc) {
 
           <br>
           <div class="container">
-            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinner1" class="big"></paper-spinner>
             <paper-button class="custom indigo" id="LoginButton1" on-tap="_clickSubmit1" raised="">
               Log in
             </paper-button>
+            <paper-spinner id="LoginSpinner1" class="big"></paper-spinner>
           </div>
 
           <div>
@@ -47029,9 +47039,9 @@ function keysrt(key,desc) {
           </paper-password-input>
           <br>
           <div class="container">
-          <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerChange" class="big"></paper-spinner>
           <paper-button raised="" disabled="" class="custom indigo" id="SendNewPassword" on-tap="_clickSubmitChange">Accept</paper-button>
           <paper-button raised="" class="custom indigo" dialog-dismiss="">Cancel</paper-button>
+          <paper-spinner id="LoginSpinnerChange" class="big"></paper-spinner>
           </div>
 
 
@@ -47153,6 +47163,46 @@ function keysrt(key,desc) {
 
 </script>
 </dom-module>
+<dom-module id="des-login-limited" assetpath="../des_components/des-login/">
+<template>
+  <style include="shared-styles">
+  </style>
+
+
+  <div style="cursor:default; height:400px;" class="container">
+    <paper-card style="cursor:default;" heading="{{error}}" class="temp">
+
+      <div style="cursor:default;" class="box-watermark-logo"></div>
+      <div class="card-content">
+        <span>These services will be available <b>January 10th!.</b> <br>
+              Go back to <a href="https:des.ncsa.illinois.edu"> Home Page</a> </span><br>
+      </div>
+      <div style="cursor:pointer;" on-tap="home" class="box-upper-image"></div>
+    </paper-card>
+  </div>
+</template>
+
+<script>
+  Polymer({
+    is: "des-login-limited",
+    properties : {
+      error :{
+        type: String,
+        value: '',
+      },
+      username: {
+        type: String,
+        value: '',
+      }
+    },
+      home: function(event){
+        window.open('/easyweb/','_self',false);
+      },
+  });
+
+
+</script>
+</dom-module>
 <dom-module id="des-login-message" assetpath="../des_components/des-login/">
 <template>
   <style include="shared-styles">
@@ -47210,9 +47260,9 @@ function keysrt(key,desc) {
           <paper-input id="Changeemail" name="email" value="{{email}}" label="Email"></paper-input>
           <br>
           <div class="container">
-          <paper-spinner style="position: fixed; z-index:1000;" id="SpinnerUpdate" class="big"></paper-spinner>
           <paper-button raised="" class="custom indigo" id="UpdateInfoButton" on-tap="_clickUpdateInfo">Accept</paper-button>
           <paper-button raised="" class="custom indigo" dialog-dismiss="">Cancel</paper-button>
+          <paper-spinner id="SpinnerUpdate" class="big"></paper-spinner>
           </div>
 
 
@@ -47369,10 +47419,10 @@ function keysrt(key,desc) {
           <br>
           <paper-checkbox id="readTerms" name="read" on-change="_enable" required="">I agree to the </paper-checkbox> <a href="javascript:;" on-click="_readT">Terms of Service</a><br>
           <div class="container">
-            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerSignup" class="big"></paper-spinner>
             <paper-button class="custom indigo" id="SignButton" on-tap="_clickSubmit" raised="" disabled="">
               Submit
             </paper-button>
+            <paper-spinner id="LoginSpinnerSignup" class="big"></paper-spinner>
           </div>
 
         </form>
@@ -47534,10 +47584,10 @@ function keysrt(key,desc) {
           </paper-password-input>
           <br>
           <div class="container">
-            <paper-spinner style="position: fixed; z-index:1000;" id="LoginSpinnerReset" class="big"></paper-spinner>
             <paper-button class="custom indigo" id="NewPassButton" on-tap="_clickSubmitNew" raised="" disabled="">
               Submit
             </paper-button>
+            <paper-spinner id="LoginSpinnerReset" class="big"></paper-spinner>
           </div>
 
         </form>
@@ -48067,7 +48117,7 @@ function keysrt(key,desc) {
             <div class="horizontal layout around justified">
 
                 <a style="text-transform: none; color:black;" href="/easyweb/db-access" tabindex="-1">
-                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="SQL command line" name="query"></des-card-welcome>
+                <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="Oracle SQL web- client" name="query"></des-card-welcome>
                 </a>
                 <a style="text-transform: none; color:black;" href="/easyweb/db-schema">
                 <des-card-welcome heading="DR1 TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables"></des-card-welcome>
@@ -48209,7 +48259,7 @@ function keysrt(key,desc) {
               <vaadin-grid-column>
                 <template class="header"> Name
                 </template>
-                <template>{{item.name}}</template>
+                <template>{{tilename}}--{{item.name}}</template>
               </vaadin-grid-column>
 
                 <vaadin-grid-column>
@@ -48294,24 +48344,34 @@ function keysrt(key,desc) {
         </paper-dialog>
 
                 <des-card heading="[[header]]">
-                    <div class="card content flex">
-                    <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-20px; " required=""> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
+                        <div class="flex" style="display: inline-block;">
+                        <div style="display: inline-block; vertical-align: top; margin-right:15px; margin-bottom:10px;">
+
+                        <canvas id="GlobWebCanvas" class="box" width="500px" height="500px" style="text-align: center; vertical-align: top;"></canvas>
+                        </div>
+                        <div style="display: inline-block;">
+
+                        <div>
+                            <div class="card-content">
+                            Use the footprint tool to search a tile by position or name. <br>
+                            Double click to select a tile. <br>
+                            </div>
+                    <div class="flex">
+                    <paper-input on-keydown="checkForEnter" class="input_position" id="zoomto" label="Position (ra,dec)" style="width: 200px; padding-left: 15px; margin-top:-15px; " required=""> <paper-icon-button slot="suffix" icon="search" on-tap="gotoposition"></paper-icon-button>
                 </paper-input>
-                    <paper-input on-keydown="checkForEnter2" class="input_position" id="zoomtotile" label="Tilename" style="width: 200px; padding-left: 15px; margin-top:-20px; " required=""> <paper-icon-button slot="suffix" icon="search" on-tap="gototile"></paper-icon-button>
+                    <paper-input on-keydown="checkForEnter2" class="input_position" id="zoomtotile" label="Tilename" style="width: 200px; padding-left: 15px; margin-top:-15px; " required=""> <paper-icon-button slot="suffix" icon="search" on-tap="gototile"></paper-icon-button>
                 </paper-input>
                 <div id="errorTile" style="margin-left: 20px; margin-top:30px; color:red;"></div>
             </div>
 
-                    <div class="card content flex">
-                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_coord" checked="" on-change="display_coord">Coordinates</paper-checkbox>
-                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_dr1" checked="" on-change="display_dr1">DR1 TILES</paper-checkbox>
-                <paper-checkbox style="margin-left: 20px; margin-top: 30px;" id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
-                    </div>
+                    <div class=" flex">
+                <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_coord" checked="" on-change="display_coord">Coordinates</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_dr1" checked="" on-change="display_dr1">DR1 TILES</paper-checkbox>
+                <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>
+            </div>
                     <div class="card-content">
-                 <div class="flex">
-                        <canvas id="GlobWebCanvas" class="box" width="600px" height="600px" style="text-align: center; vertical-align: middle;"></canvas>
-                        <des-card heading="Tile properties">
                             <div id="tiletitleHelp" class="card-content">
+                                <h2> <u>Tile properties</u></h2>
                                 <table id="tileTable" class="localTable">
                                 <tbody><tr><td>Name</td><td>:</td></tr>
                                 <tr><td>Tile Center</td><td>:</td></tr>
@@ -48320,12 +48380,15 @@ function keysrt(key,desc) {
                                 <tr><td>DEC Corners</td><td>:</td></tr>
                                 </tbody></table>
                             </div>
+                        </div>
                             <div class="card-content">
-
-                            <paper-button class="indigo" disabled="" raised="" on-tap="_getTiles" id="downloadTile"> Get Files</paper-button>
+                                <br>
+                            <paper-button class="indigo" disabled="" raised="" on-tap="_getTiles" id="downloadTile"> Get Tile Files</paper-button> <br> <br>
+                            Click <a href="http://desdr-server.ncsa.illinois.edu/despublic/dr1_tiles/" target="_blank"> here </a> to get access to all the tiles
                             </div>
 
-                        </des-card>
+                        </div>
+
                 </div>
                     </div>
                 </des-card>
@@ -48473,11 +48536,25 @@ function keysrt(key,desc) {
                  this.tilename = tile;
              },
             attached: function(){
+                window.addEventListener('resize', resizeCanvas, false);
+                function  resizeCanvas() {
+                    var caa = document.getElementById("GlobWebCanvas");
+                    var wwidth = window.innerWidth*0.8
+                    var wheight = window.innerHeight*0.65
+
+                    caa.width = Math.min(wwidth,wheight,500);
+                    caa.height = Math.min(wwidth,wheight,500);
+                    globe.refresh();
+                }
                 require.config({
                     baseUrl: '/easyweb/static/scripts/src/'
                 });
                 require(['GlobWeb'], function (GlobWeb) {
                     var cvs = document.getElementById("GlobWebCanvas");
+                    var wwidth = window.innerWidth*0.8
+                    var wheight = window.innerHeight*0.65
+                    cvs.width = Math.min(wwidth,wheight,500);
+                    cvs.height = Math.min(wwidth,wheight,500);
                     //cvs.width = window.innerWidth;
                     //cvs.height = window.innerHeight;
                     var globe = new GlobWeb.Globe({

@@ -304,6 +304,7 @@
 
     </paper-dialog>
     <des-card heading=" Query box">
+<<<<<<< HEAD
         <div class="content">
         Insert your query in the box below. Data results for "Quick" Jobs (30 sec.) will be displayed at the bottom.
         </div>
@@ -400,6 +401,82 @@
                         </tr>
                     </table>
                 </div>
+=======
+    <div class="content">
+    Insert your query in the box below. Data results for "Quick" Jobs (30 sec.) will be displayed at the bottom.
+    </div>
+<div class="query-box" style="padding-right:0px">
+<!--
+<paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
+</paper-textarea>-->
+<textarea style="border: 1px solid red;" id="queryBox" autofocus placeholder="Query box"></textarea>
+<hr />
+<template is="dom-if" if={{isQuery}} >
+    <template is="dom-if" if={{isOk}} >
+        <span class="queryMsg" style="color: green"> {{msg}}</span>
+    </template>
+    <template is="dom-if" if={{!isOk}} >
+        <span id="errqueryMsg" class="queryMsg" style="color: red"> {{msg}}</span>
+    </template>
+</template>
+<hr />
+<paper-button id="subQuery" class="indigo medium" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
+<paper-button class="indigo medium" raised on-tap="clearQueryBox">Clear</paper-button>
+<paper-button class="indigo medium" raised on-tap="_checkSyntax">Check</paper-button>
+<paper-button id="QuickQuery" class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>
+<paper-spinner id="querySpinner" class="big"></paper-spinner>
+<a href = "/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">
+<paper-button style="position:absolute; right:10px" class="indigo medium" raised >See Examples</paper-button>
+</a>
+<div style="width: 500px; padding-left: 10px; font-size: 15px;" >
+    <div class="container4">
+
+    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file (.csv, .fits, .h5)
+    </paper-toggle-button>
+    <paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
+    </div>
+</div>
+    <div style="padding-left: 10px; font-size: 15px;" >
+    Options:
+    <div class="container4" style="font-size: 15px;">
+    <paper-input  id="queryname" name="name" label="Job Name" value=""></paper-input>
+    <paper-checkbox id="compress-box" style="margin-top: 38px; margin-left:10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>
+    </div>
+    <div class="container4" style="font-size: 15px;">
+    <paper-input  id="queryemail" name="email" label="Email" value="" ></paper-input>
+    <paper-checkbox id="checkemail" style="margin-top: 38px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
+     </div>
+
+<hr /><br>
+<div id="response" class="results">
+<template is="dom-if" if={{isSelect}} >
+    <paper-button raised class="indigo" on-tap='_downloadFile'>Download File</paper-button>
+    <div class="scrollTable">
+<table id="t01" style="width:100%">
+    <tr class="t01-tr">
+    <th class="t01-th">
+        {{idx}}
+    </th>
+    <template is="dom-repeat" items="{{keys}}" as="key">
+        <th class="t01-th">&nbsp;{{key}}&nbsp;</th>
+    </template>
+    </tr>
+<!--</table>-->
+
+    <!--<table id="t01" style="width:100%">-->
+        <template is="dom-repeat" id="pandas" items="{{mydata}}">
+            <tr class="t01-tr">
+                <td class="t01-td">
+                {{index}}
+                </td>
+                <template is="dom-repeat" items="{{keys}}" as="key">
+                    <td class="t01-td">{{_returnVal(item,key)}}</td>
+                </template>
+            </tr>
+        </template>
+    </table>
+</div>
+>>>>>>> 7ce0322d44cd31f22622fa565b2e78592679518c
 
             </div>
 
@@ -584,7 +661,7 @@
         document.getElementById('QuickQuery').disabled=false;
             _self.isSelect = true;
             _self.isQuery = true;
-            _self.msg = 'Done!';
+            _self.msg = 'Done! Results below (only 1000 rows are shown, complete result in file)' ;
             document.getElementById('response2').scrollIntoView();
             _self.mydata = JSON.parse(_self.data.data);
             _self.keys = Object.keys(_self.mydata[0]);
