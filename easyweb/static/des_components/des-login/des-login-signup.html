@@ -106,6 +106,7 @@
   </div>
     </template>
 <paper-toast class="toast-position" id="toastSignUp" text="Form Submitted!" duration="2000"> </paper-toast>
+<paper-toast class="toast-position" id="toastSignUpError" text="ERROR: Check your form" duration="2000"> </paper-toast>
 </template>
 
 <script>
@@ -175,7 +176,6 @@
         button.disabled = true;
         document.getElementById('LoginSpinnerSignup').active = true;
         form2.generateRequest();
-        document.getElementById("toastSignUp").show();
        }
     },
     afterForm: function(e){
@@ -191,14 +191,18 @@
      console.log(this.error);
      if (this.errno=='1') {
          document.getElementById('form_user').value = '';
+         document.getElementById("toastSignUpError").show();
      }
      else if (this.errno=='2') {
          document.getElementById('form_email').value = '';
+         document.getElementById("toastSignUpError").show();
      }
      else if (this.errno=='3') {
          document.getElementById('form_password').value = '';
+         document.getElementById("toastSignUpError").show();
      }
      else {
+         document.getElementById("toastSignUp").show();
          var email = document.getElementById('form_email').value;
          this.text = 'An activation link was sent to '+ email + '.';
          this.msg=  true;
