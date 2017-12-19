@@ -8,7 +8,7 @@ from jsmin import jsmin
 def replacein(inputfile):
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
-            print(line.replace('elements-built.html', 'elements-built.html'), end='')
+            print(line.replace('elements.html', 'elements-built.html'), end='')
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
             print(line.replace('app.js', 'app.min.js'), end='')
@@ -16,7 +16,7 @@ def replacein(inputfile):
 def replaceout(inputfile):
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
-            print(line.replace('elements-built.html', 'elements-built.html'), end='')
+            print(line.replace('elements-built.html', 'elements.html'), end='')
     with fileinput.FileInput(inputfile, inplace=True) as file:
         for line in file:
             print(line.replace('app.min.js', 'app.js'), end='')
@@ -34,7 +34,7 @@ def changedebug(mode):
 
 def vulcanize():
     os.system('rm -f easyweb/static/elements/elements-built.html')
-    command = 'vulcanize easyweb/static/elements/elements-built.html --out-html easyweb/static/elements/elements-built.html'
+    command = 'vulcanize easyweb/static/elements/elements.html --out-html easyweb/static/elements/elements-built.html'
     os.system(command)
 
 def minimize():
