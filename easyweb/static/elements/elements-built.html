@@ -47033,7 +47033,7 @@ function keysrt(key,desc) {
           <br>
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="NEW Password (Minimum 6 characters)" value="{{password}}" required="">
+          <paper-password-input label="NEW Password (Minimum 6 characters, alphanumeric only)" value="{{password}}" required="">
           </paper-password-input>
           <paper-password-input on-invalid-changed="_enable" id="NewPass" name="password" label="Confirm NEW Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -47412,7 +47412,7 @@ function keysrt(key,desc) {
 
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input id="first_password" label="Password (at least 6 characters)" value="{{password}}" char-counter="" required="">
+          <paper-password-input id="first_password" label="Password (Minimum 6 characters, alphanumberic only)" value="{{password}}" char-counter="" required="">
           </paper-password-input>
           <paper-password-input id="form_password" on-invalid-changed="_enable" name="password" label="Confirm Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -47582,7 +47582,7 @@ function keysrt(key,desc) {
          <form>
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="New Password  (Minimum 6 characters)" value="{{password}}" required="">
+          <paper-password-input label="New Password  (Minimum 6 characters, alphanumeric only)" value="{{password}}" required="">
           </paper-password-input>
           <paper-password-input id="form_newpassword" on-invalid-changed="_enable" name="password" label="Confirm New Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
