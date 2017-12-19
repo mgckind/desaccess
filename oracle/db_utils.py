@@ -134,11 +134,18 @@ def delete_url(url):
 def update_password(username, password):
     con = ea.connect('desdr')
     qlock = "ALTER USER {0} IDENTIFIED BY {1}".format(username, password)
-    con.query_and_print(qlock, suc_arg='Password Changed')
-    delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
-    con.query_and_print(delete_old, suc_arg='Delete used Url')
+    valid = False
+    try:
+        con.cur.execute(qlock)
+        valid = True
+        msg = 'ok'
+    except Exception as e:
+        msg = str(e)
+    if valid:
+        delete_old = "DELETE FROM DES_ADMIN.RESET_URL WHERE USERNAME = '{}'".format(username)
+        con.query_and_print(delete_old, suc_arg='Delete used Url')
     con.close()
-    return True
+    return valid, msg
 
 
 def update_info(username, firstname, lastname, email, user_manager='', pass_manager=''):

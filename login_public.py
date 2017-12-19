@@ -85,6 +85,7 @@ class ResetHandler(BaseHandler):
         print('Reset Password')
         app_log.info('Reset Password')
         check, url, checkuser = db_utils.create_reset_url(email)
+        print(url)
         if check:
             email_utils.send_reset(email, checkuser, url)
             app_log.info('{},{},{}'.format(email, url, checkuser))
@@ -103,9 +104,12 @@ class ResetHandler(BaseHandler):
         if username == username2:
             print('valid', valid)
             if valid:
-                db_utils.update_password(username, password)
-                db_utils.unlock_user(username)
-                self.write(json.dumps({'msg': 'Password updated', 'errno': '0'}))
+                check, msg = db_utils.update_password(username, password)
+                if check:
+                    db_utils.unlock_user(username)
+                    self.write(json.dumps({'msg': 'Password updated', 'errno': '0'}))
+                else:
+                    self.write(json.dumps({'msg': msg + '. Try again', 'errno': '1'}))
             else:
                 msg = 'Password minimum length is 6.'
                 self.write(json.dumps({'msg': msg, 'errno': '1'}))
