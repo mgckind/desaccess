@@ -346,7 +346,8 @@ def run_quick(query, db, username, lp):
 
 
 #@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)
-@app.task(base=CustomTask)
+#@app.task(base=CustomTask)
+@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
 def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email):
     response = {}
     response['user'] = uu

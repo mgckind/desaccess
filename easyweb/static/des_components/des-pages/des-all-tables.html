@@ -55,7 +55,7 @@
               <paper-spinner id="descSpinnerAll" class="big" active></paper-spinner>
      <vaadin-grid style="height: 70%;" id="material" items="{{description}}" >
 
-      <vaadin-grid-column flex-grow="2">
+      <vaadin-grid-column flex-grow="0" width="220px">
         <template class="header">
             <vaadin-grid-filter aria-label="Column Name" path="COLUMN_NAME" value="[[_filterColumnName]]">
             <input placeholder="Column Name" value="{{_filterColumnName::input}}" focus-target>
@@ -68,17 +68,17 @@
         <template>{{item.COLUMN_NAME}}</template>
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="1">
+      <vaadin-grid-column flex-grow="0" width="130px">
         <template class="header">Data Type</template>
         <template>{{item.DATA_TYPE}}</template>
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="1">
+      <vaadin-grid-column flex-grow="0" width="110">
         <template class="header">Data Format</template>
         <template>{{item.DATA_FORMAT}}</template>
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="8">
+      <vaadin-grid-column width="780px" flex-grow="0">
         <template class="header">Comments</template>
         <template>{{item.COMMENTS}}</template>
       </vaadin-grid-column>

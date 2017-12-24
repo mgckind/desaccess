@@ -25,7 +25,7 @@
           <match-passwords-validator id="match-passwords-validator"
             password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="New Password  (Minimum 6 characters)"
+          <paper-password-input label="New Password  (Minimum 6 characters, alphanumeric only)"
             value="{{password}}"
              required>
           </paper-password-input>
@@ -58,6 +58,7 @@
     </paper-card>
   </div>
 <paper-toast class="toast-position" id="toastSignUp" text="Form Submitted!" duration="2000"> </paper-toast>
+<paper-toast class="toast-position" id="toastSignUpError" text="ERROR: Check your form" duration="2000"> </paper-toast>
 </template>
 
 <script>
@@ -121,7 +122,7 @@
           'url': this.randomurl
       };
       form2.generateRequest();
-      document.getElementById("toastSignUp").show();
+      //document.getElementById("toastSignUp").show();
     },
     afterNewPasswordForm: function(e){
      var _self = this;
@@ -129,9 +130,11 @@
      _self.data = e.detail.response;
      console.log(_self.data.msg);
          if (_self.data.errno == '0') {
+      document.getElementById("toastSignUp").show();
      window.location.href = "/easyweb/logout/";
       }
       else {
+      document.getElementById("toastSignUpError").show();
       var button = document.getElementById('NewPassButton');
       button.disabled = false;
      this.error = _self.data.msg;

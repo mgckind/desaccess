@@ -46696,7 +46696,7 @@ function keysrt(key,desc) {
               <paper-spinner id="descSpinnerAll" class="big" active=""></paper-spinner>
      <vaadin-grid style="height: 70%;" id="material" items="{{description}}">
 
-      <vaadin-grid-column flex-grow="2">
+      <vaadin-grid-column flex-grow="0" width="220px">
         <template class="header">
             <vaadin-grid-filter aria-label="Column Name" path="COLUMN_NAME" value="[[_filterColumnName]]">
             <input placeholder="Column Name" value="{{_filterColumnName::input}}" focus-target="">
@@ -46709,17 +46709,17 @@ function keysrt(key,desc) {
         <template>{{item.COLUMN_NAME}}</template>
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="1">
+      <vaadin-grid-column flex-grow="0" width="130px">
         <template class="header">Data Type</template>
         <template>{{item.DATA_TYPE}}</template>
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="1">
+      <vaadin-grid-column flex-grow="0" width="110">
         <template class="header">Data Format</template>
         <template>{{item.DATA_FORMAT}}</template>
       </vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="8">
+      <vaadin-grid-column width="780px" flex-grow="0">
         <template class="header">Comments</template>
         <template>{{item.COMMENTS}}</template>
       </vaadin-grid-column>
@@ -47033,7 +47033,7 @@ function keysrt(key,desc) {
           <br>
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="NEW Password (Minimum 6 characters)" value="{{password}}" required="">
+          <paper-password-input label="NEW Password (Minimum 6 characters, alphanumeric only)" value="{{password}}" required="">
           </paper-password-input>
           <paper-password-input on-invalid-changed="_enable" id="NewPass" name="password" label="Confirm NEW Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -47135,7 +47135,7 @@ function keysrt(key,desc) {
 
       <div style="cursor:default;" class="box-watermark-logo"></div>
       <div class="card-content">
-        <span>Go back to main page <a href="/"> Home</a> and try again</span><br>
+        <span>Go back to main page <a href="/easyweb/"> Home</a> and try again</span><br>
       </div>
       <div style="cursor:pointer;" on-tap="home" class="box-upper-image"></div>
     </paper-card>
@@ -47215,7 +47215,7 @@ function keysrt(key,desc) {
       <div style="cursor:default;" class="box-watermark-logo"></div>
       <div class="card-content">
           <content></content><br>
-        <span>Go back to main page <a href="/"> Home</a> </span><br>
+        <span>Go back to main page <a href="/easyweb/"> Home</a> </span><br>
       </div>
       <div style="cursor:pointer;" on-tap="home" class="box-upper-image"></div>
     </paper-card>
@@ -47412,7 +47412,7 @@ function keysrt(key,desc) {
 
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input id="first_password" label="Password (at least 6 characters)" value="{{password}}" char-counter="" required="">
+          <paper-password-input id="first_password" label="Password (Minimum 6 characters, alphanumberic only)" value="{{password}}" char-counter="" required="">
           </paper-password-input>
           <paper-password-input id="form_password" on-invalid-changed="_enable" name="password" label="Confirm Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -47440,6 +47440,7 @@ function keysrt(key,desc) {
   </div>
     </template>
 <paper-toast class="toast-position" id="toastSignUp" text="Form Submitted!" duration="2000"> </paper-toast>
+<paper-toast class="toast-position" id="toastSignUpError" text="ERROR: Check your form" duration="2000"> </paper-toast>
 </template>
 
 <script>
@@ -47509,7 +47510,6 @@ function keysrt(key,desc) {
         button.disabled = true;
         document.getElementById('LoginSpinnerSignup').active = true;
         form2.generateRequest();
-        document.getElementById("toastSignUp").show();
        }
     },
     afterForm: function(e){
@@ -47525,14 +47525,18 @@ function keysrt(key,desc) {
      console.log(this.error);
      if (this.errno=='1') {
          document.getElementById('form_user').value = '';
+         document.getElementById("toastSignUpError").show();
      }
      else if (this.errno=='2') {
          document.getElementById('form_email').value = '';
+         document.getElementById("toastSignUpError").show();
      }
      else if (this.errno=='3') {
          document.getElementById('form_password').value = '';
+         document.getElementById("toastSignUpError").show();
      }
      else {
+         document.getElementById("toastSignUp").show();
          var email = document.getElementById('form_email').value;
          this.text = 'An activation link was sent to '+ email + '.';
          this.msg=  true;
@@ -47578,7 +47582,7 @@ function keysrt(key,desc) {
          <form>
           <match-passwords-validator id="match-passwords-validator" password="[[password]]">
           </match-passwords-validator>
-          <paper-password-input label="New Password  (Minimum 6 characters)" value="{{password}}" required="">
+          <paper-password-input label="New Password  (Minimum 6 characters, alphanumeric only)" value="{{password}}" required="">
           </paper-password-input>
           <paper-password-input id="form_newpassword" on-invalid-changed="_enable" name="password" label="Confirm New Password" auto-validate="" validator="match-passwords-validator" error-message="Passwords need to match" required="">
           </paper-password-input>
@@ -47604,6 +47608,7 @@ function keysrt(key,desc) {
     </paper-card>
   </div>
 <paper-toast class="toast-position" id="toastSignUp" text="Form Submitted!" duration="2000"> </paper-toast>
+<paper-toast class="toast-position" id="toastSignUpError" text="ERROR: Check your form" duration="2000"> </paper-toast>
 </template>
 
 <script>
@@ -47667,7 +47672,7 @@ function keysrt(key,desc) {
           'url': this.randomurl
       };
       form2.generateRequest();
-      document.getElementById("toastSignUp").show();
+      //document.getElementById("toastSignUp").show();
     },
     afterNewPasswordForm: function(e){
      var _self = this;
@@ -47675,9 +47680,11 @@ function keysrt(key,desc) {
      _self.data = e.detail.response;
      console.log(_self.data.msg);
          if (_self.data.errno == '0') {
+      document.getElementById("toastSignUp").show();
      window.location.href = "/easyweb/logout/";
       }
       else {
+      document.getElementById("toastSignUpError").show();
       var button = document.getElementById('NewPassButton');
       button.disabled = false;
      this.error = _self.data.msg;
@@ -50148,10 +50155,10 @@ function keysrt(key,desc) {
                                     <p><b>Question Topic (Please Select All That Apply):</b></p>
                                     <paper-checkbox name="topic" value="DR1 Release"> DR1 Release</paper-checkbox> <br>
                                     <paper-checkbox name="topic" value="Interfaces"> User Interfaces </paper-checkbox> <br>
+                                    <paper-checkbox name="topic" value="LIneA Portal"> LIneA Science Server </paper-checkbox> <br>
                                     <paper-checkbox name="topic" value="User Accounts"> User Accounts </paper-checkbox><br>
                                     <paper-checkbox name="topic" value="Files format/access"> File formats / File access </paper-checkbox><br>
                                     <paper-checkbox name="topic" value="SVA1 Gold"> SVA1 Gold</paper-checkbox><br>
-                                    <paper-checkbox name="topic" value="Y1A1 Gold"> Y1A1 Gold</paper-checkbox><br>
                                     <paper-checkbox name="topic" value="General Questions"> General questions </paper-checkbox><br>
                                     <paper-checkbox name="topic" value="Other"> Other </paper-checkbox><br>
                                     <paper-input name="topic" label="Please supply topic if checked 'Other'"> </paper-input><br>
