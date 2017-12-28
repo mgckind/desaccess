@@ -41,6 +41,15 @@
            height: 73px;
            margin-top: 7px;
        }
+       des-login-update,des-login-update-info{
+           margin: 0;
+           display: block;
+            background-color: white;
+            padding: 10px;
+           box-shadow: -1px 1px 150px 600px rgba(0,0,0,0.6);
+           -webkit-box-shadow: 1px 1px 150px 600px rgba(0,0,0,0.6);
+           -moz-box-shadow: -1px 1px 150px 600px rgba(0,0,0,0.6);
+       }
 
    </style>
 
@@ -71,11 +80,11 @@
 
 
 
-  <paper-dialog class="dialog-position-narrow" id="updatePassDialog"  with-backdrop on-iron-overlay-opened="patchOverlay" >
+  <paper-dialog class="dialog-position-narrow" id="updatePassDialog"   on-iron-overlay-opened="patchOverlay" >
     <des-login-update error="{{error}}" db="{{db}}" username={{username}}></des-login-update>
   </paper-dialog>
 
-  <paper-dialog class="dialog-position-narrow" id="updateInfoDialog"  with-backdrop on-iron-overlay-opened="patchOverlay">
+  <paper-dialog class="dialog-position-narrow" id="updateInfoDialog"   on-iron-overlay-opened="patchOverlay">
     <des-login-update-info  name={{name}} lastname={{lastname}} email={{email}} username={{username}} error="{{error}}" db="{{db}}"></des-login-update-info>
   </paper-dialog>
 </template>
