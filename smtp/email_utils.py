@@ -8,6 +8,7 @@ import jinja2
 import os
 import uuid
 import base64
+import yaml
 
 
 def render(tpl_path, context):
@@ -16,6 +17,25 @@ def render(tpl_path, context):
         loader=jinja2.FileSystemLoader(path or './')
     ).get_template(filename).render(context)
 
+
+class SingleAnnounceEmailHeader(object):
+    def __init__(self, context, char='m'):
+        username = 'allusers'
+        self.toemail = 'des-dr-announce@ncsa.illinois.edu'
+        self.server = 'smtp.ncsa.illinois.edu'
+        # self.server = 'localhost'
+        self.fromemail = 'des-dr-announce@ncsa.illinois.edu'
+        self.s = smtplib.SMTP(self.server)
+        self.msg = MIMEMultipart('alternative')
+        self.msg['Subject'] = '[Announcement] '+context['Subject']
+        self.msg['From'] = formataddr((str(Header('DESDM Release Team', 'utf-8')), self.fromemail))
+        self.msg['To'] = self.toemail
+        self.uid = str(uuid.uuid4())+'-{0}'.format(char)+base64.b64encode(username.encode()).decode('ascii')
+        self.context = context
+        self.context['email_link'] += self.uid
+        self.html = render('easyweb/static/internal/templates/template_announce.html', self.context)
+        with open('easyweb/static/internal/emails/'+self.uid+'.html', 'w') as ff:
+            ff.write(self.html)
 
 class SingleEmailHeader(object):
     def __init__(self, username, toemail, context, char='r', ps=None):
@@ -160,3 +180,39 @@ def send_thanks(name, email, subject, ticket):
     header.s.sendmail(header.fromemail, [header.toemail, bcc], header.msg.as_string())
     header.s.quit()
     return "Email Sent to %s" % header.toemail
+
+
+def subscribe_email(email):
+    with open('config/user_manager.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['majordomo']
+    server = 'smtp.ncsa.illinois.edu'
+    #fromemail = 'devnull@ncsa.illinois.edu'
+    fromemail = 'mcarras2@illinois.edu'
+    s = smtplib.SMTP(server)
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = ''
+    msg['From'] = fromemail
+    msg['To'] = 'majordomo@ncsa.illinois.edu'
+    body = "approve {passwd} subscribe des-dr-announce {email}".format(passwd=conf['passwd'],
+                                                                       email=email),
+    MP1 = MIMEText(body)
+    msg.attach(MP1)
+    s.sendmail(fromemail, 'majordomo@ncsa.illinois.edu', msg.as_string())
+    s.quit()
+
+
+def send_announce(subject, msg):
+    with open('config/user_manager.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['majordomo']
+    context = {
+        "Subject": "{0}".format(subject),
+        "email_link": Settings.ROOT_URL+'/easyweb/email/',
+        "msg": msg,
+        "link": "#",
+    }
+    header = SingleAnnounceEmailHeader(context)
+    MP1 = MIMEText(header.html, 'html')
+    header.msg.attach(MP1)
+    msg2 = 'Approved: {0}\n'.format(conf['passwd']) + header.msg.as_string()
+    header.s.sendmail(header.fromemail, header.toemail, msg2)
+    header.s.quit()
