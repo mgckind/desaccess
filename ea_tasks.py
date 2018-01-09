@@ -9,7 +9,7 @@ import os
 import threading
 import time
 import json
-#import MySQLdb as mydb
+import MySQLdb as mydb
 import yaml
 import time
 import subprocess

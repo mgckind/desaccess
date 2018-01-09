@@ -4,7 +4,7 @@ import tornado.websocket
 import base64
 import os
 import datetime
-#import MySQLdb as mydb
+import MySQLdb as mydb
 import yaml
 import uuid
 from Crypto.Cipher import AES

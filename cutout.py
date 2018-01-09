@@ -12,7 +12,7 @@ import uuid
 import Settings
 import datetime
 import datetime as dt
-#import MySQLdb as mydb
+import MySQLdb as mydb
 import yaml
 import ea_tasks
 
