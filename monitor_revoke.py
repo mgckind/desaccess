@@ -1,6 +1,6 @@
 from celery import Celery
 import yaml
-import MySQLdb as mydb
+#import MySQLdb as mydb
 import requests
 import json
 

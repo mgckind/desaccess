@@ -12,7 +12,7 @@ import uuid
 import Settings
 import datetime
 import datetime as dt
-import MySQLdb as mydb
+#import MySQLdb as mydb
 import yaml
 import ea_tasks
 
@@ -92,6 +92,7 @@ class FileHandler(BaseHandler):
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
+        con.close()
         self.set_status(200)
         self.flush()
         self.finish()

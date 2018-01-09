@@ -6,7 +6,7 @@ import json
 import os
 import datetime
 import easyaccess as ea
-import MySQLdb as mydb
+#import MySQLdb as mydb
 from celery import Celery
 import yaml
 import jira_ticket
@@ -42,8 +42,18 @@ class MyExamplesHandler(BaseHandler):
     def get(self):
         query0 = """--
 -- Example Query --
--- This query selects 1% of the data
-SELECT RA, DEC, MAG_AUTO_G from DR1_MAIN sample(0.0001)
+-- This query selects 0.001% of the data
+SELECT RA, DEC, MAG_AUTO_G, TILENAME from DR1_MAIN sample(0.001)
+"""
+        query0ra = """--
+-- Example Query --
+-- This query selects the first 1000 rows from a RA/DEC region
+SELECT ALPHAWIN_J2000 RAP,DELTAWIN_J2000 DECP, MAG_AUTO_G, TILENAME
+FROM DR1_MAIN
+WHERE
+RA BETWEEN 40.0 and 41.0 and
+DEC BETWEEN -41 and -40 and
+ROWNUM < 1001
 """
         query1 = """--
 -- Example Query --
@@ -53,15 +63,14 @@ SELECT RA, DEC, MAG_AUTO_G from DR1_MAIN sample(0.0001)
 SELECT
 count(main.MAG_AUTO_I) COUNT,
 avg(main.MAG_AUTO_I) COUNT,
-hp.HPIX_1024
+main.HPIX_1024
 FROM DR1_MAIN main
-JOIN  DR1_HPIX hp ON hp.COADD_OBJECT_ID = main.COADD_OBJECT_ID
 WHERE
   main.WAVG_SPREAD_MODEL_I + 3.0*main.WAVG_SPREADERR_MODEL_I < 0.005 and
   main.WAVG_SPREAD_MODEL_I > -1 and
   main.IMAFLAGS_ISO_I = 0 and
   main.MAG_AUTO_I < 21
-GROUP BY hp.HPIX_1024
+GROUP BY main.HPIX_1024
 """
         query2 = """--
 -- Example Query --
@@ -109,9 +118,8 @@ dr1.NEPOCHS_I > 0
 -- This query creates a Helpix map of number of galaxies
 -- and their mean magnitude on a resolution of NSIDE = 1024
 -- using NEST Schema
-SELECT count(dr1.MAG_AUTO_I),avg(dr1.MAG_AUTO_I),hp.HPIX_1024
+SELECT count(dr1.MAG_AUTO_I),avg(dr1.MAG_AUTO_I),dr1.HPIX_1024
 FROM DR1_MAIN dr1
-JOIN  DR1_HPIX hp ON hp.COADD_OBJECT_ID = dr1.COADD_OBJECT_ID
 where
 dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
 dr1.WAVG_SPREAD_MODEL_I + 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.003 and
@@ -119,10 +127,11 @@ dr1.WAVG_SPREAD_MODEL_I - 1.0*dr1.WAVG_SPREADERR_MODEL_I > 0.001 and
 dr1.WAVG_SPREAD_MODEL_I > -1 and
 dr1.IMAFLAGS_ISO_I = 0 and
 dr1.MAG_AUTO_I < 23
-group by hp.HPIX_1024
+group by dr1.HPIX_1024
         """
         queries = []
         queries.append({'desc': 'Sample Basic information', 'query': query0})
+        queries.append({'desc': 'Limit Basic information by region and number of rows', 'query': query0ra})
         queries.append({'desc': 'Create stellar density healpix map', 'query': query1})
         queries.append({'desc': 'Select stars from M2 Globular Cluster', 'query': query2})
         queries.append({'desc': 'Sample of bright galaxies', 'query': query3})

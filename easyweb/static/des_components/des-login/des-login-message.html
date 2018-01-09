@@ -1,16 +1,17 @@
-<dom-module id="des-login-activate">
+<dom-module id="des-login-message">
 <template>
   <style include="shared-styles">
   </style>
 
 
   <div style="cursor:default; height:400px;" class="container" >
-    <paper-card style="cursor:default;" heading="{{error}}"
+    <paper-card style="cursor:default;" heading="{{title}}"
     class="temp">
 
       <div style="cursor:default;" class="box-watermark-logo"></div>
       <div class="card-content">
-        <span>Go back to main page <a href="/easyweb/" > Home</a> and try again</span><br>
+          <content></content><br />
+        <span>Go back to main page <a href="/easyweb/" > Home</a> </span><br>
       </div>
       <div  style="cursor:pointer;" on-tap="home" class="box-upper-image"></div>
     </paper-card>
@@ -19,16 +20,12 @@
 
 <script>
   Polymer({
-    is: "des-login-activate",
+    is: "des-login-message",
     properties : {
-      error :{
+      title :{
         type: String,
         value: '',
       },
-      username: {
-        type: String,
-        value: '',
-      }
     },
       home: function(event){
         window.open('/easyweb/','_self',false);
