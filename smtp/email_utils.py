@@ -200,6 +200,24 @@ def subscribe_email(email):
     s.sendmail(fromemail, 'majordomo@ncsa.illinois.edu', msg.as_string())
     s.quit()
 
+def unsubscribe_email(email):
+    with open('config/user_manager.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['majordomo']
+    server = 'smtp.ncsa.illinois.edu'
+    #fromemail = 'devnull@ncsa.illinois.edu'
+    fromemail = 'mcarras2@illinois.edu'
+    s = smtplib.SMTP(server)
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = ''
+    msg['From'] = fromemail
+    msg['To'] = 'majordomo@ncsa.illinois.edu'
+    body = "approve {passwd} unsubscribe des-dr-announce {email}".format(passwd=conf['passwd'],
+                                                                       email=email),
+    MP1 = MIMEText(body)
+    msg.attach(MP1)
+    s.sendmail(fromemail, 'majordomo@ncsa.illinois.edu', msg.as_string())
+    s.quit()
+
 
 def send_announce(subject, msg):
     with open('config/user_manager.yaml', 'r') as cfile:
