@@ -194,7 +194,7 @@ def subscribe_email(email):
     msg['From'] = fromemail
     msg['To'] = 'majordomo@ncsa.illinois.edu'
     body = "approve {passwd} subscribe des-dr-announce {email}".format(passwd=conf['passwd'],
-                                                                       email=email),
+                                                                       email=email)
     MP1 = MIMEText(body)
     msg.attach(MP1)
     s.sendmail(fromemail, 'majordomo@ncsa.illinois.edu', msg.as_string())
@@ -212,7 +212,7 @@ def unsubscribe_email(email):
     msg['From'] = fromemail
     msg['To'] = 'majordomo@ncsa.illinois.edu'
     body = "approve {passwd} unsubscribe des-dr-announce {email}".format(passwd=conf['passwd'],
-                                                                       email=email),
+                                                                       email=email)
     MP1 = MIMEText(body)
     msg.attach(MP1)
     s.sendmail(fromemail, 'majordomo@ncsa.illinois.edu', msg.as_string())
