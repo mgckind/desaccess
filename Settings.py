@@ -51,5 +51,6 @@ app_log.addHandler(handler_app)
 
 class dbConfig(object):
     def __init__(self):
-        self.host = 'desdb-dr.ncsa.illinois.edu'
+        # self.host = 'desdb-dr.ncsa.illinois.edu'
+        self.host = 'desdb.ncsa.illinois.edu'
         self.port = '1521'
