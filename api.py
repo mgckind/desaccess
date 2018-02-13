@@ -11,6 +11,7 @@ from celery import Celery
 import yaml
 import jira_ticket
 from smtp import email_utils
+import requests
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -192,6 +193,12 @@ class MyJobsHandler(BaseHandler):
         app.config_from_object('config.celeryconfig')
         app.control.revoke(jobid, terminate=True, signal='SIGUSR1')
         app.close()
+        # delete request
+        req = requests.delete('https://descut.cosmology.illinois.edu/api/jobs/?token=1222...&jobid=abc...')
+        print(req.text)
+
+
+
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
@@ -207,6 +214,18 @@ class MyJobsHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
+        # Replace get job list with request
+        mytoken = ? # TODO: What does token mean?
+        req = requests.get('https://descut.cosmology.illinois.edu/api/jobs/?token=mytoken&list_jobs')
+        print(req.text)
+
+
+        # TODO: Do we wanna keep the database opeartion as well?
+
+
+
+
+
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
