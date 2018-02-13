@@ -1,4 +1,6 @@
 # easyweb
+## setup
+	pip3 install -r requirements.txt
 
 ## start redis-server
 ## start celery
@@ -8,6 +10,9 @@
 ## start server
 
 	python3 public.py
+	
+	
+
 
 
 Please note that this version of desaccess is not currently using vulcanization
