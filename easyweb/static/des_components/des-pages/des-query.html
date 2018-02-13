@@ -1,545 +1,766 @@
 <link rel="import" href="../../styles/shared-styles.html">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 <dom-module id="des-query">
-<template>
-<style include="shared-styles">
+    <template>
+        <style include="shared-styles">
+            .query-container {
+                @apply(--layout-vertical);
+            }
 
-</style>
+            .query-row {
+                @apply(--layout-horizontal);
+                @apply(--layout-around-justified);
+                height: 70%;
 
-<iron-ajax id="getQuery"
-   url="/easyweb/query/"
-   method="POST"
-   contentType="application/json"
-  params='{{_getQuery(querystr,querykind,outputfile, queryname, queryemail, querycomp)}}'
-   handle-as="json"
-   on-response="_complete"
-   on-request="_request"
-   on-error="_error"
-   debounce-duration="300">
-</iron-ajax>
+            }
 
-<iron-ajax id="getMyResponse"
-   url="/easyweb/myresponse/"
-   method="POST"
-   contentType="application/json"
-   params='{{_getJobid(jobid)}}'
-   handle-as="json"
-   on-response="_complete"
-   debounce-duration="300">
-</iron-ajax>
-    <paper-dialog class="dialog-position" id="jobHelpQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <des-card heading="Help">
-            <div class="card-content">
-                <paper-carousel id="query-crs" items="1" dotText="false" controls="true">
-                    <div class="carousel-item">
-                        <table class="crs-table">
-                            <tr class="crs-tr">
-                                <th class="crs-th">Button</th>
-                                <th class="crs-th">Description</th>
+            .query-row-2 {
+                @apply(--layout-horizontal);
+                @apply(--layout-around-justified);
+
+            }
+
+            .query-left {
+                @apply(--layout-flex-2);
+                width: 60%;
+                border: 1px solid #CCCCCC;
+            }
+
+            .query-right {
+                @apply(--layout-flex);
+                @apply(--layout-vertical);
+            }
+
+            .query-btn {
+                @apply(--layout-vertical);
+                @apply(--layout-flex-4);
+                text-align: center;
+            }
+
+            .query-op {
+                @apply(--layout-around-justified);
+
+            }
+
+            .query-cb {
+                @apply(--layout-around-justified);
+            }
+
+            .query-item {
+                /*@apply(--layout-flex);*/
+                text-align: left;
+            }
+            .btn-wrap {
+                margin-top: 5px;
+            }
+
+            .query-table {
+                height: 60%;
+                /*border: 1px solid black;*/
+            }
+
+            .query-tr {
+            }
+
+            .query-td {
+            }
+
+            .query-td-2 {
+                text-align: center;
+                line-height: 15%;
+            }
+
+            /*.querySpinner {*/
+            /*position: absolute;*/
+            /*right: 50px;*/
+            /*}*/
+
+            #response {
+                /*border: 1px solid blue;*/
+                margin-top: 60px;
+            }
+
+            @media all and (max-width: 1000px) {
+                .query-row {
+                    @apply(--layout-vertical);
+                }
+                .query-btn {
+                    @apply(--layout-horizontal);
+                    @apply(--layout-wrap);
+                }
+                .query-left {
+                    width: 100%;
+                }
+                .query-right {
+                    width: 100%;
+                }
+
+                #response {
+                    margin-top: 600px;
+                }
+            }
+
+
+            @media all and (max-width: 800px) {
+                .query-row {
+                    @apply(--layout-vertical);
+                }
+                .query-btn {
+                    @apply(--layout-horizontal);
+                    @apply(--layout-wrap);
+                }
+                .query-left {
+                    width: 100%;
+                }
+                .query-right {
+                    width: 100%;
+                }
+
+                #response {
+                    margin-top: 800px;
+                }
+            }
+
+            @media all and (max-width: 450px) {
+                .query-row {
+                    @apply(--layout-vertical);
+                }
+                .query-btn {
+                    @apply(--layout-horizontal);
+                    @apply(--layout-wrap);
+                }
+                .query-left {
+                    width: 100%;
+                }
+                .query-right {
+                    width: 100%;
+                }
+
+                #response {
+                    margin-top: 1000px;
+                }
+            }
+
+            @media all and (max-height: 700px) {
+                .query-row {
+                    @apply(--layout-vertical);
+                }
+                .query-btn {
+                    @apply(--layout-horizontal);
+                    @apply(--layout-wrap);
+                }
+                .query-left {
+                    width: 100%;
+                }
+                .query-right {
+                    width: 100%;
+                }
+
+                #response {
+                    margin-top: 1200px;
+                }
+            }
+
+
+
+        </style>
+
+        <iron-ajax id="getQuery"
+                   url="/easyweb/query/"
+                   method="POST"
+                   contentType="application/json"
+                   params='{{_getQuery(querystr,querykind,outputfile, queryname, queryemail, querycomp)}}'
+                   handle-as="json"
+                   on-response="_complete"
+                   on-request="_request"
+                   on-error="_error"
+                   debounce-duration="300">
+        </iron-ajax>
+
+        <iron-ajax id="getMyResponse"
+                   url="/easyweb/myresponse/"
+                   method="POST"
+                   contentType="application/json"
+                   params='{{_getJobid(jobid)}}'
+                   handle-as="json"
+                   on-response="_complete"
+                   debounce-duration="300">
+        </iron-ajax>
+        <paper-dialog class="dialog-position" id="jobHelpQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
+
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="query-crs" items="1" dotText="false" controls="true">
+                        <div class="carousel-item">
+                            <table class="crs-table">
+                                <tr class="crs-tr">
+                                    <th class="crs-th">Button</th>
+                                    <th class="crs-th">Description</th>
+                                </tr>
+
+                                <tr class="crs-tr">
+                                    <td class="crs-td">
+                                        <paper-button class="indigo" raised>Submit Job</paper-button>
+                                    </td>
+                                    <td class="crs-td">
+                                        Submit a job on click
+                                    </td>
+                                </tr>
+
+                                <tr class="crs-tr">
+                                    <td class="crs-td">
+                                        <paper-button class="indigo" raised>Clear</paper-button>
+                                    </td>
+                                    <td class="crs-td">
+                                        Clear the form on click
+                                    </td>
+                                </tr>
+
+                                <tr class="crs-tr">
+                                    <td class="crs-td">
+                                        <paper-button class="indigo" raised>Check</paper-button>
+                                    </td>
+                                    <td class="crs-td">
+                                        Check valid input on click
+                                    </td>
+                                </tr>
+
+                                <tr class="crs-tr">
+                                    <td class="crs-td">
+                                        <paper-button class="indigo" raised>Quick</paper-button>
+                                    </td>
+                                    <td class="crs-td">
+                                        Quick peek of the query result on click
+                                    </td>
+                                </tr>
+
+                                <tr class="crs-tr">
+                                    <td class="crs-td">
+                                        <paper-button class="indigo" raised>Example Query</paper-button>
+                                    </td>
+                                    <td class="crs-td">
+                                        See example queries on click
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+            </des-card>
+        </paper-dialog>
+
+
+        <des-card heading=" Query box">
+            <div class="content">
+                Insert your query in the box below. Data results for "Quick" Jobs (30 sec.) will be displayed at the bottom.
+            </div>
+
+            <div class="query-container">
+                <div class="query-row">
+                    <div class="query-left">
+                        <textarea style="border: 1px solid red;" id="queryBox" autofocus placeholder="Query box"></textarea>
+                        <template is="dom-if" if={{isQuery}} >
+                            <template is="dom-if" if={{isOk}} >
+                                <span class="queryMsg" style="color: green"> {{msg}}</span>
+                            </template>
+                            <template is="dom-if" if={{!isOk}} >
+                                <span id="errqueryMsg" class="queryMsg" style="color: red"> {{msg}}</span>
+                            </template>
+                        </template>
+                    </div>
+
+                    <div class="query-right">
+                        <table class="query-table" id="query-table">
+                            <col width="70%">
+                            <col width="30%">
+                            <tr class="query-tr">
+                                <td class="query-td-2">
+                                    <div class="query-btn">
+                                        <div class="btn-wrap">
+                                            <paper-button id="subQuery" class="indigo medium" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
+                                        </div>
+
+                                        <div class="btn-wrap">
+                                            <paper-button class="indigo medium" raised on-tap="clearQueryBox">Clear</paper-button>
+
+                                        </div>
+
+                                        <div class="btn-wrap">
+                                            <paper-button class="indigo medium" raised on-tap="_checkSyntax">Check</paper-button>
+                                        </div>
+
+                                        <div class="btn-wrap">
+                                            <paper-button id="QuickQuery" class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>
+                                        </div>
+
+                                        <div class="btn-wrap">
+                                            <a href = "/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">
+                                                <paper-button class="indigo medium" raised >See Examples</paper-button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="query-td">
+                                    <div class="btn-wrap">
+                                        <paper-spinner id="querySpinner" class="big"></paper-spinner>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="query-tr">
+                                <td class="query-td">
+                                    <paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
+
+                                </td>
+                                <td class="query-td">
+                                    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file (.csv, .fits, .h5)
+                                    </paper-toggle-button>
+                                </td>
                             </tr>
 
-                            <tr class="crs-tr">
-                                <td class="crs-td">
-                                    <paper-button class="indigo" raised>Submit Job</paper-button>
-                                </td>
-                                <td class="crs-td">
-                                    Submit a job on click
+                            <tr class="query-tr">
+                                <td class="query-td">
+                                    Options:
                                 </td>
                             </tr>
 
-                            <tr class="crs-tr">
-                                <td class="crs-td">
-                                    <paper-button class="indigo" raised>Clear</paper-button>
-                                </td>
-                                <td class="crs-td">
-                                    Clear the form on click
+                            <tr class="query-tr">
+                                <td class="query-td" colspan="2">
+                                    <paper-checkbox id="compress-box" style="margin-top: 38px; margin-left:10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>
                                 </td>
                             </tr>
 
-                            <tr class="crs-tr">
-                                <td class="crs-td">
-                                    <paper-button class="indigo" raised>Check</paper-button>
+                            <tr class="query-tr">
+                                <td class="query-td" colspan="2">
+                                    <paper-input  id="queryname" name="name" label="Job Name" value=""></paper-input>
                                 </td>
-                                <td class="crs-td">
-                                    Check valid input on click
+
+                            </tr>
+
+                            <tr class="query-tr">
+                                <td class="query-td" colspan="2">
+                                    <paper-checkbox id="checkemail" style="margin-top: 38px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
                                 </td>
                             </tr>
 
-                            <tr class="crs-tr">
-                                <td class="crs-td">
-                                    <paper-button class="indigo" raised>Quick</paper-button>
-                                </td>
-                                <td class="crs-td">
-                                    Quick peek of the query result on click
-                                </td>
-                            </tr>
-
-                            <tr class="crs-tr">
-                                <td class="crs-td">
-                                    <paper-button class="indigo" raised>Example Query</paper-button>
-                                </td>
-                                <td class="crs-td">
-                                    See example queries on click
+                            <tr class="query-tr">
+                                <td class="query-td" colspan="2">
+                                    <paper-input  id="queryemail" name="email" label="Email" value="" ></paper-input>
                                 </td>
                             </tr>
                         </table>
                     </div>
 
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+                </div>
 
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
+                <div class="query-row">
+                    <div id="response" class="results">
+                        <template is="dom-if" if={{isSelect}} >
+                            <paper-button raised class="indigo" on-tap='_downloadFile'>Download File</paper-button>
+                            <div class="scrollTable">
+                                <table id="t01" style="width:100%">
+                                    <tr class="t01-tr">
+                                        <th class="t01-th">
+                                            {{idx}}
+                                        </th>
+                                        <template is="dom-repeat" items="{{keys}}" as="key">
+                                            <th class="t01-th">&nbsp;{{key}}&nbsp;</th>
+                                        </template>
+                                    </tr>
+                                    <!--</table>-->
 
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
+                                    <!--<table id="t01" style="width:100%">-->
+                                    <template is="dom-repeat" id="pandas" items="{{mydata}}">
+                                        <tr class="t01-tr">
+                                            <td class="t01-td">
+                                                {{index}}
+                                            </td>
+                                            <template is="dom-repeat" items="{{keys}}" as="key">
+                                                <td class="t01-td">{{_returnVal(item,key)}}</td>
+                                            </template>
+                                        </tr>
+                                    </template>
+                                </table>
                             </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
+                        </template>
                     </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
-                </paper-carousel>
+                </div>
             </div>
-            <div class="row">
-                <paper-button class="prev" on-tap="_prevPage">
-                    <iron-icon icon="image:navigate-before"></iron-icon>
-                    Prev
-                </paper-button>
 
-                <paper-button class="next" on-tap="_nextPage">
-                    Next
-                    <iron-icon icon="image:navigate-next"></iron-icon>
-                </paper-button>
+
+            <div id="response2" >
+
+                <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
+                <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+
+                <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
             </div>
         </des-card>
-
-    </paper-dialog>
-    <des-card heading=" Query box">
-    <div class="content">
-    Insert your query in the box below. Data results for "Quick" Jobs (30 sec.) will be displayed at the bottom.
-    </div>
-<div class="query-box" style="padding-right:0px">
-<!--
-<paper-textarea id = "queryBox"  label="Query box" always-float-label required error-message="needs some text!" placeholder="Input query"  rows=10 maxRows=20>
-</paper-textarea>-->
-<textarea style="border: 1px solid red;" id="queryBox" autofocus placeholder="Query box"></textarea>
-<hr />
-<template is="dom-if" if={{isQuery}} >
-    <template is="dom-if" if={{isOk}} >
-        <span class="queryMsg" style="color: green"> {{msg}}</span>
     </template>
-    <template is="dom-if" if={{!isOk}} >
-        <span id="errqueryMsg" class="queryMsg" style="color: red"> {{msg}}</span>
-    </template>
-</template>
-<hr />
-<paper-button id="subQuery" class="indigo medium" raised disabled on-tap="_submitQuery">Submit Job</paper-button>
-<paper-button class="indigo medium" raised on-tap="clearQueryBox">Clear</paper-button>
-<paper-button class="indigo medium" raised on-tap="_checkSyntax">Check</paper-button>
-<paper-button id="QuickQuery" class="indigo medium" raised on-tap="_quickSubmit">Quick</paper-button>
-<paper-spinner id="querySpinner" class="big"></paper-spinner>
-<a href = "/easyweb/db-examples" style="text-decoration: none;" tabindex="-1">
-<paper-button style="position:absolute; right:10px" class="indigo medium" raised >See Examples</paper-button>
-</a>
-<div style="width: 500px; padding-left: 10px; font-size: 15px;" >
-    <div class="container4">
 
-    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file (.csv, .fits, .h5)
-    </paper-toggle-button>
-    <paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
-    </div>
-</div>
-    <div style="padding-left: 10px; font-size: 15px;" >
-    Options:
-    <div class="container4" style="font-size: 15px;">
-    <paper-input  id="queryname" name="name" label="Job Name" value=""></paper-input>
-    <paper-checkbox id="compress-box" style="margin-top: 38px; margin-left:10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>
-    </div>
-    <div class="container4" style="font-size: 15px;">
-    <paper-input  id="queryemail" name="email" label="Email" value="" ></paper-input>
-    <paper-checkbox id="checkemail" style="margin-top: 38px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
-     </div>
-
-<hr /><br>
-<div id="response" class="results">
-<template is="dom-if" if={{isSelect}} >
-    <paper-button raised class="indigo" on-tap='_downloadFile'>Download File</paper-button>
-    <div class="scrollTable">
-<table id="t01" style="width:100%">
-    <tr class="t01-tr">
-    <th class="t01-th">
-        {{idx}}
-    </th>
-    <template is="dom-repeat" items="{{keys}}" as="key">
-        <th class="t01-th">&nbsp;{{key}}&nbsp;</th>
-    </template>
-    </tr>
-<!--</table>-->
-
-    <!--<table id="t01" style="width:100%">-->
-        <template is="dom-repeat" id="pandas" items="{{mydata}}">
-            <tr class="t01-tr">
-                <td class="t01-td">
-                {{index}}
-                </td>
-                <template is="dom-repeat" items="{{keys}}" as="key">
-                    <td class="t01-td">{{_returnVal(item,key)}}</td>
-                </template>
-            </tr>
-        </template>
-    </table>
-</div>
-
-
-</template>
-</div>
-<div id="response2" >
-
-<paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
-<paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-
-        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
-</div>
-    </des-card>
-</template>
-
-<script>
-Polymer({
-    is: "des-query",
-    properties: {
-        querystr :{
-            type: String,
-            observer: '_queryChanged',
-        },
-        querykind :{
-            type: String,
-            value: 'submit',
-        },
-        db :{
-            type: String,
-            value: '',
-        },
-        outputfile :{
-            type: String,
-            value: 'nofile',
-        },
-        email :{
-            type: String,
-            value: '',
-        },
-        username :{
-            type: String,
-            value: '',
-        },
-        jobid :{
-            // current job id
-            type: String,
-            value: 'nojob',
-        },
-        queryname :{
-            type: String,
-            value: ''
-        },
-        queryemail :{
-            type: String,
-            value: ''
-        },
-        querycomp :{
-            type: Boolean,
-            value: false
-        }
-    },
-    attached: function() {
-        myQuery = document.getElementById("queryBox");
-        setTimeout(function() {
-            app.editor.refresh();
-            app.editor.focus();
-        },20);
-    },
-    ready: function (){
-
-        var _self = this;
-        loc = window.location.host;
-        //var ws = new WebSocket("wss://"+loc+"/easyweb/websocket/");
-        var ws = new WebSocket("wss://"+loc+"/easyweb/websocket/");
-        ws.onmessage = function(e) {
-            document.getElementById("getMyJobs").generateRequest();
-            try {
-                var tmp = JSON.parse(e.data);
+    <script>
+        Polymer({
+            is: "des-query",
+            properties: {
+                querystr :{
+                    type: String,
+                    observer: '_queryChanged',
+                },
+                querykind :{
+                    type: String,
+                    value: 'submit',
+                },
+                db :{
+                    type: String,
+                    value: '',
+                },
+                outputfile :{
+                    type: String,
+                    value: 'nofile',
+                },
+                email :{
+                    type: String,
+                    value: '',
+                },
+                username :{
+                    type: String,
+                    value: '',
+                },
+                jobid :{
+                    // current job id
+                    type: String,
+                    value: 'nojob',
+                },
+                queryname :{
+                    type: String,
+                    value: ''
+                },
+                queryemail :{
+                    type: String,
+                    value: ''
+                },
+                querycomp :{
+                    type: Boolean,
+                    value: false
                 }
-            catch(err) {
-                return
-            }
-            _self.jobid = tmp.out;
-            console.log(_self.jobid+'from socket');
-            if (tmp.stopJob == 'yes') {
+            },
+            attached: function() {
+                myQuery = document.getElementById("queryBox");
+                setTimeout(function() {
+                    app.editor.refresh();
+                    app.editor.focus();
+                },20);
+            },
+            ready: function (){
 
+                var _self = this;
+                loc = window.location.host;
+                //var ws = new WebSocket("wss://"+loc+"/easyweb/websocket/");
+                var ws = new WebSocket("wss://"+loc+"/easyweb/websocket/");
+                ws.onmessage = function(e) {
+                    document.getElementById("getMyJobs").generateRequest();
+                    try {
+                        var tmp = JSON.parse(e.data);
+                    }
+                    catch(err) {
+                        return
+                    }
+                    _self.jobid = tmp.out;
+                    console.log(_self.jobid+'from socket');
+                    if (tmp.stopJob == 'yes') {
+
+                        document.getElementById("querySpinner").active = false;
+                        document.getElementById('QuickQuery').disabled=false;
+                        _self.msg = 'Time Exceeded (30 sec), Please try to re-submit the job';
+                        _self.isQuery = true;
+                        _self.isOk = false;
+                    }
+                    else{
+                        document.getElementById("getMyResponse").generateRequest();
+                        _self.msg = tmp.result;
+                    }
+                }
+            },
+            _returnVal: function(item,key) {return item[key];},
+            _getQuery: function(querystr,querykind,outputfile, queryname, queryemail, querycomp){return {query:querystr, querykind:querykind, filename:outputfile, queryname: queryname,queryemail:queryemail, querycomp:querycomp};},
+            _getJobid: function(jobid){return {jobid:jobid};},
+            _queryChanged: function(){
+                console.log('query  changed to: ' , this.querystr);
+            },
+            _emailcheck: function(){
+                var emailbox = document.getElementById("checkemail");
+                document.getElementById("queryemail").value=this.email;
+                if (emailbox.checked == true){
+                    //edialog.open();
+                }
+                else
+                {
+                    document.getElementById("queryemail").value='';
+                }
+            },
+            _enableOutputFile: function(){
+                if (document.getElementById('inputOutputCheck').checked){
+                    document.getElementById('inputOutputFile').disabled=false;
+                    document.getElementById('subQuery').disabled=false;
+                }
+                else {
+                    document.getElementById('inputOutputFile').disabled=true;
+                    document.getElementById('subQuery').disabled=true;
+                }
+            },
+            _complete: function(e){
+                var _self = this;
+                _self.data = e.detail.response;
+                _self.isOk = true;
+                if (_self.data.kind == 'select') {
+                    document.getElementById("querySpinner").active = false;
+                    document.getElementById('QuickQuery').disabled=false;
+                    _self.isSelect = true;
+                    _self.isQuery = true;
+                    _self.msg = 'Done! Results below (only 1000 rows are shown, complete result in file)' ;
+                    document.getElementById('response2').scrollIntoView();
+                    _self.mydata = JSON.parse(_self.data.data);
+                    _self.keys = Object.keys(_self.mydata[0]);
+                    _self.idx = "IDX";
+                };
+                if (_self.data.kind == 'query') {
+                    document.getElementById("querySpinner").active = false;
+                    document.getElementById('QuickQuery').disabled=false;
+                    _self.isQuery = true;
+                    _self.isSelect = false;
+                    _self.msg = _self.data.data;
+                    _self.isOk = true;
+                    if (_self.data.status != 'ok') {_self.isOk = false;}
+                };
+                if (_self.data.kind == 'check') {
+                    document.getElementById("querySpinner").active = false;
+                    document.getElementById('QuickQuery').disabled=false;
+                    _self.isQuery = true;
+                    _self.isSelect = false;
+                    _self.msg = _self.data.data;
+                    _self.isOk = true;
+                    if (_self.data.status != 'ok') {_self.isOk = false;}
+                };
+                var bbs = document.getElementsByClassName("queryButton");
+                var cbbs = bbs.length;
+                for (var i = 0; i< cbbs; i++){
+                    bbs[i].disabled = false;
+                };
+                if (this.querykind == 'submit') {
+                    document.getElementById("querySpinner").active = false;
+                    if (_self.isOk){
+                        document.querySelector('#toast1').show();}
+                    document.getElementById("getMyJobs").generateRequest();
+                }
+                //document.querySelector('#toast1').show();
+
+            },
+            _request: function(e){
+                var bbs = document.getElementsByClassName("queryButton");
+                var cbbs = bbs.length;
+                for (var i = 0; i< cbbs; i++){
+                    bbs[i].disabled = true;
+                };
+
+                if (this.querykind == 'quick') {
+                    document.getElementById("querySpinner").active = true;
+                }
+            },
+            _error: function(e){
+                document.querySelector('#toast2').show();
+            },
+            clearQueryBox: function(){
+                this.querystr = '';
+                app.editor.setValue('-- Insert Query --\n\n');
+                app.editor.focus();
+                app.editor.execCommand('goLineDown');
+                document.getElementById('inputOutputFile').disabled = true;
                 document.getElementById("querySpinner").active = false;
                 document.getElementById('QuickQuery').disabled=false;
-                _self.msg = 'Time Exceeded (30 sec), Please try to re-submit the job';
-                _self.isQuery = true;
-                _self.isOk = false;
-            }
-            else{
-            document.getElementById("getMyResponse").generateRequest();
-                _self.msg = tmp.result;
-            }
-            }
-    },
-    _returnVal: function(item,key) {return item[key];},
-    _getQuery: function(querystr,querykind,outputfile, queryname, queryemail, querycomp){return {query:querystr, querykind:querykind, filename:outputfile, queryname: queryname,queryemail:queryemail, querycomp:querycomp};},
-    _getJobid: function(jobid){return {jobid:jobid};},
-    _queryChanged: function(){
-        console.log('query  changed to: ' , this.querystr);
-    },
-    _emailcheck: function(){
-            var emailbox = document.getElementById("checkemail");
-            document.getElementById("queryemail").value=this.email;
-            if (emailbox.checked == true){
-                //edialog.open();
-            }
-            else
-            {
-            document.getElementById("queryemail").value='';
-            }
-        },
-    _enableOutputFile: function(){
-        if (document.getElementById('inputOutputCheck').checked){
-            document.getElementById('inputOutputFile').disabled=false;
-            document.getElementById('subQuery').disabled=false;
-        }
-        else {
-            document.getElementById('inputOutputFile').disabled=true;
-            document.getElementById('subQuery').disabled=true;
-        }
-    },
-    _complete: function(e){
-        var _self = this;
-        _self.data = e.detail.response;
-        _self.isOk = true;
-        if (_self.data.kind == 'select') {
-        document.getElementById("querySpinner").active = false;
-        document.getElementById('QuickQuery').disabled=false;
-            _self.isSelect = true;
-            _self.isQuery = true;
-            _self.msg = 'Done! Results below (only 1000 rows are shown, complete result in file)' ;
-            document.getElementById('response2').scrollIntoView();
-            _self.mydata = JSON.parse(_self.data.data);
-            _self.keys = Object.keys(_self.mydata[0]);
-            _self.idx = "IDX";
-        };
-        if (_self.data.kind == 'query') {
-        document.getElementById("querySpinner").active = false;
-        document.getElementById('QuickQuery').disabled=false;
-            _self.isQuery = true;
-            _self.isSelect = false;
-            _self.msg = _self.data.data;
-            _self.isOk = true;
-            if (_self.data.status != 'ok') {_self.isOk = false;}
-        };
-        if (_self.data.kind == 'check') {
-        document.getElementById("querySpinner").active = false;
-        document.getElementById('QuickQuery').disabled=false;
-            _self.isQuery = true;
-            _self.isSelect = false;
-            _self.msg = _self.data.data;
-            _self.isOk = true;
-            if (_self.data.status != 'ok') {_self.isOk = false;}
-        };
-        var bbs = document.getElementsByClassName("queryButton");
-        var cbbs = bbs.length;
-        for (var i = 0; i< cbbs; i++){
-            bbs[i].disabled = false;
-        };
-        if (this.querykind == 'submit') {
-           document.getElementById("querySpinner").active = false;
-            if (_self.isOk){
-            document.querySelector('#toast1').show();}
-            document.getElementById("getMyJobs").generateRequest();
-        }
-        //document.querySelector('#toast1').show();
+                document.getElementById('inputOutputCheck').checked = false;
+                document.getElementById('inputOutputCheck').disabled = false;
+                document.getElementById('inputOutputFile').value = '';
+                document.getElementById('inputOutputFile').disabled=false;
+                document.getElementById('queryname').value = '';
+                document.getElementById('checkemail').checked = false;
+                document.getElementById('compress-box').checked = false;
+                document.getElementById('queryemail').value ='';
+                document.getElementById('subQuery').disabled=true;
+                this.outputfile = 'nofile';
+                this.mydata = [];
+                this.msg = '';
+                this.keys = [];
+                this.idx = '';
+                this.isSelect = false;
+            },
+            _submitQuery: function(event){
+                console.log('invalid');
+                this.querystr = app.editor.getValue();
+                this.querykind = 'submit';
+                this.queryname = document.getElementById('queryname').value;
+                this.queryemail = document.getElementById('queryemail').value;
+                this.querycomp = document.getElementById('compress-box').checked;
+                if (document.getElementById('inputOutputCheck').checked){
+                    this.outputfile = document.getElementById('inputOutputFile').value;}
+                this.mydata = [];
+                this.keys = [];
+                this.idx = '';
+                valid = true;
+                if (this.querystr == '') {
+                    valid = false;
+                }
+                if (valid) {
+                    queryform = document.getElementById("getQuery");
+                    queryform.generateRequest();
+                }
+            },
+            _quickSubmit: function(event){
+                document.getElementById('inputOutputCheck').checked = false;
+                document.getElementById('inputOutputFile').disabled = true;
+                document.getElementById('subQuery').disabled=true;
+                document.getElementById('QuickQuery').disabled=true;
+                this.msg='';
+                this.querystr = app.editor.getValue();
+                this.querykind = 'quick';
+                this.outputfile = 'nofile';
+                this.queryname = document.getElementById('queryname').value;
+                this.queryemail = document.getElementById('queryemail').value;
+                this.querycomp = document.getElementById('compress-box').checked;
+                this.mydata = [];
+                this.keys = [];
+                this.idx = '';
+                valid = true;
+                if (this.querystr == '') {
+                    valid = false;
+                }
+                //var valid = document.getElementById("queryBox").validate();
+                if (valid) {
+                    queryform = document.getElementById("getQuery");
+                    queryform.generateRequest();}
+            },
+            _checkSyntax: function(event){
+                this.querystr = app.editor.getValue();
+                this.querykind = 'check';
+                this.queryname = document.getElementById('queryname').value;
+                this.queryemail = document.getElementById('queryemail').value;
+                this.querycomp = document.getElementById('compress-box').checked;
+                this.outputfile = 'nofile';
+                this.mydata = [];
+                this.keys = [];
+                this.idx = '';
+                valid = true;
+                if (this.querystr == '') {
+                    valid = false;
+                }
+                //var valid = document.getElementById("queryBox").validate();
+                if (valid) {document.getElementById("getQuery").generateRequest();}
+            },
+            patchOverlay: function (e) {
+                if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                }
+            },
+            _seeHelp: function(e){
+                e.preventDefault();
+                document.getElementById('jobHelpQuery').open();
+            },
 
-    },
-    _request: function(e){
-        var bbs = document.getElementsByClassName("queryButton");
-        var cbbs = bbs.length;
-        for (var i = 0; i< cbbs; i++){
-            bbs[i].disabled = true;
-        };
+            _seeExample: function(e){
+                //var app = document.querySelector('#app');
+                //var pages = document.getElementById("mainPages");
+                //var menu = document.querySelector('paper-menu');
+                //app.selection=3;
+                //pages.selected=3;
+                //menu.selected=3;
+                app.editor.refresh();
+            },
+            _downloadFile: function(e) {
+                e.preventDefault();
+                var filename = 'quickResults.csv'
+                var user = this.username;
+                console.log(user);
+                var link = document.createElement('a');
+                link.href = "/easyweb/static/workdir/" + user + "/" + filename;
+                if (link.download !== undefined) {
+                    //Set HTML5 download attribute. This will prevent file from opening if supported.
+                    var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+                    link.download = fileName;
+                }
+                if (document.createEvent) {
+                    var e = document.createEvent('MouseEvents');
+                    e.initEvent('click', true, true);
+                    link.dispatchEvent(e);
+                    return true;
+                }
+                var query = '?download';
+                window.open(link.href + query);
 
-        if (this.querykind == 'quick') {
-            document.getElementById("querySpinner").active = true;
-        }
-    },
-    _error: function(e){
-        document.querySelector('#toast2').show();
-    },
-    clearQueryBox: function(){
-        this.querystr = '';
-        app.editor.setValue('-- Insert Query --\n\n');
-        app.editor.focus();
-        app.editor.execCommand('goLineDown');
-        document.getElementById('inputOutputFile').disabled = true;
-        document.getElementById("querySpinner").active = false;
-        document.getElementById('QuickQuery').disabled=false;
-        document.getElementById('inputOutputCheck').checked = false;
-        document.getElementById('inputOutputCheck').disabled = false;
-        document.getElementById('inputOutputFile').value = '';
-        document.getElementById('inputOutputFile').disabled=false;
-        document.getElementById('queryname').value = '';
-        document.getElementById('checkemail').checked = false;
-        document.getElementById('compress-box').checked = false;
-        document.getElementById('queryemail').value ='';
-        document.getElementById('subQuery').disabled=true;
-        this.outputfile = 'nofile';
-        this.mydata = [];
-        this.msg = '';
-        this.keys = [];
-        this.idx = '';
-        this.isSelect = false;
-    },
-    _submitQuery: function(event){
-            console.log('invalid');
-        this.querystr = app.editor.getValue();
-        this.querykind = 'submit';
-        this.queryname = document.getElementById('queryname').value;
-        this.queryemail = document.getElementById('queryemail').value;
-        this.querycomp = document.getElementById('compress-box').checked;
-        if (document.getElementById('inputOutputCheck').checked){
-            this.outputfile = document.getElementById('inputOutputFile').value;}
-        this.mydata = [];
-        this.keys = [];
-        this.idx = '';
-        valid = true;
-        if (this.querystr == '') {
-            valid = false;
-        }
-        if (valid) {
-            queryform = document.getElementById("getQuery");
-            queryform.generateRequest();
-        }
-    },
-    _quickSubmit: function(event){
-        document.getElementById('inputOutputCheck').checked = false;
-        document.getElementById('inputOutputFile').disabled = true;
-        document.getElementById('subQuery').disabled=true;
-        document.getElementById('QuickQuery').disabled=true;
-        this.msg='';
-        this.querystr = app.editor.getValue();
-        this.querykind = 'quick';
-        this.outputfile = 'nofile';
-        this.queryname = document.getElementById('queryname').value;
-        this.queryemail = document.getElementById('queryemail').value;
-        this.querycomp = document.getElementById('compress-box').checked;
-        this.mydata = [];
-        this.keys = [];
-        this.idx = '';
-        valid = true;
-        if (this.querystr == '') {
-            valid = false;
-        }
-        //var valid = document.getElementById("queryBox").validate();
-        if (valid) {
-            queryform = document.getElementById("getQuery");
-            queryform.generateRequest();}
-    },
-    _checkSyntax: function(event){
-        this.querystr = app.editor.getValue();
-        this.querykind = 'check';
-        this.queryname = document.getElementById('queryname').value;
-        this.queryemail = document.getElementById('queryemail').value;
-        this.querycomp = document.getElementById('compress-box').checked;
-        this.outputfile = 'nofile';
-        this.mydata = [];
-        this.keys = [];
-        this.idx = '';
-        valid = true;
-        if (this.querystr == '') {
-            valid = false;
-        }
-        //var valid = document.getElementById("queryBox").validate();
-        if (valid) {document.getElementById("getQuery").generateRequest();}
-    },
-    patchOverlay: function (e) {
-        if (e.target.withBackdrop) {
-            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-        }
-    },
-    _seeHelp: function(e){
-        e.preventDefault();
-        document.getElementById('jobHelpQuery').open();
-    },
+            },
 
-    _seeExample: function(e){
-        //var app = document.querySelector('#app');
-        //var pages = document.getElementById("mainPages");
-        //var menu = document.querySelector('paper-menu');
-        //app.selection=3;
-        //pages.selected=3;
-        //menu.selected=3;
-        app.editor.refresh();
-    },
-    _downloadFile: function(e) {
-        e.preventDefault();
-        var filename = 'quickResults.csv'
-        var user = this.username;
-        console.log(user);
-        var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/" + user + "/" + filename;
-        if (link.download !== undefined) {
-            //Set HTML5 download attribute. This will prevent file from opening if supported.
-            var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
-            link.download = fileName;
-        }
-        if (document.createEvent) {
-            var e = document.createEvent('MouseEvents');
-            e.initEvent('click', true, true);
-            link.dispatchEvent(e);
-            return true;
-        }
-        var query = '?download';
-        window.open(link.href + query);
+            _nextPage: function() {
+                var crs = document.getElementById("query-crs");
+                crs.goToNextPage();
+            },
 
-    },
-
-    _nextPage: function() {
-        var crs = document.getElementById("query-crs");
-        crs.goToNextPage();
-    },
-
-    _prevPage: function() {
-        var crs = document.getElementById("query-crs");
-        crs.goToPrevPage();
-    },
-});
-</script>
+            _prevPage: function() {
+                var crs = document.getElementById("query-crs");
+                crs.goToPrevPage();
+            },
+        });
+    </script>
 </dom-module>
