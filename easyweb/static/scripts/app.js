@@ -107,7 +107,11 @@
                ysize.addEventListener('value-change', function() {
                    document.getElementById("ysizeLabel").textContent = ysize.value;
                });
-      //
+
+      // var res = document.getElementById("response");
+      // res.style.marginTop = $("#queryBox").height() + $("#query-table").height() + 35;
+      // console.log("margin top of res: ", res.style.marginTop)
+      // //
       // prevButton.addEventListener('focused-changed', function(){
       //     console.log("=> page: ", cid);
       //     var crs = document.getElementById(cid);
