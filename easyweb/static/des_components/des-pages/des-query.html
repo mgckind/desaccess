@@ -361,45 +361,55 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                            <td>
+                                <br />
+                            </td>
+                            </tr>
+                            <tr class="query-tr" >
+                                <td class="query-td" colspan="2">
+                                    <span>Output file (.csv, .fits or .h5). Enable in order to submit.</span>
+                                </td>
+                            </tr>
                             <tr class="query-tr">
                                 <td class="query-td">
-                                    <paper-input style="margin-left:13px; margin-bottom: 24px;" id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
+                                    <paper-input style="margin-left:13px; margin-bottom: 14px; margin-top: -10px;" id="inputOutputFile" disabled required auto-validate label="Output file" ></paper-input>
 
                                 </td>
                                 <td class="query-td">
-                                    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile"> Output file (.csv, .fits, .h5)
+                                    <paper-toggle-button class="queryButton" id="inputOutputCheck" noink on-tap="_enableOutputFile" style="margin-top: -10px">
                                     </paper-toggle-button>
                                 </td>
                             </tr>
 
                             <tr class="query-tr">
                                 <td class="query-td">
-                                    Options:
+                                    <span style="color: red;">Options:</span>
                                 </td>
                             </tr>
 
                             <tr class="query-tr">
                                 <td class="query-td" colspan="2">
-                                    <paper-checkbox id="compress-box" style="margin-top: 38px; margin-left:10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>
+                                    <paper-checkbox id="compress-box" style="margin-top: 18px; margin-left:10px;">Compressed files (csv and h5 files). Slightly longer jobs but smaller files</paper-checkbox>
                                 </td>
                             </tr>
 
                             <tr class="query-tr">
                                 <td class="query-td" colspan="2">
-                                    <paper-input  id="queryname" name="name" label="Job Name" value=""></paper-input>
+                                    <paper-input  id="queryname" name="name" label="Job Name (optional)" value="" style="margin-top: -10px"></paper-input>
                                 </td>
 
                             </tr>
 
                             <tr class="query-tr">
                                 <td class="query-td" colspan="2">
-                                    <paper-checkbox id="checkemail" style="margin-top: 38px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
+                                    <paper-checkbox id="checkemail" style="margin-top: 18px; margin-left:10px;" on-change="_emailcheck">Send email after completion</paper-checkbox>
                                 </td>
                             </tr>
 
                             <tr class="query-tr">
                                 <td class="query-td" colspan="2">
-                                    <paper-input  id="queryemail" name="email" label="Email" value="" ></paper-input>
+                                    <paper-input  id="queryemail" name="email" label="Email" value="" style="margin-top: -10px"></paper-input>
                                 </td>
                             </tr>
                         </table>
