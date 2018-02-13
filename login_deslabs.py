@@ -85,17 +85,16 @@ class MainHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
-        loc_pwd = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
         loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
         newfolder = os.path.join(Settings.WORKDIR, loc_user)
         if not os.path.exists(newfolder):
             os.mkdir(newfolder)
-        kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': loc_db}
+        kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': 'desoper'}
         dsn = cx_Oracle.makedsn(**kwargs)
         with open('config/user_manager.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['oracle']
-        user_manager = loc_user #conf['user']
-        pass_manager = loc_pwd #conf['passwd']
+        user_manager = conf['user']
+        pass_manager = conf['passwd']
         del conf
         dbh = cx_Oracle.connect(user_manager, pass_manager, dsn=dsn)
         cursor = dbh.cursor()
@@ -186,7 +185,7 @@ class UpdateInfoHandler(BaseHandler):
         lastname = self.get_argument("lastname", "")
         email = self.get_argument("email", "")
         err = ''
-        db_utils.update_info(username, firstname, lastname, email, user_manager, pass_manager)
+        db_utils.update_info(username, firstname, lastname, email, user_manager, pass_manager, db='desoper')
         return self.write(json.dumps({'msg': err, 'errno': '0'}))
 
 
