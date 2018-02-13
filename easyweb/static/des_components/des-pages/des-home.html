@@ -142,7 +142,7 @@
         </paper-dialog>
 
         <section>
-            <des-card heading="Welcome [[name]]!" class="welcome">
+            <des-card heading="Welcome to [[db]], [[name]]!" class="welcome">
             <div class="horizontal layout around justified">
 
                 <a style = "text-transform: none; color:black;" href="/easyweb/db-access" tabindex="-1">
@@ -185,6 +185,10 @@
 
         properties: {
             name :{
+                type: String,
+                value:''
+            },
+            db :{
                 type: String,
                 value:''
             },
