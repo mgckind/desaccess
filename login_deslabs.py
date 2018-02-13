@@ -21,58 +21,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("usera")
 
 
-class SignupHandler(BaseHandler):
-    def get(self):
-        self.render('signup.html', errormessage='', version=__version__, toast='no')
 
-    def post(self):
-        username = self.get_argument("username", "").lower()
-        password = self.get_argument("password", "")
-        firstname = self.get_argument("firstname", "")
-        lastname = self.get_argument("lastname", "")
-        email = self.get_argument("email", "").lower()
-        valid = len(password) >= 6
-        if db_utils.check_username(username) and valid:
-            if db_utils.check_email(email):
-                check, msgerr = db_utils.create_user(username, password, firstname, lastname, email, '', '')
-                if not check:
-                    err = '3'
-                    if '911' or '922' in msgerr:
-                        msg = 'Invalid character in password.'
-                    else:
-                        msg = msgerr
-                else:
-                    check, url, checkuser = db_utils.create_reset_url(email)
-                    email_utils.send_activation(firstname, username, email, url)
-                    try:
-                        email_utils.subscribe_email(email)
-                    except:
-                        pass
-                    msg = 'Activation email sent!'
-                    err = '0'
-            else:
-                msg = 'Email address already exists in our database.'
-                err = '2'
-        else:
-            if valid:
-                msg = '{0} already exists. Try a different one'.format(username)
-                err = '1'
-            else:
-                msg = 'Password minimum length is 6.'
-                err = '3'
-
-        self.write(json.dumps({'msg': msg, 'errno': err}))
-
-class EmailHandler(BaseHandler):
-    def get(self, slug):
-        htmlp = os.path.join(Settings.STATIC_PATH, 'internal/emails/'+slug+'.html')
-        try:
-            with open(htmlp, 'r') as fhtml:
-                msg = fhtml.read()
-            self.write(msg)
-        except:
-            self.set_status(404)
-            self.render('404.html', version=__version__, errormessage='404: Page Not Found', username='')
 
 
 class ResetHandler(BaseHandler):
@@ -136,6 +85,7 @@ class MainHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
+        loc_pwd = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
         loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
         newfolder = os.path.join(Settings.WORKDIR, loc_user)
         if not os.path.exists(newfolder):
@@ -144,13 +94,13 @@ class MainHandler(BaseHandler):
         dsn = cx_Oracle.makedsn(**kwargs)
         with open('config/user_manager.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['oracle']
-        user_manager = conf['user']
-        pass_manager = conf['passwd']
+        user_manager = loc_user #conf['user']
+        pass_manager = loc_pwd #conf['passwd']
         del conf
         dbh = cx_Oracle.connect(user_manager, pass_manager, dsn=dsn)
         cursor = dbh.cursor()
         try:
-            cc = cursor.execute('select firstname,lastname,email from des_admin.des_users where '
+            cc = cursor.execute('select firstname,lastname,email from des_users where '
                                 'upper(username) = \'%s\'' % loc_user.upper()).fetchone()
         except:
             cc = ('', '', '')
