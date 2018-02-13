@@ -44,6 +44,10 @@ class SignupHandler(BaseHandler):
                 else:
                     check, url, checkuser = db_utils.create_reset_url(email)
                     email_utils.send_activation(firstname, username, email, url)
+                    try:
+                        email_utils.subscribe_email(email)
+                    except:
+                        pass
                     msg = 'Activation email sent!'
                     err = '0'
             else:
