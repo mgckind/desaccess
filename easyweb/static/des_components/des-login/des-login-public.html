@@ -3,7 +3,7 @@
   <style include="shared-styles">
   </style>
 
-  <paper-dialog class="new" id="updateDialog" modal>
+  <paper-dialog class="fixbox" id="updateDialog" modal>
     <des-login-update error="{{error}}" db="{{db}}"></des-login-update>
   </paper-dialog>
 
@@ -81,6 +81,12 @@
         type: String,
         value: '',
       },
+      update:{
+        type: String,
+        value: false,
+        observer: '_updatePass'
+
+      },
       toastpass: {
         type: String,
         value: false,
@@ -136,6 +142,12 @@
       button2.disabled = true;
       var errm = document.getElementById('divError');
       errm.style.display = "none";
+    },
+
+    _updatePass: function(e) {
+      if (this.update=='yes') {
+        document.getElementById("updateDialog").open();
+      }
     },
 
     _updateToast: function(e) {
