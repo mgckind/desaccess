@@ -148,10 +148,10 @@ def update_password(username, password):
     return valid, msg
 
 
-def update_info(username, firstname, lastname, email, user_manager='', pass_manager=''):
+def update_info(username, firstname, lastname, email, user_manager='', pass_manager='', db='desdr'):
     username = username.lower()
     email = email.lower()
-    con = ea.connect('desdr', user=user_manager, passwd=pass_manager)
+    con = ea.connect(db, user=user_manager, passwd=pass_manager)
     qupdate = """
         UPDATE  DES_ADMIN.DES_USERS SET
         firstname = '{first}',
