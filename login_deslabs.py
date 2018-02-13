@@ -185,7 +185,7 @@ class UpdateInfoHandler(BaseHandler):
         lastname = self.get_argument("lastname", "")
         email = self.get_argument("email", "")
         err = ''
-        db_utils.update_info(username, firstname, lastname, email, user_manager, pass_manager)
+        db_utils.update_info(username, firstname, lastname, email, user_manager, pass_manager, db='desoper')
         return self.write(json.dumps({'msg': err, 'errno': '0'}))
 
 
