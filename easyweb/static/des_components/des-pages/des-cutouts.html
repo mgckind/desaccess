@@ -1,0 +1,60 @@
+<dom-module id="des-cutouts">
+    <style include="shared-styles">
+        paper-tabs {
+            font-family: 'Roboto', 'Noto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            width: 100%;
+            text-transform: uppercase;
+            --paper-tabs-selection-bar-color: var(--paper-blue-50);
+        }
+        paper-tab {
+            border-color: var(--paper-blue-50);
+            border-width: 2px;
+            border-style: solid;
+
+        }
+        paper-tab:hover {
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+        }
+
+    </style>
+    <template>
+        <des-card heading="Cutouts Service" no-bar>
+            <paper-tabs selected="{{ choice }}" >
+                <paper-tab>Coadds Images</paper-tab>
+                <paper-tab>Single Epochs</paper-tab>
+            </paper-tabs>
+
+            <iron-pages  id="cutoutsPages" selected=[[choice]]>
+                <des-coadds id="desCoadds" email={{email}}></des-coadds>
+                <des-epochs id="desEpochs" email={{email}}"></des-epochs>
+            </iron-pages>
+        </des-card>
+
+
+    </template>
+</dom-module>
+
+<script>
+
+    Polymer({
+        is: "des-cutouts",
+        properties: {
+            email: {
+                type: String,
+                values: "",
+            },
+            choice:{
+                type: String,
+                values: "",
+            }
+
+        },
+
+    });
+
+
+
+</script>
