@@ -56,7 +56,6 @@ class FileHandler(BaseHandler):
         send_email = self.get_argument("send_email") == 'true'
         email = self.get_argument("email")
         name = self.get_argument("name")
-
         tag = self.get_argument("tag")
         stype = self.get_argument("submit_type")
         values = self.get_argument("values")
@@ -143,7 +142,7 @@ class FileHandler(BaseHandler):
             'no_blacklist': 'false',
         # optional for 'single' epochs jobs (default: 'false'). return or not blacklisted exposures
             'list_only': list_only,  # optional (default : 'false') 'true': will not generate pngs (faster)
-            'comment': ''
+            # 'comment': ''
         }
 
         if send_email:
@@ -226,6 +225,25 @@ class FileHandler(BaseHandler):
                         q = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('FAILED', jid)
                         cur.execute(q)
                     break
+
+            # copy the file to local
+            # req = requests.get('https://descut.cosmology.illinois.edu/api/jobs/?token={0}&jobid={1}'.format(token, jid))
+            # print(req.text)
+            # links = req.json()['links']
+            # k = 0
+            # for l in links:
+            #     # only use png
+            #     if l.endswith('png'):
+            #         print(l)
+            #         r = requests.get(l, stream=True)
+            #         if r.status_code == 200:
+            #             img = "image_%d.png" % (k)
+            #             fp = folder2 + img
+            #             f = open(fp, "wb")
+            #             for chunk in r:
+            #                 f.write(chunk)
+            #         k += 1
+            #
             print("Goodbye, this cruel world.")
             con.close()
             exit()
@@ -355,7 +373,7 @@ class FileHandlerS(BaseHandler):
             'no_blacklist': noBlacklist,
             # optional for 'single' epochs jobs (default: 'false'). return or not blacklisted exposures
             'list_only': list_only,  # optional (default : 'false') 'true': will not generate pngs (faster)
-            'comment': ''
+            # 'comment': ''
         }
 
         if send_email:
