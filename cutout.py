@@ -57,6 +57,7 @@ class FileHandler(BaseHandler):
         email = self.get_argument("email")
         name = self.get_argument("name")
 
+        tag = self.get_argument("tag")
         stype = self.get_argument("submit_type")
         values = self.get_argument("values")
 
@@ -67,13 +68,12 @@ class FileHandler(BaseHandler):
         print(send_email, 'send_email')
         print(email, 'email')
         print(name, 'name')
+        print(name, '<<== tag')
+
+
         jobid = str(uuid.uuid4())
         #if name == '':
         #    name = jobid
-        if xs == 0.0:
-            xs = ''
-        if ys == 0.0:
-            ys = ''
         if stype == "manual":
             values = self.get_argument("values")
             print(values)
@@ -136,11 +136,10 @@ class FileHandler(BaseHandler):
             'ra': str(ra),  # required
             'dec': str(dec),  # required
             'job_type': 'coadd',  # required 'coadd' or 'single'
-            'xsize': str(xs),  # optional (default : 1.0)
-            'ysize': str(ys),  # optional (default : 1.0)
-            'tag': 'Y3A1_COADD',
+            'xsize': float(xs),  # optional (default : 1.0)
+            'ysize': float(ys),  # optional (default : 1.0)
+            'tag': tag,
         # optional for 'coadd' jobs (default: Y3A1_COADD, see Coadd Help page for more options)
-            'band': 'g,r,i',  # optional for 'single' epochs jobs (default: all bands)
             'no_blacklist': 'false',
         # optional for 'single' epochs jobs (default: 'false'). return or not blacklisted exposures
             'list_only': list_only,  # optional (default : 'false') 'true': will not generate pngs (faster)
@@ -190,7 +189,53 @@ class FileHandler(BaseHandler):
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
+
         con.close()
+
+        print("Process id before forking: {}".format(os.getpid()))
+
+        try:
+            pid = os.fork()
+        except OSError:
+            exit("Could not create a child process")
+
+        if pid == 0:
+            with open('config/mysqlconfig.yaml', 'r') as cfile:
+                conf = yaml.load(cfile)['mysql']
+            con = mydb.connect(**conf)
+            print("In the child process that has the PID {}".format(os.getpid()))
+            while (1):
+                sleep(1)
+                # get job result
+                url = "https://descut.cosmology.illinois.edu/api/jobs/?token={0}&jobid={1}".format(token, jid)
+                req = requests.get(url, verify=False)
+                print(req.text)
+                response = req.json()
+                msg = response['message']
+                if msg.find("PENDING") != -1:
+                    continue
+                if msg.find("SUCCESS") != -1:
+                    with con:
+                        cur = con.cursor()
+                        q = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('SUCCESS', jid)
+                        cur.execute(q)
+                    break
+                if msg.find("SUCCESS") == -1 and msg.find("PENDING") == -1:
+                    with con:
+                        cur = con.cursor()
+                        q = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('FAILED', jid)
+                        cur.execute(q)
+                    break
+            print("Goodbye, this cruel world.")
+            con.close()
+            exit()
+
+        print("In the parent process after forking the child {}".format(pid))
+        # not wait for the child, go fly
+        # finished = os.waitpid(0, 0)
+        # print(finished)
+
+
         self.set_status(200)
         self.flush()
         self.finish()
@@ -220,8 +265,6 @@ class FileHandlerS(BaseHandler):
         # comment = self.get_argument("comment")
         stype = self.get_argument("submit_type")
         name = self.get_argument("name")
-        if xs == 0.0 : xs=''
-        if ys == 0.0 : ys=''
         print('**************')
         print(xs,ys,'sizes')
         print(stype,'type')
@@ -233,6 +276,12 @@ class FileHandlerS(BaseHandler):
         print(noBlacklist, 'noBlacklist')
         print(name, 'name')
         jobid = str(uuid.uuid4())
+        if bands == "all":
+            bands = ["g", "r", "i", "z", "Y"]
+        else:
+            bands = list(bands.split(" "))
+        print("bands ==> ", bands)
+
         if stype=="manual":
             values = self.get_argument("values")
             print(values)
@@ -300,10 +349,8 @@ class FileHandlerS(BaseHandler):
             'ra': str(ra),  # required
             'dec': str(dec),  # required
             'job_type': 'single',  # required 'coadd' or 'single'
-            'xsize': str(xs),  # optional (default : 1.0)
-            'ysize': str(ys),  # optional (default : 1.0)
-            'tag': 'Y3A1_COADD',
-            # optional for 'coadd' jobs (default: Y3A1_COADD, see Coadd Help page for more options)
+            'xsize': float(xs),  # optional (default : 1.0)
+            'ysize': float(ys),  # optional (default : 1.0)
             'band': bands,  # optional for 'single' epochs jobs (default: all bands)
             'no_blacklist': noBlacklist,
             # optional for 'single' epochs jobs (default: 'false'). return or not blacklisted exposures
@@ -364,6 +411,52 @@ class FileHandlerS(BaseHandler):
             cur = con.cursor()
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
         con.close()
+
+        print("Process id before forking: {}".format(os.getpid()))
+
+        try:
+            pid = os.fork()
+        except OSError:
+            exit("Could not create a child process")
+
+        if pid == 0:
+            with open('config/mysqlconfig.yaml', 'r') as cfile:
+                conf = yaml.load(cfile)['mysql']
+            con = mydb.connect(**conf)
+            print("In the child process that has the PID {}".format(os.getpid()))
+            while (1):
+                sleep(1)
+                # get job result
+                url = "https://descut.cosmology.illinois.edu/api/jobs/?token={0}&jobid={1}".format(token, jid)
+                req = requests.get(url, verify=False)
+                print(req.text)
+                response = req.json()
+                msg = response['message']
+                if msg.find("PENDING") != -1:
+                    continue
+                if msg.find("SUCCESS") != -1:
+                    with con:
+                        cur = con.cursor()
+                        q = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('SUCCESS', jid)
+                        cur.execute(q)
+                    break
+                if msg.find("SUCCESS") == -1 and msg.find("PENDING") == -1:
+                    with con:
+                        cur = con.cursor()
+                        q = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('FAILED', jid)
+                        cur.execute(q)
+                    break
+            print("Goodbye, this cruel world.")
+            con.close()
+            exit()
+
+        print("In the parent process after forking the child {}".format(pid))
+        # not wait for the child, go fly
+        # finished = os.waitpid(0, 0)
+        # print(finished)
+
+
+
 
         self.set_status(200)
         self.flush()

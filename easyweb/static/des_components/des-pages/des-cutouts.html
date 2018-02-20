@@ -8,28 +8,42 @@
             --paper-tabs-selection-bar-color: var(--paper-blue-50);
         }
         paper-tab {
-            border-color: var(--paper-blue-50);
-            border-width: 2px;
-            border-style: solid;
+            display: flex;
 
         }
         paper-tab:hover {
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-left: 5px lightpink solid;
 
+        }
+        paper-tab.iron-selected {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: linear-gradient(to right, lightpink, white);
+        }
+
+        .flex-child {
+            flex-grow: 1;
         }
 
     </style>
     <template>
-        <des-card heading="Cutouts Service" no-bar>
-            <paper-tabs selected="{{ choice }}" >
-                <paper-tab>Coadds Images</paper-tab>
-                <paper-tab>Single Epochs</paper-tab>
-            </paper-tabs>
+        <des-card heading="Cutouts Service">
+            <paper-tabs selected="{{ choice }}" no-bar>
+                <paper-tab>
+                    <iron-icon icon="image:burst-mode" slot="item-icon" class="flex-child"></iron-icon>
+                    <span class="flex-child">Coadds Images</span>
+                </paper-tab>
+                <paper-tab>
+                    <iron-icon icon="image:image" slot="item-icon" class="flex-child"></iron-icon>
+                    <span class="flex-child">Single Epochs</span>
 
+
+                </paper-tab>
+            </paper-tabs>
             <iron-pages  id="cutoutsPages" selected=[[choice]]>
                 <des-coadds id="desCoadds" email={{email}}></des-coadds>
-                <des-epochs id="desEpochs" email={{email}}"></des-epochs>
+                <des-epochs id="desEpochs" email={{email}}></des-epochs>
             </iron-pages>
         </des-card>
 

@@ -5,7 +5,7 @@
         </style>
 
 
-        <paper-dialog id="inputValuesDialogS"  entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop >
+        <paper-dialog id="inputValuesDialogS"   with-backdrop on-iron-overlay-opened="patchOverlay"  >
             <paper-card heading="Enter positions below" elevation="0">
                 <div class="card-content">
                     <iron-autogrow-textarea id="enteredPositionsS" max-rows="10" rows=8 placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
@@ -17,6 +17,10 @@
                 </div>
             </paper-card>
         </paper-dialog>
+
+
+
+
 
     </template>
 
@@ -39,6 +43,11 @@
             clear: function(){
                 document.getElementById("enteredPositionsS").value="";
             },
+            patchOverlay: function (e) {
+             if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+             }
+         },
         });
 
 

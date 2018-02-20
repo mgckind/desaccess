@@ -14,6 +14,9 @@
             /*border: 2px dotted #8da6ce;*/
             /*border-style: outset;*/
         }
+        .dropdown-content {
+            width: fit-content;
+        }
 
         .card-content {
             @apply(--layout-vertical);
@@ -247,6 +250,28 @@
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
+                                    <iron-icon icon="list" slot="item-icon"></iron-icon>
+                                    Release TAG
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-dropdown-menu label="Release TAG">
+                                    <paper-listbox id="coaddTag" selected = "0" slot="dropdown-content" class="dropdown-content">
+                                        <paper-item value="Y3A1_COADD">Y3A1_COADD</paper-item>
+                                        <paper-item value="Y3A1_COADD_DEEP">Y3A1_COADD_DEEP</paper-item>
+                                        <paper-item value="Y1A1_COADD">Y1A1_COADD</paper-item>
+                                        <paper-item value="Y1A1_COADD_D04">Y1A1_COADD_D04</paper-item>
+                                        <paper-item value="Y1A1_COADD_D10">Y1A1_COADD_D10</paper-item>
+                                        <paper-item value="Y1A1_COADD_DFULL">Y1A1_COADD_DFULL</paper-item>
+                                        <paper-item value="SVA1_COADD">SVA1_COADD</paper-item>
+                                    </paper-listbox>
+                                </paper-dropdown-menu>
+                            </td>
+                        </tr>
+
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
                                     <iron-icon icon="create" slot="item-icon"></iron-icon>
                                     Job Name
                                 </paper-icon-item>
@@ -392,6 +417,7 @@
 //            document.getElementById("coords").value = '';
             document.getElementById("uploadicon").icon = "backup";
             document.getElementById("keyboardicon").icon = "hardware:keyboard";
+            document.getElementById("coaddTag").selected="0";
 
 
 
@@ -440,7 +466,7 @@
             formdata.append('name', document.getElementById("validname").value);
             formdata.append('submit_type', this.submit_type);
             formdata.append('values',document.getElementById("enteredPositions").value);
-
+            formdata.append('tag',document.getElementById("coaddTag").selectedItem.getAttribute("value"));
             $.ajax({
                 url: '/easyweb/cutout/coadds',
                 type: 'POST',
