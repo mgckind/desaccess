@@ -1,0 +1,74 @@
+<dom-module id="des-cutouts">
+    <style include="shared-styles">
+        paper-tabs {
+            font-family: 'Roboto', 'Noto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            width: 100%;
+            text-transform: uppercase;
+            --paper-tabs-selection-bar-color: var(--paper-blue-50);
+        }
+        paper-tab {
+            display: flex;
+
+        }
+        paper-tab:hover {
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-left: 5px lightpink solid;
+
+        }
+        paper-tab.iron-selected {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: linear-gradient(to right, lightpink, white);
+        }
+
+        .flex-child {
+            flex-grow: 1;
+        }
+
+    </style>
+    <template>
+        <des-card heading="Cutouts Service">
+            <paper-tabs selected="{{ choice }}" no-bar>
+                <paper-tab>
+                    <iron-icon icon="image:burst-mode" slot="item-icon" class="flex-child"></iron-icon>
+                    <span class="flex-child">Coadds Images</span>
+                </paper-tab>
+                <paper-tab>
+                    <iron-icon icon="image:image" slot="item-icon" class="flex-child"></iron-icon>
+                    <span class="flex-child">Single Epochs</span>
+
+
+                </paper-tab>
+            </paper-tabs>
+            <iron-pages  id="cutoutsPages" selected=[[choice]]>
+                <des-coadds id="desCoadds" email={{email}}></des-coadds>
+                <des-epochs id="desEpochs" email={{email}}></des-epochs>
+            </iron-pages>
+        </des-card>
+
+
+    </template>
+</dom-module>
+
+<script>
+
+    Polymer({
+        is: "des-cutouts",
+        properties: {
+            email: {
+                type: String,
+                values: "",
+            },
+            choice:{
+                type: String,
+                values: "",
+            }
+
+        },
+
+    });
+
+
+
+</script>
