@@ -44,10 +44,16 @@ app-toolbar.black {
       display: block;
       color : red;
       text-align: center;
+      word-wrap: break-word;
     }
     .temp {
       border: 1px solid grey;
       }
+
+     .fixbox {
+         width: 80%;
+         max-width: 480px;
+     }
     .container {
       position: relative;
       top: 25%;
@@ -481,6 +487,22 @@ paper-item {
     }
 
     td.coadd-td:nth-child(odd) {
+        background: linear-gradient(to right, #efeaf4, white);
+    }
+
+    /* epochs table layout */
+    table#epochs-table {
+        /*border: 1px solid #ddd;*/
+    }
+
+    th.epochs-th, td.epochs-td {
+        padding: 5px;
+        text-align: left;
+        border: 1px solid white;
+        vertical-align: middle;
+    }
+
+    td.epochs-td:nth-child(odd) {
         background: linear-gradient(to right, #efeaf4, white);
     }
 

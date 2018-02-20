@@ -3,7 +3,7 @@ import os
 import random
 import string
 import logging
-DEBUG = False
+DEBUG = True
 DIRNAME = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
 try:
@@ -51,5 +51,6 @@ app_log.addHandler(handler_app)
 
 class dbConfig(object):
     def __init__(self):
-        self.host = 'desdb-dr.ncsa.illinois.edu'
+        # self.host = 'desdb-dr.ncsa.illinois.edu'
+        self.host = 'desdb.ncsa.illinois.edu'
         self.port = '1521'

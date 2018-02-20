@@ -1,0 +1,55 @@
+<dom-module id="des-positions-epochs">
+    <template>
+        <style include="shared-styles">
+
+        </style>
+
+
+        <paper-dialog id="inputValuesDialogS"   with-backdrop on-iron-overlay-opened="patchOverlay"  >
+            <paper-card heading="Enter positions below" elevation="0">
+                <div class="card-content">
+                    <iron-autogrow-textarea id="enteredPositionsS" max-rows="10" rows=8 placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
+
+                </div>
+                <div class="card-actions">
+                    <paper-button dialog-dismiss autofocus raised class="desbutton">Close</paper-button>
+                    <paper-button on-tap="_submitPositions" raised class="desbutton"> Accept</paper-button>
+                </div>
+            </paper-card>
+        </paper-dialog>
+
+
+
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-positions-epochs",
+            properties : {
+                place_holder: {
+                    type: String,
+                    value: "RA , DEC \nRA , DEC\n... , ..."
+                },
+            },
+            _submitPositions: function(){
+                document.getElementById("inputValuesDialogS").close();
+                document.getElementById("submitJobButtonS").disabled=false;
+                document.getElementById("uploadFileS").disabled=true;
+                document.getElementById("keyboardiconS").style.display='none';
+                document.getElementById("desEpochs").enter_values = "Values Entered";
+            },
+            clear: function(){
+                document.getElementById("enteredPositionsS").value="";
+            },
+            patchOverlay: function (e) {
+             if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+             }
+         },
+        });
+
+
+    </script>
+</dom-module>
