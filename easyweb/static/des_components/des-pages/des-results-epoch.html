@@ -1,4 +1,4 @@
-<dom-module id="des-results">
+<dom-module id="des-results-epoch">
 <template>
     <style include="shared-styles">
 
@@ -10,13 +10,14 @@
     }
     </style>
 
-    <iron-ajax id="getTiles"
+    <iron-ajax id="getTilesS"
         auto
-        url=/easyweb/static/workdir/{{username}}/{{jobid}}/list.json
+        url=/static/workdir/{{username}}/{{jobid}}/list.json
         handle-as="json"
         last-response="{{jsondata}}"
         on-response="_getTilesResponse">
     </iron-ajax>
+
 
     <iron-ajax id="getLogHelp"
                url="/easyweb/mylogs/"
@@ -32,9 +33,6 @@
         <!--<p>Help goes here</p>-->
     <!--</paper-dialog>-->
 
-
-
-
     <paper-dialog id="logDialogHelp" with-backdrop modal on-iron-overlay-opened="patchOverlay">
         <h2>Log</h2>
                    Job : {{jobid}}
@@ -46,35 +44,16 @@
 
     </paper-dialog>
 
-
-    <des-card heading="Job1 : [[jobid]] ( [[jsondata.length]] objects)">
-        <!--<br>-->
-        <!--<b>Comment:</b> {{jobcomment}}-->
+    <des-card heading="Job : [[jobid]] ( [[jsondata.length]] tiles)">
         <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
-        <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
         <paper-button class="custom indigo" on-tap="_closedialog"> Close</paper-button>
         <hr class="des-hr">
     <div class="card-content" style="height: 70%; overflow-y: scroll;">
-
-
-
-    <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}">
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
-            <des-thumb imtitle={{item.title}} imdisplay={{item.name}}>
-            </des-thumb>
+            <des-thumb-single imdisplay="[[item.demo_png]]" imtitle="[[item.image_title]]" jobid="{{jobid}}" username="{{username}}" ra="[[item.RA]]" dec="[[item.DEC]]"></des-thumb-single>
         </template>
     </template>
-    </template>
-
-    <template is="dom-if" if="{{_actionIsSE(jobtype)}}">
-    <template id="inside" is="dom-if" if="{{jsondata}}">
-        <template id="seRepeat" is="dom-repeat" items="{{jsondata}}">
-            <des-thumb-epoch imdisplay="[[item.demo_png]]" imtitle="[[item.image_title]]" username="{{username}}" ra="[[item.RA]]" dec="[[item.DEC]]" jobid="[[jobid]]"></des-thumb-epoch>
-        </template>
-    </template>
-    </template>
-
     </div>
 
 
@@ -90,7 +69,7 @@
 
 <script>
     Polymer({
-          is: "des-results",
+          is: "des-results-epoch",
           properties : {
             jsondata: {
                 type: Array,
@@ -104,26 +83,6 @@
                 type: String,
                 value: '',
             },
-
-              jobtype: {
-                value : '',
-                type : String,
-                notify: true,
-            },
-          },
-
-        _actionIsCoadd: function(job_type) {
-
-            if (job_type == "coadd") {
-                console.log("COADD!")
-                return true;
-            }
-          },
-          _actionIsSE: function(job_type) {
-            if (job_type == "epoch") {
-                console.log("EPOCH!")
-                return true;
-            }
           },
           _seeLog: function(e) {
             e.stopPropagation();
@@ -158,11 +117,11 @@
             },
               _gobackdialog: function(event){
                   document.getElementById('logDialogHelp').close();
-                  document.getElementById('JobTiles').close();
-                  document.getElementById('JobTiles').open();
+                  document.getElementById('JobTilesS').close();
+                  document.getElementById('JobTilesS').open();
               },
               _closedialog: function(event){
-                  document.getElementById('JobTiles').close();
+                  document.getElementById('JobTilesS').close();
               },
 
              patchOverlay: function (e) {

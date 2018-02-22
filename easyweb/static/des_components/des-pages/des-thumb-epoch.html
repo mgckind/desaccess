@@ -1,0 +1,378 @@
+<dom-module id="des-thumb-epoch">
+
+<style>
+
+    :host {
+      display: block;
+      height : 200px;
+      width: 200px;
+      margin: 15px;
+      float : left;
+      background-color: white;
+    }
+
+    .mycard{
+      width: 200px;
+      height: 200px;
+      margin-bottom: 0px;
+      font-size: 15px;
+      color : var(--paper-pink-500);
+    }
+
+    paper-material{
+      height: 100%;
+      width: 100%;
+      background-color: white;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    span#demo_title {
+      color: #F1C748;
+    }
+
+
+    paper-material:hover .mycolors{
+      visibility: visible;
+    }
+
+    .mycolors{
+      color: pink;
+      visibility: hidden;
+    }
+
+    .mycolors:hover{
+      color:green;
+    }
+
+    paper-dialog {
+      position: fixed;
+      max-width: 100%;
+      top: 20px;
+      left: 20px;
+    }
+
+    paper-dialog #buttons{
+      margin-top: 15px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    h2.header {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    paper-spinner.big{width:60px;height:60px;position:absolute;top:80px;left:80px;}
+
+    a paper-button,
+    a:active paper-button,
+    a:visited paper-button {
+      color: #000;
+    }
+
+    paper-tooltip#table_tip {
+      width: 100px;
+      height: 45px;
+      margin-left: 110px;
+      margin-top: -60px;
+    }
+</style>
+
+<template>
+
+      <iron-ajax id="getSE"
+        url=/easyweb/static/workdir/{{username}}/{{jobid}}/{{imtitle}}/png_list.json
+        handle-as="json"
+        last-response="{{SE_list}}">
+      </iron-ajax>
+
+      <paper-material  elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="showAll">
+      <div class="mycard" id='thumb_div'> <div style="position:absolute;">
+      <span id="demo_title">{{_returnName(imtitle)}}</span> </div>
+      <paper-spinner id="{{_returnNameSpin(imtitle)}}" class='big'></paper-spinner>
+      <img id='thumb_demo' src="{{demoPath}}" height="200px" width="200px" />
+      <!-- <x-gif id = 'xgif' src="" fill n-times='0.000001'></x-gif> -->
+      <!-- <div style="position:absolute; right:10px; bottom:10px">
+      <paper-icon-button id="gif_control" icon="star-half" class="mycolors" on-click="blink">
+      </paper-icon-button>
+      </div>  -->
+      <div style="position:absolute; left:10px; bottom:10px">
+      <paper-icon-button id="thumb_down" icon="file-download" class="mycolors" on-click='downloadObj'>
+      </paper-icon-button>
+      </div>
+
+      </div>
+      </paper-material>
+
+      <paper-dialog id="{{imtitle}}" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2 class='header' align="center">{{dialog_title}}</h2>
+
+      <paper-dialog-scrollable>
+      <template  id="bandRepeat" is="dom-repeat" items="{{SE_list}}" as="obj" initial-count='20'>
+      <des-thumb-band png-name="{{obj.png_name}}" im-band = "{{obj.BAND}}" im-night="{{obj.NITE}}" job-id = "{{jobid}}" im-folder = "[[imtitle]]" username = "{{username}}" ccd-Num = "{{obj.CCDNUM}}" exp-Num = "{{obj.EXPNUM}}"></des-thumb-band>
+      </template>
+      </paper-dialog-scrollable>
+
+      <div id='buttons'>
+        <paper-button dialog-dismiss autofocus raised >Close</paper-button>
+        <paper-button id="{{_returnNameDia(imtitle)}}" on-click="downloadObj" raised> Download(All Exposures)</paper-button>
+        <a href="{{table_link}}">
+        <paper-button id = "show_table" raised>Show Table</paper-button>
+        </a>
+        <!-- <paper-tooltip id = 'table_tip' for='show_table' >Exposure details in an ascii table</paper-tooltip> -->
+      </div>
+    </paper-dialog>
+
+</template>
+
+<script>
+    var imgTitle = "";
+    var username = "";
+
+    Polymer({
+      is: "des-thumb-epoch",
+
+      listeners:{
+        "iron-overlay-closed":"_overlayClose",
+      },
+      properties: {
+        _elevation:{
+          type: Number,
+          value: 0,
+        },
+        imdisplay:{
+          type: String,
+          value: ""
+        },
+        imtitle:{
+          type: String,
+        },
+        jobid : {
+         type: String,
+         value: "",
+        },
+        username: {
+          type: String,
+        },
+
+        ra:{
+          type: Number,
+        },
+
+        dec:{
+          type: Number,
+        },
+        dialog_title:{
+          type:String,
+          computed:"_returnDiaTitle(imtitle, ra, dec)",
+        },
+
+        demoPath:{
+          type:String,
+          computed: "_returnPath(imdisplay,jobid,username)",
+        },
+
+        gifPath:{
+          type:String,
+          computed: '_getGif(username,jobid,imdisplay)',
+        },
+
+        table_link:{
+          type:String,
+          computed:"_getTable(username, jobid, imdisplay)"
+        }
+
+      },
+      _overlayClose:function(){
+        console.log("close");
+        this.SE_list = [];
+        // console.log(Polymer.dom(this.root).querySelectorAll('des-thumb-band'));
+      },
+
+      _returnPath: function(imdisplay,jobid,username) {
+          console.log("==>>JOBID", jobid);
+          console.log("==>>imdisplay", imdisplay);
+
+          //form dir
+          var idx = imdisplay.search("_");
+          var prefix = imdisplay.substring(0, idx);
+          var idx2 = prefix.search('J') + 1;
+          var first = prefix.substring(0, idx2);
+          var second = prefix.substring(idx2);
+          var d = 'thumbs_' + first + '_' + second + '/';
+          console.log("==>>dir", d);
+
+
+          return "/easyweb/static/workdir/"+username+"/"+jobid+"/" + d + imdisplay;
+      },
+
+      _getGif: function(username,jobid,imdisplay){
+          var folder = imdisplay.split('/')[0];
+          console.log("==>>folder", folder);
+          var n1 = folder.search('_')+1;
+          var gifName = folder.substring(n1)+'.gif';
+
+          var gif_path = "/easyweb/static/workdir/"+username+"/"+jobid+"/"+folder+'/'+gifName;
+          // this.$.xgif.setAttribute('src', gif_path);
+          return gif_path;
+      },
+
+      _returnDiaTitle: function(imtitle, ra, dec){
+        var n2 = imtitle.search('_');
+        var dia_title = imtitle.substring(n2+1)+' ('+ra+','+dec+')';
+        return dia_title;
+      },
+
+      _getTable: function(username, jobid, imdisplay){
+          //form dir
+          var idx = imdisplay.search("_");
+          var prefix = imdisplay.substring(0, idx);
+          var idx2 = prefix.search('J') + 1;
+          var first = prefix.substring(0, idx2);
+          var second = prefix.substring(idx2);
+          var d = 'thumbs_' + first + '_' + second + '/';
+          console.log("==>>dir", d);
+        //var folder = imdisplay.split('/')[0];
+        var table = "/easyweb/static/workdir/"+username+"/"+jobid+"/"+ d +'table.txt';
+        return table;
+      },
+
+      _returnName: function(imtitle) {
+        var n1 = imtitle.search('_');
+        return imtitle.substring(n1+1);
+      },
+
+      _returnNameSpin: function(imtitle) {
+        return imtitle+"_spin";
+      },
+
+      _returnNameDia: function(imtitle) {
+        return imtitle+"_diag";
+      },
+
+      _mouseout: function(){
+        this._elevation = 0;
+       },
+
+      _mouseover: function(){
+        this._elevation = 5;
+      },
+
+      blink: function(e){
+
+        e.stopPropagation();
+        var parent =document.getElementById('thumb_div');
+        var img = this.$.thumb_demo;
+        has_gif = this._check_gif_path(this.gifPath);
+
+        // if no gif exist (for older jobs), just return
+        if (!has_gif){return;}
+
+        if (parent.contains(img)){
+
+          var xgif = document.createElement('X-GIF');
+          xgif.setAttribute('id', 'xgif');
+          xgif.setAttribute('src', this.gifPath);
+          xgif.setAttribute('fill', '');
+          xgif.setAttribute('speed', '0.8');
+          parent.replaceChild(xgif, img);
+          this.$.gif_control.setAttribute('icon', 'pan-tool');
+
+        }
+        else{
+          var xgif_2 = document.getElementById('xgif');
+          parent.replaceChild(img, xgif_2);
+          this.$.gif_control.setAttribute('icon', 'star-half');
+        }
+
+      },
+
+      _check_gif_path: function(url){
+        var path_exists = false;
+        $.ajax({
+          type: 'HEAD',
+          url: url,
+          async: false,
+          success: function() {
+            path_exists = true;
+            console.log('found');
+            console.log(path_exists);
+          },
+          error: function() {
+            console.log('not');
+          }
+        });
+
+        return path_exists;
+      },
+
+        patchOverlay: function (e) {
+         if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         }
+     },
+
+      showAll: function(event){
+        this.$.getSE.generateRequest();
+        var dialog = document.getElementById(this.imtitle);
+        dialog.open();
+      },
+      errorHandler: function(){
+          console.log('Oh no!');
+      },
+      completeHandler:function(){
+        var jobid = document.getElementById('desResults').jobid;
+        var obj_tar = jobid.substring(0,6)+"_"+imgTitle+'.tar.gz';
+        var link = document.createElement('a');
+        link.href = "/easyweb/static/workdir/"+username+"/"+jobid+"/"+obj_tar;
+        document.getElementById(imgTitle+"_spin").active = false;
+        if (link.download !== undefined){
+            //Set HTML5 download attribute. This will prevent file from opening if supported.
+            var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+            link.download = fileName;
+        }
+        if (document.createEvent) {
+          var e = document.createEvent('MouseEvents');
+          e.initEvent('click' ,true ,true);
+          link.dispatchEvent(e);
+          return true;
+        }
+        var query = '?download';
+        window.open(link.href + query);
+
+      },
+      downloadObj: function(event){
+        event.stopPropagation();
+        document.getElementById(this.imtitle).close();
+        document.getElementById(this.imtitle+"_spin").active = true;
+
+        var data = new FormData();
+        var objectFolder = "/easyweb/static/workdir/"+this.username+"/"+this.jobid+"/"+this.imtitle;
+        imgTitle = this.imtitle;
+        username = this.username;
+        data.append('path', objectFolder);
+        data.append('jobid', this.jobid);
+        $.ajax({
+             url: '/download/object/',  //Server script to process data
+             type: 'POST',
+             data: data,
+             success: this.completeHandler,
+             error: this.errorHandler,
+             //Options to tell jQuery not to process data or worry about content-type.
+             cache: false,
+             contentType: false,
+             processData: false
+        });
+
+      }
+
+
+
+
+    });
+
+
+</script>
+
+</dom>

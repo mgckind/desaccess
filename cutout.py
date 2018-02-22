@@ -1,25 +1,41 @@
-import tornado.auth
-import tornado.escape
-import tornado.httpserver
-import tornado.ioloop
-import tornado.options
-import tornado.web
 import tornado.websocket
 from Crypto.Cipher import AES
-import base64
-import os
-import uuid
-import Settings
 import datetime
 import datetime as dt
-import MySQLdb as mydb
-import yaml
-import ea_tasks
-import requests
-import re
-import config.descut as des
-
+import glob
+import inspect
+import json
+import os
+import subprocess
+import time
+import uuid
 from time import sleep
+
+import MySQLdb as mydb
+import config.descut as des
+import requests
+import tornado.websocket
+import yaml
+import base64
+from Crypto.Cipher import AES
+
+import Settings
+
+
+def __line__():
+    return inspect.currentframe().f_back.f_lineno
+
+def get_filesize(filename):
+    size = os.path.getsize(filename)
+    size = size * 1. / 1024.
+    if size > 1024. * 1024:
+        size = '%.2f GB' % (1. * size / 1024. / 1024)
+    elif size > 1024.:
+        size = '%.2f MB' % (1. * size / 1024.)
+    else:
+        size = '%.2f KB' % (size)
+    return size
+
 
 def create_token():
     req = requests.post('https://descut.cosmology.illinois.edu/api/token/',
@@ -70,13 +86,13 @@ class FileHandler(BaseHandler):
         print(name, '<<== tag')
 
 
-        jobid = str(uuid.uuid4())
+        # jobid = str(uuid.uuid4())
         #if name == '':
         #    name = jobid
         if stype == "manual":
             values = self.get_argument("values")
             print(values)
-            filename = user_folder+jobid+'.csv'
+            filename = user_folder+'cutouts.csv'
             F = open(filename, 'w')
             F.write("RA,DEC\n")
             F.write(values)
@@ -87,14 +103,12 @@ class FileHandler(BaseHandler):
             extn = os.path.splitext(fname)[1]
             print(fname)
             print(fileinfo['content_type'])
-            filename = user_folder+jobid+extn
+            filename = user_folder + "cutouts" + extn
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
         print('**************')
-        folder2 = user_folder+jobid+'/'
-        os.system('mkdir -p '+folder2)
         now = datetime.datetime.now()
-        input_csv = user_folder + jobid + '.csv'
+        input_csv = user_folder + "cutouts" + '.csv'
 
         f = open(input_csv, 'r+')
         ra = []
@@ -151,8 +165,13 @@ class FileHandler(BaseHandler):
         # create body for files if needed
         body_files = {'csvfile': open(input_csv, 'rb')}  # To load csv file as part of request
         # To include files
+
+        # submit job
+        t1 = time.time()
         req = requests.post('https://descut.cosmology.illinois.edu/api/jobs/', data=body, files=body_files, verify=False)
+
         print(req)
+
         print(req.text)
         response = req.json()
         status = response['status']
@@ -160,9 +179,20 @@ class FileHandler(BaseHandler):
             self.set_status(403)
             self.flush()
             self.finish()
-        jid =  response['job']
+        jid = response['job']
         msg = response['message']
         print (msg)
+
+        # write running to the log
+        target_folder = user_folder + jid + '/'
+        if not os.path.exists(os.path.join(user_folder, jid)):
+            os.mkdir(os.path.join(user_folder, jid))
+        jsonfile = os.path.join(target_folder, jid + ".json")
+        js = open(jsonfile, "w")
+        with open(target_folder + 'log.log', 'w') as logfile:
+            logfile.write('Running...')
+        cmd = "cp " + user_folder + "cutouts.csv " + user_folder + jid + ".csv"
+        os.system(cmd)
         result = ''
 
         while(1):
@@ -188,7 +218,6 @@ class FileHandler(BaseHandler):
         with con:
             cur = con.cursor()
             cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
-
         con.close()
 
         print("Process id before forking: {}".format(os.getpid()))
@@ -227,25 +256,94 @@ class FileHandler(BaseHandler):
                     break
 
             # copy the file to local
-            # req = requests.get('https://descut.cosmology.illinois.edu/api/jobs/?token={0}&jobid={1}'.format(token, jid))
-            # print(req.text)
-            # links = req.json()['links']
-            # k = 0
-            # for l in links:
-            #     # only use png
-            #     if l.endswith('png'):
-            #         print(l)
-            #         r = requests.get(l, stream=True)
-            #         if r.status_code == 200:
-            #             img = "image_%d.png" % (k)
-            #             fp = folder2 + img
-            #             f = open(fp, "wb")
-            #             for chunk in r:
-            #                 f.write(chunk)
-            #         k += 1
-            #
+            req = requests.get('https://descut.cosmology.illinois.edu/api/jobs/?token={0}&jobid={1}'.format(token, jid), verify=False)
+            print(req.text)
+            links = req.json()['links']
+            l = links[0]
+            print("==>> PATH", l)
+            # if l.endswith('tar.gz'):
+            # print(l)
+            l = l.replace(os.path.basename(l), jid + ".tar.gz")
+            print("==>> NEW L", l)
+            r = requests.get(l, stream=True, verify=False)
+
+            # writing json
+            response = {}
+            response['user'] = loc_user
+            response['elapsed'] = 0
+            response['jobid'] = jid
+            response['files'] = None
+            response['sizes'] = None
+            response['email'] = 'no'
+
+            if r.status_code == 200:
+                fp = target_folder + jid + ".tar.gz"
+                print("==>> FILEPATH", fp)
+                f = open(fp, "wb")
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+                        f.flush()
+                # uncompress file
+                os.chdir(target_folder)
+                os.system("tar -zxf {}.tar.gz".format(jid))
+                os.chdir(target_folder + "results/" + jid + "/")
+                os.system("cp * ../../")
+                os.chdir(target_folder)
+                print(os.listdir(target_folder))
+                os.system("rm -rf {}/results/".format(target_folder))
+                os.chdir(os.path.dirname(__file__))
+                if os.path.exists(target_folder + "list.json"):
+                    os.remove(target_folder + "list.json")
+                outfile = open(target_folder + "list.json", "w")
+
+
+                if list_only:
+                    json.dump('', outfile, indent=4)
+                else:
+                    tiffiles = glob.glob(target_folder + '*.tif')
+                    titles = []
+                    pngfiles = []
+                    Ntiles = len(tiffiles)
+                    for f in tiffiles:
+                        title = f.split('/')[-1][:-4]
+                        print(title)
+                        # TODO: CANNOT RUN CONVERT IN MAC
+                        subprocess.check_output(["convert %s %s.png" % (f, f)], shell=True)
+                        titles.append(title)
+                        pngfiles.append(target_folder + title + '.tif.png')
+                    for ij in range(Ntiles):
+                        pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/easyweb'):]
+                    json.dump([dict(name=pngfiles[i], title=titles[i],
+                                    size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
+
+                # writing files for wget
+                allfiles = glob.glob(target_folder + '*.*')
+                response['files'] = [os.path.basename(i) for i in allfiles]
+                response['sizes'] = [get_filesize(i) for i in allfiles]
+                Fall = open(target_folder + 'list_all.txt', 'w')
+                prefix = 'URLPATH' + '/static'
+                for ff in allfiles:
+                    if (ff.find(jid + '.tar.gz') == -1 & ff.find('list.json') == -1):
+                        Fall.write(prefix + ff.split('static')[-1] + '\n')
+                Fall.close()
+                response['status'] = 'ok'
+                t2 = time.time()
+                response['elapsed'] = t2 - t1
+                json.dump(response, js)
+
+            else:
+                response['status'] = 'error'
+                response['data'] = r.status_code
+                response['kind'] = 'query'
+                print("==>>", response)
+                json.dump(response, js)
+
+
+
             print("Goodbye, this cruel world.")
             con.close()
+            return response
             exit()
 
         print("In the parent process after forking the child {}".format(pid))
@@ -300,35 +398,29 @@ class FileHandlerS(BaseHandler):
             bands = list(bands.split(" "))
         print("bands ==> ", bands)
 
-        if stype=="manual":
+        # jobid = str(uuid.uuid4())
+        # if name == '':
+        #    name = jobid
+        if stype == "manual":
             values = self.get_argument("values")
             print(values)
-            filename = user_folder+jobid+'.csv'
-            F=open(filename,'w')
+            filename = user_folder + 'cutouts.csv'
+            F = open(filename, 'w')
             F.write("RA,DEC\n")
             F.write(values)
             F.close()
-        if stype=="csvfile":
+        if stype == "csvfile":
             fileinfo = self.request.files["csvfile"][0]
             fname = fileinfo['filename']
             extn = os.path.splitext(fname)[1]
             print(fname)
             print(fileinfo['content_type'])
-            filename = user_folder+jobid+extn
-            with open(filename,'w') as F:
+            filename = user_folder + "cutouts" + extn
+            with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
-        # print('**************')
-        # job_dir=user_folder+'results/'+jobid+'/'
-        # os.system('mkdir -p '+job_dir)
-        # infP=infoP(loc_user,loc_passw)
-        # now = datetime.datetime.now()
-        # tiid = loc_user+'__'+jobid+'_{'+now.strftime('%a %b %d %H:%M:%S %Y')+'}'
-
         print('**************')
-        folder2 = user_folder + jobid + '/'
-        os.system('mkdir -p ' + folder2)
         now = datetime.datetime.now()
-        input_csv = user_folder + jobid + '.csv'
+        input_csv = user_folder + "cutouts" + '.csv'
 
         f = open(input_csv, 'r+')
         ra = []
@@ -382,9 +474,14 @@ class FileHandlerS(BaseHandler):
         # create body for files if needed
         body_files = {'csvfile': open(input_csv, 'rb')}  # To load csv file as part of request
         # To include files
+
+        # submit job
+        t1 = time.time()
         req = requests.post('https://descut.cosmology.illinois.edu/api/jobs/', data=body, files=body_files,
                             verify=False)
+
         print(req)
+
         print(req.text)
         response = req.json()
         status = response['status']
@@ -395,6 +492,17 @@ class FileHandlerS(BaseHandler):
         jid = response['job']
         msg = response['message']
         print (msg)
+
+        # write running to the log
+        target_folder = user_folder + jid + '/'
+        if not os.path.exists(os.path.join(user_folder, jid)):
+            os.mkdir(os.path.join(target_folder))
+        jsonfile = os.path.join(target_folder, jid + ".json")
+        js = open(jsonfile, "w")
+        with open(target_folder + 'log.log', 'w') as logfile:
+            logfile.write('Running...')
+        cmd = "cp " + user_folder + "cutouts.csv " + user_folder + jid + ".csv"
+        os.system(cmd)
         result = ''
 
         while (1):
@@ -408,17 +516,9 @@ class FileHandlerS(BaseHandler):
                 result = response
                 break
 
-
-
-        # if send_email:
-        #     print('Sending email to %s' % email)
-        #     run=dtasks.mkcut.apply_async(args=[filename, loc_user, loc_passw, job_dir, xs, ys, bands, jobid, noBlacklist, tiid, list_only], \
-        #         task_id=tiid, link=dtasks.send_note.si(loc_user, tiid, toemail))
-        # else:
-        #     print('Not sending email')
-        #     run=dtasks.mkcut.apply_async(args=[filename, loc_user, loc_passw, job_dir, xs, ys, bands, jobid, noBlacklist, tiid, list_only], \
-        #         task_id=tiid)
-
+        # run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
+        #                                           folder2, xs, ys, jobid, list_only,
+        #                                           send_email, email], retry=True, task_id=jobid)
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
@@ -464,17 +564,120 @@ class FileHandlerS(BaseHandler):
                         q = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('FAILED', jid)
                         cur.execute(q)
                     break
+
+            # copy the file to local
+            req = requests.get('https://descut.cosmology.illinois.edu/api/jobs/?token={0}&jobid={1}'.format(token, jid),
+                verify=False)
+            print(req.text)
+            links = req.json()['links']
+            l = links[0]
+            idx = l.find("thumbs")
+            l = l[: idx]
+            l = l + jid + ".tar.gz"
+            r = requests.get(l, stream=True, verify=False)
+
+            # writing json
+            response = {}
+            response['user'] = loc_user
+            response['elapsed'] = 0
+            response['jobid'] = jid
+            response['files'] = None
+            response['sizes'] = None
+            response['email'] = 'no'
+
+            print("==>> REQUEST", r)
+
+            if r.status_code == 200:
+                fp = target_folder + jid + ".tar.gz"
+                f = open(fp, "wb")
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+                        f.flush()
+                # uncompress file
+                os.chdir(target_folder)
+                os.system("tar xf {0}.tar.gz -C {1} --strip-components=1".format(jid, target_folder))
+                os.chdir(target_folder)
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                all_files = glob.glob('thumbs*/DESJ*')
+                with open('list_all.txt', 'w') as list_output:
+                    for file in all_files:
+                        list_output.write(target_folder + file + '\n')
+
+                os.chdir(script_dir)
+
+                if os.path.exists(target_folder + "list.json"):
+                     os.remove(target_folder + "list.json")
+                outfile = open(target_folder + "list.json", "w")
+
+                os.chdir(target_folder)
+
+                if list_only:
+                    json.dump('', outfile, indent=4)
+                else:
+
+                    # [{"RA": 0.0,
+                    # "DEC": 0.0,
+                    # XSIZE": 0.0,
+                    # "YSIZE": 0.0,
+                    # "demo_png": "thumbs_DESJ_000000.0+000000.0\/DESJ000000.0+000000.0_Y_20121109.png",
+                    # "image_title": "thumbs_DESJ_000000.0+000000.0"}]
+
+
+                    ls = os.listdir(target_folder)
+                    image_title = []
+                    demo_png = []
+                    for l in ls:
+                        if l.find("thumb") != -1:
+                            image_title.append(l)
+
+                    # print("==>> THUMB FILE: ", image_title)
+
+                    for dir in image_title:
+                        os.chdir(target_folder + dir + '/')
+                        # print("==>>Grab demo", os.listdir(os.getcwd()))
+                        fs = os.listdir(os.getcwd())
+                        print(fs)
+                        for p in fs:
+                            if p.endswith('png'):
+                                demo_png.append(p)
+                                break
+
+                    print("==>>DEMO_PNG", demo_png)
+                    json.dump([dict(RA=ra[i], DEC=dec[i],
+                                    XSIZE=xs, YSIZE=ys, demo_png=demo_png[i], image_title=image_title[i]) for i in range(len(image_title))], outfile, indent=4)
+
+                # writing files for wget
+                allfiles = glob.glob(target_folder + '*.*')
+                response['files'] = [os.path.basename(i) for i in allfiles]
+                response['sizes'] = [get_filesize(i) for i in allfiles]
+                Fall = open(target_folder + 'list_all.txt', 'w')
+                prefix = 'URLPATH' + '/static'
+                for ff in allfiles:
+                    if (ff.find(jid + '.tar.gz') == -1 & ff.find('list.json') == -1):
+                        Fall.write(prefix + ff.split('static')[-1] + '\n')
+                Fall.close()
+                response['status'] = 'ok'
+                t2 = time.time()
+                response['elapsed'] = t2 - t1
+                json.dump(response, js)
+
+            else:
+                response['status'] = 'error'
+                response['data'] = r.status_code
+                response['kind'] = 'query'
+                print("==>>", response)
+                json.dump(response, js)
+
             print("Goodbye, this cruel world.")
             con.close()
+            return response
             exit()
 
         print("In the parent process after forking the child {}".format(pid))
         # not wait for the child, go fly
         # finished = os.waitpid(0, 0)
         # print(finished)
-
-
-
 
         self.set_status(200)
         self.flush()
