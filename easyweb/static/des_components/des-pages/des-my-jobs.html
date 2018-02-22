@@ -85,8 +85,9 @@
     </paper-dialog>
 
     <paper-dialog class="dialog-position" id="JobTiles" with-backdrop on-iron-overlay-opened="patchOverlay">
-              <des-results id="desTiles" username={{username}} jobid={{jobid}}></des-results>
+              <des-results id="desTiles" username={{username}} jobid={{jobid}} jobtype={{jobtype}}></des-results>
     </paper-dialog>
+
 
     <paper-dialog class="dialog-position-small" id="JobName" with-backdrop on-iron-overlay-opened="patchOverlay">
         <b>Job id: {{jobid}} </b><br />
@@ -505,6 +506,10 @@ function keysrt(key,desc) {
         jobname: {
             type: String,
             value: '',
+        },
+          jobtype: {
+            type: String,
+            value: '',
         }
       },
       _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
@@ -557,10 +562,12 @@ function keysrt(key,desc) {
     _downloadFile: function(e){
         e.preventDefault();
         var filename =  e.model.item.file;
+        console.log("Click download!")
+        console.log("==>>FILES: ", e.model.item.file);
         var jobid = this.jobid;
         var user = this.username;
         var link = document.createElement('a');
-        link.href = "http://desdr-server.ncsa.illinois.edu/workdir/"+user+"/"+jobid+"/"+filename;
+        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
               if (link.download !== undefined){
                   //Set HTML5 download attribute. This will prevent file from opening if supported.
                   var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
@@ -648,9 +655,8 @@ function keysrt(key,desc) {
         e.preventDefault();
         this.jobid = e.model.item.job;
         this.username = e.model.item.user;
-        console.log(this.jobid + 'Tiles');
-        //document.getElementById('desTiles').username = this.username;
-        //document.getElementById('desTiles').jobid = this.jobid;
+        this.jobtype = e.model.item.jobtype;
+
         document.getElementById('JobTiles').open();
      },
       _seeHelp: function(e){

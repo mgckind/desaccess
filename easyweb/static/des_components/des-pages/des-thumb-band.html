@@ -1,0 +1,229 @@
+<!-- 'des-thumb-band' element to display the png for each individual exposure cut -->
+<dom-module id="des-thumb-band">
+
+<style>
+    :host {
+      display: block;
+      height : 200px;
+      width: 200px;
+      margin: 15px;
+      float : left;
+      background-color: white;
+    }
+    paper-card {
+      width: 200px;
+      height: 200px;
+      margin-bottom: 0px;
+    }
+    .mycard{
+      width: 200px;
+      height: 200px;
+      margin-bottom: 0px;
+      font-size: 15px;
+      color : var(--paper-pink-500);
+    }
+    .pink {
+       
+      --paper-card-header-color: var(--paper-green-500);
+    }
+    paper-material{
+      height: 100%;
+      width: 100%;
+      background-color: white;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    paper-material:hover .mycolors{
+      visibility: visible;
+    }
+    .mycolors{
+      color: pink;
+      visibility: hidden;
+    }
+    
+    .mycolors:hover{
+      color:green;
+    }
+    paper-dialog {
+      position: fixed;
+      max-width: 90%;
+      top: 16px;
+    }
+
+    span.exp_info {
+      color: #F1C748;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    paper-spinner.big{width:60px;height:60px;position:absolute;top:80px;left:80px;}
+</style>
+
+<template>
+      <paper-material>
+      <div class="mycard"> <div style="position:absolute;"> 
+      <span class='exp_info'>{{expTop}}</span> </div> 
+      <paper-spinner id="{{_returnName3(pngName)}}" class="big" ></paper-spinner> 
+      <img src="{{imgPath}}" height="200px" width="200px"/>
+      <div style='position:absolute;bottom: 10px'>
+        <span class='exp_info'>{{expBottom}}</span>
+      </div> 
+      <div style="position:absolute; right:10px; bottom:10px"> 
+      <paper-icon-button id="{{_returnNameDwn(pngName)}}" icon="file-download" class="mycolors" on-click="download">
+      </paper-icon-button>
+      </div> 
+      </div>
+      </paper-material>
+
+</template>
+
+<script>
+  var username = "";
+  var expo_png = "";
+  var jobid = "";
+  (function(){
+      Polymer({
+      is: "des-thumb-band",
+      
+      properties: {
+        _elevation:{
+          type: Number,
+          value: 0,
+        },
+        pngName:{
+          type: String,
+        },
+        imBand:{
+          type: String,
+        },
+        
+        imNight:{
+          type:Number,
+        },
+
+        ccdNum:{
+          type: Number,
+          value: 0,
+        },
+
+        expNum:{
+          type: Number,
+          value: 0,
+        },
+
+        jobId:{
+          type:String,
+        },
+
+        imFolder:{
+          type:String,
+        }, 
+
+        username:{
+          type:String,
+        },
+
+        imgPath:{
+          type:String,
+          computed: "_returnImage(username, pngName,jobId,imFolder)",
+        },
+
+        expTop:{
+          type:String,
+          computed: "_exp_top_info(imBand, imNight)",
+        },
+
+        expBottom:{
+          type:String,
+          computed: "_exp_bottom_info(ccdNum, expNum)",
+        }
+
+
+      }, 
+
+      _returnImage: function(username, pngName, jobId, imFolder){
+
+        var imgPath = "/easyweb/static/workdir/"+username+"/"+jobId+"/"+imFolder+"/"+pngName;
+        return imgPath;
+
+      },
+
+      _exp_top_info: function(imBand, imNight) {
+        return 'Band:'+imBand+'\t'+'Night:'+imNight;
+      },
+
+      _exp_bottom_info: function(ccdNum, expNum) {
+        return 'CCD#:'+ccdNum+'\t'+'EXP#:'+expNum;
+
+      },
+      
+      _returnNameDwn: function(pngName) {
+        return pngName+"_down";
+      },
+      
+      _returnName3: function(pngName) {
+        return pngName+"_spin";
+      },
+      _mouseout: function(){
+      this._elevation = 0;
+       },
+      
+      _mouseover: function(){
+      this._elevation = 5;
+      },
+      completeHandler: function(){
+        document.getElementById(expo_png+"_down").disabled = false;
+        document.getElementById(expo_png+"_spin").active = false;
+        var link = document.createElement('a');
+        link.href = "/easyweb/static/workdir/"+username+"/"+jobid+"/"+expo_png.replace('.png','.tar.gz');
+    
+        if (link.download !== undefined){
+            //Set HTML5 download attribute. This will prevent file from opening if supported.
+            var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+            link.download = fileName;
+        }
+        if (document.createEvent) {
+          var e = document.createEvent('MouseEvents');
+          e.initEvent('click' ,true ,true);
+          link.dispatchEvent(e);
+          return true;
+        }
+        var query = '?download';
+        window.open(link.href + query);
+      },
+
+
+      errorHandler: function(){
+          console.log('Oh no!');
+      },
+      download: function(event){
+        event.stopPropagation();
+        document.getElementById(this.pngName+"_down").disabled = true;
+        document.getElementById(this.pngName+"_spin").active = true;
+
+        var data = new FormData();
+        expo_png = this.pngName;
+        username = this.username;
+        jobid = this.jobId;
+        data.append('pngName', this.pngName);
+        data.append('path', this.imgPath);
+        data.append('jobid', this.jobId);
+        
+        $.ajax({
+             url: '/download/single/',  //Server script to process data
+             type: 'POST',
+             data: data,
+             success: this.completeHandler,
+             error: this.errorHandler,
+             //Options to tell jQuery not to process data or worry about content-type.
+             cache: false,
+             contentType: false,
+             processData: false
+           });
+       },
+    
+    });
+    })();
+</script>
+
+</dom-module>

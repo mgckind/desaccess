@@ -1,14 +1,14 @@
-import Settings
-import sqlite3 as lite
-import tornado.web
-import tornado.websocket
+import datetime
 import json
 import os
-import datetime
-import easyaccess as ea
+
 import MySQLdb as mydb
-from celery import Celery
+import easyaccess as ea
+import tornado.websocket
 import yaml
+from celery import Celery
+
+import Settings
 import jira_ticket
 from smtp import email_utils
 

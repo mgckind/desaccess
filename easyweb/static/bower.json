@@ -57,7 +57,8 @@
     "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
     "paper-carousel": "Redbility/paper-carousel#^1.2.5",
     "paper-radio-button": "PolymerElements/paper-radio-button#^2.0.0",
-    "web-animations-js": "^2.3.1"
+    "web-animations-js": "^2.3.1",
+    "paper-material": "PolymerElements/paper-material#^2.1.0"
   },
   "resolutions": {
     "polymer": "^1.9.0",
