@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="author" content="Matias Carrasco Kind, Ruiqi Li & Francisco Paz">
+
+<title>DES Easyaccess Web</title>
+<link rel="shortcut icon" href="{{ static_url('favicon.ico') }}">
+<script src="/easyweb/static/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="import" href="/easyweb/static/elements/elements.html">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<link rel="stylesheet" href="/easyweb/static/scripts/codemirror/lib/codemirror.css">
+<style is="custom-style">
+
+
+
+
+app-drawer-layout:not([narrow]) [drawer-toggle] {
+          display: none;
+    }
+    html {
+        overflow-y: scroll;
+    }
+    /*body {*/
+        /*zoom: 80%;*/
+    /*}*/
+</style>
+</head>
+<body unresolved>
+<template is="dom-bind" id="app">
+
+<app-drawer-layout id="drawerLayout" responsive-width="1000px">
+
+<!-- SIDE PANEL -->
+
+
+<!-- MAIN PANEL -->
+<app-header-layout style="margin:-8px;">
+<app-header condenses>
+      <des-toolbar-base  class="paper-header"></des-toolbar-base>
+      <des-stats  count={{count}}></des-stats>
+ </app-header>
+</app-header-layout>
+
+</app-drawer-layout>
+
+</template>
+<des-credit-line version="{{version}}"></des-credit-line>
+
+        <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawUserChart);
+        function drawUserChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Groups');
+            data.addColumn('number', 'Users');
+            data.addRows([
+                ['Active users', 137],
+                ['Inactive users', 10],
+            ]);
+            var options = {/*'title':'Users Distribution',*/
+                         'backgroundColor': '#43a047',
+                        //'width':500,
+                        //'height':400
+                    };
+            var chart = new google.visualization.PieChart(document.getElementById('user_chart'));
+            chart.draw(data, options);
+        }
+        </script>
+
+</body>
+</html>
