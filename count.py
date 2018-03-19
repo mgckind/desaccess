@@ -35,5 +35,5 @@ class CountHandler(BaseHandler):
             cc = ('')
         cursor.close()
         dbh.close()
-        self.write('<br><br><h1>Count = {}</h1>'.format(cc[0]-49))
-
+        self.render('stats.html', version=__version__, count=cc[0]-49)
+        #self.write('<br><br><h1>Count = {}</h1>'.format(cc[0]-49))
