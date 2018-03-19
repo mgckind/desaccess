@@ -1,0 +1,44 @@
+<link rel="import" href="../styles/shared-styles.html">
+<dom-module id="des-toolbar-base">
+<template>
+   <style include="shared-styles">
+   </style>
+
+   <app-toolbar sticky id="mainToolbarBase" class="black">
+        <iron-image
+        style="width:60px; height:60px;"
+        sizing="cover"
+        src="/easyweb/static/images/DESDM_logo.png"></iron-image>
+        <!--
+	<paper-icon-button icon="menu" onclick="drawer.toggle()" drawer-toggle ></paper-icon-button>
+        -->
+      <div main-title class="wideScreen">&nbsp; &nbsp;DARK ENERGY SURVEY desaccess </div>
+      <div main-title drawer-toggle>&nbsp; &nbsp;DES desaccess </div>
+
+    </app-toolbar>
+
+</template>
+
+
+<script>
+      Polymer({
+      is: "des-toolbar-base",
+      properties:{
+          db:{
+              type: String,
+              value: '',
+          }
+      },
+      home: function(event){
+        window.open('/easyweb/','_self',false);
+      },
+     patchOverlay: function (e) {
+         if (e.target.withBackdrop) {
+            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         }
+     }
+    });
+
+
+</script>
+</dom-module>

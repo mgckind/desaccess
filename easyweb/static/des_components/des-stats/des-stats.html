@@ -1,0 +1,180 @@
+<link href="https://fonts.googleapis.com/css?family=Oswald:500" rel="stylesheet">
+<dom-module id="des-stats">
+<template>
+   <style include="shared-styles">
+
+   .grid-container {
+     display: grid;
+     grid-template-columns:repeat(auto-fill, 250px);
+     justify-items: stretch;
+     justify-content: stretch;
+     grid-column-gap: 10px;
+     grid-row-gap: 10px;
+   }
+   .grid-item-m {
+       grid-column-start: 1;
+       grid-column-start: span col4-end;
+       grid-row: 2 / span 2 ;
+   }
+
+
+   google-map {
+    width: 1000px;
+    height: 500px;
+  }
+  paper-card.single {
+      display: block;
+      width: 100%;
+      --paper-card-header-color: white;
+      --paper-card-header-text: {
+          font-family: 'Oswald', sans-serif;
+          font-size: 40px;
+          text-align: center;
+      }
+      --paper-card-actions: {
+          text-align: center;
+      }
+  }
+  paper-card.map {
+       width: auto;
+      --paper-card-header-color: white;
+      --paper-card-header-text: {
+          font-family: 'Oswald', sans-serif;
+          font-size: 40px;
+          text-align: center;
+      }
+      --paper-card-actions: {
+          text-align: center;
+      }
+  }
+  .green {
+      --paper-card-background-color : var(--paper-green-600);
+  }
+  .blue {
+      --paper-card-background-color : var(--paper-blue-600);
+  }
+  .red {
+      --paper-card-background-color : var(--paper-red-600);
+  }
+  .grey {
+      --paper-card-background-color : var(--paper-grey-600);
+  }
+  .bign {
+      color: white;
+      text-align: center;
+      font-size: 40px;
+      font-family: 'Oswald', sans-serif;
+  }
+
+   </style>
+   <div class="grid-container">
+    <div class="grid-item">
+    <paper-card heading="No. of Users" elevation=3 class="single green">
+        <div class="card-actions">
+            <span class="bign"> {{count}}</span>
+<!--
+            <br />
+            <div id="user_chart">        </div>
+-->
+        </div>
+    </paper-card>
+    </div>
+    <div class="grid-item">
+    <paper-card heading="Unique visits" elevation=3 class="single grey">
+        <div class="card-actions">
+            <span class="bign"> {{visits}}</span>
+        </div>
+    </paper-card>
+    </div>
+    <div class="grid-item">
+    <paper-card heading="No. of Jobs" elevation=3 class="single green">
+        <div class="card-actions">
+            <span class="bign"> {{jobs}}</span>
+        </div>
+    </paper-card>
+    </div>
+    <div class="grid-item">
+    <paper-card heading="Users data" elevation=3 class="single grey">
+        <div class="card-actions">
+            <span class="bign"> {{usersdata}}</span>
+        </div>
+    </paper-card>
+    </div>
+    </div>
+   <div class="grid-container">
+    <div class="grid-item-m">
+    <paper-card heading="Map of Unique visits" class="map blue">
+    <div class="card-content">
+    <google-map kml={{kmlfile}} fit-to-markers api-key="AIzaSyDj1D8t60ZGGzMLdEbYTaW1jE_WUwQbLFU"></google-map>
+    </div>
+    </paper-card>
+   </div>
+   </div>
+
+
+</template>
+
+<script type="text/javascript">
+
+function loadStats(filename,callback) {
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('GET', filename, true);
+    xobj.onreadystatechange = function () {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+            callback(xobj.responseText);
+        }
+    };
+    xobj.send(null);
+}
+
+
+</script>
+
+
+
+<script>
+      Polymer({
+      is: "des-stats",
+      properties:{
+          count:{
+              type: Number,
+              value: 0,
+          },
+          kmlfile:{
+              type: String,
+              value: '',
+          },
+          visits:{
+              type: Number,
+              value: 0,
+          },
+          jobs:{
+              type: Number,
+              value: 0,
+          },
+          usersdata:{
+              type: String,
+              value: '',
+          }
+      },
+      attached: function(){
+          var _self= this;
+        loadStats('http://desdr-server.ncsa.illinois.edu/internal/ingress/stats/stats.json',function(response){
+            var stats = JSON.parse(response);
+            console.log(stats.visits);
+            _self.visits = stats.visits;
+            _self.jobs = stats.jobs;
+            _self.kmlfile = stats.kmlfile;
+            _self.usersdata = stats.usersdata;
+
+        })
+      },
+      home: function(event){
+        window.open('/easyweb/','_self',false);
+      },
+    });
+
+
+</script>
+</dom-module>
