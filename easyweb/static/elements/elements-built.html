@@ -40644,7 +40644,7 @@ function loadStats(filename,callback) {
       },
       attached: function(){
           var _self= this;
-        loadStats('http://desdr-server.ncsa.illinois.edu/internal/ingress/stats/stats.json',function(response){
+        loadStats('/des/desaccess/logs/stats/stats.json',function(response){
             var stats = JSON.parse(response);
             console.log(stats.visits);
             _self.visits = stats.visits;
