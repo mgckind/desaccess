@@ -64,6 +64,7 @@ if __name__ == "__main__":
         replacein('templates/404.html')
         replacein('templates/service-down.html')
         replacein('templates/limited.html')
+        replacein('templates/stats.html')
         changedebug('build')
         #changeports('build')
 
@@ -77,5 +78,6 @@ if __name__ == "__main__":
         replaceout('templates/404.html')
         replaceout('templates/service-down.html')
         replaceout('templates/limited.html')
+        replaceout('templates/stats.html')
         changedebug('dev')
         #changeports('dev')
