@@ -160,7 +160,7 @@ function loadStats(filename,callback) {
       },
       attached: function(){
           var _self= this;
-        loadStats('/des/desaccess/logs/stats/stats.json',function(response){
+        loadStats('/easyweb/static/internal/stats/stats.json',function(response){
             var stats = JSON.parse(response);
             console.log(stats.visits);
             _self.visits = stats.visits;

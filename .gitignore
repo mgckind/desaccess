@@ -3,6 +3,7 @@ __pycache__
 static/workdir/*
 easyweb/static/workdir/*
 easyweb/static/internal/emails/*
+easyweb/static/internal/stats/*
 celeryconfig.py
 supervisord.conf
 config/*
