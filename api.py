@@ -311,7 +311,14 @@ class DescTablesHandler(BaseHandler):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
         loc_passw = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
         loc_db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
-        owner = 'DES_ADMIN'
+        if owner == "me":
+            owner = loc_user
+        elif owner == "nobody":
+            owner = "DES_ADMIN"
+        if '.' in table:
+            owner = table.split('.')[0]
+            table = table.split('.')[1]
+        print(owner, table)
         con = ea.connect(loc_db, user=loc_user, passwd=loc_passw)
         query = """
             select atc.column_name, atc.data_type,
@@ -320,10 +327,9 @@ class DescTablesHandler(BaseHandler):
             when 'VARCHAR2' then atc.CHAR_LENGTH || ' characters'
             else atc.data_length || ''  end as DATA_FORMAT,
             acc.comments
-            from all_tab_cols atc , all_col_comments acc, all_synonyms ass
-            where ass.synonym_name = '{table}' and
-            atc.owner = ass.table_owner and atc.table_name = ass.table_name
-            and acc.owner = ass.table_owner and acc.table_name = ass.table_name
+            from all_tab_cols atc , all_col_comments acc
+            where atc.owner = '{owner}' and atc.table_name = '{table}'
+            and acc.owner = '{owner}' and acc.table_name = '{table}'
             and acc.column_name = atc.column_name
             order by atc.column_name
             """.format(owner=owner.upper(), table=table.upper())
@@ -342,9 +348,13 @@ class AllTablesHandler(BaseHandler):
         print(loc_db)
         con = ea.connect(loc_db, user=loc_user, passwd=loc_passw)
         query = """
-        SELECT t.synonym_name as table_name, a.num_rows as NROWS
-        FROM all_synonyms t, all_tables a
-        where t.table_owner = 'DES_ADMIN' and t.table_name = a.table_name
+        SELECT t.table_name, a.num_rows as NROWS
+        FROM DES_ADMIN.CACHE_TABLES t, all_tables a
+        where a.owner || '.' || a.table_name = t.table_name
+        union
+        SELECT t.table_name, a.num_rows as NROWS
+        FROM DES_ADMIN.CACHE_TABLES t, all_tables a
+        where a.table_name = t.table_name and a.owner = 'DES_ADMIN'
         order by table_name;
         """
         temp_df = con.query_to_pandas(query)
