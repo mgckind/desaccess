@@ -14,10 +14,11 @@
     <iron-pages  id="mainPages" selected=[[selection]]>
         <des-home  name={{name}} db={{db}}></des-home>
         <des-query name="query-box" id="desQuery" username={{username}} db={{db}} email={{email}}></des-query>
-        <des-all-tables name="schema"></des-all-tables>
+        <des-schema name="schema" choice="0"></des-schema>
+        <!--<des-all-tables name="schema"></des-all-tables>-->
         <des-example-query></des-example-query>
         <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
-        <des-cutouts id="desCutouts" email={{email}} choice="0"}}></des-cutouts>
+        <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
         <des-footprint id="FootprintPage"></des-footprint>
         <des-my-jobs></des-my-jobs>
         <des-help></des-help>

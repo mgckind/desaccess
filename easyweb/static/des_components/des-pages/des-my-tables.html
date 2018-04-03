@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <link rel="import" href="../../styles/shared-styles.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
@@ -16,7 +15,7 @@
     debounce-duration="300">
     </iron-ajax>
 
-    <iron-ajax id="getDescTable"
+    <iron-ajax id="getDescMyTable"
     method="POST"
     url="/easyweb/desctables/"
     params='{{_getPar(owner,tablename)}}'
@@ -26,92 +25,13 @@
     debounce-duration="300">
     </iron-ajax>
 
-    <paper-dialog class="dialog-position" id="scrolling"  with-backdrop on-iron-overlay-opened="patchOverlay">
-              <h2>{{tablename}}</h2>
-
-              <paper-spinner id="descSpinner" class="big" active></paper-spinner>
-     <vaadin-grid id="material" items="{{description}}">
-
-      <vaadin-grid-column flex-grow="2">
-        <template class="header">Column name</template>
-        <template>{{item.COLUMN_NAME}}</template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="1">
-        <template class="header">Data Type</template>
-        <template>{{item.DATA_TYPE}}</template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="1">
-        <template class="header">Data Format</template>
-        <template>{{item.DATA_FORMAT}}</template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="8">
-        <template class="header">Comments</template>
-        <template><span style="font-size: 10px;">{{item.COMMENTS}}</span></template>
-      </vaadin-grid-column>
-
-    </vaadin-grid>
-
-        <paper-button class="indigo" style="color: white;" dialog-confirm autofocus>OKA</paper-button>
-    </paper-dialog>
     <paper-dialog class="dialog-position" id="jobHelpMyTables" with-backdrop on-iron-overlay-opened="patchOverlay">
         <des-card heading="Help">
             <div class="card-content">
                 <paper-carousel id="my-crs" items="1" dotText="false" controls="true">
                     <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif" width="500px">
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
+                        A complete list for all type of tables.
                     </div>
-
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
                 </paper-carousel>
             </div>
             <div class="row">
@@ -126,15 +46,59 @@
                 </paper-button>
             </div>
         </des-card>
+
     </paper-dialog>
 
-    <paper-button onclick="getMyTables.generateRequest()"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
+    <paper-dialog class="dialog-position" id="scrollingMy" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <h2>{{tablename}}</h2>
 
+              <paper-spinner id="descSpinnerMy" class="big" active></paper-spinner>
+     <vaadin-grid style="height: 70%;" id="material" items="{{description}}" >
+
+      <vaadin-grid-column flex-grow="0" width="220px">
+        <template class="header">
+            <vaadin-grid-filter aria-label="Column Name" path="COLUMN_NAME" value="[[_filterColumnName]]">
+            <input placeholder="Column Name" value="{{_filterColumnName::input}}" focus-target>
+
+            <vaadin-grid-sorter path="COLUMN_NAME"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+          </vaadin-grid-filter>
+
+
+        </template>
+        <template>{{item.COLUMN_NAME}}</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="0" width="130px">
+        <template class="header">Data Type</template>
+        <template>{{item.DATA_TYPE}}</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column flex-grow="0" width="110">
+        <template class="header">Data Format</template>
+        <template>{{item.DATA_FORMAT}}</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column width="780px" flex-grow="0">
+        <template class="header">Comments</template>
+        <template>{{item.COMMENTS}}</template>
+      </vaadin-grid-column>
+    </vaadin-grid>
+
+      <div class="buttons" on-iron-overlay-opened="patchOverlay">
+        <paper-button class="indigo" style="color: white;" dialog-confirm autofocus >Close</paper-button>
+      </div>
+    </paper-dialog>
+
+
+    <des-card>
+        <br>
+
+<div style="padding-right: 20px">
 <vaadin-grid id="material" items="{{data}}">
 
      <vaadin-grid-column width="20px" flex-grow="0">
         <template class="header"></template>
-         <template></template>
+        <template></template>
     </vaadin-grid-column>
 
 
@@ -142,17 +106,11 @@
         <template class="header">
             <vaadin-grid-filter aria-label="Table Name" path="TABLE_NAME" value="[[_filterTableName]]">
             <input placeholder="Table Name" value="{{_filterTableName::input}}" focus-target>
+
             <vaadin-grid-sorter path="TABLE_NAME"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
                       </vaadin-grid-filter>
         </template>
         <template>{{item.TABLE_NAME}}</template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column>
-        <template class="header"><vaadin-grid-sorter path="SIZE_GBYTES"> SIZE (GB)<iron-icon icon="icons:swap-vert"></iron-icon>
-</vaadin-grid-sorter>
-        </template>
-        <template>{{item.SIZE_GBYTES}}</template>
       </vaadin-grid-column>
 
       <vaadin-grid-column>
@@ -162,18 +120,25 @@
         <template>{{item.NROWS}}</template>
       </vaadin-grid-column>
 
+      <vaadin-grid-column>
+        <template class="header">
+            <vaadin-grid-sorter path="SIZE_GBYTES">Size(GB)<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+        </template>
+        <template>{{item.SIZE_GBYTES}}</template>
+      </vaadin-grid-column>
+
         <vaadin-grid-column>
-              <template class="header">Description</template>
+              <template class="header">Description </template>
               <template>
-                <paper-button class="describeButton" raised on-click="_describe">See description</paper-button>
+                <paper-button class="describeButton" raised on-click="_describe">Description</paper-button>
               </template>
             </vaadin-grid-column>
 
     </vaadin-grid>
+        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
-    <paper-fab disabled icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
+</div>
+    </des-card>
 
 </template>
 
@@ -185,14 +150,14 @@
             type: String,
             value: '',
         },
-        tablename: {
-            type: String,
-            value: '',
-        },
-        owner: {
+        owner:{
             type: String,
             value: 'me',
         },
+        tablename:{
+            type: String,
+            value: '',
+        }
       },
       _handleResponse: function(e){
         var _self = this;
@@ -201,31 +166,33 @@
       _getPar: function(owner,tablename){return {owner:owner, tablename:tablename};},
       _handleDescription: function(e){
         var _self = this;
-        document.getElementById('descSpinner').active = false;
+        document.getElementById('descSpinnerMy').active = false;
         _self.description = e.detail.response;
     },
       _requestDescription: function(e){
-        document.getElementById('descSpinner').active = true;
+        document.getElementById('descSpinnerMy').active = true;
         var _self = this;
         _self.description = [];
     },
      _describe: function(e){
         e.preventDefault();
-        this.tablename = e.path[3].__data__.item.TABLE_NAME;
-        document.getElementById('scrolling').open();
-        document.getElementById('getDescTable').generateRequest();
+        this.tablename = e.model.item.TABLE_NAME;
+        document.getElementById('scrollingMy').open();
+        document.getElementById('getDescMyTable').generateRequest();
      },
      patchOverlay: function (e) {
          if (e.target.withBackdrop) {
             e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
          }
      },
+
       _seeHelp: function(e){
           e.preventDefault();
           document.getElementById('jobHelpMyTables').open();
       },
 
-          _nextPage: function() {
+
+      _nextPage: function() {
           var crs = document.getElementById("my-crs");
           crs.goToNextPage();
       },
