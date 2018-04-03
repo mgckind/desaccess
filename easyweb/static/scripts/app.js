@@ -100,13 +100,22 @@
         app.examplequerybox.focus();
 
         var xsize = document.getElementById("xsizeSlider");
-               xsize.addEventListener('value-change', function() {
-                   document.getElementById("xsizeLabel").textContent = xsize.value;
-               });
-               var ysize = document.getElementById("ysizeSlider");
-               ysize.addEventListener('value-change', function() {
-                   document.getElementById("ysizeLabel").textContent = ysize.value;
-               });
+        xsize.addEventListener('value-change', function() {
+           document.getElementById("xsizeLabel").textContent = xsize.value;
+        });
+        var ysize = document.getElementById("ysizeSlider");
+        ysize.addEventListener('value-change', function() {
+           document.getElementById("ysizeLabel").textContent = ysize.value;
+        });
+
+        var xsizeS = document.getElementById("xsizeSliderS");
+        xsizeS.addEventListener('value-change', function() {
+           document.getElementById("xsizeLabelS").textContent = xsizeS.value;
+        });
+        var ysizeS = document.getElementById("ysizeSliderS");
+        ysizeS.addEventListener('value-change', function() {
+           document.getElementById("ysizeLabelS").textContent = ysizeS.value;
+        });
 
       // var res = document.getElementById("response");
       // res.style.marginTop = $("#queryBox").height() + $("#query-table").height() + 35;
