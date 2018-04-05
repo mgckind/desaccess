@@ -129,7 +129,8 @@
 <script>
     var imgTitle = "";
     var username = "";
-
+    var siid = "";
+    var singlePath = "";
     Polymer({
       is: "des-thumb-epoch",
 
@@ -260,7 +261,6 @@
       },
 
       blink: function(e){
-
         e.stopPropagation();
         var parent =document.getElementById('thumb_div');
         var img = this.$.thumb_demo;
@@ -322,14 +322,16 @@
           console.log('Oh no!');
       },
       completeHandler:function(){
-        var jobid = document.getElementById('desResults').jobid;
-        var obj_tar = jobid.substring(0,6)+"_"+imgTitle+'.tar.gz';
+         var pathL = singlePath.replace('.tif.png','.tar.gz');
+        console.log('==>>imtitled: ', imgTitle);
+        var obj_tar = imgTitle+'.tar.gz';
         var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+username+"/"+jobid+"/"+obj_tar;
+        link.href = "/easyweb/static/workdir/"+username+"/"+ siid +"/" + obj_tar;
         document.getElementById(imgTitle+"_spin").active = false;
         if (link.download !== undefined){
             //Set HTML5 download attribute. This will prevent file from opening if supported.
             var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+            console.log(fileName)
             link.download = fileName;
         }
         if (document.createEvent) {
@@ -342,19 +344,20 @@
         window.open(link.href + query);
 
       },
+
       downloadObj: function(event){
         event.stopPropagation();
         document.getElementById(this.imtitle).close();
-        document.getElementById(this.imtitle+"_spin").active = true;
-
+        siid = this.jobid;
         var data = new FormData();
         var objectFolder = "/easyweb/static/workdir/"+this.username+"/"+this.jobid+"/"+this.imtitle;
         imgTitle = this.imtitle;
         username = this.username;
         data.append('path', objectFolder);
         data.append('jobid', this.jobid);
+        data.append('title', this.imtitle);
         $.ajax({
-             url: '/download/object/',  //Server script to process data
+             url: '/easyweb/download/epoch/object/',  //Server script to process data
              type: 'POST',
              data: data,
              success: this.completeHandler,
@@ -375,4 +378,4 @@
 
 </script>
 
-</dom>
+</dom-module>>

@@ -51,7 +51,7 @@
     <div class="card-content" style="height: 70%; overflow-y: scroll;">
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
-            <des-thumb-single imdisplay="[[item.demo_png]]" imtitle="[[item.image_title]]" jobid="{{jobid}}" username="{{username}}" ra="[[item.RA]]" dec="[[item.DEC]]"></des-thumb-single>
+            <des-thumb-epoch imdisplay="[[item.demo_png]]" imtitle="[[item.image_title]]" jobid="{{jobid}}" username="{{username}}" ra="[[item.RA]]" dec="[[item.DEC]]"></des-thumb-epoch>
         </template>
     </template>
     </div>
