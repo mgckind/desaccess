@@ -81,6 +81,7 @@
   var username = "";
   var expo_png = "";
   var jobid = "";
+  var folder = "";
   (function(){
       Polymer({
       is: "des-thumb-band",
@@ -172,11 +173,9 @@
       this._elevation = 5;
       },
       completeHandler: function(){
-        document.getElementById(expo_png+"_down").disabled = false;
-        document.getElementById(expo_png+"_spin").active = false;
         var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+username+"/"+jobid+"/"+expo_png.replace('.png','.tar.gz');
-    
+        link.href = "/easyweb/static/workdir/"+username+"/"+jobid+"/" + folder + "/" + expo_png.replace('.png','.tar.gz');
+        console.log(link.href);
         if (link.download !== undefined){
             //Set HTML5 download attribute. This will prevent file from opening if supported.
             var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
@@ -198,19 +197,18 @@
       },
       download: function(event){
         event.stopPropagation();
-        document.getElementById(this.pngName+"_down").disabled = true;
-        document.getElementById(this.pngName+"_spin").active = true;
 
         var data = new FormData();
         expo_png = this.pngName;
         username = this.username;
         jobid = this.jobId;
-        data.append('pngName', this.pngName);
+        folder = this.imgPath.substring(this.imgPath.indexOf('thumbs'), this.imgPath.indexOf('/DESJ'));
+        data.append('title', this.pngName);
         data.append('path', this.imgPath);
         data.append('jobid', this.jobId);
         
         $.ajax({
-             url: '/download/single/',  //Server script to process data
+             url: '/easyweb/download/epoch/single/',  //Server script to process data
              type: 'POST',
              data: data,
              success: this.completeHandler,

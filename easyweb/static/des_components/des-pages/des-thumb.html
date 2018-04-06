@@ -96,7 +96,7 @@
                   <img id="SingleTileImg" class = "Image" />
                   <div class="buttons horizontal layout left-justified">
                         <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
-                        <paper-button class="indigo" raised disabled> Download</paper-button>
+                        <paper-button class="indigo" raised on-tap="download"> Download</paper-button>
                   </div>
             </paper-dialog>
           <paper-dialog class="dialog-position" id="jobHelpThumb" with-backdrop on-iron-overlay-opened="patchOverlay">
@@ -235,21 +235,15 @@
                       document.getElementById('JobTiles').open();
                   },
                   completeHandler: function(){
-                      var wrap = document.getElementById(singletitle+"_wrap");
-                      wrap.disabled=false;
-                      var diag = document.getElementById(singletitle+"_diag");
-                      diag.disabled=false;
-                      var spin = document.getElementById(singletitle+"_spin");
-                      spin.active=false;
-                      //console.log(singlepath.replace('.tif.png','.tar.gz'));
                       var link = document.createElement('a');
                       var pathL = singlepath.replace('.tif.png','.tar.gz');
                       link.href = pathL; //pathL.replace(".tif.png",".tar.gz");
-                      console.log(link.href);
+                      console.log('REFP', link.href);
 
                       if (link.download !== undefined){
                           //Set HTML5 download attribute. This will prevent file from opening if supported.
                           var fileName = pathL.substring(pathL.lastIndexOf('/') + 1, pathL.length);
+                          console.log("==>FILENAME: ", fileName);
                           link.download = fileName;
                       }
                       if (document.createEvent) {
@@ -275,26 +269,17 @@
                       document.getElementById('jobHelpThumb').open();
                   },
                   download: function(event){
-                      var n1=this.jobid.search("__");
-                      var n2=this.jobid.search("{");
-                      var siid = this.jobid.substring(n1+2,n2-1);
+                      var siid = this.jobid;
                       console.log(siid);
                       event.stopPropagation();
-                      var dialog = document.getElementById(this.imtitle);
-                      var wrap = document.getElementById(this.imtitle+"_wrap");
-                      wrap.disabled=true;
-                      var diag = document.getElementById(this.imtitle+"_diag");
-                      diag.disabled=true;
-                      wrap = document.getElementById(this.imtitle+"_spin");
-                      wrap.active=true;
-                      dialog.close();
                       var data = new FormData();
-                      singlepath = this.imdisplay;
-                      singletitle = this.imtitle;
-                      data.append('title', this.imtitle);
-                      data.append('siid', siid);
+                      singlepath = document.getElementById('SingleTileImg').src;
+                      singletitle = document.getElementById('SingleTileTitle').innerHTML;
+                      data.append('title', singletitle);
+                      data.append('jobid', siid);
+                      data.append('path', singlepath);
                       $.ajax({
-                          url: '/single/',  //Server script to process data
+                          url: '/easyweb/download/coadd/object/',  //Server script to process data
                           type: 'POST',
                           data: data,
                           success: this.completeHandler,

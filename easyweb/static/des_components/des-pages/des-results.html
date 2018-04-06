@@ -61,7 +61,7 @@
     <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}">
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
-            <des-thumb imtitle={{item.title}} imdisplay={{item.name}}>
+            <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
             </des-thumb>
         </template>
     </template>

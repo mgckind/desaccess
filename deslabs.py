@@ -5,7 +5,7 @@ import os
 import pusher
 import queries
 import login_deslabs as login
-import api
+import api, download
 import pubapi
 import MySQLdb as mydb
 from tornado.options import define, options
@@ -89,6 +89,9 @@ class Application(tornado.web.Application):
             (r"/easyweb/mytables/?", api.MyTablesHandler),
             (r"/easyweb/desctables/?", api.DescTablesHandler),
             (r"/easyweb/alltables/?", api.AllTablesHandler),
+            (r"/easyweb/download/coadd/object/", download.DownloadCoaddObjectHandler),
+            (r"/easyweb/download/epoch/object/", download.DownloadEpochObjectHandler),
+            (r"/easyweb/download/epoch/single/", download.DownloadEpochSingleHandler),
             (r'/easyweb/websocket/?', pusher.WebSocketHandler),
             (r'/easyweb/pusher/?', pusher.PusherHandler),
             (r"/easyweb/query/?", queries.QueryHandler),
