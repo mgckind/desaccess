@@ -13,6 +13,8 @@ import Settings
 import yaml
 import backup
 import cutout
+import dr1_chart
+import dr1_vistools
 import count
 from version import __version__
 
@@ -75,6 +77,8 @@ class Application(tornado.web.Application):
             (r"/easyweb/db-access/?", login.MainHandler),
             (r"/easyweb/db-examples/?", login.MainHandler),
             (r"/easyweb/cutouts/?", login.MainHandler),
+            (r"/easyweb/finding-chart/?", login.MainHandler),
+            (r"/easyweb/data-analysis/?", login.MainHandler),
             (r"/easyweb/footprint/?", login.MainHandler),
             (r"/easyweb/my-jobs/?", login.MainHandler),
             (r"/easyweb/help-form/?", login.MainHandler),
@@ -98,6 +102,8 @@ class Application(tornado.web.Application):
             (r"/easyweb/activate/(\w+)", login.ActivateHandler),
             (r"/easyweb/signup/?", login.SignupHandler),
             (r"/easyweb/cutout/", cutout.FileHandler),
+            (r"/easyweb/dr1_chart/", dr1_chart.FileHandler),
+            (r"/easyweb/dr1_vistools/", dr1_vistools.FileHandler),
             (r"/easyweb/delete/", api.DeleteHandler),
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),

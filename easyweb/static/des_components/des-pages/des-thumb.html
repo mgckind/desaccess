@@ -2,7 +2,7 @@
     <style include="shared-styles">
             :host {
                   display: block;
-                  height : 220px;
+                  height : 240px; // 220px
                   width: 220px;
                   margin: 10px;
                   float : left;
@@ -17,7 +17,7 @@
             }
             .mycard{
                   width: 200px;
-                  height: 200px;
+                  height: 220px; // 200px;
                   padding: 10px;
                   border-radius: 5px;
                   margin-bottom: 0px;
@@ -80,8 +80,8 @@
                   <div class="mycard" on-click="openBig"> <div style="position:absolute;">
                         <span>{{imtitle}}</span> </div>
                         <paper-spinner class="big" ></paper-spinner>
-                        <img src={{imdisplay}} height="200px" width="200px" />
-                        <div style="position:relative; left:-8px; top:-32px;">
+                        <img src={{imdisplay}} height="200px" width="200px" style="position: relative; top: 20px;" />
+                        <div style="position:relative; left:-8px; top:-12px;"><!-- top:-32px -->
                               <paper-icon-button id="infoid" icon="info" class="mycolors">
                               </paper-icon-button>
                         </div>
@@ -91,9 +91,9 @@
              -->
 
             <!-- DIALOG -->
-            <paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay">
+            <paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">
                   <h2 id="SingleTileTitle">{{imtitle}}</h2>
-                  <img id="SingleTileImg" class = "Image" />
+                  <img id="SingleTileImg" class = "Image" style="width: 100%; max-width: 650px;" />
                   <div class="buttons horizontal layout left-justified">
                         <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
                         <paper-button class="indigo" raised disabled> Download</paper-button>
