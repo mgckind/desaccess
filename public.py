@@ -77,6 +77,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/cutouts/?", login.MainHandler),
             (r"/easyweb/footprint/?", login.MainHandler),
             (r"/easyweb/my-jobs/?", login.MainHandler),
+            (r"/easyweb/deslabs/?", login.MainHandler),
             (r"/easyweb/help-form/?", login.MainHandler),
             (r"/easyweb/login/?", login.AuthLoginHandler),
             (r"/easyweb/changepass/?", login.ChangeAuthHandler),

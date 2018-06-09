@@ -34,7 +34,8 @@
     if (appr.data.view == 'cutouts') sel_page = "4";
     if (appr.data.view == 'footprint') sel_page = "5";
     if (appr.data.view == 'my-jobs') sel_page = "6";
-    if (appr.data.view == 'help-form') sel_page = "7";
+    if (appr.data.view == 'deslabs') sel_page = "7";
+    if (appr.data.view == 'help-form') sel_page = "8";
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
@@ -52,7 +53,8 @@
     if (appr.data.view == 'cutouts') sel_page = "4";
     if (appr.data.view == 'footprint') sel_page = "5";
     if (appr.data.view == 'my-jobs') sel_page = "6";
-    if (appr.data.view == 'help-form') sel_page = "7";
+    if (appr.data.view == 'deslabs') sel_page = "7";
+    if (appr.data.view == 'help-form') sel_page = "8";
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
