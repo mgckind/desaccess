@@ -30,6 +30,22 @@
     .red {background: var(--paper-red-500);}
         </style>
 
+    <iron-ajax id="deployLabReq"
+    url="/easyweb/deslabs/deploy"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="statusLabReq"
+    url="/easyweb/deslabs/status"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponseStatus"
+    debounce-duration="300">
+    </iron-ajax>
+
         <paper-dialog class="dialog-position" id="labsHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
             <des-card heading="Help">
                 <div class="card-content">
@@ -126,6 +142,7 @@
                   <div class="status green" item-icon style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; Ready </span><br />
               </template>
                   <span>{{statusv}}</span>
+                  <span>{{status}}</span>
 
 
 
@@ -156,6 +173,10 @@
                     type: Number,
                     value: 0
                 },
+                status: {
+                    type: String,
+                    value: ''
+                },
                 stop: {
                     type: Boolean,
                     value: true,
@@ -175,6 +196,7 @@
                 }
             },
             _deployLab: function(e){
+            document.getElementById("deployLabReq").generateRequest();
             var _self = this
             document.getElementById('DeployLab').disabled=true;
             _self.stop = false;
@@ -185,6 +207,7 @@
                 setTimeout(function () {
                     console.log('hello');
                     _self.statusv += 1;
+                    document.getElementById("statusLabReq").generateRequest();
                     if (--i) {
                         myLoop(i);
                     }
@@ -223,6 +246,17 @@
             _gotoLab: function(e){
                 var _=0;
             },
+          _handleResponse: function(e){
+            var _self = this;
+            var data = e.detail.response;
+            console.log(data);
+        },
+          _handleResponseStatus: function(e){
+            var _self = this;
+            var data = e.detail.response;
+            console.log(data);
+            _self.status = data.status;
+        },
             _seeHelp: function(e){
                 e.preventDefault();
                 document.getElementById('labsHelp').open();

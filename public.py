@@ -14,6 +14,7 @@ import yaml
 import backup
 import cutout
 import count
+import jlab
 from version import __version__
 
 define("port", default=8080, help="run on the given port", type=int)
@@ -107,6 +108,8 @@ class Application(tornado.web.Application):
             (r"/easyweb/api/v1/query/", pubapi.ApiQueryHandler),
             (r"/easyweb/api/v1/jobs/", pubapi.ApiJobHandler),
             (r"/easyweb/dcount/", count.CountHandler),
+            (r"/easyweb/deslabs/deploy", jlab.LaunchHandler),
+            (r"/easyweb/deslabs/status", jlab.LabStatusHandler),
             (r"/easyweb/files/dr1/(.*)", MyStaticFileHandler,
              {'path': '/des004/despublic/dr1_tiles/'}),
         ]
