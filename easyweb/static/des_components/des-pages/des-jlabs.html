@@ -197,19 +197,27 @@
                     }
                 }, 1000)
             })(5);
-            //setTimeout(function() {
-        //            console.log('hello');
-    //                _self.statusv += 1;}, 1000);
             },
             _deleteLab: function(e){
-            var _self = this
-            document.getElementById('DeployLab').disabled=false;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            var _self = this
             _self.stop = true;
             _self.pending = false;
             _self.running = false;
             _self.statusv = 0;
+            var i;
+            (function myLoop (i) {
+                setTimeout(function () {
+                    _self.statusv += 1;
+                    if (--i) {
+                        myLoop(i);
+                    }
+                    else {
+                        document.getElementById('DeployLab').disabled=false;
+                    }
+                }, 1000)
+            })(2);
 
             },
             _gotoLab: function(e){
