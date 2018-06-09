@@ -46,6 +46,13 @@
     debounce-duration="300">
     </iron-ajax>
 
+    <iron-ajax id="deleteLabReq"
+    url="/easyweb/deslabs/delete"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
         <paper-dialog class="dialog-position" id="labsHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
             <des-card heading="Help">
                 <div class="card-content">
@@ -175,7 +182,7 @@
                 },
                 status: {
                     type: String,
-                    value: ''
+                    value: 'Lab Not Ready'
                 },
                 stop: {
                     type: Boolean,
@@ -205,11 +212,10 @@
             var i;
             (function myLoop (i) {
                 setTimeout(function () {
-                    console.log('hello');
-                    _self.statusv += 1;
-                    document.getElementById("statusLabReq").generateRequest();
                     if (--i) {
                         myLoop(i);
+                    _self.statusv += 1;
+                    document.getElementById("statusLabReq").generateRequest();
                     }
                     else {
                         document.getElementById('DeleteLab').disabled=false;
@@ -217,11 +223,13 @@
                         _self.stop = false;
                         _self.pending = false;
                         _self.running = true;
+                        _self.status = 'Lab Ready'
                     }
                 }, 1000)
             })(5);
             },
             _deleteLab: function(e){
+            document.getElementById("deleteLabReq").generateRequest();
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
             var _self = this
@@ -232,15 +240,17 @@
             var i;
             (function myLoop (i) {
                 setTimeout(function () {
-                    _self.statusv += 1;
                     if (--i) {
                         myLoop(i);
+                    _self.statusv += 1;
+                    document.getElementById("statusLabReq").generateRequest();
                     }
                     else {
                         document.getElementById('DeployLab').disabled=false;
+                        _self.status = 'Lab Not Ready'
                     }
                 }, 1000)
-            })(2);
+            })(3);
 
             },
             _gotoLab: function(e){
@@ -249,7 +259,7 @@
           _handleResponse: function(e){
             var _self = this;
             var data = e.detail.response;
-            console.log(data);
+            _self.status = data.status;
         },
           _handleResponseStatus: function(e){
             var _self = this;

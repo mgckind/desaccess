@@ -108,8 +108,9 @@ class Application(tornado.web.Application):
             (r"/easyweb/api/v1/query/", pubapi.ApiQueryHandler),
             (r"/easyweb/api/v1/jobs/", pubapi.ApiJobHandler),
             (r"/easyweb/dcount/", count.CountHandler),
-            (r"/easyweb/deslabs/deploy", jlab.LaunchHandler),
+            (r"/easyweb/deslabs/deploy", jlab.LabLaunchHandler),
             (r"/easyweb/deslabs/status", jlab.LabStatusHandler),
+            (r"/easyweb/deslabs/delete", jlab.LabDeleteHandler),
             (r"/easyweb/files/dr1/(.*)", MyStaticFileHandler,
              {'path': '/des004/despublic/dr1_tiles/'}),
         ]
