@@ -39,8 +39,8 @@
     </iron-ajax>
 
     <iron-ajax id="statusLabReq"
+    auto
     url="/easyweb/deslabs/status"
-    params='{"part":"fff"}'
     handle-as="json"
     on-response="_handleResponseStatus"
     debounce-duration="300">
@@ -151,13 +151,13 @@
               </template>
 
               <template is="dom-if" if="{{pending}}">
-                  <div class="status " item-icon style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; Starting </span><br />
+                  <div class="status " item-icon style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; Pending Action</span><br />
               </template>
 
               <template is="dom-if" if="{{running}}">
                   <div class="status green" item-icon style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; Ready </span><br />
               </template>
-                  <span>{{statusv}}</span>
+                  <span>Status: </span>
                   <span>{{status}}</span>
 
 
@@ -167,7 +167,8 @@
             <paper-button class="indigo"  raised disabled on-tap="_gotoLab" id ="GotoLab"> Go To Lab &nbsp; &nbsp; <i class="fa fa-arrow-circle-right"></i></paper-button>
 
             </div>
-            </paper-card>
+        </paper-card><br />
+        <paper-button on-click="_refreshStatus"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
             </div>
         </des-card>
 
@@ -205,6 +206,10 @@
                     type: Boolean,
                     value: false,
                 },
+                ready: {
+                    type: Number,
+                    value: 3,
+                }
             },
             patchOverlay: function (e) {
                 if (e.target.withBackdrop) {
@@ -214,6 +219,7 @@
             _deployLab: function(e){
             document.getElementById("deployLabReq").generateRequest();
             var _self = this
+            _self.statusv = 0;
             document.getElementById('DeployLab').disabled=true;
             _self.stop = false;
             _self.running = false;
@@ -221,45 +227,36 @@
             var i;
             (function myLoop (i) {
                 setTimeout(function () {
+                    if (_self.ready == 0) i=1;
                     if (--i) {
                         myLoop(i);
                     _self.statusv += 1;
                     document.getElementById("statusLabReq").generateRequest();
                     }
-                    else {
-                        document.getElementById('DeleteLab').disabled=false;
-                        document.getElementById('GotoLab').disabled=false;
-                        _self.stop = false;
-                        _self.pending = false;
-                        _self.running = true;
-                        _self.status = 'Lab Ready'
-                    }
                 }, 1000)
-            })(5);
+            })(60);
+            },
+            _refreshStatus: function(e){
+            document.getElementById("statusLabReq").generateRequest();
             },
             _deleteLab: function(e){
             document.getElementById("deleteLabReq").generateRequest();
+            document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
             var _self = this
-            _self.stop = true;
-            _self.pending = false;
-            _self.running = false;
             _self.statusv = 0;
             var i;
             (function myLoop (i) {
                 setTimeout(function () {
+                    if (_self.ready == 3) i=1;
                     if (--i) {
                         myLoop(i);
                     _self.statusv += 1;
                     document.getElementById("statusLabReq").generateRequest();
                     }
-                    else {
-                        document.getElementById('DeployLab').disabled=false;
-                        _self.status = 'Lab Not Ready'
-                    }
                 }, 1000)
-            })(3);
+            })(60);
 
             },
             _gotoLab: function(e){
@@ -275,8 +272,33 @@
           _handleResponseStatus: function(e){
             var _self = this;
             var data = e.detail.response;
-            console.log(data);
             _self.status = data.status;
+            _self.ready = data.ready;
+            if (_self.ready == 0){
+            _self.stop = false;
+            _self.pending = false;
+            _self.running = true;
+            document.getElementById('DeployLab').disabled=true;
+            document.getElementById('DeleteLab').disabled=false;
+            document.getElementById('GotoLab').disabled=false;
+            }
+            else if (_self.ready == 2){
+            _self.stop = false;
+            _self.pending = true;
+            _self.running = false;
+            document.getElementById('DeployLab').disabled=true;
+            document.getElementById('DeleteLab').disabled=true;
+            document.getElementById('GotoLab').disabled=true;
+            }
+            else {
+            _self.stop = true;
+            _self.pending = false;
+            _self.running = false;
+            document.getElementById('DeployLab').disabled=false;
+            document.getElementById('DeleteLab').disabled=true;
+            document.getElementById('GotoLab').disabled=true;
+
+            }
         },
             _seeHelp: function(e){
                 e.preventDefault();

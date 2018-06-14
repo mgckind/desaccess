@@ -24,11 +24,11 @@ class LabStatusHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
-        token = str(uuid.uuid4())
-        print('status Lab', token[0:10])
-        #deploy.main(action='deploy',user=user,token=token)
-        #insert_token(user, token)
-        temp = json.dumps({'status': token[0:10]}, indent=4)
+        r = requests.post('http://localhost:8888/labs/api/v1/status', data={'user': user})
+        status = r.json()['msg']
+        ready = r.json()['err']
+        print('status Lab', status)
+        temp = json.dumps({'status': status, 'ready': ready}, indent=4)
         self.write(temp)
 
 class LabGotoHandler(BaseHandler):
