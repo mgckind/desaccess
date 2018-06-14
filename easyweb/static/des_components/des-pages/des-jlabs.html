@@ -53,6 +53,15 @@
     on-response="_handleResponse"
     debounce-duration="300">
     </iron-ajax>
+
+    <iron-ajax id="gotoLabReq"
+    url="/easyweb/deslabs/goto"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
         <paper-dialog class="dialog-position" id="labsHelp" with-backdrop on-iron-overlay-opened="patchOverlay">
             <des-card heading="Help">
                 <div class="card-content">
@@ -255,6 +264,8 @@
             },
             _gotoLab: function(e){
                 var _=0;
+                window.open('/easyweb/deslabs/goto','_blank');
+                //document.getElementById("gotoLabReq").generateRequest();
             },
           _handleResponse: function(e){
             var _self = this;
