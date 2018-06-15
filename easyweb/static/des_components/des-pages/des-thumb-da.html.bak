@@ -1,0 +1,301 @@
+<dom-module id="des-thumb-da">
+    <style include="shared-styles">
+            :host {
+                  display: block;
+                  height : 240px; // 220px;
+                  width: 220px;
+                  margin: 10px;
+                  float : left;
+                  background-color: white;
+            }
+
+
+            paper-card {
+                  width: 200px;
+                  height: 200px;
+                  margin-bottom: 0px;
+            }
+            .mycard{
+                  width: 200px;
+                  height: 220px; // 200px;
+                  padding: 10px;
+                  border-radius: 5px;
+                  margin-bottom: 0px;
+                  font-size: 15px;
+                  color : var(--paper-pink-500);
+            }
+            .mycard:hover {
+                @apply(--shadow-elevation-16dp);
+                visibility: visible;
+            }
+
+            .mycard:hover .mycolors{
+                visibility: visible;
+            }
+            .pink {
+
+                  --paper-card-header-color: var(--paper-green-500);
+            }
+            .thumb{
+                  height: 300px;
+                  width: 300px;
+                  background-color: white;
+                  border-radius: 5px;
+                  padding: 10px;
+            }
+            .thumb:hover .mycolors{
+                  visibility: visible;
+            }
+            .mycolors{
+                  color: pink;
+                  visibility: hidden;
+            }
+
+            .mycolors:hover{
+                  color:green;
+            }
+            paper-dialog {
+                  position: fixed;
+                  max-width: 90%;
+                  top: 16px;
+            }
+            paper-spinner.big{width:60px;height:60px;position:absolute;top:70px;left:70px;}
+
+
+            paper-dialog.centered {
+                  position: fixed;
+                  top: 20px;
+                  left: 20px;
+                  max-width: 90%;
+                  max-height: 90%;
+                  overflow: auto;
+            }
+
+      </style>
+
+      <template>
+          <!--
+            <paper-material class="thumb" elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="openBig">
+            -->
+                  <div class="mycard" on-click="openBig"> <div style="position:absolute;">
+                        <span>{{imtitle}}</span> </div>
+                        <paper-spinner class="big" ></paper-spinner>
+                        <!--<img src={{imdisplay}} height="200px" width="200px" />-->
+                        <img src={{imdisplay}} height="200px" width="200px" style="position: relative; top: 20px;" />
+                        <!--<div style="position:relative; left:-8px; top:-32px;">-->
+                        <div style="position:relative; left:-8px; top:-12px;">
+                              <paper-icon-button id="infoid" icon="info" class="mycolors">
+                              </paper-icon-button>
+                        </div>
+                  </div>
+                  <!--
+            </paper-material>
+             -->
+
+            <!-- DIALOG -->
+            <paper-dialog  id="SingleTileDialogDA" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">
+                  <h2 id="SingleTileTitleDA">{{imtitle}}</h2>
+                  <!--<img id="SingleTileImgDA" class = "Image" />-->
+                  <img id="SingleTileImgDA" class = "Image" style="width: 100%; max-width: 650px;" />
+                  <div class="buttons horizontal layout left-justified">
+                        <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
+                        <paper-button class="indigo" raised on-tap="download"> Download</paper-button>
+                  </div>
+            </paper-dialog>
+          <paper-dialog class="dialog-position" id="jobHelpThumbDA" with-backdrop on-iron-overlay-opened="patchOverlay">
+              <des-card heading="Help">
+                  <div class="card-content">
+                      <paper-carousel id="thumb-crs" items="1" dotText="false" controls="true">
+                          <div class="carousel-item">
+                              <img src="/easyweb/static/images/demo1.gif" width="500px">
+                              <div class="desc">
+                                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+                          </div>
+
+                          <div class="carousel-item">
+                              <!--<div class="col">-->
+                              <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                              <div class="desc">
+                                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+
+                              <!--</div>-->
+                          </div>
+
+                          <div class="carousel-item">
+                              <div class="row">
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+
+                                  <div class="left">
+                                      <img src="/easyweb/static/images/demo1.gif">
+                                  </div>
+                              </div>
+                              <div class="desc">
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                              </div>
+                          </div>
+
+                          <div class="carousel-item">
+                              <img src="/easyweb/static/images/demo1.gif">
+                              <div class="desc">
+                                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                              </div>
+                          </div>
+
+                      </paper-carousel>
+                  </div>
+                  <div class="row">
+                      <paper-button class="prev" on-tap="_prevPage">
+                          <iron-icon icon="image:navigate-before"></iron-icon>
+                          Prev
+                      </paper-button>
+
+                      <paper-button class="next" on-tap="_nextPage">
+                          Next
+                          <iron-icon icon="image:navigate-next"></iron-icon>
+                      </paper-button>
+                  </div>
+              </des-card>
+          </paper-dialog>
+
+
+      </template>
+
+      <script>
+          var singlepath = "";
+          var singletitle = "";
+          (function(){
+              Polymer({
+                  is: "des-thumb-da",
+                behaviors: [
+                  Polymer.IronA11yKeysBehavior
+                ],
+                  properties: {
+                      _elevation:{
+                          type: Number,
+                          value: 0,
+                      },
+                      imdisplay:{
+                          type: String,
+                          value: "",
+                      },
+                      imtitle:{
+                          type: String,
+                          value: "",
+                      },
+                      jobid : {
+                          type: String,
+
+                      },
+                  },
+            keyBindings:{
+              'enter:keydown':'_gobackdialog',
+            },
+
+
+                  _nextPage: function() {
+                  var crs = document.getElementById("thumb-crs");
+                  crs.goToNextPage();
+              },
+
+              _prevPage: function() {
+                  var crs = document.getElementById("thumb-crs");
+                  crs.goToPrevPage();
+              },
+
+                  _mouseout: function(){
+                      this._elevation = 0;
+                  },
+                  _mouseover: function(){
+                      this._elevation = 5;
+                  },
+                  openBig: function(event){
+                      document.getElementById('SingleTileImgDA').src=this.imdisplay;
+                      document.getElementById('SingleTileTitleDA').innerHTML=this.imtitle;
+                      document.getElementById('SingleTileDialogDA').open();
+
+
+                  },
+                  _gobackdialog: function(event){
+                      document.getElementById('SingleTileDialogDA').close();
+                      document.getElementById('JobTiles').close();
+                      document.getElementById('JobTiles').open();
+                  },
+                  completeHandler: function(){
+                      var link = document.createElement('a');
+                      var pathL = singlepath.replace('.tif.png','.tar.gz');
+                      link.href = pathL; //pathL.replace(".tif.png",".tar.gz");
+                      console.log('REFP', link.href);
+
+                      if (link.download !== undefined){
+                          //Set HTML5 download attribute. This will prevent file from opening if supported.
+                          var fileName = pathL.substring(pathL.lastIndexOf('/') + 1, pathL.length);
+                          console.log("==>FILENAME: ", fileName);
+                          link.download = fileName;
+                      }
+                      if (document.createEvent) {
+                          var e = document.createEvent('MouseEvents');
+                          e.initEvent('click' ,true ,true);
+                          link.dispatchEvent(e);
+                          return true;
+                      }
+                      var query = '?download';
+                      window.open(pathL + query);
+                      //window.open(this.imdisplay,'_self');
+                  },
+                  errorHandler: function(){
+                      console.log('Oh no!');
+                  },
+                 patchOverlay: function (e) {
+                     if (e.target.withBackdrop) {
+                        e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                     }
+                 },
+                  _seeHelp: function(e){
+                      e.preventDefault();
+                      document.getElementById('jobHelpThumbDA').open();
+                  },
+                  download: function(event){
+                      var siid = this.jobid;
+                      console.log(siid);
+                      event.stopPropagation();
+                      var data = new FormData();
+                      singlepath = document.getElementById('SingleTileImgDA').src;
+                      singletitle = document.getElementById('SingleTileTitleDA').innerHTML;
+                      data.append('title', singletitle);
+                      data.append('jobid', siid);
+                      data.append('path', singlepath);
+                      $.ajax({
+                          url: '/easyweb/download/da/object/',  //Server script to process data
+                          type: 'POST',
+                          data: data,
+                          success: this.completeHandler,
+                          error: this.errorHandler,
+                          //Options to tell jQuery not to process data or worry about content-type.
+                          cache: false,
+                          contentType: false,
+                          processData: false
+                      });
+                  },
+
+              });
+          })();
+      </script>
+
+</dom-module>
