@@ -56,7 +56,25 @@
         <hr class="des-hr">
     <div class="card-content" style="height: 70%; overflow-y: scroll;">
 
-
+    <template is="dom-if" if="{{_actionIsFC(jobtype)}}">
+    <template is="dom-if" if="{{jsondata}}">
+        <template is="dom-repeat" items="{{jsondata}}">
+            <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
+            </des-thumb>
+        </template>
+    </template>
+    </template>
+    
+    <template is="dom-if" if="{{_actionIsDA(jobtype)}}">
+        <span> Help!2</span>
+    <template is="dom-if" if="{{jsondata}}">
+        <template is="dom-repeat" items="{{jsondata}}">
+            <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
+            </des-thumb>
+            <span> Help!</span>
+        </template>
+    </template>
+    </template>
 
     <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}">
     <template is="dom-if" if="{{jsondata}}">
@@ -112,6 +130,20 @@
             },
           },
 
+        _actionIsFC: function(job_type) {
+
+            if (job_type == "finding chart") {
+                console.log("Finding Chart!")
+                return true;
+            }
+          },
+        _actionIsDA: function(job_type) {
+
+            if (job_type == "data analysis") {
+                console.log("Data Analysis!")
+                return true;
+            }
+          },
         _actionIsCoadd: function(job_type) {
 
             if (job_type == "coadd") {
@@ -171,6 +203,7 @@
                  }
              },
           _getTilesResponse: function() {
+            console.log(this.jsondata);
             if (this.jsondata.length == 0 ) {
               //document.getElementById('getAllIcon').disabled=true;
               console.log('==0');
