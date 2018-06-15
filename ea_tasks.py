@@ -823,9 +823,9 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     
     with open(mypath+'log.log','w') as logg:
         logg.write('Running...')
-    uu = 'demo_user'
-    pp = 'demo_pass'
-    com = "makeDESthumbs {0} --user {1}1 --password {3} --MP --outdir={3}".format(inputs, uu, pp, outputs)
+    uu1 = 'demo_user'
+    pp1 = 'demo_pass'
+    com = "makeDESthumbs {0} --user {1}1 --password {3} --MP --outdir={3}".format(inputs, uu1, pp1, outputs)
     
     if xs != "":
         com += ' --xsize {}'.format(xs)
