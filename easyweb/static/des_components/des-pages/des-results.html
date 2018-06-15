@@ -66,12 +66,10 @@
     </template>
     
     <template is="dom-if" if="{{_actionIsDA(jobtype)}}">
-        <span> Help!2</span>
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
             </des-thumb>
-            <span> Help!</span>
         </template>
     </template>
     </template>
