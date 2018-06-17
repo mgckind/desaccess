@@ -52689,6 +52689,7 @@ function keysrt(key,desc) {
             <div class="card-content">
                 This feature is experimental only. Please use with caution. <br>
                 You can launch, access and delete your Jupyter Notebook.
+                This Notebook will run with 1 CPU and 2GB of RAM.
             </div>
             <hr>
 
@@ -52801,13 +52802,6 @@ function keysrt(key,desc) {
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
-            (function myLoop2 (i) {
-                setTimeout(function () {
-                    if (--i) {
-                        myLoop2(i);
-                    }
-                }, 1000)
-            })(4);
             var _self = this
             _self.statusv = 0;
             var i;
