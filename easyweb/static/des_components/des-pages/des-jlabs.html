@@ -227,14 +227,14 @@
             var i;
             (function myLoop (i) {
                 setTimeout(function () {
-                    if (_self.ready == 0) i=1;
+                    if (_self.ready == 0) i=4;
                     if (--i) {
                         myLoop(i);
                     _self.statusv += 1;
                     document.getElementById("statusLabReq").generateRequest();
                     }
                 }, 1000)
-            })(60);
+            })(120);
             },
             _refreshStatus: function(e){
             document.getElementById("statusLabReq").generateRequest();
@@ -244,6 +244,13 @@
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            (function myLoop2 (i) {
+                setTimeout(function () {
+                    if (--i) {
+                        myLoop2(i);
+                    }
+                }, 1000)
+            })(4);
             var _self = this
             _self.statusv = 0;
             var i;
@@ -256,7 +263,7 @@
                     document.getElementById("statusLabReq").generateRequest();
                     }
                 }, 1000)
-            })(60);
+            })(120);
 
             },
             _gotoLab: function(e){
