@@ -13,9 +13,10 @@ class LabLaunchHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
+        passwd = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
         print(user)
         print('deploying Lab')
-        r = requests.post('http://localhost:8888/labs/api/v1/deploy', data={'user': user})
+        r = requests.post('http://localhost:8888/labs/api/v1/deploy', data={'user': user, 'passwd': passwd})
         print(r.json()['token'])
         temp = json.dumps({'status': 'deploying'}, indent=4)
         self.write(temp)
