@@ -453,7 +453,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     
     if send_email:
         response['email'] = email
-    
+    t1 = time.time()
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
@@ -729,16 +729,6 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             logfile.write('Figure ' + filenm + '_spreadmag' + exten + ' has been created.\n')
             numPlots += 1
     
-    logfile.write('****************************************\n')
-    logfile.write('Number of Generated Plots: ' + str(numPlots) + '\n')
-    end_time = time.time()
-    difference = end_time - start_time
-    logfile.write('The plots took ' + str(difference) + ' seconds to make.\n')
-    response['elapsed'] = difference
-    
-    logfile.write('Done.\n')
-    logfile.close()
-    
     pngfiles = sorted(glob.glob(mypath + '*.png'))
     titles = []
     Ntiles = len(pngfiles)
@@ -757,9 +747,16 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
         with open(mypath + "list.json", "w") as outfile:
             json.dump([dict(name=pngfiles[i], title=titles[i], size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
     
+    logfile.write('****************************************\n')
+    logfile.write('Number of Generated Plots: ' + str(numPlots) + '\n')
+    end_time = time.time()
+    difference = end_time - start_time
+    logfile.write('The plots took ' + str(difference) + ' seconds to make.\n')
+    logfile.write('Done.\n')
+    logfile.close()
+
     # writing files for wget
     allfiles = glob.glob(mypath+'*.*')
-    #response['elapsed'] = difference
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
@@ -770,6 +767,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     Fall.close()
     response['status'] = 'ok'
     t2 = time.time()
+    response['elapsed'] = t2-t1
     with open(jsonfile, 'w') as fp:
         json.dump(response, fp)
     return response
@@ -786,7 +784,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     
     if send_email:
         response['email'] = email
-    
+    t1 = time.time()
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
@@ -795,6 +793,10 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     mypath = user_folder + jobid + '/'      # this is the same as "outputs"
     
     input_df = pd.DataFrame(pd.read_csv(inputs, sep=','))
+    
+    logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+    
+    logfile = open(mypath + 'DESFinderTool_' + logname + '.log', 'w')
     
     if len(input_df['RA']) != len(input_df['DEC']):
         logfile.write('ERROR - Please enter the same number of RA and DEC values.\n')
@@ -806,9 +808,6 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     ralst = ','.join(input_df['RA'].apply(str).tolist())
     declst = ','.join(input_df['DEC'].apply(str).tolist())
     
-    logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-    
-    logfile = open(mypath + 'DESFinderTool_' + logname + '.log', 'w')
     logfile.write('Selected Options:\n')
     logfile.write('    x size: ' + str(xs) + '\n')
     logfile.write('    y size: ' + str(ys) + '\n')
@@ -945,7 +944,6 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         
         figname = outputs + filenm + '_' + band + '.png'
         
-        # THIS MIGHT FAIL - 20180516
         fig = plt.figure()
         ax = plotutils.CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
         fig.axes.append(ax)
@@ -958,19 +956,9 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             return None
         else:
             logfile.write('Chart exported to ' + figname + '\n')
-    
-    logfile.write('****************************************\n')
-    end_time = time.time()
-    difference = end_time - start_time
-    logfile.write('The plot took ' + str(difference) + ' seconds to make.\n')
-    logfile.write('Have a nice day.\n')
-    logfile.close()
-    #conn.close()
-    
-    print(type(listonly), listonly)
 
     if listonly:
-        print('list only')
+        #print('list only')
         chartfiles = glob.glob(mypath + '*.png')
         titles = []
         pngfiles = []
@@ -991,7 +979,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
                 json.dump([dict(name=pngfiles[i], title=titles[i],
                                 size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
     else:
-        print('make png too')
+        #print('make png too')
         tiffiles = glob.glob(mypath+'*.tif')
         chartfiles = glob.glob(mypath + '*.png')
         titles = []
@@ -1019,9 +1007,16 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
                 json.dump([dict(name=pngfiles[i], title=titles[i],
                                 size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
     
+    logfile.write('****************************************\n')
+    end_time = time.time()
+    difference = end_time - start_time
+    logfile.write('The plot took ' + str(difference) + ' seconds to make.\n')
+    logfile.write('Have a nice day.\n')
+    logfile.close()
+    #conn.close()
+    
     # writing files for wget
     allfiles = glob.glob(mypath+'*.*')
-    response['elapsed'] = difference
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
@@ -1032,6 +1027,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     Fall.close()
     response['status'] = 'ok'
     t2 = time.time()
+    response['elapsed'] = t2-t1
     with open(jsonfile, 'w') as fp:
         json.dump(response, fp)
     return response
