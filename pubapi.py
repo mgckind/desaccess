@@ -12,6 +12,8 @@ import hashlib
 import ea_tasks
 import pandas as pd
 import numpy as np
+import backup
+
 
 def create_token_table(delete=False):
     with open('config/mysqlconfig.yaml', 'r') as cfile:
@@ -26,26 +28,27 @@ def create_token_table(delete=False):
         con.select_db('des')
     cur = con.cursor()
     if delete:
-        cur.execute("DROP TABLE IF EXISTS Tokens")
+        cur.execute("DROP TABLE IF EXISTS apiTokens")
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS Tokens(
+    CREATE TABLE IF NOT EXISTS apiTokens(
     token varchar(50),
     time datetime,
+    user varchar(100),
     )""")
     con.commit()
     con.close()
 
 
-def create_token():
+def create_token(user='test'):
         token = hashlib.sha1(os.urandom(64)).hexdigest()
         now = datetime.datetime.now()
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
-        tup = tuple([token, now.strftime('%Y-%m-%d %H:%M:%S')])
+        tup = tuple([token, now.strftime('%Y-%m-%d %H:%M:%S'), user])
         with con:
             cur = con.cursor()
-            cur.execute("INSERT INTO Tokens VALUES {0}".format(tup))
+            cur.execute("INSERT INTO apiTokens VALUES {0}".format(tup))
         con.close()
 
 
@@ -96,7 +99,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         con = mydb.connect(**conf)
         try:
             cur = con.cursor()
-            cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
+            cur.execute("SELECT *  from apiTokens where token = '{0}'".format(token))
             cc = cur.fetchone()
             now = datetime.datetime.now()
             dt = (now-cc[1]).total_seconds()
@@ -194,7 +197,7 @@ class ApiQueryHandler(tornado.web.RequestHandler):
         con = mydb.connect(**conf)
         try:
             cur = con.cursor()
-            cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
+            cur.execute("SELECT *  from apiTokens where token = '{0}'".format(token))
             cc = cur.fetchone()
             now = datetime.datetime.now()
             dt = (now-cc[1]).total_seconds()
@@ -264,7 +267,7 @@ class ApiJobHandler(tornado.web.RequestHandler):
         con = mydb.connect(**conf)
         try:
             cur = con.cursor()
-            cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
+            cur.execute("SELECT *  from apiTokens where token = '{0}'".format(token))
             cc = cur.fetchone()
             now = datetime.datetime.now()
             dt = (now-cc[1]).total_seconds()
