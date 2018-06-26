@@ -62,7 +62,6 @@ ROWNUM < 1001
 -- using NEST Schema
 SELECT
 count(main.MAG_AUTO_I) COUNT,
-avg(main.MAG_AUTO_I) AVERAGE,
 main.HPIX_1024
 FROM DR1_MAIN main
 WHERE
