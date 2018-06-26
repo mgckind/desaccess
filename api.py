@@ -62,7 +62,7 @@ ROWNUM < 1001
 -- using NEST Schema
 SELECT
 count(main.MAG_AUTO_I) COUNT,
-avg(main.MAG_AUTO_I) COUNT,
+avg(main.MAG_AUTO_I) AVERAGE,
 main.HPIX_1024
 FROM DR1_MAIN main
 WHERE
@@ -95,7 +95,7 @@ WHERE
         query3 = """--
 -- Example Query --
 -- This query selects  a sample of bright galaxies
-SELECT dr1.RA,dr1.DEC,dr1.COADD_OBJECT_ID
+SELECT dr1.RA RA, dr1.DEC DEC, dr1.COADD_OBJECT_ID ID
 FROM dr1_main sample(0.01) dr1
 WHERE
 dr1.MAG_AUTO_G < 18 and
@@ -118,7 +118,7 @@ dr1.NEPOCHS_I > 0
 -- This query creates a Helpix map of number of galaxies
 -- and their mean magnitude on a resolution of NSIDE = 1024
 -- using NEST Schema
-SELECT count(dr1.MAG_AUTO_I),avg(dr1.MAG_AUTO_I),dr1.HPIX_1024
+SELECT count(dr1.MAG_AUTO_I) COUNT,avg(dr1.MAG_AUTO_I) AVERAGE,dr1.HPIX_1024
 FROM DR1_MAIN dr1
 where
 dr1.WAVG_SPREAD_MODEL_I + 3.0*dr1.WAVG_SPREADERR_MODEL_I > 0.005 and
