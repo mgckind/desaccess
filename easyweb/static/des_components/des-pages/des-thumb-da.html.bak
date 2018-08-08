@@ -1,4 +1,4 @@
-<dom-module id="des-thumb">
+<dom-module id="des-thumb-da">
     <style include="shared-styles">
             :host {
                   display: block;
@@ -93,16 +93,16 @@
              -->
 
             <!-- DIALOG -->
-            <paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">
-                  <h2 id="SingleTileTitle">{{imtitle}}</h2>
-                  <!--<img id="SingleTileImg" class = "Image" />-->
-                  <img id="SingleTileImg" class = "Image" style="width: 100%; max-width: 650px;" />
+            <paper-dialog  id="SingleTileDialogDA" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">
+                  <h2 id="SingleTileTitleDA">{{imtitle}}</h2>
+                  <!--<img id="SingleTileImgDA" class = "Image" />-->
+                  <img id="SingleTileImgDA" class = "Image" style="width: 100%; max-width: 650px;" />
                   <div class="buttons horizontal layout left-justified">
                         <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
                         <paper-button class="indigo" raised on-tap="download"> Download</paper-button>
                   </div>
             </paper-dialog>
-          <paper-dialog class="dialog-position" id="jobHelpThumb" with-backdrop on-iron-overlay-opened="patchOverlay">
+          <paper-dialog class="dialog-position" id="jobHelpThumbDA" with-backdrop on-iron-overlay-opened="patchOverlay">
               <des-card heading="Help">
                   <div class="card-content">
                       <paper-carousel id="thumb-crs" items="1" dotText="false" controls="true">
@@ -182,7 +182,7 @@
           var singletitle = "";
           (function(){
               Polymer({
-                  is: "des-thumb",
+                  is: "des-thumb-da",
                 behaviors: [
                   Polymer.IronA11yKeysBehavior
                 ],
@@ -226,14 +226,14 @@
                       this._elevation = 5;
                   },
                   openBig: function(event){
-                      document.getElementById('SingleTileImg').src=this.imdisplay;
-                      document.getElementById('SingleTileTitle').innerHTML=this.imtitle;
-                      document.getElementById('SingleTileDialog').open();
+                      document.getElementById('SingleTileImgDA').src=this.imdisplay;
+                      document.getElementById('SingleTileTitleDA').innerHTML=this.imtitle;
+                      document.getElementById('SingleTileDialogDA').open();
 
 
                   },
                   _gobackdialog: function(event){
-                      document.getElementById('SingleTileDialog').close();
+                      document.getElementById('SingleTileDialogDA').close();
                       document.getElementById('JobTiles').close();
                       document.getElementById('JobTiles').open();
                   },
@@ -269,20 +269,20 @@
                  },
                   _seeHelp: function(e){
                       e.preventDefault();
-                      document.getElementById('jobHelpThumb').open();
+                      document.getElementById('jobHelpThumbDA').open();
                   },
                   download: function(event){
                       var siid = this.jobid;
                       console.log(siid);
                       event.stopPropagation();
                       var data = new FormData();
-                      singlepath = document.getElementById('SingleTileImg').src;
-                      singletitle = document.getElementById('SingleTileTitle').innerHTML;
+                      singlepath = document.getElementById('SingleTileImgDA').src;
+                      singletitle = document.getElementById('SingleTileTitleDA').innerHTML;
                       data.append('title', singletitle);
                       data.append('jobid', siid);
                       data.append('path', singlepath);
                       $.ajax({
-                          url: '/easyweb/download/coadd/object/',  //Server script to process data
+                          url: '/easyweb/download/da/object/',  //Server script to process data
                           type: 'POST',
                           data: data,
                           success: this.completeHandler,

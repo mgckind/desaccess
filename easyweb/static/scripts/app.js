@@ -32,9 +32,11 @@
     if (appr.data.view == 'db-schema') sel_page = "2";
     if (appr.data.view == 'db-examples') sel_page = "3";
     if (appr.data.view == 'cutouts') sel_page = "4";
-    if (appr.data.view == 'footprint') sel_page = "5";
-    if (appr.data.view == 'my-jobs') sel_page = "6";
-    if (appr.data.view == 'help-form') sel_page = "7";
+    if (appr.data.view == 'finding-chart') sel_page = "5";
+    if (appr.data.view == 'footprint') sel_page = "6";
+    if (appr.data.view == 'data-analysis') sel_page = "7";
+    if (appr.data.view == 'my-jobs') sel_page = "8";
+    if (appr.data.view == 'help-form') sel_page = "9";
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
@@ -50,9 +52,11 @@
     if (appr.data.view == 'db-schema') sel_page = "2";
     if (appr.data.view == 'db-examples') sel_page = "3";
     if (appr.data.view == 'cutouts') sel_page = "4";
-    if (appr.data.view == 'footprint') sel_page = "5";
-    if (appr.data.view == 'my-jobs') sel_page = "6";
-    if (appr.data.view == 'help-form') sel_page = "7";
+    if (appr.data.view == 'finding-chart') sel_page = "5";
+    if (appr.data.view == 'footprint') sel_page = "6";
+    if (appr.data.view == 'data-analysis') sel_page = "7";
+    if (appr.data.view == 'my-jobs') sel_page = "8";
+    if (appr.data.view == 'help-form') sel_page = "9";
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
@@ -115,6 +119,23 @@
         var ysizeS = document.getElementById("ysizeSliderS");
         ysizeS.addEventListener('value-change', function() {
            document.getElementById("ysizeLabelS").textContent = ysizeS.value;
+        });
+        
+        var fc_xsize = document.getElementById("fc_xsizeSlider");
+        fc_xsize.addEventListener('value-change', function() {
+            document.getElementById("fc_xsizeLabel").textContent = fc_xsize.value;
+        });
+        var fc_ysize = document.getElementById("fc_ysizeSlider");
+        fc_ysize.addEventListener('value-change', function() {
+            document.getElementById("fc_ysizeLabel").textContent = fc_ysize.value;
+        });
+        var fc_mag = document.getElementById("fc_magSlider");
+		fc_mag.addEventListener('value-change', function() {
+		  document.getElementById("fc_magLabel").textContent = fc_mag.value;
+	    });
+	    var da_radius = document.getElementById("da_radiusSlider");
+        da_radius.addEventListener('value-change', function() {
+            document.getElementById("da_radiusLabel").textContent = da_radius.value;
         });
 
       // var res = document.getElementById("response");
