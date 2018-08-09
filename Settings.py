@@ -16,6 +16,7 @@ if not os.path.exists(LOG_PATH):
 TEMPLATE_PATH = os.path.join(DIRNAME, 'templates')
 WORKDIR = os.path.join(STATIC_PATH, "workdir/")
 DBFILE = os.path.join(STATIC_PATH, "workdir/admin/users.db")
+DBFILE2 = os.path.join(STATIC_PATH, "workdir/admin/users.db")
 ROOT_URL = 'https://des.ncsa.illinois.edu'
 #ROOT_URL = 'http://localhost:8080'
 LOGFILE = os.path.join(LOG_PATH, "access.log")
