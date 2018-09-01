@@ -183,7 +183,7 @@ def send_thanks(name, email, subject, ticket):
 
 
 def subscribe_email(email):
-    with open('config/user_manager.yaml', 'r') as cfile:
+    with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['majordomo']
     server = 'smtp.ncsa.illinois.edu'
     #fromemail = 'devnull@ncsa.illinois.edu'
@@ -201,7 +201,7 @@ def subscribe_email(email):
     s.quit()
 
 def unsubscribe_email(email):
-    with open('config/user_manager.yaml', 'r') as cfile:
+    with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['majordomo']
     server = 'smtp.ncsa.illinois.edu'
     #fromemail = 'devnull@ncsa.illinois.edu'
@@ -220,7 +220,7 @@ def unsubscribe_email(email):
 
 
 def send_announce(subject, msg):
-    with open('config/user_manager.yaml', 'r') as cfile:
+    with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['majordomo']
     context = {
         "Subject": "{0}".format(subject),

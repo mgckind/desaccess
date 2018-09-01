@@ -22,7 +22,7 @@ class CountHandler(BaseHandler):
     def get(self):
         kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': 'desdr'}
         dsn = cx_Oracle.makedsn(**kwargs)
-        with open('config/user_manager.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['oracle']
         user_manager = conf['user']
         pass_manager = conf['passwd']
@@ -36,4 +36,3 @@ class CountHandler(BaseHandler):
         cursor.close()
         dbh.close()
         self.write('<br><br><h1>Count = {}</h1>'.format(cc[0]-49))
-

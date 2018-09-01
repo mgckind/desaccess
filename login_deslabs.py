@@ -91,7 +91,7 @@ class MainHandler(BaseHandler):
             os.mkdir(newfolder)
         kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': 'desoper'}
         dsn = cx_Oracle.makedsn(**kwargs)
-        with open('config/user_manager.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['oracle']
         user_manager = conf['user']
         pass_manager = conf['passwd']
@@ -175,7 +175,7 @@ class AuthLoginHandler(BaseHandler):
 
 class UpdateInfoHandler(BaseHandler):
     def post(self):
-        with open('config/user_manager.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['oracle']
         user_manager = conf['user']
         pass_manager = conf['passwd']

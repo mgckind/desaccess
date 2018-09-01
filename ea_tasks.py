@@ -356,6 +356,8 @@ def run_quick(query, db, username, lp):
 #@app.task(base=CustomTask)
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
 def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email):
+    with open('config/desaccess.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['descut']
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -374,8 +376,8 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     mypath = user_folder+jobid+'/'
     with open(mypath+'log.log', 'w') as logfile:
         logfile.write('Running...')
-    uu = 'demo_user'
-    pp = 'demo_pass'
+    uu = conf['username']
+    pp = conf['password']
     com = "makeDESthumbs {0} --user {1} --password {2} --MP --outdir={3}".format(inputs, uu, pp,
                                                                                  outputs)
     if xs != "":
@@ -450,22 +452,22 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     response['files'] = None
     response['sizes'] = None
     response['email'] = 'no'
-    
+
     if send_email:
         response['email'] = email
     t1 = time.time()
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
-    
+
     user_folder = Settings.WORKDIR + uu + "/"
     jsonfile = user_folder + jobid + '.json'
     mypath = user_folder + jobid + '/'
-    
+
     input_df = pd.DataFrame(pd.read_csv(inputs, sep=','))
-    
+
     logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-    
+
     logfile = open(mypath + 'vistoolsLOG_' + logname + '.log', 'w')
     logfile.write('Selected Options:\n')
     logfile.write('    Flux vs. Wavelength: ........ ' + str(fluxwav) + '\n')
@@ -475,13 +477,13 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     logfile.write('    G-R vs. R-I: ................ ' + str(grri) + '\n')
     logfile.write('    G-Z vs. Z-W1: ............... ' + str(gzzw1) + '\n')
     logfile.write('    Spread vs. Magnitude: ....... ' + str(spreadmag) + '\n')
-    
+
     #boxsize = (boxsize / 2 * ARCSEC_TO_DEG)
     numPlots = 0
     exten = '.png'
-    
+
     start_time = time.time()
-    
+
     if intype == 'coords':
         if len(input_df['RA']) != len(input_df['DEC']):
             logfile.write('ERROR - Please enter the same number of RA and DEC values.\n')
@@ -489,10 +491,10 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             with open(jsonfile, 'w') as fp:
                 json.dump(response, fp)
             return response
-    
+
     conn = ea.connect(db, user=uu, passwd=pp)
     curs = conn.cursor()
-    
+
     for row in range(len(input_df[input_df.columns[0]])):
         FluxVsWavelength = fluxwav
         MagVsWavelength = magwav
@@ -501,11 +503,11 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
         SpreadVsMag = spreadmag
         wise = None
         vhs = None
-        
+
         COADDID = None
         RAUSER, RAMIN, RAMAX = None, None, None
         DECUSER, DECMIN, DECMAX = None, None, None
-        
+
         if intype == 'coadds':
             try:
                 a = int(input_df['COADDID'][row])
@@ -516,7 +518,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                 COADDID = str(input_df['COADDID'][row])
                 logfile.write('****************************************\n')
                 logfile.write('Object: {0}'.format(COADDID))
-        
+
         if intype == 'coords':
             try:
                 a = float(input_df['RA'][row])
@@ -535,20 +537,20 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                 DECUSER = str(DECUSER)
                 logfile.write('****************************************\n')
                 logfile.write('User input: RA {0} DEC {1}\n'.format(RAUSER, DECUSER))
-        
+
         df = None
-        
+
         a = 'select * from (select y.COADD_OBJECT_ID, y.RA, y.DEC'
         b = ' from DR1_MAIN y'
         c = ''
         d = ' where'
         e = ''
         f = ''
-        
+
         a += ', y.MAG_AUTO_G, y.MAG_AUTO_R, y.MAG_AUTO_I, y.MAG_AUTO_Z, y.MAG_AUTO_Y, y.MAGERR_AUTO_G, y.MAGERR_AUTO_R, y.MAGERR_AUTO_I, y.MAGERR_AUTO_Z, y.MAGERR_AUTO_Y'
-            
+
         a += ', y.WAVG_MAG_PSF_G, y.WAVG_MAG_PSF_R, y.WAVG_MAG_PSF_I, y.WAVG_MAG_PSF_Z, y.WAVG_MAG_PSF_Y, y.WAVG_MAGERR_PSF_G, y.WAVG_MAGERR_PSF_R, y.WAVG_MAGERR_PSF_I, y.WAVG_MAGERR_PSF_Z, y.WAVG_MAGERR_PSF_Y'
-        
+
         if intype == 'coadds':
             d += ' y.COADD_OBJECT_ID = ' + COADDID + ''
             e += ')'
@@ -556,15 +558,15 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             d += ' y.RA between ' + RAMIN + ' and ' + RAMAX + ' and y.DEC between ' + DECMIN + ' and ' + DECMAX + ' and y.MAG_AUTO_I between 10.0 and 30.0'
             e += ' order by abs('+RAUSER+' - y.RA)+abs('+DECUSER+' - y.DEC) asc)'
             f += ' where rownum = 1'
-            
+
             if FluxVsWavelength or MagVsWavelength:
                 #d += '  and abs(y.MAG_AUTO_G) != 99.000000 and abs(y.MAG_AUTO_R) != 99.000000 and abs(y.MAG_AUTO_I) != 99.000000 and abs(y.MAG_AUTO_Z) != 99.000000 and abs(y.MAG_AUTO_Y) != 99.000000'
                 d += ' and ((y.MAG_AUTO_I >= 21.000000 and (abs(y.MAG_AUTO_G) != 99.000000 and abs(y.MAG_AUTO_R) != 99.000000 and abs(y.MAG_AUTO_Z) != 99.000000 and abs(y.MAG_AUTO_Y) != 99.000000)) or (y.MAG_AUTO_I < 21.000000 and (abs(y.WAVG_MAG_PSF_G) != 99.000000 and abs(y.WAVG_MAG_PSF_R) != 99.000000 and abs(y.WAVG_MAG_PSF_I) != 99.000000 and abs(y.WAVG_MAG_PSF_Z) != 99.000000 and abs(y.WAVG_MAG_PSF_Y) != 99.000000)))'
-                
+
             elif GR_RI or GZ_ZW1:
                 #d += ' and abs(y.MAG_AUTO_G) != 99.000000'
                 d += ' and ((y.MAG_AUTO_I >= 21.000000 and abs(y.MAG_AUTO_G) != 99.000000) or (y.MAG_AUTO_I < 21.000000 and abs(y.WAVG_MAG_PSF_G) != 99.000000))'
-                
+
                 if GR_RI:
                     #d += ' and abs(y.MAG_AUTO_R) != 99.000000 and abs(y.MAG_AUTO_I) != 99.000000'
                     d += ' and ((y.MAG_AUTO_I >= 21.000000 and abs(y.MAG_AUTO_R) != 99.000000) or (y.MAG_AUTO_I < 21.000000 and (abs(y.WAVG_MAG_PSF_R) != 99.000000 and abs(y.WAVG_MAG_PSF_I) != 99.000000)))'
@@ -577,24 +579,24 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             elif SpreadVsMag:
                 #d += ' and abs(y.MAG_AUTO_I) != 99.000000'
                 d += ' and (y.MAG_AUTO_I >= 21.000000 or (y.MAG_AUTO_I < 21.000000 and abs(y.WAVG_MAG_PSF_I) != 99.000000))'
-        
+
         if addwise or gzzw1:
             a += ', w.W1MPRO, w.W2MPRO, w.W3MPRO, w.W4MPRO, w.W1SIGMPRO, w.W2SIGMPRO, w.W3SIGMPRO, w.W4SIGMPRO, w.W1SNR, w.W2SNR, w.W3SNR, w.W4SNR'
             c += ' left outer join WISE_DES w on y.COADD_OBJECT_ID = w.COADD_OBJECT_ID'
-        
+
         if addvhs:
             a += ', v.JAPERMAG3, v.HAPERMAG3, v.KSAPERMAG3, v.JAPERMAG3ERR, v.HAPERMAG3ERR, v.KSAPERMAG3ERR'
             c += ' left outer join VHS_DES v on y.COADD_OBJECT_ID = v.COADD_OBJECT_ID'
         if SpreadVsMag:
             a += ', y.SPREAD_MODEL_G, y.SPREAD_MODEL_R, y.SPREAD_MODEL_I'
-        
+
         query = a + b + c + d + e + f + ';'
         df = conn.query_to_pandas(query)
-        
+
         logfile.write('Below is the query used to match object:\n' + query + '\n')
-        
+
         ### "For python 3.6 and above, the columns are inserted in the order of **kwargs. For python 3.5 and earlier, since **kwargs is unordered, the columns are inserted in alphabetical order at the end of your DataFrame. Assigning multiple columns within the same assign is possible, but you cannot reference other columns created within the same assign call." - Pandas 0.22.0 documentation for pandas.DataFrame.assign ###
-            
+
         if df.empty:
             if intype == 'coadds':
                 logfile.write('WARNING - No object found with Coadd ID ' + COADDID + '.\n')
@@ -607,41 +609,41 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             SpreadVsMag = False
         else:
             logfile.write('Below is the result of the query:\n' + df.to_string(columns=None, header=True, index=False, justify='left') + '\n')
-            
+
             filenm = 'DESJ' + plotutils.DecConverter(df['RA'][0], df['DEC'][0])
 
             logfile.write('Closest object to your coordinates RA ' + str(df['RA'][0]) + ' DEC ' + str(df['DEC'][0]) + ' with Coadd ID ' + str(df['COADD_OBJECT_ID'][0]) + '.\n')
-            
+
             # >=21 use detmodel; <21 use wavg
             if df['MAG_AUTO_I'][0] >= 21.0:
                 logfile.write('The MAG_AUTO magnitude in the I band is greater than or equal to 21. The plots will be made using MAG_AUTO magnitudes.')
                 df.drop(columns=[
-                        'WAVG_MAG_PSF_G', 'WAVG_MAG_PSF_R', 'WAVG_MAG_PSF_I', 
-                        'WAVG_MAG_PSF_Z', 'WAVG_MAG_PSF_Y', 
-                        'WAVG_MAGERR_PSF_G', 'WAVG_MAGERR_PSF_R', 'WAVG_MAGERR_PSF_I', 
+                        'WAVG_MAG_PSF_G', 'WAVG_MAG_PSF_R', 'WAVG_MAG_PSF_I',
+                        'WAVG_MAG_PSF_Z', 'WAVG_MAG_PSF_Y',
+                        'WAVG_MAGERR_PSF_G', 'WAVG_MAGERR_PSF_R', 'WAVG_MAGERR_PSF_I',
                         'WAVG_MAGERR_PSF_Z', 'WAVG_MAGERR_PSF_Y'], inplace=True)
                 df.rename(columns={
-                        'MAG_AUTO_G':'MAG_G', 'MAG_AUTO_R':'MAG_R', 
-                        'MAG_AUTO_I':'MAG_I', 'MAG_AUTO_Z':'MAG_Z', 
-                        'MAG_AUTO_Y':'MAG_Y', 
-                        'MAGERR_AUTO_G':'MAGERR_G', 'MAGERR_AUTO_R':'MAGERR_R', 
-                        'MAGERR_AUTO_I':'MAGERR_I', 'MAGERR_AUTO_Z':'MAGERR_Z', 
+                        'MAG_AUTO_G':'MAG_G', 'MAG_AUTO_R':'MAG_R',
+                        'MAG_AUTO_I':'MAG_I', 'MAG_AUTO_Z':'MAG_Z',
+                        'MAG_AUTO_Y':'MAG_Y',
+                        'MAGERR_AUTO_G':'MAGERR_G', 'MAGERR_AUTO_R':'MAGERR_R',
+                        'MAGERR_AUTO_I':'MAGERR_I', 'MAGERR_AUTO_Z':'MAGERR_Z',
                         'MAGERR_AUTO_Y':'MAGERR_Y'}, inplace=True)
             else:
                 logfile.write('The MAG_AUTO magnitude in the I band is less than 21. The plots will be made using WAVG_MAG_PSF magnitudes.')
                 df.drop(columns=[
-                        'MAG_AUTO_G', 'MAG_AUTO_R', 'MAG_AUTO_I', 
-                        'MAG_AUTO_Z', 'MAG_AUTO_Y', 
-                        'MAGERR_AUTO_G', 'MAGERR_AUTO_R', 'MAGERR_AUTO_I', 
+                        'MAG_AUTO_G', 'MAG_AUTO_R', 'MAG_AUTO_I',
+                        'MAG_AUTO_Z', 'MAG_AUTO_Y',
+                        'MAGERR_AUTO_G', 'MAGERR_AUTO_R', 'MAGERR_AUTO_I',
                         'MAGERR_AUTO_Z', 'MAGERR_AUTO_Y'], inplace=True)
                 df.rename(columns={
-                        'WAVG_MAG_PSF_G':'MAG_G', 'WAVG_MAG_PSF_R':'MAG_R', 
-                        'WAVG_MAG_PSF_I':'MAG_I', 'WAVG_MAG_PSF_Z':'MAG_Z', 
-                        'WAVG_MAG_PSF_Y':'MAG_Y', 
-                        'WAVG_MAGERR_PSF_G':'MAGERR_G', 'WAVG_MAGERR_PSF_R':'MAGERR_R', 
-                        'WAVG_MAGERR_PSF_I':'MAGERR_I', 'WAVG_MAGERR_PSF_Z':'MAGERR_Z', 
+                        'WAVG_MAG_PSF_G':'MAG_G', 'WAVG_MAG_PSF_R':'MAG_R',
+                        'WAVG_MAG_PSF_I':'MAG_I', 'WAVG_MAG_PSF_Z':'MAG_Z',
+                        'WAVG_MAG_PSF_Y':'MAG_Y',
+                        'WAVG_MAGERR_PSF_G':'MAGERR_G', 'WAVG_MAGERR_PSF_R':'MAGERR_R',
+                        'WAVG_MAGERR_PSF_I':'MAGERR_I', 'WAVG_MAGERR_PSF_Z':'MAGERR_Z',
                         'WAVG_MAGERR_PSF_Y':'MAGERR_Y'}, inplace=True)
-            
+
             if fluxwav:
                 df = df.assign(G_FLUX=3631*(10**(-df['MAG_G']/2.5))*1000)
                 df = df.assign(R_FLUX=3631*(10**(-df['MAG_R']/2.5))*1000)
@@ -654,13 +656,13 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                 df = df.assign(Z_FLUXERR=df['G_FLUX']*(1-(10**(-df['MAGERR_Z']/2.5))))
                 df = df.assign(Y_FLUXERR=df['Y_FLUX']*(1-(10**(-df['MAGERR_Y']/2.5))))
                 logfile.write('The following DES flux data has been calculated:\n' + df.to_string(columns=['G_FLUX','R_FLUX','I_FLUX','Z_FLUX','Y_FLUX','G_FLUXERR','R_FLUXERR','I_FLUXERR','Z_FLUXERR','Y_FLUXERR'], header=True, index=False, justify='left'))
-                
+
             if addwise:
                 if df['W1MPRO'][0] is None:
                     wise = False
                 else:
                     wise = True
-                    
+
                     df = df.assign(W1FLUX=309.540*(10**(-df['W1MPRO']/2.5))*1000)
                     df = df.assign(W2FLUX=171.787*(10**(-df['W2MPRO']/2.5))*1000)
                     df = df.assign(W3FLUX=31.674*(10**(-df['W3MPRO']/2.5))*1000)
@@ -670,13 +672,13 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                     df = df.assign(W3FLUXERR=df['W3FLUX']*(1-(10**(-df['W3SIGMPRO']/2.5))))
                     df = df.assign(W4FLUXERR=df['W4FLUX']*(1-(10**(-df['W4SIGMPRO']/2.5))))
                     logfile.write('The following WISE flux data has been calculated:\n' + df.to_string(columns=['W1FLUX','W2FLUX','W3FLUX','W4FLUX','W1FLUXERR','W2FLUXERR','W3FLUXERR','W4FLUXERR'], header=True, index=False, justify='left') + '\n')
-            
+
             if addvhs:
                 if df['JAPERMAG3'][0] is None:
                     vhs = False
                 else:
                     vhs = True
-                    
+
                     df = df.assign(JFLUX=1600*(10**(-df['JAPERMAG3']/2.5))*1000)
                     df = df.assign(HFLUX=1020*(10**(-df['HAPERMAG3']/2.5))*1000)
                     df = df.assign(KSFLUX=666.7*(10**(-df['KSAPERMAG3']/2.5))*1000)
@@ -684,7 +686,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                     df = df.assign(HFLUXERR=df['HFLUX']*(1-(10**(-df['HAPERMAG3ERR']/2.5))))
                     df = df.assign(KSFLUXERR=df['KSFLUX']*(1-(10**(-df['KSAPERMAG3ERR']/2.5))))
                     logfile.write('The following VHS flux data has been calculated:\n' + df.to_string(columns=['JFLUX','HFLUX','KSFLUX','JFLUXERR','HFLUXERR','KSFLUXERR'], header=True, index=False, justify='left') + '\n')
-            
+
             if gzzw1:
                 if df['W1MPRO'][0] is None:
                     GZ_ZW1 = False
@@ -693,21 +695,21 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                     df = df.assign(Z_W1=df['MAG_Z']-df['W1MPRO'])
                     df = df.assign(G_Z=df['MAG_G']-df['MAG_Z'])
                     logfile.write('The following color data has been calculated:\n' + df.to_string(columns=['Z_W1','G_Z'], header=True, index=False, justify='left') + '\n')
-                    
+
             if grri is True:
                 df = df.assign(G_R=df['MAG_G']-df['MAG_R'])
                 df = df.assign(R_I=df['MAG_R']-df['MAG_I'])
                 logfile.write('The following color data has been calculated:\n' + df.to_string(columns=['G_R','R_I'], header=True, index=False, justify='left') + '\n')
-        
+
         if addwise and not wise:
             logfile.write('WARNING - No WISE data was found for this object. The SED plot(s) will not include WISE data.\n')
-        
+
         if addvhs and not vhs:
                 logfile.write('WARNING - No VHS data was found for this object. The SED plot(s) will not include VHS data.\n')
-        
+
         if gzzw1 and not wise:
             logfile.write('WARNING - No WISE data was found for this object. Cannot create G-Z vs. Z-W1 color plot.\n')
-        
+
         if FluxVsWavelength:
             plotutils.PlotFluxVsWavelength(outputs, df, wise, vhs, filenm, exten)
             logfile.write('Figure ' + filenm + '_flux' + exten +' has been created.\n')
@@ -728,7 +730,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             plotutils.PlotSpreadVsMag(outputs, df, filenm, exten)
             logfile.write('Figure ' + filenm + '_spreadmag' + exten + ' has been created.\n')
             numPlots += 1
-    
+
     pngfiles = sorted(glob.glob(mypath + '*.png'))
     titles = []
     Ntiles = len(pngfiles)
@@ -746,7 +748,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             os.remove(mypath + "list.json")
         with open(mypath + "list.json", "w") as outfile:
             json.dump([dict(name=pngfiles[i], title=titles[i], size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
-    
+
     logfile.write('****************************************\n')
     logfile.write('Number of Generated Plots: ' + str(numPlots) + '\n')
     end_time = time.time()
@@ -781,7 +783,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     response['files'] = None
     response['sizes'] = None
     response['email'] = 'no'
-    
+
     if send_email:
         response['email'] = email
     t1 = time.time()
@@ -791,23 +793,23 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     user_folder = Settings.WORKDIR+uu+"/"
     jsonfile = user_folder +jobid + '.json'
     mypath = user_folder + jobid + '/'      # this is the same as "outputs"
-    
+
     input_df = pd.DataFrame(pd.read_csv(inputs, sep=','))
-    
+
     logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-    
+
     logfile = open(mypath + 'DESFinderTool_' + logname + '.log', 'w')
-    
+
     if len(input_df['RA']) != len(input_df['DEC']):
         logfile.write('ERROR - Please enter the same number of RA and DEC values.\n')
         response['status'] = 'error'
         with open(jsonfile, 'w') as fp:
             json.dump(response, fp)
         return response
-    
+
     ralst = ','.join(input_df['RA'].apply(str).tolist())
     declst = ','.join(input_df['DEC'].apply(str).tolist())
-    
+
     logfile.write('Selected Options:\n')
     logfile.write('    x size: ' + str(xs) + '\n')
     logfile.write('    y size: ' + str(ys) + '\n')
@@ -819,27 +821,29 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     logfile.write('****************************************\n')
     logfile.write('Submitted RA: ' + ralst + '\n')
     logfile.write('Submitted DEC: ' + declst + '\n')
-    
+
     with open(mypath+'log.log','w') as logg:
         logg.write('Running...')
-    uu1 = 'demo_user'
-    pp1 = 'demo_pass'
+    with open('config/desaccess.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['descut']
+    uu1 = conf['username']
+    pp1 = conf['password']
     com = "makeDESthumbs {0} --user {1}1 --password {3} --MP --outdir={3}".format(inputs, uu1, pp1, outputs)
-    
+
     if xs != "":
         com += ' --xsize {}'.format(xs)
     if ys != "":
         com += ' --ysize {}'.format(ys)
     com += " --logg {}".format(outputs + 'log.log')
     com += " --tag Y3A1_COADD"
-    
+
     os.chdir(mypath)
     oo = subprocess.check_output([com], shell=True)
-    
+
     # If no options were selected in the form, set it to use iband.
     if not gband and not rband and not iband and not zband and not yband:
         iband = True
-    
+
     urllst = []
     for fileitm in os.listdir(mypath):
         if fileitm.endswith("_g.fits") and gband:
@@ -852,22 +856,22 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             urllst.append(mypath + fileitm)
         if fileitm.endswith("_Y.fits") and yband:
             urllst.append(mypath + fileitm)
-    
+
     conn = ea.connect(db, user=uu, passwd=pp)
     curs = conn.cursor()
-    
+
     start_time = time.time()
     for row in urllst:
         logfile.write('****************************************\n')
         logfile.write('Object: ' + row[-28:-5] + '\n')
-        
+
         band = ''
         filenm = ''
-        
+
         makePlot = True
         helperPlot = True
         USERObject = None
-        
+
         if '_g.fits' in row:
             band = 'G'
         if '_r.fits' in row:
@@ -878,24 +882,24 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             band = 'Z'
         if '_Y.fits' in row:
             band = 'Y'
-        
+
         #image = urllst[row]
         ##image = fits.HDUList.fromstring(image.content)
         #image = fits.open(image)
         image = fits.open(row)
-        
+
         image = image[0]
         header = image.header
         data = image.data
         data = data.copy()
-        
+
         RAUSER = header['CRVAL1']            # should be the precise RA the user inputted in the form
         DECUSER = header['CRVAL2']            # should be the precise DEC the user inputted in the form
         RAUSERpixel = header['CRPIX1']        # pixel coordinate of the image corresponding to the RA
         DECUSERpixel = header['CRPIX2']        # pixel coordinate of the image corresponding to the DEC
-        
+
         filenm = 'DESJ' + plotutils.DecConverter(RAUSER, DECUSER)
-        
+
         RAMIN, DECMIN = plotutils.PixelstoWCS(header, RAUSERpixel+(header['NAXIS1']/2)-1, DECUSERpixel-(header['NAXIS2']/2)+1)        # minimum RA/DEC of the image field in degrees
         RAMAX, DECMAX = plotutils.PixelstoWCS(header, RAUSERpixel-(header['NAXIS1']/2)+1, DECUSERpixel+(header['NAXIS2']/2)-1)        # maximum RA/DEC of the image field in degrees
         RAMIN = str(RAMIN)
@@ -904,16 +908,16 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         DECMAX = str(DECMAX)
         RAUSER = str(RAUSER)
         DECUSER = str(DECUSER)
-        
+
         logfile.write('RA: ' + RAUSER + '\n')
         logfile.write('DEC: ' + DECUSER + '\n')
-        
+
         # FIND USER OBJECT IN THE THUMBNAIL
         query1 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from DR1_MAIN where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' order by abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum = 1'
-        
+
         # FIND NEIGHBOR OBJECTS IN THE THUMBNAIL
         query2 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from DR1_MAIN where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' and WAVG_MAG_PSF_'+band+' < '+str(mag)+' and abs(WAVG_MAG_PSF_'+band+') != 99.0 order by WAVG_MAG_PSF_'+band+' asc, abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum < 11'
-        
+
         # The user object will be found and thrown into a csv file. The helper object will be found, in addition to the next (up to) 9 brightest objects, and all will be appended to the same csv file.
         USERObject = conn.query_to_pandas(query1)
         logfile.write('Below is the query used to match your object:\n' + query1 + '\n')
@@ -926,7 +930,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             filenm = 'DESJ' + plotutils.DecConverter(USERObject['RA'][0], USERObject['DEC'][0])
             logfile.write('Below is the result of the query:\n' + USERObject.to_string(columns=None, header=True, index=False, justify='left') + '\n')
             USERObject.to_csv(outputs + filenm + '_' + band + '_objects.csv', sep=',', index=False)
-        
+
         df = conn.query_to_pandas(query2)
         logfile.write('Below is the query used to find a helper object:\n' + query2 + '\n')
         if df.empty is True:
@@ -937,17 +941,17 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             logfile.write('Below is the result of the query. The first object listed is the helper object.\n' + df.to_string(columns=None, header=True, index=False, justify='left') + '\n')
             with open(outputs + filenm + '_' + band + '_objects.csv', 'a') as f:
                 df.to_csv(f, sep=',', index=False, header=False)
-        
+
         [dataMin, dataMax] = np.percentile(data,[30,99])
         data[data < dataMin] = dataMin
         data[data > dataMax] = dataMax
-        
+
         figname = outputs + filenm + '_' + band + '.png'
-        
+
         fig = plt.figure()
         ax = plotutils.CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
         fig.axes.append(ax)
-        
+
         try:
             plt.savefig(figname, bbox_inches='tight', dpi=300)
         except _wcs.InconsistentAxisTypesError as e:
@@ -1006,7 +1010,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             with open(mypath+"list.json", "w") as outfile:
                 json.dump([dict(name=pngfiles[i], title=titles[i],
                                 size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
-    
+
     logfile.write('****************************************\n')
     end_time = time.time()
     difference = end_time - start_time
@@ -1014,7 +1018,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     logfile.write('Have a nice day.\n')
     logfile.close()
     #conn.close()
-    
+
     # writing files for wget
     allfiles = glob.glob(mypath+'*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
@@ -1031,4 +1035,3 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     with open(jsonfile, 'w') as fp:
         json.dump(response, fp)
     return response
-

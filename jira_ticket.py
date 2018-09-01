@@ -27,11 +27,10 @@ def send_email():
 
 
 def create_ticket(first, last, email, topics, subject, question):
-    f = open('.access', 'r')
-    A = f.readlines()
-    f.close()
-    my_string_u = base64.b64decode(A[0].strip()).decode().strip()
-    my_string_p = base64.b64decode(A[1].strip()).decode().strip()
+    with open('config/desaccess.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['jira']
+    my_string_u = base64.b64decode(conf['uu'].decode().strip()
+    my_string_p = base64.b64decode(conf['pp'].decode().strip()
     """
     This function creates the ticket coming form the help form
     """
