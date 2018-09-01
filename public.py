@@ -21,7 +21,7 @@ from version import __version__
 define("port", default=8080, help="run on the given port", type=int)
 
 def create_db(delete=False):
-    with open('config/mysqlconfig.yaml', 'r') as cfile:
+    with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['mysql']
     conf.pop('db', None)
     con = mydb.connect(**conf)

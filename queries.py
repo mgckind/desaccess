@@ -92,7 +92,7 @@ class QueryHandler(BaseHandler):
             return
         if query_kind == "submit":
             now = datetime.datetime.now()
-            with open('config/mysqlconfig.yaml', 'r') as cfile:
+            with open('config/desaccess.yaml', 'r') as cfile:
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             # copy the jobid to initial name

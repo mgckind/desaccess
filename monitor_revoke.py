@@ -24,7 +24,7 @@ def my_monitor(app):
         # will keep track of this for us.
         task = state.tasks.get(event['uuid'])
         jobid = task.uuid
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('REVOKE', jobid)

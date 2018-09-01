@@ -192,7 +192,7 @@ class MyJobsHandler(BaseHandler):
         app.config_from_object('config.celeryconfig')
         app.control.revoke(jobid, terminate=True, signal='SIGUSR1')
         app.close()
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         cur = con.cursor()
@@ -207,7 +207,7 @@ class MyJobsHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         cur = con.cursor()
@@ -371,7 +371,7 @@ class DeleteHandler(BaseHandler):
 
         user_folder = os.path.join(Settings.WORKDIR, loc_user)+'/'
         Nd = len(response)
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             cur = con.cursor()
@@ -405,7 +405,7 @@ class ChangeHandler(BaseHandler):
         user = self.get_argument('username')
         jobid = self.get_argument('jobid')
         jobname = self.get_argument('jobname')
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         cur = con.cursor()

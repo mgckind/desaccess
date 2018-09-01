@@ -209,7 +209,7 @@ class FileHandler(BaseHandler):
         # run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
         #                                           folder2, xs, ys, jobid, list_only,
         #                                           send_email, email], retry=True, task_id=jobid)
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
@@ -228,7 +228,7 @@ class FileHandler(BaseHandler):
             exit("Could not create a child process")
 
         if pid == 0:
-            with open('config/mysqlconfig.yaml', 'r') as cfile:
+            with open('config/desaccess.yaml', 'r') as cfile:
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             print("In the child process that has the PID {}".format(os.getpid()))
@@ -519,7 +519,7 @@ class FileHandlerS(BaseHandler):
         # run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
         #                                           folder2, xs, ys, jobid, list_only,
         #                                           send_email, email], retry=True, task_id=jobid)
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
@@ -538,7 +538,7 @@ class FileHandlerS(BaseHandler):
             exit("Could not create a child process")
 
         if pid == 0:
-            with open('config/mysqlconfig.yaml', 'r') as cfile:
+            with open('config/desaccess.yaml', 'r') as cfile:
                 conf = yaml.load(cfile)['mysql']
             con = mydb.connect(**conf)
             print("In the child process that has the PID {}".format(os.getpid()))

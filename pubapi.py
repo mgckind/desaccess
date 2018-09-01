@@ -14,7 +14,7 @@ import pandas as pd
 import numpy as np
 
 def create_token_table(delete=False):
-    with open('config/mysqlconfig.yaml', 'r') as cfile:
+    with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['mysql']
     conf.pop('db', None)
     con = mydb.connect(**conf)
@@ -39,7 +39,7 @@ def create_token_table(delete=False):
 def create_token():
         token = hashlib.sha1(os.urandom(64)).hexdigest()
         now = datetime.datetime.now()
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         tup = tuple([token, now.strftime('%Y-%m-%d %H:%M:%S')])
@@ -91,7 +91,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
             ys[0:len(ys_read)] = ys_read
         else:
             ys = ys_read[0:len(ys)]
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         try:
@@ -127,7 +127,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         run = ea_tasks.desthumb.apply_async(args=[input_csv, loc_user, lp.decode(),
                                                   folder2, '', '', jobid, list_only,
                                                   send_email, email], retry=True, task_id=jobid)
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
@@ -189,7 +189,7 @@ class ApiQueryHandler(tornado.web.RequestHandler):
         compression = arguments["compression"].lower() == 'yes'
         email = arguments["email"]
         jobname = arguments["jobname"]
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         try:
@@ -221,7 +221,7 @@ class ApiQueryHandler(tornado.web.RequestHandler):
             self.finish()
             return
         now = datetime.datetime.now()
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         tup = tuple([loc_user, jobid, jobname, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
@@ -259,7 +259,7 @@ class ApiJobHandler(tornado.web.RequestHandler):
             self.write(response)
             self.finish()
             return
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         try:

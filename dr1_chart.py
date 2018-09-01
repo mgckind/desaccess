@@ -108,7 +108,7 @@ class FileHandler(BaseHandler):
 												  gband, rband, iband, zband, yband, 
 												  mag], retry=True, task_id=jobid)
 		
-		with open('config/mysqlconfig.yaml', 'r') as cfile:
+		with open('config/desaccess.yaml', 'r') as cfile:
 			conf = yaml.load(cfile)['mysql']
 		con = mydb.connect(**conf)
 		

@@ -5,7 +5,8 @@ import os
 import pusher
 import queries
 import login_deslabs as login
-import api, download
+import api
+import download
 import pubapi
 import MySQLdb as mydb
 from tornado.options import define, options
@@ -20,8 +21,9 @@ from version import __version__
 
 define("port", default=8080, help="run on the given port", type=int)
 
+
 def create_db(delete=False):
-    with open('config/mysqlconfig.yaml', 'r') as cfile:
+    with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['mysql']
     conf.pop('db', None)
     con = mydb.connect(**conf)

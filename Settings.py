@@ -3,6 +3,7 @@ import os
 import random
 import string
 import logging
+import yaml
 DEBUG = True
 DIRNAME = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
@@ -24,9 +25,10 @@ LOG_GENERALFILE = os.path.join(LOG_PATH, "general.log")
 LOG_APPFILE = os.path.join(LOG_PATH, "app.log")
 WORKERS = os.path.join(DIRNAME, 'workers')
 # TODO: read from file since there will be a race conition between pods
-with open('config/ranC.tk', 'r') as fi:
-    COOKIE_SECRET = fi.readline().strip()
-    SKEY = fi.readline().strip()
+with open('config/desaccess.yaml', 'r') as cfile:
+    conf = yaml.load(cfile)['secrets']
+COOKIE_SECRET = conf['cookie']
+SKEY = conf['skey']
 # COOKIE_SECRET = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(16))
 # SKEY = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(16))
 formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)-8s - %(message)s',
@@ -49,6 +51,7 @@ app_log.setLevel(logging.DEBUG)
 handler_app = logging.FileHandler(LOG_APPFILE)
 handler_app.setFormatter(formatter)
 app_log.addHandler(handler_app)
+
 
 class dbConfig(object):
     def __init__(self):

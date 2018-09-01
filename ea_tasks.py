@@ -48,7 +48,7 @@ class CustomTask(Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         url = 'http://localhost:8080/easyweb/pusher/'
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('REVOKE', task_id)
@@ -71,7 +71,7 @@ class CustomTask(Task):
         except:
             return
         url = 'http://localhost:8080/easyweb/pusher/'
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         cur = con.cursor()

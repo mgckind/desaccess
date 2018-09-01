@@ -10,7 +10,7 @@ import sys
 
 def dump():
     command = "mysqldump -h {host} -P {port} -u {user} -p{passwd} {db} > {sqlfile}"
-    with open('config/mysqlconfig.yaml', 'r') as cfile:
+    with open('config/desaccess.yaml', 'r') as cfile:
         inputs = yaml.load(cfile)['mysql']
     inputs['sqlfile'] = Settings.DBFILE2
     #print(command.format(**inputs))
@@ -20,7 +20,7 @@ def dump():
 
 def restore():
     try:
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         conf.pop('db', None)
         con = mydb.connect(**conf)
@@ -40,7 +40,7 @@ def restore():
             con.close()
             print('Restoring des DB')
             command = "mysql -h {host} -P {port} -u {user} -p{passwd} {db} < {sqlfile}"
-            with open('config/mysqlconfig.yaml', 'r') as cfile:
+            with open('config/desaccess.yaml', 'r') as cfile:
                 inputs = yaml.load(cfile)['mysql']
             inputs['sqlfile'] = Settings.DBFILE2
             # print(command.format(**inputs))
