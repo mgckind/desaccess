@@ -12,7 +12,6 @@ import uuid
 from time import sleep
 
 import MySQLdb as mydb
-import config.descut as des
 import requests
 import tornado.websocket
 import yaml
