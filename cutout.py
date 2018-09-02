@@ -38,8 +38,10 @@ def get_filesize(filename):
 
 
 def create_token():
+    with open('config/desaccess.yaml', 'r') as cfile:
+        conf = yaml.load(cfile)['descut']
     req = requests.post('https://descut.cosmology.illinois.edu/api/token/',
-                        data={'username': des.USERNAME, 'password': des.PASSWORD}, verify=False)
+                        data={'username': conf['username'], 'password': conf['password']}, verify=False)
     return req
 
 class infoP(object):
