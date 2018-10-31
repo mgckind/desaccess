@@ -541,7 +541,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
         df = None
 
         a = 'select * from (select y.COADD_OBJECT_ID, y.RA, y.DEC'
-        b = ' from DR1_MAIN y'
+        b = ' from Y3A2_COADD_Object_SUMMARY y'
         c = ''
         d = ' where'
         e = ''
@@ -913,10 +913,10 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         logfile.write('DEC: ' + DECUSER + '\n')
 
         # FIND USER OBJECT IN THE THUMBNAIL
-        query1 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from DR1_MAIN where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' order by abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum = 1'
+        query1 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from Y3A2_COADD_OBJECT_SUMMARY where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' order by abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum = 1'
 
         # FIND NEIGHBOR OBJECTS IN THE THUMBNAIL
-        query2 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from DR1_MAIN where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' and WAVG_MAG_PSF_'+band+' < '+str(mag)+' and abs(WAVG_MAG_PSF_'+band+') != 99.0 order by WAVG_MAG_PSF_'+band+' asc, abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum < 11'
+        query2 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from Y3A2_COADD_OBJECT_SUMMARY where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' and WAVG_MAG_PSF_'+band+' < '+str(mag)+' and abs(WAVG_MAG_PSF_'+band+') != 99.0 order by WAVG_MAG_PSF_'+band+' asc, abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum < 11'
 
         # The user object will be found and thrown into a csv file. The helper object will be found, in addition to the next (up to) 9 brightest objects, and all will be appended to the same csv file.
         USERObject = conn.query_to_pandas(query1)
