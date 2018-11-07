@@ -6,6 +6,7 @@ from Crypto.Cipher import AES
 import base64
 import Settings
 import plotutils
+import bulkthumbs
 import os
 import threading
 import time
@@ -828,6 +829,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         conf = yaml.load(cfile)['descut']
     uu1 = conf['username']
     pp1 = conf['password']
+    """
     com = "makeDESthumbs {0} --user {1}1 --password {3} --MP --outdir={3}".format(inputs, uu1, pp1, outputs)
 
     if xs != "":
@@ -843,20 +845,44 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     # If no options were selected in the form, set it to use iband.
     if not gband and not rband and not iband and not zband and not yband:
         iband = True
-
+    """
+    
+    bulkthumbscolors = []
+    if gband:
+        bulkthumbscolors.append('g')
+    if rband:
+        bulkthumbscolors.append('r')
+    if iband:
+        bulkthumbscolors.append('i')
+    if zband:
+        bulkthumbscolors.append('z')
+    if yband:
+        bulkthumbscolors.append('y')
+    if not bulkthumbscolors:
+        bulkthumbscolors.append('i')
+    bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
+    bulkthumbscom = "mpirun -n 1 python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, bulkthumbscolors, "Y3A2", jobid, uu, pp, Settings.WORKDIR)
+    try:
+        #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
+        oo = subprocess.check_output([bulkthumbscom], shell=True)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+    
     urllst = []
-    for fileitm in os.listdir(mypath):
-        if fileitm.endswith("_g.fits") and gband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_r.fits") and rband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_i.fits") and iband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_z.fits") and zband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_Y.fits") and yband:
-            urllst.append(mypath + fileitm)
-
+    dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper().replace("-","_")+'.csv'))
+    for tile in dftiles['TILENAME']:
+        for fileitm in os.listdir(mypath+tile+'/'):
+            if fileitm.endswith("_g.fits") and gband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_r.fits") and rband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_i.fits") and iband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_z.fits") and zband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_Y.fits") and yband:
+                urllst.append(mypath + tile + '/' + fileitm)
+    
     conn = ea.connect(db, user=uu, passwd=pp)
     curs = conn.cursor()
 
@@ -929,7 +955,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             makePlot = True
             filenm = 'DESJ' + plotutils.DecConverter(USERObject['RA'][0], USERObject['DEC'][0])
             logfile.write('Below is the result of the query:\n' + USERObject.to_string(columns=None, header=True, index=False, justify='left') + '\n')
-            USERObject.to_csv(outputs + filenm + '_' + band + '_objects.csv', sep=',', index=False)
+            USERObject.to_csv(outputs + filenm + '_' + (band.lower() if band != 'Y' else band) + '_objects.csv', sep=',', index=False)
 
         df = conn.query_to_pandas(query2)
         logfile.write('Below is the query used to find a helper object:\n' + query2 + '\n')
@@ -946,7 +972,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         data[data < dataMin] = dataMin
         data[data > dataMax] = dataMax
 
-        figname = outputs + filenm + '_' + band + '.png'
+        figname = outputs + filenm + '_' + band.lower() + '_chart.png' if band != 'Y' else outputs + filenm + '_' + band + '_chart.png'
 
         fig = plt.figure()
         ax = plotutils.CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
