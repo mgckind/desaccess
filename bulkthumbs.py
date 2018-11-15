@@ -357,7 +357,7 @@ def run(args):
 		else:
 			jobid = str(uuid.uuid4())
 		
-		outdir = OUTDIR + usernm + '/' + jobid + '/'
+		outdir = OUTDIR #+ usernm + '/' + jobid + '/'
 		
 		"""
 		try:
