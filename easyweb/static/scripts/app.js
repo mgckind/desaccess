@@ -32,11 +32,12 @@
     if (appr.data.view == 'db-schema') sel_page = "2";
     if (appr.data.view == 'db-examples') sel_page = "3";
     if (appr.data.view == 'cutouts') sel_page = "4";
-    if (appr.data.view == 'finding-chart') sel_page = "5";
-    if (appr.data.view == 'footprint') sel_page = "6";
-    if (appr.data.view == 'data-analysis') sel_page = "7";
-    if (appr.data.view == 'my-jobs') sel_page = "8";
-    if (appr.data.view == 'help-form') sel_page = "9";
+    if (appr.data.view == 'bulk-cutouts') sel_page = "5";
+    if (appr.data.view == 'finding-chart') sel_page = "6";
+    if (appr.data.view == 'footprint') sel_page = "7";
+    if (appr.data.view == 'data-analysis') sel_page = "8";
+    if (appr.data.view == 'my-jobs') sel_page = "9";
+    if (appr.data.view == 'help-form') sel_page = "10";
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
@@ -52,11 +53,12 @@
     if (appr.data.view == 'db-schema') sel_page = "2";
     if (appr.data.view == 'db-examples') sel_page = "3";
     if (appr.data.view == 'cutouts') sel_page = "4";
-    if (appr.data.view == 'finding-chart') sel_page = "5";
-    if (appr.data.view == 'footprint') sel_page = "6";
-    if (appr.data.view == 'data-analysis') sel_page = "7";
-    if (appr.data.view == 'my-jobs') sel_page = "8";
-    if (appr.data.view == 'help-form') sel_page = "9";
+    if (appr.data.view == 'bulk-cutouts') sel_page = "5";
+    if (appr.data.view == 'finding-chart') sel_page = "6";
+    if (appr.data.view == 'footprint') sel_page = "7";
+    if (appr.data.view == 'data-analysis') sel_page = "8";
+    if (appr.data.view == 'my-jobs') sel_page = "9";
+    if (appr.data.view == 'help-form') sel_page = "10";
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
@@ -66,7 +68,7 @@
         menu.addEventListener('iron-select', function() {
             app.selection=menu.selected;
             // pages.selected=menu.selected;
-            pages.select(menu.selected)
+            pages.select(menu.selected);
             app.editor.refresh();
             if (app.$.drawerLayout.narrow) {app.$.drawer.close();}
         });
@@ -136,6 +138,15 @@
 	    var da_radius = document.getElementById("da_radiusSlider");
         da_radius.addEventListener('value-change', function() {
             document.getElementById("da_radiusLabel").textContent = da_radius.value;
+        });
+        
+        var bc_xsize = document.getElementById("bc_xsizeSlider");
+        bc_xsize.addEventListener('value-change', function() {
+           document.getElementById("bc_xsizeLabel").textContent = bc_xsize.value;
+        });
+        var bc_ysize = document.getElementById("bc_ysizeSlider");
+        bc_ysize.addEventListener('value-change', function() {
+           document.getElementById("bc_ysizeLabel").textContent = bc_ysize.value;
         });
 
       // var res = document.getElementById("response");
