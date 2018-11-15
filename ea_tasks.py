@@ -6,6 +6,7 @@ from Crypto.Cipher import AES
 import base64
 import Settings
 import plotutils
+import bulkthumbs
 import os
 import threading
 import time
@@ -438,7 +439,7 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
     return response
 
 """
-run_vistools() and make_chart() written by Landon Gelman for use by DES Data Management, 2017-2018.
+run_vistools, make_chart, bulktasks written by Landon Gelman for use by DES Data Management, 2017-2018.
 """
 
 ARCSEC_TO_DEG = 0.000278
@@ -541,7 +542,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
         df = None
 
         a = 'select * from (select y.COADD_OBJECT_ID, y.RA, y.DEC'
-        b = ' from DR1_MAIN y'
+        b = ' from Y3A2_COADD_Object_SUMMARY y'
         c = ''
         d = ' where'
         e = ''
@@ -828,6 +829,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         conf = yaml.load(cfile)['descut']
     uu1 = conf['username']
     pp1 = conf['password']
+    """
     com = "makeDESthumbs {0} --user {1}1 --password {3} --MP --outdir={3}".format(inputs, uu1, pp1, outputs)
 
     if xs != "":
@@ -843,20 +845,44 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     # If no options were selected in the form, set it to use iband.
     if not gband and not rband and not iband and not zband and not yband:
         iband = True
-
+    """
+    
+    bulkthumbscolors = []
+    if gband:
+        bulkthumbscolors.append('g')
+    if rband:
+        bulkthumbscolors.append('r')
+    if iband:
+        bulkthumbscolors.append('i')
+    if zband:
+        bulkthumbscolors.append('z')
+    if yband:
+        bulkthumbscolors.append('y')
+    if not bulkthumbscolors:
+        bulkthumbscolors.append('i')
+    bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
+    bulkthumbscom = "python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, bulkthumbscolors, "Y3A2", jobid, uu, pp, outputs)
+    try:
+        #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
+        oo = subprocess.check_output([bulkthumbscom], shell=True)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+    
     urllst = []
-    for fileitm in os.listdir(mypath):
-        if fileitm.endswith("_g.fits") and gband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_r.fits") and rband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_i.fits") and iband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_z.fits") and zband:
-            urllst.append(mypath + fileitm)
-        if fileitm.endswith("_Y.fits") and yband:
-            urllst.append(mypath + fileitm)
-
+    dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))
+    for tile in dftiles['TILENAME']:
+        for fileitm in os.listdir(mypath+tile+'/'):
+            if fileitm.endswith("_g.fits") and gband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_r.fits") and rband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_i.fits") and iband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_z.fits") and zband:
+                urllst.append(mypath + tile + '/' + fileitm)
+            if fileitm.endswith("_Y.fits") and yband:
+                urllst.append(mypath + tile + '/' + fileitm)
+    
     conn = ea.connect(db, user=uu, passwd=pp)
     curs = conn.cursor()
 
@@ -913,10 +939,10 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         logfile.write('DEC: ' + DECUSER + '\n')
 
         # FIND USER OBJECT IN THE THUMBNAIL
-        query1 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from DR1_MAIN where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' order by abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum = 1'
+        query1 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from Y3A2_COADD_OBJECT_SUMMARY where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' order by abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum = 1'
 
         # FIND NEIGHBOR OBJECTS IN THE THUMBNAIL
-        query2 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from DR1_MAIN where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' and WAVG_MAG_PSF_'+band+' < '+str(mag)+' and abs(WAVG_MAG_PSF_'+band+') != 99.0 order by WAVG_MAG_PSF_'+band+' asc, abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum < 11'
+        query2 = 'select * from (select COADD_OBJECT_ID, ALPHAWIN_J2000, DELTAWIN_J2000, RA, DEC, WAVG_MAG_PSF_'+band+' from Y3A2_COADD_OBJECT_SUMMARY where RA between '+RAMIN+' and '+RAMAX+' and DEC between '+DECMIN+' and '+DECMAX+' and WAVG_MAG_PSF_'+band+' < '+str(mag)+' and abs(WAVG_MAG_PSF_'+band+') != 99.0 order by WAVG_MAG_PSF_'+band+' asc, abs('+RAUSER+' - RA) + abs('+DECUSER+' - DEC) asc) where rownum < 11'
 
         # The user object will be found and thrown into a csv file. The helper object will be found, in addition to the next (up to) 9 brightest objects, and all will be appended to the same csv file.
         USERObject = conn.query_to_pandas(query1)
@@ -929,7 +955,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             makePlot = True
             filenm = 'DESJ' + plotutils.DecConverter(USERObject['RA'][0], USERObject['DEC'][0])
             logfile.write('Below is the result of the query:\n' + USERObject.to_string(columns=None, header=True, index=False, justify='left') + '\n')
-            USERObject.to_csv(outputs + filenm + '_' + band + '_objects.csv', sep=',', index=False)
+            USERObject.to_csv(outputs + filenm + '_' + (band.lower() if band != 'Y' else band) + '_objects.csv', sep=',', index=False)
 
         df = conn.query_to_pandas(query2)
         logfile.write('Below is the query used to find a helper object:\n' + query2 + '\n')
@@ -946,7 +972,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         data[data < dataMin] = dataMin
         data[data > dataMax] = dataMax
 
-        figname = outputs + filenm + '_' + band + '.png'
+        figname = outputs + filenm + '_' + band.lower() + '_chart.png' if band != 'Y' else outputs + filenm + '_' + band + '_chart.png'
 
         fig = plt.figure()
         ax = plotutils.CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
@@ -1034,4 +1060,98 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     response['elapsed'] = t2-t1
     with open(jsonfile, 'w') as fp:
         json.dump(response, fp)
+    return response
+
+@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email):
+    response = {}
+    response['user'] = uu
+    response['elapsed'] = 0
+    response['jobid'] = jobid
+    response['files'] = None
+    response['sizes'] = None
+    response['email'] = 'no'
+    if send_email:
+        response['email'] = email
+    
+    t1 = time.time()
+    
+    cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
+    dlp = cipher.decrypt(base64.b64decode(pp)).strip()
+    pp = dlp.decode()
+    
+    user_folder = Settings.WORKDIR + uu + '/'
+    jsonfile = user_folder + jobid + '.json'
+    mypath = user_folder + jobid + '/'
+    
+    MAX_CPUS = 2
+    dftemp = pd.DataFrame(pd.read_csv(input_csv))
+    dftemp_rows = len(dftemp.index)
+    if dftemp_rows >= MAX_CPUS:
+        nprocs = MAX_CPUS
+    elif dftemp_rows < MAX_CPUS and dftemp_rows > 0:
+        nprocs = dftemp_rows
+    else:
+        nprocs = 1
+    
+    args = 'mpirun -n {} python3 bulkthumbs.py'.format(nprocs)
+    args += ' --csv {}'.format(input_csv)
+    if tiffs:
+        args += ' --make_tiffs'
+    if fits:
+        colors = ''
+        if gband:
+            colors = (',').join((colors, 'g'))
+        if rband:
+            colors = (',').join((colors, 'r'))
+        if iband:
+            colors = (',').join((colors, 'i'))
+        if zband:
+            colors = (',').join((colors, 'z'))
+        if yband:
+            colors = (',').join((colors, 'y'))
+        colors = colors.strip(',')
+        args += ' --make_fits --colors {}'.format(colors)
+    if pngs:
+        args += ' --make_pngs'
+    if rgbs:
+        for _i in rgbvalues:
+            args += ' --make_rgbs {}'.format(_i)
+        """
+        if rgb_minimum:
+            args += ' --rgb_minimum {}'.format(rgb_minimum)
+        if rgb_stretch:
+            args += ' --rgb_stretch {}'.format(rgb_stretch)
+        if rgb_asinh:
+            args += ' --rgb_asinh {}'.format(rgb_asinh)
+        """
+    args += ' --xsize {} --ysize {}'.format(xsize, ysize)
+    if return_list:
+        args += ' --return_list'
+    if db == 'dessci' or db == 'desoper':
+        args += ' --db Y3A2'
+    else:
+        args += ' --db DR1'
+    args += ' --usernm {} --passwd {}'.format(uu, pp)
+    args += ' --jobid {}'.format(jobid)
+    args += ' --outdir {}'.format(outdir)
+    
+    try:
+        oo = subprocess.check_output([args], shell=True)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+    
+    os.chdir(user_folder)
+    os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+    os.chdir(os.path.dirname(__file__))
+    
+    allfiles = glob.glob(mypath+'*.*')
+    response['files'] = [os.path.basename(i) for i in allfiles]
+    response['sizes'] = [get_filesize(i) for i in allfiles]
+    
+    response['status'] = 'ok'
+    t2 = time.time()
+    response['elapsed'] = t2-t1
+    #with open(jsonfile, 'w') as fp:
+    #    json.dump(response, fp)
     return response

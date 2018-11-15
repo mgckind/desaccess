@@ -25,15 +25,15 @@ def DecConverter(ra, dec):
     raHH = int(ra1)
     raMM = int((ra1 - raHH) * 60)
     raSS = (((ra1 - raHH) * 60) - raMM) * 60
-    raSS = np.round(raSS, decimals=1)
-    raOUT = '{0:02d}{1:02d}{2:04.1f}'.format(raHH, raMM, raSS) if ra > 0 else '-{0:02d}{1:02d}{2:04.1f}'.format(raHH, raMM, raSS)
+    raSS = np.round(raSS, decimals=4)
+    raOUT = '{0:02d}{1:02d}{2:07.4f}'.format(raHH, raMM, raSS) if ra > 0 else '-{0:02d}{1:02d}{2:07.4f}'.format(raHH, raMM, raSS)
     
     dec1 = np.abs(dec)
     decDD = int(dec1)
     decMM = int((dec1 - decDD) * 60)
     decSS = (((dec1 - decDD) * 60) - decMM) * 60
-    decSS = np.round(decSS, decimals=1)
-    decOUT = '-{0:02d}{1:02d}{2:04.1f}'.format(decDD, decMM, decSS) if dec < 0 else '+{0:02d}{1:02d}{2:04.1f}'.format(decDD, decMM, decSS)
+    decSS = np.round(decSS, decimals=4)
+    decOUT = '-{0:02d}{1:02d}{2:07.4f}'.format(decDD, decMM, decSS) if dec < 0 else '+{0:02d}{1:02d}{2:07.4f}'.format(decDD, decMM, decSS)
     
     return(raOUT + decOUT)
 

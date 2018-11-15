@@ -75,7 +75,7 @@ class FileHandler(BaseHandler):
 		print(send_email, 'send_email')
 		print(email, 'email')
 		print(name, 'name')
-		jobid = str(uuid.uuid4())
+		jobid = str(uuid.uuid4()).replace("-","_")
 		print(jobid)
 		if boxsize == 0.0:
 			boxsize = ''
