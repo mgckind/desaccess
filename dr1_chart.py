@@ -75,7 +75,7 @@ class FileHandler(BaseHandler):
 		print(send_email, 'send_email')
 		print(email, 'email')
 		print(name, 'name')
-		jobid = str(uuid.uuid4())	#'57b54f4f-ab85-4e4e-b366-1557c4b3ca0b' #str(uuid.uuid4())
+		jobid = str(uuid.uuid4()).replace("-","_")	#'57b54f4f-ab85-4e4e-b366-1557c4b3ca0b' #str(uuid.uuid4())
 		if xs == 0.0:
 			xs = ''
 		if ys == 0.0:
