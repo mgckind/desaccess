@@ -544,17 +544,27 @@
             formdata.append('da_coadds',document.getElementById("da_enteredCoadds").value);
             formdata.append('da_coords',document.getElementById("da_enteredCoords").value);
 
-            $.ajax({
-                url: '/easyweb/dr1_vistools/',
-                type: 'POST',
-                //beforeSend: this.beforeSendHandler,
-                success: this.completeHandler,
-                error: this.errorHandler,
-                data: formdata,
-                cache: false,
-                contentType: false,
-                processData: false
-            });
+            var fluxwav = document.getElementById("da_fluxwav").checked;
+            var magwav = document.getElementById("da_magwav").checked;
+            var grri = document.getElementById("da_grri").checked;
+            var gzzw1 = document.getElementById("da_gzzw1").checked;
+            var spread = document.getElementById("da_spreadmag").checked;
+            if (fluxwav == false && magwav == false && grri == false && gzzw1 == false && spread == false){
+                document.getElementById('desDataAnalysis').errorHandler();
+            }
+            else{
+                $.ajax({
+                    url: '/easyweb/dr1_vistools/',
+                    type: 'POST',
+                    //beforeSend: this.beforeSendHandler,
+                    success: this.completeHandler,
+                    error: this.errorHandler,
+                    data: formdata,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
         },
         _clearForm: function(){
             console.log('clear Form');
