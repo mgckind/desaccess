@@ -40591,22 +40591,24 @@ paper-item {
             <span style=" position: absolute; top:12px;">Example Queries</span>
         </a>
         </paper-item>
+
+        <!-- OLD cutouts
         <paper-item>
-        <a class="ahidden" href="/easyweb/cutouts">
+        <a  class="ahidden" href="/easyweb/cutouts" >
             <span style=" position: absolute; top:12px;">Cutout Service</span>
         </a>
         </paper-item>
-        
-        
-        
+        -->
+
+
         <paper-item>
         <a class="ahidden" href="/easyweb/bulk-cutouts">
-            <span style=" position: absolute; top:12px;">Bulk Cutout Service</span>
+            <span style=" position: absolute; top:12px;">Cutouts Service</span>
         </a>
         </paper-item>
-        
-        
-        
+
+
+
         <paper-item>
         <a class="ahidden" href="/easyweb/finding-chart">
 			<span style=" position: absolute; top:12px;">Finding Chart</span>
@@ -40672,14 +40674,16 @@ paper-item {
         <!--<des-all-tables name="schema"></des-all-tables>-->
         <des-example-query></des-example-query>
         <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
-        <des-cutouts id="desCutouts" email="{{email}}" choice="0"></des-cutouts>
-        
-        
-        
+        <!--
+        <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
+         -->
+
+
+
         <des-bulk-cutouts id="desBulkCutouts" email="{{email}}" choice="0"></des-bulk-cutouts>
-        
-        
-        
+
+
+
         <des-finding-chart id="desFindingChart" email="{{email}}"></des-finding-chart>
         <des-footprint id="FootprintPage"></des-footprint>
         <des-data-analysis id="desDataAnalysis" email="{{email}}"></des-data-analysis>
@@ -49692,7 +49696,6 @@ function keysrt(key,desc) {
         document.getElementById('desQuery').clearQueryBox();
         document.querySelector('#toastCopy').show();
         app.editor.setValue(app.examplequerybox.getValue());
-        console.log("-> line number: ", app.editor.lineCount());
         setTimeout(function() {
             app.editor.refresh();
             app.editor.focus();
@@ -49700,7 +49703,6 @@ function keysrt(key,desc) {
 
     },
      _seeQuery: function(e){
-        console.log('seeexamples')
         e.preventDefault();
         this.jobid = e.model.item.job;
         this.examplequery = e.model.item.jquery;
@@ -49894,18 +49896,19 @@ function keysrt(key,desc) {
                 <a style="text-transform: none; color:black;" href="/easyweb/db-examples" tabindex="-1">
                 <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example"></des-card-welcome>
                 </a>
-                <a style="text-transform: none; color:black;" href="/easyweb/cutouts" tabindex="-1">
-                <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd"></des-card-welcome>
+                <!-- old cutouts
+                <a style = "text-transform: none; color:black;" href="/easyweb/cutouts" tabindex="-1">
+                <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd" ></des-card-welcome>
                 </a>
-                
-                
-                
+                -->
+
+
                 <a style="text-transform: none; color:black;" href="/easyweb/bulk-cutouts" tabindex="-1">
-                <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd-bulk.png" alt="Bulk Cutout Service" desc="A lot of cutouts" name="bulkcoadd"></des-card-welcome>
+                <des-card-welcome heading="CUTOUTS SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Bulk Cutout Service" desc="Generate cutouts for positions or ids" name="bulkcoadd"></des-card-welcome>
                 </a>
-                
-                
-                
+
+
+
                 <a style="text-transform: none; color:black;" href="/easyweb/finding-chart" tabindex="-1">
                 <!--<des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/home-footprint-old.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>-->
                 <des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/DESJ004034.0-620158.6_I.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>
