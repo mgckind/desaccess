@@ -1066,7 +1066,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
 
 
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email):
+def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -1087,6 +1087,7 @@ def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgb
     jsonfile = user_folder + jobid + '.json'
     mypath = user_folder + jobid + '/'
 
+    """
     MAX_CPUS = 2
     dftemp = pd.DataFrame(pd.read_csv(input_csv))
     dftemp_rows = len(dftemp.index)
@@ -1096,6 +1097,7 @@ def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgb
         nprocs = dftemp_rows
     else:
         nprocs = 1
+    """
 
     args = 'mpirun -n {} python3 bulkthumbs.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
@@ -1144,9 +1146,10 @@ def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgb
     except subprocess.CalledProcessError as e:
         print(e.output)
 
-    os.chdir(user_folder)
-    os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
-    os.chdir(os.path.dirname(__file__))
+    if job_size == 'small':
+        os.chdir(user_folder)
+        os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+        os.chdir(os.path.dirname(__file__))
 
     allfiles = glob.glob(mypath+'*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
