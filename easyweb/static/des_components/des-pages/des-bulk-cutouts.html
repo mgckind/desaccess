@@ -296,7 +296,6 @@
                             </td>
                         </tr>
 
-
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -573,17 +572,26 @@
             formdata.append('bc_coords',document.getElementById("bc_enteredCoords").value);
             formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
 
-            $.ajax({
-                url: '/easyweb/bulk_cutout/',
-                type: 'POST',
-                //beforeSend: this.beforeSendHandler,
-                success: this.completeHandler,
-                error: this.errorHandler,
-                data: formdata,
-                cache: false,
-                contentType: false,
-                processData: false
-            });
+            var tiffs = document.getElementById("bc_tiffs").checked;
+            var pngs = document.getElementById("bc_pngs").checked;
+            var fits = document.getElementById("bc_fits").checked;
+            var rgbs = document.getElementById("bc_rgb").checked;
+            if (tiffs == false && pngs == false && fits == false && rgbs == false){
+                document.getElementById('desBulkCutouts').errorHandler();
+            }
+            else{
+                $.ajax({
+                    url: '/easyweb/bulk_cutout/',
+                    type: 'POST',
+                    //beforeSend: this.beforeSendHandler,
+                    success: this.completeHandler,
+                    error: this.errorHandler,
+                    data: formdata,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
         },
         _clearForm: function(){
             console.log('clear Form');
