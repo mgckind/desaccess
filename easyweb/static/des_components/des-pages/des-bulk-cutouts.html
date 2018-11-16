@@ -155,28 +155,28 @@
                             </td>
                             <td class="btcell">
                                 <div class="around-cell">
-									<paper-button raised class="indigo" id="bc_uploadFileCoadd">
-										<div id="bc_uploadiconcoadd" style="display: inline-block;">
-											<i class="fa fa-cloud-upload"></i>
-											&nbsp;  &nbsp;
-											Coadd ID: &nbsp;
-										</div>
-										<span style="overflow-x: auto; overflow-wrap: break-word;">
-											[[file_name]]
-										</span>
-										<input type="file" class="upload" id="file1" on-change="_fileChange1" />
-									</paper-button>
-									<paper-button raised class="indigo" id="bc_uploadFileCoord">
-										<div id="bc_uploadiconcoord" style="display: inline-block;">
-											<i class="fa fa-cloud-upload"></i>
-												&nbsp;  &nbsp;
-												RA,DEC: &nbsp;
-										</div>
-										<span style="overflow-x: auto; overflow-wrap: break-word;">
-											[[file_name]]
-										</span>
-										<input type="file" class="upload" id="file2" on-change="_fileChange2" />
-									</paper-button>
+                                    <paper-button raised class="indigo" id="bc_uploadFileCoadd">
+                                        <div id="bc_uploadiconcoadd" style="display: inline-block;">
+                                            <i class="fa fa-cloud-upload"></i>
+                                            &nbsp;  &nbsp;
+                                            Coadd ID: &nbsp;
+                                        </div>
+                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                            [[file_name]]
+                                        </span>
+                                        <input type="file" class="upload" id="file1" on-change="_fileChange1" />
+                                    </paper-button>
+                                    <paper-button raised class="indigo" id="bc_uploadFileCoord">
+                                        <div id="bc_uploadiconcoord" style="display: inline-block;">
+                                            <i class="fa fa-cloud-upload"></i>
+                                                &nbsp;  &nbsp;
+                                                RA,DEC: &nbsp;
+                                        </div>
+                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                            [[file_name]]
+                                        </span>
+                                        <input type="file" class="upload" id="file2" on-change="_fileChange2" />
+                                    </paper-button>
                                 </div>
                             </td>
                         </tr>
@@ -188,86 +188,86 @@
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
-								<div class="around-cell">
-									<paper-button raised class="indigo" id="bc_enterCoadds" on-tap="_bc_openCoadds">
-										<div id ="bc_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-											&nbsp;  &nbsp;
-											Coadd ID: &nbsp;
-										</div>
-										<span>[[enter_values]]</span>
-									</paper-button>
-									<paper-button raised class="indigo" id="bc_enterCoords" on-tap="_bc_openCoords">
-										<div id="bc_keyboardiconcoord" style="display: online-block;"> <i class="fa fa-keyboard-o"></i>
-											&nbsp;  &nbsp;
-											RA,DEC: &nbsp;
-										</div>
-										<span>[[enter_values]]</span>
-									</paper-button>
-								</div>
+                                <div class="around-cell">
+                                    <paper-button raised class="indigo" id="bc_enterCoadds" on-tap="_bc_openCoadds">
+                                        <div id ="bc_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                            &nbsp;  &nbsp;
+                                            Coadd ID: &nbsp;
+                                        </div>
+                                        <span>[[enter_values]]</span>
+                                    </paper-button>
+                                    <paper-button raised class="indigo" id="bc_enterCoords" on-tap="_bc_openCoords">
+                                        <div id="bc_keyboardiconcoord" style="display: online-block;"> <i class="fa fa-keyboard-o"></i>
+                                            &nbsp;  &nbsp;
+                                            RA,DEC: &nbsp;
+                                        </div>
+                                        <span>[[enter_values]]</span>
+                                    </paper-button>
+                                </div>
                             </td>
                         </tr>
                         
                         
                         <tr class="coadd-tr">
-							<td class="coadd-td">
-								<paper-icon-item>
-									<icon-icon icon="image:tune" slot="item-item"></icon-icon>
-									Pregenerated (i, r, g) or FITS cutout
-								</paper-icon-item>
-							</td>
-							<td class="coadd-td">
-								<div class="around-cell">
-									<div class="left">
-										<paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_tiffs">TIFF</paper-checkbox>
-									</div>
-									<div class="left">
-										<paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_pngs">PNG</paper-checkbox>
-									</div>
-									<div class="left">
-										<paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_fits">FITS</paper-checkbox>
-									</div>
-								</div>
-							</td>
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <icon-icon icon="image:tune" slot="item-item"></icon-icon>
+                                    Pregenerated (i, r, g) or FITS cutout
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_tiffs">TIFF</paper-checkbox>
+                                    </div>
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_pngs">PNG</paper-checkbox>
+                                    </div>
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_fits">FITS</paper-checkbox>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         
                         
                         <tr class="coadd-tr">
-							<td class="coadd-td">
-								<paper-icon-item>
-									<icon-icon icon="image:tune" slot="item-item"></icon-icon>
-									"Any band" 3-color PNG (e.g., "i,r,g Y,z,r z,i,r")
-								</paper-icon-item>
-							</td>
-							<td class="coadd-td">
-								<div class="around-cell">
-									<div class="left">
-										<paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_rgb">Make RGB</paper-checkbox>
-									</div>
-									<div class="right">
-										<paper-input always-float-label id="bc_rgb_values" name="rgbbands" label="RGB Bands" value=""></paper-input>
-									</div>
-								</div>
-							</td>
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <icon-icon icon="image:tune" slot="item-item"></icon-icon>
+                                    "Any band" 3-color PNG (e.g., "i,r,g Y,z,r z,i,r")
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_rgb">Make RGB</paper-checkbox>
+                                    </div>
+                                    <div class="right">
+                                        <paper-input always-float-label id="bc_rgb_values" name="rgbbands" label="RGB Bands" value=""></paper-input>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         
                         
                         <tr class="coadd-tr">
-							<td class="coadd-td">
-								<paper-icon-item>
-									<iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-									Color Bands (for FITS option above)
-								</paper-icon-item>
-							</td>
-							<td class="coadd-td">
-								<div class="around-cell">
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_gband">g</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_rband">r</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_iband">i</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_zband">z</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_Yband">Y</paper-checkbox>
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    Color Bands (for FITS option above)
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_gband">g</paper-checkbox>
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_rband">r</paper-checkbox>
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_iband">i</paper-checkbox>
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_zband">z</paper-checkbox>
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_Yband">Y</paper-checkbox>
                                     <paper-toggle-button style="font-size:16px; padding-top:15px;" id="bc_all_toggle">Select All</paper-toggle-button>
-								</div>
-							</td>
+                                </div>
+                            </td>
                         </tr>
 
 
@@ -426,8 +426,8 @@
             return this.$.file1.files[0];
         },
         get file2(){
-			return this.$.file2.files[0];
-		},
+            return this.$.file2.files[0];
+        },
         emailcheck: function(){
             var emailbox = document.getElementById("bc_sendemail");
             var edialog = document.getElementById("bc_emaildialog");
