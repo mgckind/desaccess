@@ -31,13 +31,13 @@
     if (appr.data.view == 'db-access') sel_page = "1";
     if (appr.data.view == 'db-schema') sel_page = "2";
     if (appr.data.view == 'db-examples') sel_page = "3";
-    if (appr.data.view == 'cutouts') sel_page = "4";
-    if (appr.data.view == 'bulk-cutouts') sel_page = "5";
-    if (appr.data.view == 'finding-chart') sel_page = "6";
-    if (appr.data.view == 'footprint') sel_page = "7";
-    if (appr.data.view == 'data-analysis') sel_page = "8";
-    if (appr.data.view == 'my-jobs') sel_page = "9";
-    if (appr.data.view == 'help-form') sel_page = "10";
+    //if (appr.data.view == 'cutouts') sel_page = "4";
+    if (appr.data.view == 'bulk-cutouts') sel_page = "4";
+    if (appr.data.view == 'finding-chart') sel_page = "5";
+    if (appr.data.view == 'footprint') sel_page = "6";
+    if (appr.data.view == 'data-analysis') sel_page = "7";
+    if (appr.data.view == 'my-jobs') sel_page = "8";
+    if (appr.data.view == 'help-form') sel_page = "9";
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
@@ -52,13 +52,13 @@
     if (appr.data.view == 'db-access') sel_page = "1";
     if (appr.data.view == 'db-schema') sel_page = "2";
     if (appr.data.view == 'db-examples') sel_page = "3";
-    if (appr.data.view == 'cutouts') sel_page = "4";
-    if (appr.data.view == 'bulk-cutouts') sel_page = "5";
-    if (appr.data.view == 'finding-chart') sel_page = "6";
-    if (appr.data.view == 'footprint') sel_page = "7";
-    if (appr.data.view == 'data-analysis') sel_page = "8";
-    if (appr.data.view == 'my-jobs') sel_page = "9";
-    if (appr.data.view == 'help-form') sel_page = "10";
+    //if (appr.data.view == 'cutouts') sel_page = "4";
+    if (appr.data.view == 'bulk-cutouts') sel_page = "4";
+    if (appr.data.view == 'finding-chart') sel_page = "5";
+    if (appr.data.view == 'footprint') sel_page = "6";
+    if (appr.data.view == 'data-analysis') sel_page = "7";
+    if (appr.data.view == 'my-jobs') sel_page = "8";
+    if (appr.data.view == 'help-form') sel_page = "9";
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
@@ -122,7 +122,7 @@
         ysizeS.addEventListener('value-change', function() {
            document.getElementById("ysizeLabelS").textContent = ysizeS.value;
         });
-        
+
         var fc_xsize = document.getElementById("fc_xsizeSlider");
         fc_xsize.addEventListener('value-change', function() {
             document.getElementById("fc_xsizeLabel").textContent = fc_xsize.value;
@@ -139,7 +139,7 @@
         da_radius.addEventListener('value-change', function() {
             document.getElementById("da_radiusLabel").textContent = da_radius.value;
         });
-        
+
         var bc_xsize = document.getElementById("bc_xsizeSlider");
         bc_xsize.addEventListener('value-change', function() {
            document.getElementById("bc_xsizeLabel").textContent = bc_xsize.value;

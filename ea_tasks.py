@@ -29,6 +29,7 @@ app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
 app.conf.broker_transport_options = {'visibility_timeout': 3600}
 
+
 def get_filesize(filename):
     size = os.path.getsize(filename)
     size = size * 1. / 1024.
@@ -444,6 +445,7 @@ run_vistools, make_chart, bulktasks written by Landon Gelman for use by DES Data
 
 ARCSEC_TO_DEG = 0.000278
 
+
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
 def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, grri, gzzw1, spreadmag, addwise, addvhs, jobid, send_email, email):
     response = {}
@@ -846,7 +848,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     if not gband and not rband and not iband and not zband and not yband:
         iband = True
     """
-    
+
     bulkthumbscolors = []
     if gband:
         bulkthumbscolors.append('g')
@@ -867,7 +869,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         oo = subprocess.check_output([bulkthumbscom], shell=True)
     except subprocess.CalledProcessError as e:
         print(e.output)
-    
+
     urllst = []
     dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))
     for tile in dftiles['TILENAME']:
@@ -882,7 +884,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
                 urllst.append(mypath + tile + '/' + fileitm)
             if fileitm.endswith("_Y.fits") and yband:
                 urllst.append(mypath + tile + '/' + fileitm)
-    
+
     conn = ea.connect(db, user=uu, passwd=pp)
     curs = conn.cursor()
 
@@ -1062,6 +1064,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         json.dump(response, fp)
     return response
 
+
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
 def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email):
     response = {}
@@ -1073,17 +1076,17 @@ def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgb
     response['email'] = 'no'
     if send_email:
         response['email'] = email
-    
+
     t1 = time.time()
-    
+
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
-    
+
     user_folder = Settings.WORKDIR + uu + '/'
     jsonfile = user_folder + jobid + '.json'
     mypath = user_folder + jobid + '/'
-    
+
     MAX_CPUS = 2
     dftemp = pd.DataFrame(pd.read_csv(input_csv))
     dftemp_rows = len(dftemp.index)
@@ -1093,7 +1096,7 @@ def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgb
         nprocs = dftemp_rows
     else:
         nprocs = 1
-    
+
     args = 'mpirun -n {} python3 bulkthumbs.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
     if tiffs:
@@ -1135,20 +1138,20 @@ def bulktasks(input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgb
     args += ' --usernm {} --passwd {}'.format(uu, pp)
     args += ' --jobid {}'.format(jobid)
     args += ' --outdir {}'.format(outdir)
-    
+
     try:
         oo = subprocess.check_output([args], shell=True)
     except subprocess.CalledProcessError as e:
         print(e.output)
-    
+
     os.chdir(user_folder)
     os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
     os.chdir(os.path.dirname(__file__))
-    
+
     allfiles = glob.glob(mypath+'*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
-    
+
     response['status'] = 'ok'
     t2 = time.time()
     response['elapsed'] = t2-t1
