@@ -29,6 +29,7 @@ app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
 app.conf.broker_transport_options = {'visibility_timeout': 3600}
 
+
 def get_filesize(filename):
     size = os.path.getsize(filename)
     size = size * 1. / 1024.
