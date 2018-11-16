@@ -6,6 +6,7 @@ import pusher
 import queries
 import login_deslabs as login
 import api
+import query_examples
 import download
 import pubapi
 import MySQLdb as mydb
@@ -92,7 +93,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/logout/?", login.AuthLogoutHandler),
             (r"/easyweb/myjobs/?", api.MyJobsHandler),
             (r"/easyweb/mylogs/?", api.MyLogsHandler),
-            (r"/easyweb/myexamples/?", api.MyExamplesHandler),
+            (r"/easyweb/myexamples/?", query_examples.MyExamplesHandler),
             (r"/easyweb/myresponse/?", api.MyResponseHandler),
             (r"/easyweb/mytables/?", api.MyTablesHandler),
             (r"/easyweb/desctables/?", api.DescTablesHandler),
