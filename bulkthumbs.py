@@ -32,6 +32,7 @@ from PIL import Image
 
 Image.MAX_IMAGE_PIXELS = 144000000		# allows Pillow to not freak out at a large filesize
 ARCMIN_TO_DEG = 0.0166667		# deg per arcmin
+dbs = ['DR1','Y3A2']
 
 TILES_FOLDER = ''
 OUTDIR = ''
@@ -633,6 +634,9 @@ if __name__ == '__main__':
 	DR1_UU = conf['dr1_user']['usernm']
 	DR1_PP = conf['dr1_user']['passwd']
 
+	if args.db not in dbs:
+		print('Please select a valid database: {}.'.format(dbs))
+		exit(1)
 	if not args.csv and not (args.ra and args.dec) and not args.coadd:
 		print('Please include either RA/DEC coordinates or Coadd IDs.')
 		sys.exit(1)
