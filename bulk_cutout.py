@@ -15,6 +15,7 @@ import datetime as dt
 import MySQLdb as mydb
 import yaml
 import ea_tasks
+import pandas as pd
 
 
 def dt_t(entry):
@@ -124,7 +125,28 @@ class FileHandler(BaseHandler):
         now = datetime.datetime.now()
         input_csv = user_folder + jobid + '.csv'
 
-        run = ea_tasks.bulktasks.apply_async(args=[input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
+        SMALL_QUEUE = 100
+        MEDIUM_QUEUE = 1000
+        LARGE_QUEUE = 10000
+        SMALL_QUEUE_MAX_CPUS = 1
+        MEDIUM_QUEUE_MAX_CPUS = 4
+        LARGE_QUEUE_MAX_CPUS = 6
+        job_size = ''
+        
+        dftemp = pd.DataFrame(pd.read_csv(input_csv))
+        dftemp_rows = len(dftemp.index)
+        
+        if dftemp_rows <= SMALL_QUEUE:
+            job_size = 'small'
+            nprocs = SMALL_QUEUE_MAX_CPUS
+        if dftemp_rows > SMALL_QUEUE and dftemp_rows <= MEDIUM_QUEUE:
+            job_size = 'medium'
+            nprocs = MEDIUM_QUEUE_MAX_CPUS
+        if dftemp_rows > MEDIUM_QUEUE:
+            job_size = 'large'
+            nprocs = LARGE_QUEUE_MAX_CPUS
+
+        run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
 
         with open('config/mysqlconfig.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
