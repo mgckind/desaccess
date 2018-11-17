@@ -66,10 +66,12 @@ def check_token(token, ttl=10):
             now = datetime.datetime.now()
             dt = (now-cc[2]).total_seconds()
             left = ttl - dt
+            user = cc[0]
         except:
             left = None
+            user = None
         con.close()
-        return left
+        return left, user
 
 
 
