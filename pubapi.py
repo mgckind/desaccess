@@ -12,6 +12,8 @@ import hashlib
 import ea_tasks
 import pandas as pd
 import numpy as np
+import backup
+
 
 def create_token_table(delete=False):
     with open('config/desaccess.yaml', 'r') as cfile:
@@ -29,24 +31,46 @@ def create_token_table(delete=False):
         cur.execute("DROP TABLE IF EXISTS Tokens")
     cur.execute("""
     CREATE TABLE IF NOT EXISTS Tokens(
+    user varchar(50),
     token varchar(50),
     time datetime,
+    UNIQUE(user)
     )""")
     con.commit()
     con.close()
 
 
-def create_token():
+def create_token(user):
         token = hashlib.sha1(os.urandom(64)).hexdigest()
         now = datetime.datetime.now()
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
-        tup = tuple([token, now.strftime('%Y-%m-%d %H:%M:%S')])
+        nows = now.strftime('%Y-%m-%d %H:%M:%S')
+        tup = tuple([user, token, nows])
         with con:
             cur = con.cursor()
-            cur.execute("INSERT INTO Tokens VALUES {0}".format(tup))
+            cur.execute("REPLACE INTO Tokens VALUES {0}".format(tup))
         con.close()
+
+
+def check_token(token, ttl=10):
+        now = datetime.datetime.now()
+        with open('config/desaccess.yaml', 'r') as cfile:
+            conf = yaml.load(cfile)['mysql']
+        con = mydb.connect(**conf)
+        cur = con.cursor()
+        cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
+        try:
+            cc = cur.fetchone()
+            now = datetime.datetime.now()
+            dt = (now-cc[2]).total_seconds()
+            left = ttl - dt
+        except:
+            left = None
+        con.close()
+        return left
+
 
 
 class ApiCutoutHandler(tornado.web.RequestHandler):
