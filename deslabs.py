@@ -118,6 +118,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/delete/", api.DeleteHandler),
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),
+            (r"/easyweb/gettiley1/?", api.GetY1TileHandler),
             (r"/easyweb/help/?", api.HelpHandler),
             (r"/easyweb/api/v1/cutout/", pubapi.ApiCutoutHandler),
             (r"/easyweb/api/v1/query/", pubapi.ApiQueryHandler),
