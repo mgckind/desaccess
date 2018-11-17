@@ -18,11 +18,41 @@
       @apply --layout-horizontal;
         }
 
+        paper-checkbox.dr1 {
+
+                --paper-checkbox-checked-color: #4C72B0;
+                --paper-checkbox-checked-ink-color: #4C72B0;
+                --paper-checkbox-unchecked-color: #4C72B0;
+                --paper-checkbox-unchecked-ink-color: #4C72B0;
+                --paper-checkbox-label-color: #4C72B0;
+            }
+            paper-checkbox.sva1 {
+
+                  --paper-checkbox-checked-color: #C44E52;
+                  --paper-checkbox-checked-ink-color: #C44E52;
+                  --paper-checkbox-unchecked-color: #C44E52;
+                  --paper-checkbox-unchecked-ink-color: #C44E52;
+                  --paper-checkbox-label-color: #C44E52;
+              }
+        paper-checkbox.y1a1 {
+
+        --paper-checkbox-checked-color: #55A868;
+        --paper-checkbox-checked-ink-color: #55A868;
+        --paper-checkbox-unchecked-color: #55A868;
+        --paper-checkbox-unchecked-ink-color: #55A868;
+        --paper-checkbox-label-color: #55A868;
+
+    }
+
+
         .flex2 {
       @apply --layout-horizontal;
       @apply(--layout-center-justified);
         }
         .downloadTile {
+            visibility: hidden;
+        }
+        .downloadTileY1 {
             visibility: hidden;
         }
         .localTable tr td{
@@ -41,6 +71,15 @@
     <iron-ajax id="getFilesTile"
     method="POST"
     url="/easyweb/gettile/"
+    params='{{_getTilename(tilename)}}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getFilesTileY1"
+    method="POST"
+    url="/easyweb/gettiley1/"
     params='{{_getTilename(tilename)}}'
     handle-as="json"
     on-response="_handleResponse"
@@ -168,7 +207,9 @@
 
                     <div class=" flex">
                 <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
-                <paper-checkbox style="margin-left: 20px; margin-top: 20px;"  id="check_dr1" checked on-change="display_dr1">Y3A2 TILES</paper-checkbox>
+                <paper-checkbox class="dr1" style="margin-left: 20px; margin-top: 20px;"  id="check_dr1" checked on-change="display_dr1">Y3A2 TILES</paper-checkbox>
+                <paper-checkbox class="y1a1" style="margin-left: 20px; margin-top: 20px;"  id="check_y1a1"  on-change="display_y1a1">Y1A1 TILES</paper-checkbox>
+                <paper-checkbox class="sva1" style="margin-left: 20px; margin-top: 20px;"  id="check_sva1"  on-change="display_sva1">SVA1 TILES</paper-checkbox>
                 <!--<paper-checkbox style="margin-left: 20px; margin-top: 20px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>-->
             </div>
                     <div class="card-content">
@@ -185,8 +226,9 @@
                         </div>
                             <div class="card-content">
                                 <br />
-                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Tile Files</paper-button> <br /> <br />
-                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all the tiles
+                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Y3A2 Tile Files</paper-button> <br /> <br />
+                            <paper-button class="indigo" disabled raised on-tap="_getTilesY1" id ="downloadTileY1"> Get Y1A1 Tile Files</paper-button> <br /> <br />
+                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all Y3A2 tiles
                             </div>
 
                         </div>
@@ -327,6 +369,10 @@
              },
              _getTiles: function(e){
                  document.getElementById('getFilesTile').generateRequest();
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesY1: function(e){
+                 document.getElementById('getFilesTileY1').generateRequest();
                  document.getElementById('GetTiles').open();
              },
               _handleResponse: function(e){
@@ -526,6 +572,34 @@
                         globe.addLayer(vectorLayer);
                         window.dr1_tiles = vectorLayer;
                     });
+                    loadTiles('/easyweb/static/tiles/y1a1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : [0.3333333333333333, 0.6588235294117647, 0.40784313725490196,1.],
+                                strokeWidth: 1.0,
+                                fill: false,
+                                zIndex: 10,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.y1a1_tiles = vectorLayer;
+                    });
+                    loadTiles('/easyweb/static/tiles/sva1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : [0.7686274509803922, 0.3058823529411765, 0.3215686274509804,1.],
+                                strokeWidth: 1.0,
+                                fill: false,
+                                zIndex: 50,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.sva1_tiles = vectorLayer;
+                    });
                     loadTiles('/easyweb/static/tiles/hpix32.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -617,6 +691,7 @@
 
                              //document.getElementById('downloadTile').style.visibility = 'visible';
                              document.getElementById('downloadTile').disabled = false;
+                             document.getElementById('downloadTileY1').disabled = false;
 
 
                     };
@@ -673,6 +748,7 @@
                                 //"DEC Corners  : " + dec_corner +"<br /> <br /> <br />";
                                  //document.getElementById('downloadTile').style.visibility = 'visible';
                                  document.getElementById('downloadTile').disabled=false;
+                                 document.getElementById('downloadTileY1').disabled=false;
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }
@@ -733,6 +809,26 @@
                 }
                 else{
                     dr1_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_y1a1: function(){
+            var checky1a1 = document.getElementById("check_y1a1");
+                if (checky1a1.checked) {
+                    y1a1_tiles._visible = true;
+                }
+                else{
+                    y1a1_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_sva1: function(){
+            var checksva1 = document.getElementById("check_sva1");
+                if (checksva1.checked) {
+                    sva1_tiles._visible = true;
+                }
+                else{
+                    sva1_tiles._visible = false;
                 }
                 globe.refresh();
             },
