@@ -13,6 +13,23 @@ import ea_tasks
 import pandas as pd
 import numpy as np
 import backup
+import cx_Oracle
+from api import humantime
+
+dbConfig0 = Settings.dbConfig()
+app_log = Settings.app_log
+
+
+def check_permission(password, username, db):
+    kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': db}
+    dsn = cx_Oracle.makedsn(**kwargs)
+    try:
+        dbh = cx_Oracle.connect(username, password, dsn=dsn)
+        dbh.close()
+        return True, ""
+    except Exception as e:
+        error = str(e).strip()
+        return False, error
 
 
 def create_token_table(delete=False):
@@ -22,7 +39,7 @@ def create_token_table(delete=False):
     con = mydb.connect(**conf)
     try:
         con.select_db('des')
-    except:
+    except Exception:
         backup.restore()
         con.commit()
         con.select_db('des')
@@ -52,9 +69,10 @@ def create_token(user):
             cur = con.cursor()
             cur.execute("REPLACE INTO Tokens VALUES {0}".format(tup))
         con.close()
+        return token
 
 
-def check_token(token, ttl=10):
+def check_token(token, ttl=Settings.TOKEN_TTL):
         now = datetime.datetime.now()
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
@@ -64,19 +82,75 @@ def check_token(token, ttl=10):
         try:
             cc = cur.fetchone()
             now = datetime.datetime.now()
-            dt = (now-cc[2]).total_seconds()
+            dt = (now - cc[2]).total_seconds()
             left = ttl - dt
             user = cc[0]
-        except:
+        except Exception:
             left = None
             user = None
         con.close()
         return left, user
 
 
+class ApiTokenHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        arguments = {k.lower(): self.get_argument(k) for k in self.request.arguments}
+        response = {'status': 'error'}
+        if 'token' in arguments:
+            ttl, user = check_token(arguments['token'])
+            if ttl is None:
+                response['message'] = 'Token does not exist'
+                self.set_status(404)
+            elif ttl < 0:
+                response['message'] = 'Token is expired, please create a new one'
+                self.set_status(404)
+            else:
+                response['status'] = 'ok'
+                response['message'] = 'Token is valid for %s' % humantime(round(ttl))
+                self.set_status(200)
+        else:
+            response['message'] = 'no token argument found!'
+            self.set_status(400)
+        self.write(response)
+        self.flush()
+        self.finish()
+
+    @tornado.web.asynchronous
+    def post(self):
+        arguments = {k.lower(): self.get_argument(k) for k in self.request.arguments}
+        response = {'status': 'error'}
+        if 'username' in arguments:
+            if 'password' not in arguments:
+                response['message'] = 'Need password'
+                self.set_status(400)
+            else:
+                user = arguments['username']
+                passwd = arguments['password']
+                check, msg = check_permission(passwd, user, 'dessci')
+                if check:
+                    response['status'] = 'ok'
+                    newfolder = os.path.join(Settings.WORKDIR, user)
+                    if not os.path.exists(newfolder):
+                        os.mkdir(newfolder)
+                    token = create_token(user)
+                else:
+                    self.set_status(403)
+                    response['message'] = msg
+        else:
+            response['message'] = 'Need username'
+            self.set_status(400)
+        if response['status'] == 'ok':
+            response['message'] = 'Token created, expiration time: %s' % humantime(Settings.TOKEN_TTL)
+            response['token'] = token
+            self.set_status(200)
+        self.write(response)
+        self.flush()
+        self.finish()
+
+
 
 class ApiCutoutHandler(tornado.web.RequestHandler):
-
     @tornado.web.asynchronous
     def post(self):
         listargs = ['token', 'username', 'password', 'ra', 'dec', 'xsize', 'ysize', 'list_only','email', 'jobname']

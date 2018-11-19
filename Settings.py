@@ -6,6 +6,7 @@ import logging
 import yaml
 DEBUG = False
 DIRNAME = os.path.dirname(__file__)
+TOKEN_TTL = 30
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
 try:
     LOG_PATH = os.path.join(DIRNAME, 'logs', os.environ['POD_ID'])
