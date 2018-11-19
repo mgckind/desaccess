@@ -1146,6 +1146,20 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     except subprocess.CalledProcessError as e:
         print(e.output)
 
+    tiles = glob.glob(mypath + '**/*.png')# + glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
+    titles = []
+    Ntiles = len(tiles)
+    for i in tiles:
+        #title = ('/').join([i.split('/')[-2], i.split('/')[-1]])
+        title = i.split('/')[-1]
+        titles.append(title)
+    for i in range(Ntiles):
+        tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
+    if os.path.exists(mypath + "list.json"):
+        os.remove(mypath + "list.json")
+    with open(mypath + "list.json", "w") as outfile:
+        json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
+
     if job_size == 'small':
         os.chdir(user_folder)
         os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
