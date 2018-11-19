@@ -149,7 +149,6 @@ class ApiTokenHandler(tornado.web.RequestHandler):
         self.finish()
 
 
-
 class ApiCutoutHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def post(self):
@@ -245,10 +244,11 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         self.flush()
         self.finish()
 
-class ApiQueryHandler(tornado.web.RequestHandler):
 
+class ApiQueryHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
     def post(self):
-        listargs = ['token', 'username', 'password', 'query', 'output', 'compression', 'email', 'jobname']
+        listargs = ['token', 'query', 'output', 'compression', 'email', 'jobname', 'db']
         response = {'status': 'error'}
         arguments = {k.lower(): self.get_argument(k) for k in self.request.arguments}
         for l in listargs:
@@ -260,9 +260,8 @@ class ApiQueryHandler(tornado.web.RequestHandler):
                 self.finish()
                 return
         token = arguments["token"]
-        loc_user = arguments["username"]
-        loc_passw = arguments["password"]
         query = arguments["query"]
+        db = arguments["db"]
         query = query.replace(';', '')
         lines = query.split('\n')
         newquery = ''
@@ -285,35 +284,23 @@ class ApiQueryHandler(tornado.web.RequestHandler):
             self.write(response)
             self.finish()
             return
-
         compression = arguments["compression"].lower() == 'yes'
         email = arguments["email"]
         jobname = arguments["jobname"]
-        with open('config/desaccess.yaml', 'r') as cfile:
-            conf = yaml.load(cfile)['mysql']
-        con = mydb.connect(**conf)
-        try:
-            cur = con.cursor()
-            cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
-            cc = cur.fetchone()
-            now = datetime.datetime.now()
-            dt = (now-cc[1]).total_seconds()
-            msg = 'Token {0} times {1}'.format(token, dt)
-            response['msg'] = msg
-            con.close()
-        except Exception as e:
-            msg = 'Token not valid or expired'
-            response['msg'] = msg
+        ttl, user = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
             self.set_status(403)
             self.write(response)
             self.finish()
             return
         cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
-        lp = base64.b64encode(cipher.encrypt(loc_passw.rjust(32)))
-        response['user'] = loc_user
+        lp = base64.b64encode(cipher.encrypt('TODO'.rjust(32)))
+        response['user'] = user
         response['elapsed'] = 0
         jobid = str(uuid.uuid4())
-        run_check = ea_tasks.check_query(query, 'desdr', loc_user, lp.decode())
+
+        run_check = ea_tasks.check_query(query, db, 'TODO', lp.decode())
         if run_check['status'] == 'error':
             response['msg'] = run_check['data']
             self.set_status(400)
@@ -324,16 +311,15 @@ class ApiQueryHandler(tornado.web.RequestHandler):
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
-        tup = tuple([loc_user, jobid, jobname, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
+        tup = tuple([user, jobid, jobname, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                      'query', query, '', '', -1])
         cur = con.cursor()
         cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
         con.commit()
         con.close()
         try:
-            run = ea_tasks.run_query.apply_async(args=[query, filename, 'desdr',
-                                                 loc_user, lp.decode(), jobid,
-                                                 email, compression], retry=True, task_id=jobid)
+            run = ea_tasks.run_query.apply_async(args=[query, filename, db,
+                                                 'TODO', lp.decode(), jobid, email, compression], retry=True, task_id=jobid)
         except Exception as e:
             self.set_status(400)
             response['msg'] = 'Unexpected Error'
