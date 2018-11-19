@@ -1146,7 +1146,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     except subprocess.CalledProcessError as e:
         print(e.output)
 
-    tiles = glob.glob(mypath + '**/*.png' + glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
+    tiles = glob.glob(mypath + '**/*.png') + glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
     titles = []
     Ntiles = len(tiles)
     for i in tiles:
