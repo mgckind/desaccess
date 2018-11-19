@@ -37,7 +37,8 @@ class FileHandler(BaseHandler):
         user_folder = os.path.join(Settings.WORKDIR, loc_user)+'/'
         cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
         lp = base64.b64encode(cipher.encrypt(loc_passw.rjust(32)))
-        db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
+        #db = self.get_secure_cookie("userdb").decode('ascii').replace('\"', '')
+        db = self.get_argument("bc_tag")
         tiffs = self.get_argument("make_tiffs") == 'true'
         pngs = self.get_argument("make_pngs") == 'true'
         fits = self.get_argument("make_fits") == 'true'

@@ -32,7 +32,8 @@ from PIL import Image
 
 Image.MAX_IMAGE_PIXELS = 144000000        # allows Pillow to not freak out at a large filesize
 ARCMIN_TO_DEG = 0.0166667        # deg per arcmin
-dbs = ['DR1','Y3A2']
+dbs = ['DR1_COADD','Y3A2_COADD']#, 'Y1A1_COADD']
+dessci_dbs = ['Y3A2_COADD']#, 'Y1A1_COADD']
 
 TILES_FOLDER = ''
 OUTDIR = ''
@@ -341,12 +342,12 @@ def MakeFitsCut(tiledir, outdir, size, positions, colors, df):
 
 def run(args):
     if rank == 0:
-        if args.db == 'DR1':
+        if args.db == 'DR1_COADD':
             db = 'desdr'
             uu = DR1_UU
             pp = DR1_PP
             conn = ea.connect(db, user=uu, passwd=pp)
-        elif args.db == 'Y3A2':
+        elif args.db in dessci_dbs:
             db = 'dessci'
             conn = ea.connect(db, user=args.usernm, passwd=args.passwd)
 
@@ -454,17 +455,23 @@ def run(args):
             userdf = userdf.assign(RA_ADJUSTED = ra_adjust)
             userdf.to_csv(OUTDIR+tablename+'.csv', index=False)
             conn.load_table(OUTDIR+tablename+'.csv', name=tablename)
-
-            #query = "select temp.RA, temp.DEC, temp.RA_ADJUSTED, temp.RA as ALPHAWIN_J2000, temp.DEC as DELTAWIN_J2000, m.TILENAME from {} temp left outer join Y3A2_COADDTILE_GEOM m on (m.CROSSRA0='N' and (temp.RA between m.URAMIN and m.URAMAX) and (temp.DEC between m.UDECMIN and m.UDECMAX)) or (m.CROSSRA0='Y' and (temp.RA_ADJUSTED between m.URAMIN-360 and m.URAMAX) and (temp.DEC between m.UDECMIN and m.UDECMAX))".format(tablename)
+            
             query = "select temp.RA, temp.DEC, temp.RA_ADJUSTED, temp.RA as ALPHAWIN_J2000, temp.DEC as DELTAWIN_J2000, m.TILENAME"
+            
             if 'XSIZE' in userdf:
                 query += ", temp.XSIZE"
             if 'YSIZE' in userdf:
                 query += ", temp.YSIZE"
-            if args.db == 'Y3A2':
+            
+            if args.db == 'Y3A2_COADD':
                 catalog = 'Y3A2_COADDTILE_GEOM'
-            elif args.db == 'DR1':
-                catalog = 'DR1_Tile_INFO'
+            
+            elif args.db == 'DR1_COADD':
+                catalog = 'DR1_TILE_INFO'
+            
+            #elif args.db == 'Y1A1_COADD':
+            #    catalog = 'Y3A2_COADDTILE_GEOM'
+            
             query += " from {0} temp left outer join {1} m on (m.CROSSRA0='N' and (temp.RA between m.URAMIN and m.URAMAX) and (temp.DEC between m.UDECMIN and m.UDECMAX)) or (m.CROSSRA0='Y' and (temp.RA_ADJUSTED between m.URAMIN-360 and m.URAMAX) and (temp.DEC between m.UDECMIN and m.UDECMAX))".format(tablename, catalog)
 
             df = conn.query_to_pandas(query)
@@ -485,18 +492,29 @@ def run(args):
         if 'COADD_OBJECT_ID' in userdf:
             userdf.to_csv(OUTDIR+tablename+'.csv', index=False)
             conn.load_table(OUTDIR+tablename+'.csv', name=tablename)
-
-            #query = "select temp.COADD_OBJECT_ID, m.ALPHAWIN_J2000, m.DELTAWIN_J2000, m.RA, m.DEC, m.TILENAME from {} temp left outer join Y3A2_COADD_OBJECT_SUMMARY m on temp.COADD_OBJECT_ID=m.COADD_OBJECT_ID".format(tablename)
-            query = "select temp.COADD_OBJECT_ID, m.ALPHAWIN_J2000, m.DELTAWIN_J2000, m.RA, m.DEC, m.TILENAME"
+            
+            query = "select temp.COADD_OBJECT_ID"
+            
             if 'XSIZE' in userdf:
                 query += ", temp.XSIZE"
             if 'YSIZE' in userdf:
                 query += ", temp.YSIZE"
-            if args.db == 'Y3A2':
+            
+            if args.db == 'Y3A2_COADD':
+                query += ", m.ALPHAWIN_J2000, m.DELTAWIN_J2000, m.RA, m.DEC, m.TILENAME"
                 catalog = 'Y3A2_COADD_OBJECT_SUMMARY'
-            elif args.db == 'DR1':
+                query += " from {0} temp left outer join {1} m on temp.COADD_OBJECT_ID=m.COADD_OBJECT_ID".format(tablename, catalog)
+            
+            elif args.db == 'DR1_COADD':
+                query += ", m.ALPHAWIN_J2000, m.DELTAWIN_J2000, m.RA, m.DEC, m.TILENAME"
                 catalog = 'DR1_MAIN'
-            query += " from {0} temp left outer join {1} m on temp.COADD_OBJECT_ID=m.COADD_OBJECT_ID".format(tablename, catalog)
+                query += " from {0} temp left outer join {1} m on temp.COADD_OBJECT_ID=m.COADD_OBJECT_ID".format(tablename, catalog)
+           
+            #elif args.db == 'Y1A1_COADD':
+            #    query += ", m1.ALPHAWIN_J2000, m1.DELTAWIN_J2000, m1.RA, m1.DEC, m2.TILENAME"
+            #    catalog1, catalog2 = 'Y1A1_OBJECTS', 'Y1A1_COADD_OBJECTS'
+            #    query += " from {0} temp left outer join {1} m1 on temp.COADD_OBJECT_ID=m.COADD_OBJECTS_ID".format(tablename, catalog1)
+            #    query += " left outer join {0} m2 on m1.COADD_OBJECTS_ID=m2.COADD_OBJECTS_ID".format(catalog2)
 
             df = conn.query_to_pandas(query)
             curs.execute('drop table {}'.format(tablename))

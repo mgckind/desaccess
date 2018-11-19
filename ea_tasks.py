@@ -1133,10 +1133,13 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     args += ' --xsize {} --ysize {}'.format(xsize, ysize)
     if return_list:
         args += ' --return_list'
-    if db == 'dessci' or db == 'desoper':
-        args += ' --db Y3A2'
-    else:
+    #if db == 'dessci' or db == 'desoper':
+    if db == 'Y3A2_COADD':
+        args += ' --db Y3A2_COADD'
+    elif db == 'DR1_COADD':
         args += ' --db DR1'
+    #elif db == 'Y1A1_COADD':
+    #    args += ' --db Y1A1_COADD'
     args += ' --usernm {} --passwd {}'.format(uu, pp)
     args += ' --jobid {}'.format(jobid)
     args += ' --outdir {}'.format(outdir)

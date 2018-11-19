@@ -296,6 +296,23 @@
                             </td>
                         </tr>
 
+                        <tr  class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    Release Tag
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-dropdown-menu label="Release Tag">
+                                    <paper-listbox id="bc_coaddTag" selected="0" slot="dropdown-content">
+                                        <paper-item value="Y3A2_COADD">Y3A2 COADD</paper-item>
+                                        <paper-item value="DR1_COADD">DR1_COADD</paper-item>
+                                        <paper-item value="Y1A1_COADD">Y1A1 COADD</paper-item>
+                                    </paper-listbox>
+                                </paper-dropdown-menu>
+                            </td>
+                        </tr>
+
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -495,6 +512,7 @@
             document.getElementById("bc_iband").checked=false;
             document.getElementById("bc_zband").checked=false;
             document.getElementById("bc_Yband").checked=false;
+            document.getElementById("bc_coaddTag").selected="0";
             document.getElementById("bc_sendemail").checked=false;
             document.getElementById("bc_returnList").checked=false;
             document.getElementById("desPositionsCoaddsBC").clear();
@@ -562,6 +580,8 @@
             formdata.append('bc_iband', document.getElementById("bc_iband").checked);
             formdata.append('bc_zband', document.getElementById("bc_zband").checked);
             formdata.append('bc_Yband', document.getElementById("bc_Yband").checked);
+            
+            formdata.append('bc_tag', document.getElementById("bc_coaddTag").selectedItem.getAttribute("value"));
             
             formdata.append('bc_returnList', document.getElementById("bc_returnList").checked);
             formdata.append('bc_send_email', document.getElementById("bc_sendemail").checked);
