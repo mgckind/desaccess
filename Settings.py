@@ -4,7 +4,7 @@ import random
 import string
 import logging
 import yaml
-DEBUG = True
+DEBUG = False
 DIRNAME = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
 try:
