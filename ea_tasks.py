@@ -1147,7 +1147,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     except subprocess.CalledProcessError as e:
         print(e.output)
 
-    tiles = glob.glob(mypath + '**/*.png') + glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
+    tiles = glob.glob(mypath + '**/*.png')
     titles = []
     Ntiles = len(tiles)
     for i in tiles:
@@ -1160,6 +1160,19 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         os.remove(mypath + "list.json")
     with open(mypath + "list.json", "w") as outfile:
         json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
+    
+    alltiles = tiles + glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
+    alltitles = titles
+    allNtiles = len(alltiles)
+    for i in alltiles:
+        title = i.split('/')[-1]
+        alltitles.append(title)
+    for i in range(allNtiles):
+        alltiles[i] = alltiles[i][alltiles[i].find('/easyweb'):]
+    if os.path.exists(mypath + "list_all.json"):
+        os.remove(mypath + "list_all.json")
+    with open(mypath + "list_all.json", "w") as outfile:
+        json.dump([dict(name=alltiles[i], title=alltitles[i], size=allNtiles) for i in range(len(alltiles))], outfile, indent=4)
 
     if job_size == 'small':
         os.chdir(user_folder)
