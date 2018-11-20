@@ -4,7 +4,7 @@ import random
 import string
 import logging
 import yaml
-DEBUG = False
+DEBUG = True
 DIRNAME = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
 try:
@@ -16,6 +16,7 @@ if not os.path.exists(LOG_PATH):
     os.makedirs(LOG_PATH)
 TEMPLATE_PATH = os.path.join(DIRNAME, 'templates')
 WORKDIR = os.path.join(STATIC_PATH, "workdir/")
+PLTDATA = os.path.join(STATIC_PATH, "plotdata/")
 DBFILE = os.path.join(STATIC_PATH, "workdir/admin/users.db")
 DBFILE2 = os.path.join(STATIC_PATH, "workdir/admin/users.db")
 ROOT_URL = 'https://des.ncsa.illinois.edu'
