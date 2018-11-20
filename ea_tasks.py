@@ -803,7 +803,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
 
     logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
 
-    logfile = open(mypath + 'DESFinderTool_' + logname + '.log', 'w')
+    #logfile = open(mypath + 'DESFinderTool_' + logname + '.log', 'w')
+    logfile = open(mypath + 'log.log', 'w')
 
     if len(input_df['RA']) != len(input_df['DEC']):
         logfile.write('ERROR - Please enter the same number of RA and DEC values.\n')
@@ -851,6 +852,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         iband = True
     """
 
+    logfile.write('Passing off to bulkthumbs to get the fits file...\n')
     bulkthumbscolors = []
     if gband:
         bulkthumbscolors.append('g')
