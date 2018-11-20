@@ -471,7 +471,8 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
 
     logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
 
-    logfile = open(mypath + 'vistoolsLOG_' + logname + '.log', 'w')
+    #logfile = open(mypath + 'vistoolsLOG_' + logname + '.log', 'w')
+    logfile = open(mypath + 'log.log', 'w')
     logfile.write('Selected Options:\n')
     logfile.write('    Flux vs. Wavelength: ........ ' + str(fluxwav) + '\n')
     logfile.write('    Magnitude vs. Wavelength: ... ' + str(magwav) + '\n')
@@ -825,8 +826,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     logfile.write('Submitted RA: ' + ralst + '\n')
     logfile.write('Submitted DEC: ' + declst + '\n')
 
-    with open(mypath+'log.log','w') as logg:
-        logg.write('Running...')
+    #with open(mypath+'log.log','w') as logg:
+    #    logg.write('Running...')
     with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['descut']
     uu1 = conf['username']
@@ -1150,8 +1151,8 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     titles = []
     Ntiles = len(tiles)
     for i in tiles:
-        title = ('/').join([i.split('/')[-2], i.split('/')[-1]])
-        #title = i.split('/')[-1]
+        #title = ('/').join([i.split('/')[-2], i.split('/')[-1]])
+        title = i.split('/')[-1]
         titles.append(title)
     for i in range(Ntiles):
         tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
