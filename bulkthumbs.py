@@ -377,7 +377,8 @@ def run(args):
 
     logtime = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     #logname = OUTDIR + 'BulkThumbs_' + logtime + '.log'
-    logname = outdir + 'BulkThumbs_' + logtime + '.log'
+    #logname = outdir + 'BulkThumbs_' + logtime + '.log'
+    logname = outdir + 'log.log'
     formatter = logging.Formatter('%(asctime)s - '+str(rank)+' - %(levelname)-8s - %(message)s')
 
     logger = logging.getLogger(__name__)
