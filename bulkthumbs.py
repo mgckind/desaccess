@@ -251,11 +251,11 @@ def MakeTiffCut(tiledir, outdir, positions, xs, ys, df, maketiff, makepngs):
         newimg = im.crop((left, upper, right, lower))
 
         if maketiff:
-            filenm += '.tiff'
-            newimg.save(filenm, format='TIFF')
+            filenmtiff = filenm + '.tiff'
+            newimg.save(filenmtiff, format='TIFF')
         if makepngs:
-            filenm += '.png'
-            newimg.save(filenm, format='PNG')
+            filenmpng = filenm + '.png'
+            newimg.save(filenmpng, format='PNG')
         if newimg.size != (2*udx, 2*udy):
             logger.info('MakeTiffCut - {} is smaller than user requested. This is likely because the object/coordinate was in close proximity to the edge of a tile.'.format(('/').join(filenm.split('/')[-2:])))
     logger.info('MakeTiffCut - Tile {} complete.'.format(df['TILENAME'][0]))
