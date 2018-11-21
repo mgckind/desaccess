@@ -1000,9 +1000,9 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         pngtitles = []
         Ntiles = len(tiles)
         for i in tiles:
-            title = i.split('/')[-1]
+            title = i.split('/')[-1][:-4]
             titles.append(title)
-            pngtitles.append(mypath + title[:-4] + '.png')    #pngfiles.append(c)
+            pngtitles.append(mypath + title + '.png')    #pngfiles.append(c)
         for i in range(Ntiles):
             pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
         if os.path.exists(mypath+"list.json"):
@@ -1016,9 +1016,9 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         pngtitles = []
         Ntiles = len(tiles)
         for i in tiles:
-            title = i.split('/')[-1]
+            title = i.split('/')[-1][:-4]
             titles.append(title)
-            pngtitles.append(mypath + title[:-4] + '.png')
+            pngtitles.append(mypath + title + '.png')
         for i in range(Ntiles):
             pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
         if os.path.exists(mypath + "list.json"):
@@ -1187,9 +1187,15 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
         os.chdir(os.path.dirname(__file__))
 
-    allfiles = glob.glob(mypath+'*.*')
+    allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
+    Fall = open(mypath+'list_all.txt', 'w')
+    prefix = 'URLPATH'+'/static'
+    for ff in allfiles:
+        if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
+            Fall.write(prefix+ff.split('static')[-1]+'\n')
+    Fall.close()
 
     response['status'] = 'ok'
     t2 = time.time()
