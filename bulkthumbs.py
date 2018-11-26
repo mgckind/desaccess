@@ -251,11 +251,11 @@ def MakeTiffCut(tiledir, outdir, positions, xs, ys, df, maketiff, makepngs):
         newimg = im.crop((left, upper, right, lower))
 
         if maketiff:
-            filenm += '.tiff'
-            newimg.save(filenm, format='TIFF')
+            filenmtiff = filenm + '.tiff'
+            newimg.save(filenmtiff, format='TIFF')
         if makepngs:
-            filenm += '.png'
-            newimg.save(filenm, format='PNG')
+            filenmpng = filenm + '.png'
+            newimg.save(filenmpng, format='PNG')
         if newimg.size != (2*udx, 2*udy):
             logger.info('MakeTiffCut - {} is smaller than user requested. This is likely because the object/coordinate was in close proximity to the edge of a tile.'.format(('/').join(filenm.split('/')[-2:])))
     logger.info('MakeTiffCut - Tile {} complete.'.format(df['TILENAME'][0]))
@@ -377,7 +377,8 @@ def run(args):
 
     logtime = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     #logname = OUTDIR + 'BulkThumbs_' + logtime + '.log'
-    logname = outdir + 'BulkThumbs_' + logtime + '.log'
+    #logname = outdir + 'BulkThumbs_' + logtime + '.log'
+    logname = outdir + 'log.log'
     formatter = logging.Formatter('%(asctime)s - '+str(rank)+' - %(levelname)-8s - %(message)s')
 
     logger = logging.getLogger(__name__)

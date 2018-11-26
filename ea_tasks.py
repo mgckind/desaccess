@@ -471,7 +471,8 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
 
     logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
 
-    logfile = open(mypath + 'vistoolsLOG_' + logname + '.log', 'w')
+    #logfile = open(mypath + 'vistoolsLOG_' + logname + '.log', 'w')
+    logfile = open(mypath + 'log.log', 'w')
     logfile.write('Selected Options:\n')
     logfile.write('    Flux vs. Wavelength: ........ ' + str(fluxwav) + '\n')
     logfile.write('    Magnitude vs. Wavelength: ... ' + str(magwav) + '\n')
@@ -734,23 +735,24 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             logfile.write('Figure ' + filenm + '_spreadmag' + exten + ' has been created.\n')
             numPlots += 1
 
-    pngfiles = sorted(glob.glob(mypath + '*.png'))
+    tiles = sorted(glob.glob(mypath + '*.png'))
     titles = []
-    Ntiles = len(pngfiles)
-    for p in pngfiles:
-        title = p.split('/')[-1][:-4]
+    Ntiles = len(tiles)
+    for i in tiles:
+        title = i.split('/')[-1][:-4]
         title = title.split('_')[-1].upper()
         titles.append(title)
-    for ij in range(Ntiles):
-        pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/easyweb'):]
+    for i in range(Ntiles):
+        tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
+    
     os.chdir(user_folder)
     os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
     os.chdir(os.path.dirname(__file__))
-    if pngfiles:
-        if os.path.exists(mypath + "list.json"):
-            os.remove(mypath + "list.json")
-        with open(mypath + "list.json", "w") as outfile:
-            json.dump([dict(name=pngfiles[i], title=titles[i], size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
+    
+    if os.path.exists(mypath + "list.json"):
+        os.remove(mypath + "list.json")
+    with open(mypath + "list.json", "w") as outfile:
+        json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
 
     logfile.write('****************************************\n')
     logfile.write('Number of Generated Plots: ' + str(numPlots) + '\n')
@@ -801,7 +803,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
 
     logname = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
 
-    logfile = open(mypath + 'DESFinderTool_' + logname + '.log', 'w')
+    #logfile = open(mypath + 'DESFinderTool_' + logname + '.log', 'w')
+    logfile = open(mypath + 'log.log', 'w')
 
     if len(input_df['RA']) != len(input_df['DEC']):
         logfile.write('ERROR - Please enter the same number of RA and DEC values.\n')
@@ -825,8 +828,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     logfile.write('Submitted RA: ' + ralst + '\n')
     logfile.write('Submitted DEC: ' + declst + '\n')
 
-    with open(mypath+'log.log','w') as logg:
-        logg.write('Running...')
+    #with open(mypath+'log.log','w') as logg:
+    #    logg.write('Running...')
     with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['descut']
     uu1 = conf['username']
@@ -849,6 +852,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         iband = True
     """
 
+    logfile.write('Passing off to bulkthumbs to get the fits file...\n')
     bulkthumbscolors = []
     if gband:
         bulkthumbscolors.append('g')
@@ -990,54 +994,57 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             logfile.write('Chart exported to ' + figname + '\n')
 
     if listonly:
-        #print('list only')
-        chartfiles = glob.glob(mypath + '*.png')
+        #print('just making the chart')
+        tiles = glob.glob(mypath + '*.png')
         titles = []
-        pngfiles = []
-        Ntiles = len(chartfiles)
-        for c in chartfiles:
-            title = c.split('/')[-1][:-4]
+        pngtitles = []
+        Ntiles = len(tiles)
+        for i in tiles:
+            title = i.split('/')[-1][:-4]
             titles.append(title)
-            pngfiles.append(mypath + title + '.png')    #pngfiles.append(c)
-        for ij in range(Ntiles):
-            pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/easyweb'):]
-        os.chdir(user_folder)
-        os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
-        os.chdir(os.path.dirname(__file__))
-        if pngfiles:
-            if os.path.exists(mypath+"list.json"):
-                os.remove(mypath+"list.json")
-            with open(mypath+"list.json", "w") as outfile:
-                json.dump([dict(name=pngfiles[i], title=titles[i],
-                                size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
+            pngtitles.append(mypath + title + '.png')    #pngfiles.append(c)
+        for i in range(Ntiles):
+            pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
+        if os.path.exists(mypath+"list.json"):
+            os.remove(mypath+"list.json")
+        with open(mypath+"list.json", "w") as outfile:
+            json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
     else:
-        #print('make png too')
-        tiffiles = glob.glob(mypath+'*.tif')
-        chartfiles = glob.glob(mypath + '*.png')
+        #print('making the chart and cutout too')
+        tiles = glob.glob(mypath + '*.png')
         titles = []
-        pngfiles = []
-        Ntiles = len(tiffiles) + len(chartfiles)
-        for c in chartfiles:
-            title = c.split('/')[-1][:-4]
+        pngtitles = []
+        Ntiles = len(tiles)
+        for i in tiles:
+            title = i.split('/')[-1][:-4]
             titles.append(title)
-            pngfiles.append(mypath + title + '.png')   #pngfiles.append(c)
-        for f in tiffiles:
-            title = f.split('/')[-1][:-4]
-            subprocess.check_output(["convert %s %s.png" % (f, f)], shell=True)
-            titles.append(title)
-            pngfiles.append(mypath + title + '.tif.png')
-
-        for ij in range(Ntiles):
-            pngfiles[ij] = pngfiles[ij][pngfiles[ij].find('/easyweb'):]
-        os.chdir(user_folder)
-        os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
-        os.chdir(os.path.dirname(__file__))
-        if pngfiles:
-            if os.path.exists(mypath+"list.json"):
-                os.remove(mypath+"list.json")
-            with open(mypath+"list.json", "w") as outfile:
-                json.dump([dict(name=pngfiles[i], title=titles[i],
-                                size=Ntiles) for i in range(len(pngfiles))], outfile, indent=4)
+            pngtitles.append(mypath + title + '.png')
+        for i in range(Ntiles):
+            pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
+        if os.path.exists(mypath + "list.json"):
+            os.remove(mypath + "list.json")
+        with open(mypath + "list.json", "w") as outfile:
+            json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
+        
+        alltiles = glob.glob(mypath+'**/*.fits')
+        alltitles = []
+        allNtiles = len(alltiles)
+        for i in alltiles:
+            title = i.split('/')[-1]
+            alltitles.append(title)
+        for i in range(allNtiles):
+            alltiles[i] = alltiles[i][alltiles[i].find('/easyweb'):]
+        alltiles = tiles + alltiles
+        alltitles = titles + alltitles
+        allNtiles = Ntiles + allNtiles
+        if os.path.exists(mypath+"list_all.json"):
+            os.remove(mypath+"list_all.json")
+        with open(mypath+"list_all.json", "w") as outfile:
+            json.dump([dict(name=alltiles[i], title=alltitles[i], size=allNtiles) for i in range(len(alltiles))], outfile, indent=4)
+    
+    os.chdir(user_folder)
+    os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+    os.chdir(os.path.dirname(__file__))
 
     logfile.write('****************************************\n')
     end_time = time.time()
@@ -1146,18 +1153,53 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     except subprocess.CalledProcessError as e:
         print(e.output)
 
+    tiles = glob.glob(mypath + '**/*.png')
+    titles = []
+    Ntiles = len(tiles)
+    for i in tiles:
+        title = i.split('/')[-1]    #title = ('/').join([i.split('/')[-2], i.split('/')[-1]])    # Displays the tile folder
+        titles.append(title)
+    for i in range(Ntiles):
+        tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
+    if os.path.exists(mypath + "list.json"):
+        os.remove(mypath + "list.json")
+    with open(mypath + "list.json", "w") as outfile:
+        json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
+    
+    alltiles = glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
+    alltitles = []
+    allNtiles = len(alltiles)
+    for i in alltiles:
+        title = i.split('/')[-1]
+        alltitles.append(title)
+    for i in range(allNtiles):
+        alltiles[i] = alltiles[i][alltiles[i].find('/easyweb'):]
+    alltiles = tiles + alltiles
+    alltitles = titles + alltitles
+    allNtiles = Ntiles + allNtiles
+    if os.path.exists(mypath + "list_all.json"):
+        os.remove(mypath + "list_all.json")
+    with open(mypath + "list_all.json", "w") as outfile:
+        json.dump([dict(name=alltiles[i], title=alltitles[i], size=allNtiles) for i in range(len(alltiles))], outfile, indent=4)
+
     if job_size == 'small':
         os.chdir(user_folder)
         os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
         os.chdir(os.path.dirname(__file__))
 
-    allfiles = glob.glob(mypath+'*.*')
+    allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
+    Fall = open(mypath+'list_all.txt', 'w')
+    prefix = 'URLPATH'+'/static'
+    for ff in allfiles:
+        if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
+            Fall.write(prefix+ff.split('static')[-1]+'\n')
+    Fall.close()
 
     response['status'] = 'ok'
     t2 = time.time()
     response['elapsed'] = t2-t1
-    #with open(jsonfile, 'w') as fp:
-    #    json.dump(response, fp)
+    with open(jsonfile, 'w') as fp:
+        json.dump(response, fp)
     return response

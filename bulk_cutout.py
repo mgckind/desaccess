@@ -152,7 +152,7 @@ class FileHandler(BaseHandler):
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
-        tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'), 'cutoutb', '', '', '', -1])
+        tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'), 'coadd', '', '', '', -1])
 
         with con:
             cur = con.cursor()

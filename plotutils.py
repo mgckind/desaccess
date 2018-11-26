@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
+import Settings
 from matplotlib.patches import Ellipse
 from astropy.wcs import WCS, _wcs
 from matplotlib.patches import Rectangle
@@ -133,7 +134,7 @@ def PlotMagVsWavelength(folder, df, a, b, fi, ex):
     plt.savefig(folder+ '/' + fi + '_magnitude' + ex, dpi=300) 
 
 def PlotGR_RI(folder, df, fi, ex):
-    seds = pd.DataFrame(pd.read_json('easyweb/static/plotdata/stellar_seds.json',orient='columns',typ='frame'))
+    seds = pd.DataFrame(pd.read_json(Settings.PLTDATA + 'stellar_seds.json',orient='columns',typ='frame'))
     ot = ''
     s = 99999
     r = 0
@@ -144,7 +145,7 @@ def PlotGR_RI(folder, df, fi, ex):
             r = row
     ot = str(seds['SPT'][r])
     
-    fig = pickle.load(open('easyweb/static/plotdata/grri_contours.pkl','rb'))
+    fig = pickle.load(open(Settings.PLTDATA + 'grri_contours.pkl','rb'))
     ax = fig.add_subplot(111)
     ax.scatter(df['G_R'], df['R_I'], color='maroon', alpha=0.75, s=100, zorder=10)
     #ax.text(-0.4, 1.75, 'Suggested Object\nType: ' + ot, va='center', **font3)
@@ -199,7 +200,7 @@ def PlotGZ_ZW1(folder, df, fi, ex):
     else:
         ot = 'Unknown'
     
-    fig = pickle.load(open('easyweb/static/plotdata/gzzw1_plot.pkl','rb'))
+    fig = pickle.load(open(Settings.PLTDATA + 'gzzw1_plot.pkl','rb'))
     ax = fig.add_subplot(111)
     ax.scatter(df['G_Z'][0], df['Z_W1'][0], color='maroon', alpha=0.75, s=100, zorder=10)
     #ax.text(3.0, 4.65, 'Suggested Object\nType: ' + ot, va='center', **font3)
@@ -250,7 +251,7 @@ def PlotSpreadVsMag(folder, df, fi, ex):
     else:
         ot = 'Extended'
     
-    fig = pickle.load(open('easyweb/static/plotdata/spreadmag_plot.pkl','rb'))
+    fig = pickle.load(open(Settings.PLTDATA + 'spreadmag_plot.pkl','rb'))
     ax = fig.add_subplot(111)
     ax.scatter(df['MAG_I'][0], df['SPREAD_MODEL_I'][0], color='maroon', alpha=0.75, s=100, zorder=10)
     
