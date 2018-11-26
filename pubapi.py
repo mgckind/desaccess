@@ -12,6 +12,25 @@ import hashlib
 import ea_tasks
 import pandas as pd
 import numpy as np
+import backup
+import cx_Oracle
+from api import humantime
+
+dbConfig0 = Settings.dbConfig()
+app_log = Settings.app_log
+
+
+def check_permission(password, username, db):
+    kwargs = {'host': dbConfig0.host, 'port': dbConfig0.port, 'service_name': db}
+    dsn = cx_Oracle.makedsn(**kwargs)
+    try:
+        dbh = cx_Oracle.connect(username, password, dsn=dsn)
+        dbh.close()
+        return True, ""
+    except Exception as e:
+        error = str(e).strip()
+        return False, error
+
 
 def create_token_table(delete=False):
     with open('config/desaccess.yaml', 'r') as cfile:
@@ -20,7 +39,7 @@ def create_token_table(delete=False):
     con = mydb.connect(**conf)
     try:
         con.select_db('des')
-    except:
+    except Exception:
         backup.restore()
         con.commit()
         con.select_db('des')
@@ -29,28 +48,113 @@ def create_token_table(delete=False):
         cur.execute("DROP TABLE IF EXISTS Tokens")
     cur.execute("""
     CREATE TABLE IF NOT EXISTS Tokens(
+    user varchar(50),
     token varchar(50),
     time datetime,
+    cp varchar(60),
+    UNIQUE(user)
     )""")
     con.commit()
     con.close()
 
 
-def create_token():
+def create_token(user, cp):
         token = hashlib.sha1(os.urandom(64)).hexdigest()
         now = datetime.datetime.now()
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
-        tup = tuple([token, now.strftime('%Y-%m-%d %H:%M:%S')])
+        nows = now.strftime('%Y-%m-%d %H:%M:%S')
+        tup = tuple([user, token, nows, cp.decode()])
         with con:
             cur = con.cursor()
-            cur.execute("INSERT INTO Tokens VALUES {0}".format(tup))
+            cur.execute("REPLACE INTO Tokens VALUES {0}".format(tup))
         con.close()
+        return token
+
+
+def check_token(token, ttl=Settings.TOKEN_TTL):
+        now = datetime.datetime.now()
+        with open('config/desaccess.yaml', 'r') as cfile:
+            conf = yaml.load(cfile)['mysql']
+        con = mydb.connect(**conf)
+        cur = con.cursor()
+        cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
+        try:
+            cc = cur.fetchone()
+            now = datetime.datetime.now()
+            dt = (now - cc[2]).total_seconds()
+            left = ttl - dt
+            user = cc[0]
+            lp = cc[3]
+        except Exception:
+            left = None
+            user = None
+            lp = None
+        con.close()
+        return left, user, lp
+
+
+class ApiTokenHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        arguments = {k.lower(): self.get_argument(k) for k in self.request.arguments}
+        response = {'status': 'error'}
+        if 'token' in arguments:
+            ttl, user, lp = check_token(arguments['token'])
+            if ttl is None:
+                response['message'] = 'Token does not exist'
+                self.set_status(404)
+            elif ttl < 0:
+                response['message'] = 'Token is expired, please create a new one'
+                self.set_status(404)
+            else:
+                response['status'] = 'ok'
+                response['message'] = 'Token is valid for %s' % humantime(round(ttl))
+                self.set_status(200)
+        else:
+            response['message'] = 'no token argument found!'
+            self.set_status(400)
+        self.write(response)
+        self.flush()
+        self.finish()
+
+    @tornado.web.asynchronous
+    def post(self):
+        arguments = {k.lower(): self.get_argument(k) for k in self.request.arguments}
+        response = {'status': 'error'}
+        if 'username' in arguments:
+            if 'password' not in arguments:
+                response['message'] = 'Need password'
+                self.set_status(400)
+            else:
+                user = arguments['username']
+                passwd = arguments['password']
+                check, msg = check_permission(passwd, user, 'dessci')
+                if check:
+                    response['status'] = 'ok'
+                    newfolder = os.path.join(Settings.WORKDIR, user)
+                    if not os.path.exists(newfolder):
+                        os.mkdir(newfolder)
+                    cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
+                    lp = base64.b64encode(cipher.encrypt(passwd.rjust(32)))
+                    token = create_token(user, lp)
+                else:
+                    self.set_status(403)
+                    response['message'] = msg
+        else:
+            response['message'] = 'Need username'
+            self.set_status(400)
+        if response['status'] == 'ok':
+            response['message'] = 'Token created, expiration time: %s' % humantime(Settings.TOKEN_TTL)
+            response['token'] = token
+            self.set_status(200)
+        self.write(response)
+        self.flush()
+        self.finish()
 
 
 class ApiCutoutHandler(tornado.web.RequestHandler):
-
     @tornado.web.asynchronous
     def post(self):
         listargs = ['token', 'username', 'password', 'ra', 'dec', 'xsize', 'ysize', 'list_only','email', 'jobname']
@@ -145,10 +249,11 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         self.flush()
         self.finish()
 
-class ApiQueryHandler(tornado.web.RequestHandler):
 
+class ApiQueryHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
     def post(self):
-        listargs = ['token', 'username', 'password', 'query', 'output', 'compression', 'email', 'jobname']
+        listargs = ['token', 'query', 'output', 'compression', 'email', 'jobname', 'db']
         response = {'status': 'error'}
         arguments = {k.lower(): self.get_argument(k) for k in self.request.arguments}
         for l in listargs:
@@ -160,9 +265,8 @@ class ApiQueryHandler(tornado.web.RequestHandler):
                 self.finish()
                 return
         token = arguments["token"]
-        loc_user = arguments["username"]
-        loc_passw = arguments["password"]
         query = arguments["query"]
+        db = arguments["db"]
         query = query.replace(';', '')
         lines = query.split('\n')
         newquery = ''
@@ -173,47 +277,34 @@ class ApiQueryHandler(tornado.web.RequestHandler):
             newquery += ' ' + line.split('--')[0]
         query = newquery
         filename = arguments['output']
+        fi = filename
         if filename == '':
             self.set_status(400)
             response['msg'] = 'Filename cannot be empty'
             self.write(response)
             self.finish()
             return
-        elif not filename.endswith('.csv') and not filename.endswith('.fits') and not filename.endswith('.h5'):
+        elif not fi.endswith('.csv') and not fi.endswith('.fits') and not fi.endswith('.h5'):
             self.set_status(400)
             response['msg'] = 'ERROR: File format allowed : .csv, .fits and .h5'
             self.write(response)
             self.finish()
             return
-
         compression = arguments["compression"].lower() == 'yes'
         email = arguments["email"]
         jobname = arguments["jobname"]
-        with open('config/desaccess.yaml', 'r') as cfile:
-            conf = yaml.load(cfile)['mysql']
-        con = mydb.connect(**conf)
-        try:
-            cur = con.cursor()
-            cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
-            cc = cur.fetchone()
-            now = datetime.datetime.now()
-            dt = (now-cc[1]).total_seconds()
-            msg = 'Token {0} times {1}'.format(token, dt)
-            response['msg'] = msg
-            con.close()
-        except Exception as e:
-            msg = 'Token not valid or expired'
-            response['msg'] = msg
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
             self.set_status(403)
             self.write(response)
             self.finish()
             return
-        cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
-        lp = base64.b64encode(cipher.encrypt(loc_passw.rjust(32)))
-        response['user'] = loc_user
+        response['user'] = user
         response['elapsed'] = 0
         jobid = str(uuid.uuid4())
-        run_check = ea_tasks.check_query(query, 'desdr', loc_user, lp.decode())
+
+        run_check = ea_tasks.check_query(query, db, user, lp)
         if run_check['status'] == 'error':
             response['msg'] = run_check['data']
             self.set_status(400)
@@ -224,19 +315,20 @@ class ApiQueryHandler(tornado.web.RequestHandler):
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
-        tup = tuple([loc_user, jobid, jobname, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
+        tup = tuple([user, jobid, jobname, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                      'query', query, '', '', -1])
         cur = con.cursor()
         cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
         con.commit()
         con.close()
         try:
-            run = ea_tasks.run_query.apply_async(args=[query, filename, 'desdr',
-                                                 loc_user, lp.decode(), jobid,
-                                                 email, compression], retry=True, task_id=jobid)
+            run = ea_tasks.run_query.apply_async(args=[query, filename, db,
+                                                 user, lp, jobid, email, compression],
+                                                 retry=True, task_id=jobid)
+            print(run)
         except Exception as e:
             self.set_status(400)
-            response['msg'] = 'Unexpected Error'
+            response['msg'] = 'Unexpected Error: ' + repr(e)
             self.write(response)
             self.finish()
         response['jobid'] = jobid
@@ -247,15 +339,23 @@ class ApiQueryHandler(tornado.web.RequestHandler):
         self.write(response)
         self.finish()
 
-class ApiJobHandler(tornado.web.RequestHandler):
 
+class ApiJobHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
     def post(self):
         response = {'status': 'error'}
         token = self.get_argument("token", "none")
         jobid = self.get_argument("jobid", "none")
         if jobid == "none":
             self.set_status(400)
-            response['msg'] = 'Need Job Id'
+            response['msg'] = 'Need Job Id, use all to see all jobs'
+            self.write(response)
+            self.finish()
+            return
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
+            self.set_status(403)
             self.write(response)
             self.finish()
             return
@@ -264,34 +364,29 @@ class ApiJobHandler(tornado.web.RequestHandler):
         con = mydb.connect(**conf)
         try:
             cur = con.cursor()
-            cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
-            cc = cur.fetchone()
-            now = datetime.datetime.now()
-            dt = (now-cc[1]).total_seconds()
-            msg = 'Token {0} times {1}'.format(token, dt)
-            response['msg'] = msg
-        except Exception as e:
-            msg = 'Token not valid or expired'
-            response['msg'] = msg
-            self.set_status(403)
-            print(str(e))
-            con.close()
-            self.write(response)
-            self.finish()
-            return
-        try:
-            cur = con.cursor()
-            cur.execute("SELECT * from Jobs where job = '{0}'".format(jobid))
-            cc = cur.fetchone()
-            files = cc[7]
-            ff = files[1:-1].replace('"', '').split(',')
-            host = 'http://desdr-server.ncsa.illinois.edu/workdir/{0}/{1}/'.format(cc[0], jobid)
-            final = [host+f.replace(' ','') for f in ff]
-            response['msg'] = 'Job summary'
-            response['job_status'] = cc[3]
-            response['files'] = final
-            response['job_runtime'] = cc[9]
-            response['job_type'] = cc[5]
+            if jobid.lower() == 'all':
+                cur.execute("SELECT * from Jobs \
+                            where user = '{0}' order by time DESC".format(user))
+                cc = cur.fetchall()
+                response['msg'] = 'List of all Jobs'
+                response['job_id'] = [j[1] for j in cc]
+                response['job_name'] = [j[2] for j in cc]
+                response['job_status'] = [j[3] for j in cc]
+                response['job_type'] = [j[5] for j in cc]
+                response['job_creation'] = [str(j[4]) for j in cc]
+                response['job_runtime'] = [j[9] for j in cc]
+            else:
+                cur.execute("SELECT * from Jobs where job = '{0}'".format(jobid))
+                cc = cur.fetchone()
+                files = cc[7]
+                ff = files[1:-1].replace('"', '').split(',')
+                host = 'http://desdr-server.ncsa.illinois.edu/workdir/{0}/{1}/'.format(cc[0], jobid)
+                final = [host+f.replace(' ', '') for f in ff]
+                response['msg'] = 'Job summary'
+                response['job_status'] = cc[3]
+                response['files'] = final
+                response['job_runtime'] = cc[9]
+                response['job_type'] = cc[5]
         except Exception as e:
             msg = 'Job id not valid or does not exist'
             response['msg'] = msg
@@ -301,6 +396,56 @@ class ApiJobHandler(tornado.web.RequestHandler):
             self.write(response)
             self.finish()
             return
+        con.close()
+        response['status'] = 'ok'
+        self.write(response)
+        self.flush()
+        self.finish()
+
+    @tornado.web.asynchronous
+    def delete(self):
+        response = {'status': 'error'}
+        token = self.get_argument("token", "none")
+        jobid = self.get_argument("jobid", "none")
+        if jobid == "none":
+            self.set_status(400)
+            response['msg'] = 'Need Job Id'
+            self.write(response)
+            self.finish()
+            return
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
+            self.set_status(403)
+            self.write(response)
+            self.finish()
+            return
+        user_folder = os.path.join(Settings.WORKDIR, user)+'/'
+        with open('config/desaccess.yaml', 'r') as cfile:
+            conf = yaml.load(cfile)['mysql']
+        con = mydb.connect(**conf)
+        try:
+            cur = con.cursor()
+            cur.execute("SELECT * from Jobs where job = '{0}'".format(jobid))
+            cc = cur.fetchone()
+            check_id = cc[1]
+            q = "DELETE from Jobs where job = '{}' and user = '{}'".format(jobid, user)
+            cur.execute(q)
+            try:
+                os.system('rm -rf ' + user_folder + jobid + '*')
+            except Exception as e:
+                print(e)
+            response['msg'] = 'Job {} was deleted'.format(jobid)
+        except Exception as e:
+            msg = 'Job id not valid or does not exist'
+            response['msg'] = msg
+            self.set_status(400)
+            print(str(e))
+            con.close()
+            self.write(response)
+            self.finish()
+            return
+        con.commit()
         con.close()
         response['status'] = 'ok'
         self.write(response)

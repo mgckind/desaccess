@@ -120,6 +120,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/gettile/?", api.GetTileHandler),
             (r"/easyweb/gettiley1/?", api.GetY1TileHandler),
             (r"/easyweb/help/?", api.HelpHandler),
+            (r"/easyweb/api/v1/token/?", pubapi.ApiTokenHandler),
             (r"/easyweb/api/v1/cutout/", pubapi.ApiCutoutHandler),
             (r"/easyweb/api/v1/query/", pubapi.ApiQueryHandler),
             (r"/easyweb/api/v1/jobs/", pubapi.ApiJobHandler),
@@ -146,6 +147,7 @@ def main():
     if not os.path.exists(Settings.WORKDIR):
         os.mkdir(Settings.WORKDIR)
     create_db()
+    pubapi.create_token_table()
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(options.port)
