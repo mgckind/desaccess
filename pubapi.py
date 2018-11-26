@@ -341,14 +341,21 @@ class ApiQueryHandler(tornado.web.RequestHandler):
 
 
 class ApiJobHandler(tornado.web.RequestHandler):
-
+    @tornado.web.asynchronous
     def post(self):
         response = {'status': 'error'}
         token = self.get_argument("token", "none")
         jobid = self.get_argument("jobid", "none")
         if jobid == "none":
             self.set_status(400)
-            response['msg'] = 'Need Job Id'
+            response['msg'] = 'Need Job Id, use all to see all jobs'
+            self.write(response)
+            self.finish()
+            return
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
+            self.set_status(403)
             self.write(response)
             self.finish()
             return
@@ -357,34 +364,29 @@ class ApiJobHandler(tornado.web.RequestHandler):
         con = mydb.connect(**conf)
         try:
             cur = con.cursor()
-            cur.execute("SELECT *  from Tokens where token = '{0}'".format(token))
-            cc = cur.fetchone()
-            now = datetime.datetime.now()
-            dt = (now-cc[1]).total_seconds()
-            msg = 'Token {0} times {1}'.format(token, dt)
-            response['msg'] = msg
-        except Exception as e:
-            msg = 'Token not valid or expired'
-            response['msg'] = msg
-            self.set_status(403)
-            print(str(e))
-            con.close()
-            self.write(response)
-            self.finish()
-            return
-        try:
-            cur = con.cursor()
-            cur.execute("SELECT * from Jobs where job = '{0}'".format(jobid))
-            cc = cur.fetchone()
-            files = cc[7]
-            ff = files[1:-1].replace('"', '').split(',')
-            host = 'http://desdr-server.ncsa.illinois.edu/workdir/{0}/{1}/'.format(cc[0], jobid)
-            final = [host+f.replace(' ','') for f in ff]
-            response['msg'] = 'Job summary'
-            response['job_status'] = cc[3]
-            response['files'] = final
-            response['job_runtime'] = cc[9]
-            response['job_type'] = cc[5]
+            if jobid.lower() == 'all':
+                cur.execute("SELECT * from Jobs \
+                            where user = '{0}' order by time DESC".format(user))
+                cc = cur.fetchall()
+                response['msg'] = 'List of all Jobs'
+                response['job_id'] = [j[1] for j in cc]
+                response['job_name'] = [j[2] for j in cc]
+                response['job_status'] = [j[3] for j in cc]
+                response['job_type'] = [j[5] for j in cc]
+                response['job_creation'] = [str(j[4]) for j in cc]
+                response['job_runtime'] = [j[9] for j in cc]
+            else:
+                cur.execute("SELECT * from Jobs where job = '{0}'".format(jobid))
+                cc = cur.fetchone()
+                files = cc[7]
+                ff = files[1:-1].replace('"', '').split(',')
+                host = 'http://desdr-server.ncsa.illinois.edu/workdir/{0}/{1}/'.format(cc[0], jobid)
+                final = [host+f.replace(' ', '') for f in ff]
+                response['msg'] = 'Job summary'
+                response['job_status'] = cc[3]
+                response['files'] = final
+                response['job_runtime'] = cc[9]
+                response['job_type'] = cc[5]
         except Exception as e:
             msg = 'Job id not valid or does not exist'
             response['msg'] = msg
@@ -394,6 +396,56 @@ class ApiJobHandler(tornado.web.RequestHandler):
             self.write(response)
             self.finish()
             return
+        con.close()
+        response['status'] = 'ok'
+        self.write(response)
+        self.flush()
+        self.finish()
+
+    @tornado.web.asynchronous
+    def delete(self):
+        response = {'status': 'error'}
+        token = self.get_argument("token", "none")
+        jobid = self.get_argument("jobid", "none")
+        if jobid == "none":
+            self.set_status(400)
+            response['msg'] = 'Need Job Id'
+            self.write(response)
+            self.finish()
+            return
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
+            self.set_status(403)
+            self.write(response)
+            self.finish()
+            return
+        user_folder = os.path.join(Settings.WORKDIR, user)+'/'
+        with open('config/desaccess.yaml', 'r') as cfile:
+            conf = yaml.load(cfile)['mysql']
+        con = mydb.connect(**conf)
+        try:
+            cur = con.cursor()
+            cur.execute("SELECT * from Jobs where job = '{0}'".format(jobid))
+            cc = cur.fetchone()
+            check_id = cc[1]
+            q = "DELETE from Jobs where job = '{}' and user = '{}'".format(jobid, user)
+            cur.execute(q)
+            try:
+                os.system('rm -rf ' + user_folder + jobid + '*')
+            except Exception as e:
+                print(e)
+            response['msg'] = 'Job {} was deleted'.format(jobid)
+        except Exception as e:
+            msg = 'Job id not valid or does not exist'
+            response['msg'] = msg
+            self.set_status(400)
+            print(str(e))
+            con.close()
+            self.write(response)
+            self.finish()
+            return
+        con.commit()
         con.close()
         response['status'] = 'ok'
         self.write(response)
