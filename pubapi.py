@@ -51,20 +51,21 @@ def create_token_table(delete=False):
     user varchar(50),
     token varchar(50),
     time datetime,
+    cp varchar(60),
     UNIQUE(user)
     )""")
     con.commit()
     con.close()
 
 
-def create_token(user):
+def create_token(user, cp):
         token = hashlib.sha1(os.urandom(64)).hexdigest()
         now = datetime.datetime.now()
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         nows = now.strftime('%Y-%m-%d %H:%M:%S')
-        tup = tuple([user, token, nows])
+        tup = tuple([user, token, nows, cp.decode()])
         with con:
             cur = con.cursor()
             cur.execute("REPLACE INTO Tokens VALUES {0}".format(tup))
@@ -85,11 +86,13 @@ def check_token(token, ttl=Settings.TOKEN_TTL):
             dt = (now - cc[2]).total_seconds()
             left = ttl - dt
             user = cc[0]
+            lp = cc[3]
         except Exception:
             left = None
             user = None
+            lp = None
         con.close()
-        return left, user
+        return left, user, lp
 
 
 class ApiTokenHandler(tornado.web.RequestHandler):
@@ -98,7 +101,7 @@ class ApiTokenHandler(tornado.web.RequestHandler):
         arguments = {k.lower(): self.get_argument(k) for k in self.request.arguments}
         response = {'status': 'error'}
         if 'token' in arguments:
-            ttl, user = check_token(arguments['token'])
+            ttl, user, lp = check_token(arguments['token'])
             if ttl is None:
                 response['message'] = 'Token does not exist'
                 self.set_status(404)
@@ -133,7 +136,9 @@ class ApiTokenHandler(tornado.web.RequestHandler):
                     newfolder = os.path.join(Settings.WORKDIR, user)
                     if not os.path.exists(newfolder):
                         os.mkdir(newfolder)
-                    token = create_token(user)
+                    cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
+                    lp = base64.b64encode(cipher.encrypt(passwd.rjust(32)))
+                    token = create_token(user, lp)
                 else:
                     self.set_status(403)
                     response['message'] = msg
@@ -272,13 +277,14 @@ class ApiQueryHandler(tornado.web.RequestHandler):
             newquery += ' ' + line.split('--')[0]
         query = newquery
         filename = arguments['output']
+        fi = filename
         if filename == '':
             self.set_status(400)
             response['msg'] = 'Filename cannot be empty'
             self.write(response)
             self.finish()
             return
-        elif not filename.endswith('.csv') and not filename.endswith('.fits') and not filename.endswith('.h5'):
+        elif not fi.endswith('.csv') and not fi.endswith('.fits') and not fi.endswith('.h5'):
             self.set_status(400)
             response['msg'] = 'ERROR: File format allowed : .csv, .fits and .h5'
             self.write(response)
@@ -287,20 +293,18 @@ class ApiQueryHandler(tornado.web.RequestHandler):
         compression = arguments["compression"].lower() == 'yes'
         email = arguments["email"]
         jobname = arguments["jobname"]
-        ttl, user = check_token(token)
+        ttl, user, lp = check_token(token)
         if ttl is None or ttl < 0:
             response['msg'] = 'Token not valid or expired, create a new one'
             self.set_status(403)
             self.write(response)
             self.finish()
             return
-        cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
-        lp = base64.b64encode(cipher.encrypt('TODO'.rjust(32)))
         response['user'] = user
         response['elapsed'] = 0
         jobid = str(uuid.uuid4())
 
-        run_check = ea_tasks.check_query(query, db, 'TODO', lp.decode())
+        run_check = ea_tasks.check_query(query, db, user, lp)
         if run_check['status'] == 'error':
             response['msg'] = run_check['data']
             self.set_status(400)
@@ -319,10 +323,12 @@ class ApiQueryHandler(tornado.web.RequestHandler):
         con.close()
         try:
             run = ea_tasks.run_query.apply_async(args=[query, filename, db,
-                                                 'TODO', lp.decode(), jobid, email, compression], retry=True, task_id=jobid)
+                                                 user, lp, jobid, email, compression],
+                                                 retry=True, task_id=jobid)
+            print(run)
         except Exception as e:
             self.set_status(400)
-            response['msg'] = 'Unexpected Error'
+            response['msg'] = 'Unexpected Error: ' + repr(e)
             self.write(response)
             self.finish()
         response['jobid'] = jobid
@@ -332,6 +338,7 @@ class ApiQueryHandler(tornado.web.RequestHandler):
 
         self.write(response)
         self.finish()
+
 
 class ApiJobHandler(tornado.web.RequestHandler):
 
