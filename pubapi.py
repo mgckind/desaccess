@@ -172,6 +172,12 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
     
     @tornado.web.asynchronous
     def post(self):
+        SMALL_QUEUE = 300
+        MEDIUM_QUEUE = 1000
+        LARGE_QUEUE = 10000
+        SMALL_QUEUE_MAX_CPUS = 1
+        MEDIUM_QUEUE_MAX_CPUS = 4
+        LARGE_QUEUE_MAX_CPUS = 6
         listargs = ['token', 'ra', 'dec', 'coadd', 'xsize', 'ysize', 'jobname']  # required
         jtasks = ['make_tiffs','make_pngs','make_fits']
         response = {'status': 'error'}
@@ -249,12 +255,23 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
             df = pd.DataFrame(np.array([coadd, xs, ys]).T, columns=['COADD_OBJECT_ID', 'XSIZE', 'YSIZE'])
         input_csv = user_folder + jobid + '.csv'
         df.to_csv(input_csv, sep=',', index=False)
+        
+        job_size = ''
+        dftemp_rows = len(df.index)
+        if dftemp_rows <= SMALL_QUEUE:
+            job_size = 'small'
+            nprocs = SMALL_QUEUE_MAX_CPUS
+        if dftemp_rows > SMALL_QUEUE and dftemp_rows <= MEDIUM_QUEUE:
+            job_size = 'medium'
+            nprocs = MEDIUM_QUEUE_MAX_CPUS
+        if dftemp_rows > MEDIUM_QUEUE:
+            job_size = 'large'
+            nprocs = LARGE_QUEUE_MAX_CPUS
+        
         del df
         folder2 = user_folder+jobid+'/'
         os.system('mkdir -p '+folder2)
 
-        job_size = 'small'
-        nprocs = 1
         db = 'dessci'
         tiffs = True if 'make_tiffs' in arguments and arguments['make_tiffs'].upper() == 'TRUE' else False
         pngs = True if 'make_pngs' in arguments and arguments['make_pngs'].upper() == 'TRUE' else False
