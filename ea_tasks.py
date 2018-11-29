@@ -767,7 +767,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
-    prefix = 'URLPATH'+'/static'
+    prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
@@ -1059,7 +1059,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
-    prefix = 'URLPATH'+'/static'
+    prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
@@ -1193,7 +1193,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
-    prefix = 'URLPATH'+'/static'
+    prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
