@@ -1073,7 +1073,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
 
 
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email):
+def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -1111,6 +1111,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     if tiffs:
         args += ' --make_tiffs'
     if fits:
+        """
         colors = ''
         if gband:
             colors = (',').join((colors, 'g'))
@@ -1123,6 +1124,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         if yband:
             colors = (',').join((colors, 'y'))
         colors = colors.strip(',')
+        """
         args += ' --make_fits --colors {}'.format(colors)
     if pngs:
         args += ' --make_pngs'
