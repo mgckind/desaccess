@@ -85,7 +85,9 @@ class CustomTask(Task):
         if namejob == '':
             namejob = task_id
         file_list = json.dumps(retval['files'])
+        file_list = file_list[:5182] + '...' if len(file_list) > 5182 else file_list    # 5182 characters is the expected length for a job_type of small, just pngs
         size_list = json.dumps(retval['sizes'])
+        size_list = size_list[:3947] + '...' if len(size_list) > 3947 else size_list    # 3947 characters is the expected length for a job_type of small, and 1'x1' cutouts, just pngs
         elapsed = int(retval['elapsed'])
         if retval['status'] == 'ok':
             if statusjob == 'REVOKE':
