@@ -51715,7 +51715,9 @@ function keysrt(key,desc) {
     }
     </style>
 
-    <iron-ajax id="getTiles" auto="" url="/easyweb/static/workdir/{{username}}/{{jobid}}/list.json" handle-as="json" last-response="{{jsondata}}" on-response="_getTilesResponse">
+    <iron-ajax id="getListAll" auto="" url="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" handle-as="text" las-response="{{listalltxt}}" on-response="
+
+    <iron-ajax id=" gettiles"="" last-response="{{jsondata}}">
     </iron-ajax>
 
     <iron-ajax id="getLogHelp" url="/easyweb/mylogs/" method="POST" handle-as="json" content-type="application/x-www-form-urlencoded" last-response="{{logdata}}" debounce-duration="300">
@@ -51769,11 +51771,14 @@ function keysrt(key,desc) {
     </template>
 
     <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}">
-    <template is="dom-if" if="{{jsondata}}">
+    <template is="dom-if" if="{{jsondata.length <= 300}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle="{{item.title}}" imdisplay="{{item.name}}" jobid="[[jobid]]">
             </des-thumb>
         </template>
+    </template>
+    <template is="dom-if" if="{{jsondata.length > 300}}">
+        <h3>There are too many files to display. Check the <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt">list_all.txt</a> file for the outputs.</h3>
     </template>
     </template>
 
