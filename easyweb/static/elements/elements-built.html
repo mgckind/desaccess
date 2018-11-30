@@ -40604,6 +40604,13 @@ paper-item {
             <span style=" position: absolute; top:12px;">Cutouts Service</span>
         </a>
         </paper-item>
+
+        <paper-item>
+            <a class="ahidden" href="/easyweb/deslabs">
+                <span style=" position: absolute; top:12px;">DES JupyterLab</span>
+            </a>
+        </paper-item>
+
         <paper-item>
         <a class="ahidden" href="/easyweb/finding-chart">
 			<span style=" position: absolute; top:12px;">Finding Chart</span>
@@ -40673,6 +40680,7 @@ paper-item {
         <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
          -->
         <des-bulk-cutouts id="desBulkCutouts" email="{{email}}" choice="0"></des-bulk-cutouts>
+        <des-jlabs username="{{username}}"></des-jlabs>
         <des-finding-chart id="desFindingChart" email="{{email}}"></des-finding-chart>
         <des-footprint id="FootprintPage"></des-footprint>
         <des-data-analysis id="desDataAnalysis" email="{{email}}"></des-data-analysis>
@@ -47815,6 +47823,296 @@ function keysrt(key,desc) {
 
 
 </script>
+<dom-module id="des-jlabs" assetpath="../des_components/des-pages/">
+    <template>
+
+        <style include="shared-styles">
+            .form1:hover{
+                background: var(--paper-blue-grey-50);}
+            .helpform{
+                text-align:center;
+            }
+            .ironformcontent{
+                text-align: left;
+            }
+            paper-card{
+                width: 320px;
+            }
+    .status {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--paper-yellow-500);
+    }
+    .green {background: var(--paper-green-500);}
+    .red {background: var(--paper-red-500);}
+        </style>
+
+    <iron-ajax id="deployLabReq" url="/easyweb/deslabs/deploy" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="statusLabReq" auto="" url="/easyweb/deslabs/status" handle-as="json" on-response="_handleResponseStatus" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="deleteLabReq" url="/easyweb/deslabs/delete" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="gotoLabReq" url="/easyweb/deslabs/goto" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
+
+        <paper-dialog class="dialog-position" id="labsHelp" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+            <des-card heading="Help">
+                <div class="card-content">
+                    <paper-carousel id="labs-crs" items="1" dottext="false" controls="true">
+                        <div class="carousel-item">
+                            Use the form to submit your question.
+                        </div>
+
+                        <div class="carousel-item">
+                            <!--<div class="col">-->
+                            <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                            <div class="desc">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+
+                            <!--</div>-->
+                        </div>
+
+                        <div class="carousel-item">
+                            <div class="row">
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+
+                                <div class="left">
+                                    <img src="/easyweb/static/images/demo1.gif">
+                                </div>
+                            </div>
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </div>
+
+                        <div class="carousel-item">
+                            <img src="/easyweb/static/images/demo1.gif">
+                            <div class="desc">
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            </div>
+                        </div>
+
+                    </paper-carousel>
+                </div>
+                <div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>
+            </des-card>
+        </paper-dialog>
+
+        <des-card heading="DES Jupyter Labs (Beta)">
+            <div class="card-content">
+                This feature is experimental only. Please use with caution. <br>
+                You can launch, access and delete your Jupyter Notebook.
+                This Notebook will run with 1 CPU and 2GB of RAM.
+            </div>
+            <hr>
+
+            <div class="card-content">
+            <paper-button class="indigo" raised="" on-tap="_deployLab" id="DeployLab"> Deploy Lab &nbsp; &nbsp; <i class="fa fa-plus"></i></paper-button>
+
+            <paper-button class="indigo" raised="" disabled="" on-tap="_deleteLab" id="DeleteLab"> Delete Lab &nbsp; &nbsp; <i class="fa fa-trash"></i></paper-button>
+            <br>
+            </div>
+            <div class="card-content">
+            <paper-card heading="Status">
+                <div class="card-content">
+
+
+              <template is="dom-if" if="{{stop}}">
+                  <div class="status red" item-icon="" style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; No Lab running </span><br>
+              </template>
+
+              <template is="dom-if" if="{{pending}}">
+                  <div class="status " item-icon="" style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; Pending Action</span><br>
+              </template>
+
+              <template is="dom-if" if="{{running}}">
+                  <div class="status green" item-icon="" style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; Ready </span><br>
+              </template>
+                  <span>Status: </span>
+                  <span>{{status}}</span>
+
+
+
+                </div>
+            <div class="card-actions">
+            <paper-button class="indigo" raised="" disabled="" on-tap="_gotoLab" id="GotoLab"> Go To Lab &nbsp; &nbsp; <i class="fa fa-arrow-circle-right"></i></paper-button>
+
+            </div>
+        </paper-card><br>
+        <paper-button on-click="_refreshStatus"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
+            </div>
+        </des-card>
+
+        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "des-jlabs",
+            properties: {
+                invalid: {
+                    type: Boolean,
+                },
+                statusv: {
+                    type: Number,
+                    value: 0
+                },
+                status: {
+                    type: String,
+                    value: 'Lab Not Ready'
+                },
+                stop: {
+                    type: Boolean,
+                    value: true,
+                },
+                pending: {
+                    type: Boolean,
+                    value: false,
+                },
+                running: {
+                    type: Boolean,
+                    value: false,
+                },
+                ready: {
+                    type: Number,
+                    value: 3,
+                }
+            },
+            patchOverlay: function (e) {
+                if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                }
+            },
+            _deployLab: function(e){
+            document.getElementById("deployLabReq").generateRequest();
+            var _self = this
+            _self.statusv = 0;
+            document.getElementById('DeployLab').disabled=true;
+            _self.stop = false;
+            _self.running = false;
+            _self.pending = true;
+            var i;
+            (function myLoop (i) {
+                setTimeout(function () {
+                    if (_self.ready == 0) i=4;
+                    if (--i) {
+                        myLoop(i);
+                    _self.statusv += 1;
+                    document.getElementById("statusLabReq").generateRequest();
+                    }
+                }, 1000)
+            })(120);
+            },
+            _refreshStatus: function(e){
+            document.getElementById("statusLabReq").generateRequest();
+            },
+            _deleteLab: function(e){
+            document.getElementById("deleteLabReq").generateRequest();
+            document.getElementById('DeployLab').disabled=true;
+            document.getElementById('DeleteLab').disabled=true;
+            document.getElementById('GotoLab').disabled=true;
+            var _self = this
+            _self.statusv = 0;
+            var i;
+            (function myLoop (i) {
+                setTimeout(function () {
+                    if (_self.ready == 3) i=1;
+                    if (--i) {
+                        myLoop(i);
+                    _self.statusv += 1;
+                    document.getElementById("statusLabReq").generateRequest();
+                    }
+                }, 1000)
+            })(120);
+            },
+            _gotoLab: function(e){
+                var _=0;
+                window.open('/easyweb/deslabs/goto','_blank');
+                //document.getElementById("gotoLabReq").generateRequest();
+            },
+          _handleResponse: function(e){
+            var _self = this;
+            var data = e.detail.response;
+            _self.status = data.status;
+        },
+          _handleResponseStatus: function(e){
+            var _self = this;
+            var data = e.detail.response;
+            _self.status = data.status;
+            _self.ready = data.ready;
+            if (_self.ready == 0){
+            _self.stop = false;
+            _self.pending = false;
+            _self.running = true;
+            document.getElementById('DeployLab').disabled=true;
+            document.getElementById('DeleteLab').disabled=false;
+            document.getElementById('GotoLab').disabled=false;
+            }
+            else if (_self.ready == 2){
+            _self.stop = false;
+            _self.pending = true;
+            _self.running = false;
+            document.getElementById('DeployLab').disabled=true;
+            document.getElementById('DeleteLab').disabled=true;
+            document.getElementById('GotoLab').disabled=true;
+            }
+            else {
+            _self.stop = true;
+            _self.pending = false;
+            _self.running = false;
+            document.getElementById('DeployLab').disabled=false;
+            document.getElementById('DeleteLab').disabled=true;
+            document.getElementById('GotoLab').disabled=true;
+            }
+        },
+            _seeHelp: function(e){
+                e.preventDefault();
+                document.getElementById('labsHelp').open();
+            },
+            _nextPage: function() {
+                var crs = document.getElementById("labs-crs");
+                crs.goToNextPage();
+            },
+            _prevPage: function() {
+                var crs = document.getElementById("labs-crs");
+                crs.goToPrevPage();
+            }
+        });
+    </script>
+
+</dom-module>
 <dom-module id="des-epochs" assetpath="../des_components/des-pages/">
 
     <style include="shared-styles">
@@ -49893,6 +50191,11 @@ function keysrt(key,desc) {
                 <a style="text-transform: none; color:black;" href="/easyweb/bulk-cutouts" tabindex="-1">
                 <des-card-welcome heading="CUTOUTS SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Bulk Cutout Service" desc="Generate cutouts for positions or ids" name="bulkcoadd"></des-card-welcome>
                 </a>
+
+                <a style="text-transform: none; color:black;" href="/easyweb/deslabs" tabindex="-1">
+                <des-card-welcome heading="DES JupyterLabs" image="/easyweb/static/images/home-deslabs.jpg" alt="deslabs" desc="(Beta) Jupyter Labs" name="deslabs"></des-card-welcome>
+                </a>
+
                 <a style="text-transform: none; color:black;" href="/easyweb/finding-chart" tabindex="-1">
                 <!--<des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/home-footprint-old.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>-->
                 <des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/DESJ004034.0-620158.6_I.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>
