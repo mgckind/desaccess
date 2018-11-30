@@ -10,6 +10,13 @@
     }
     </style>
 
+    <iron-ajax id="getListAll"
+        auto
+        url=/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt
+        handle-as="text"
+        las-response="{{listalltxt}}"
+        on-response="
+
     <iron-ajax id="getTiles"
         auto
         url=/easyweb/static/workdir/{{username}}/{{jobid}}/list.json
@@ -75,11 +82,14 @@
     </template>
 
     <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}">
-    <template is="dom-if" if="{{jsondata}}">
+    <template is="dom-if" if="{{jsondata.length <= 300}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
             </des-thumb>
         </template>
+    </template>
+    <template is="dom-if" if="{{jsondata.length > 300}}">
+        <h3>There are too many files to display. Check the <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt">list_all.txt</a> file for the outputs.</h3>
     </template>
     </template>
 
