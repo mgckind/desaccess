@@ -148,7 +148,7 @@ class FileHandler(BaseHandler):
 
         run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
 
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 

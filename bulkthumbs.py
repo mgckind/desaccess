@@ -625,7 +625,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    with open('config/bulkthumbsconfig.yaml','r') as cfile:
+    with open('config/desaccess.yaml','r') as cfile:
         conf = yaml.load(cfile)
     TILES_FOLDER = conf['directories']['tiles'] + '/'
     if args.outdir:
