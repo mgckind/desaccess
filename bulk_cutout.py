@@ -66,6 +66,18 @@ class FileHandler(BaseHandler):
             iband = True
             zband = True
             yband = True
+        colors = ''
+        if gband:
+            colors = (',').join((colors, 'g'))
+        if rband:
+            colors = (',').join((colors, 'r'))
+        if iband:
+            colors = (',').join((colors, 'i'))
+        if zband:
+            colors = (',').join((colors, 'z'))
+        if yband:
+            colors = (',').join((colors, 'y'))
+        colors = colors.strip(',')
 
         print('**************')
         print(tiffs, 'make tiff')
@@ -125,7 +137,7 @@ class FileHandler(BaseHandler):
         now = datetime.datetime.now()
         input_csv = user_folder + jobid + '.csv'
 
-        SMALL_QUEUE = 100
+        SMALL_QUEUE = 300
         MEDIUM_QUEUE = 1000
         LARGE_QUEUE = 10000
         SMALL_QUEUE_MAX_CPUS = 1
@@ -146,7 +158,7 @@ class FileHandler(BaseHandler):
             job_size = 'large'
             nprocs = LARGE_QUEUE_MAX_CPUS
 
-        run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
+        run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
 
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']

@@ -52009,12 +52009,10 @@ function keysrt(key,desc) {
 <dom-module id="des-results" assetpath="../des_components/des-pages/">
 <template>
     <style include="shared-styles">
-
     paper-dialog {
         height: 60%;
         width: 70%;
         overflow-y: scroll;
-
     }
     </style>
 
@@ -52117,30 +52115,25 @@ function keysrt(key,desc) {
                 type: String,
                 value: '',
             },
-
               jobtype: {
                 value : '',
                 type : String,
                 notify: true,
             },
           },
-
         _actionIsFC: function(job_type) {
-
             if (job_type == "finding chart") {
                 console.log("Finding Chart!")
                 return true;
             }
           },
         _actionIsDA: function(job_type) {
-
             if (job_type == "data analysis") {
                 console.log("Data Analysis!")
                 return true;
             }
           },
         _actionIsCoadd: function(job_type) {
-
             if (job_type == "coadd") {
                 console.log("COADD!")
                 return true;
@@ -52166,9 +52159,7 @@ function keysrt(key,desc) {
                 var link = document.createElement('a');
                 var siid = this.jobid;
                 var user = this.username;
-
                 link.href = "/easyweb/static/workdir/"+user+"/"+siid+"/"+siid+".tar.gz";
-
                 if (link.download !== undefined){
                     //Set HTML5 download attribute. This will prevent file from opening if supported.
                     var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
@@ -52191,7 +52182,6 @@ function keysrt(key,desc) {
               _closedialog: function(event){
                   document.getElementById('JobTiles').close();
               },
-
              patchOverlay: function (e) {
                  if (e.target.withBackdrop) {
                     e.target.parentNode.insertBefore(e.target.backdropElement, e.target);

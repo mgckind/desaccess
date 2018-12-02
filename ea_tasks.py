@@ -85,7 +85,9 @@ class CustomTask(Task):
         if namejob == '':
             namejob = task_id
         file_list = json.dumps(retval['files'])
+        file_list = file_list[:5182] + '...' if len(file_list) > 5182 else file_list    # 5182 characters is the expected length for a job_type of small, just pngs
         size_list = json.dumps(retval['sizes'])
+        size_list = size_list[:3947] + '...' if len(size_list) > 3947 else size_list    # 3947 characters is the expected length for a job_type of small, and 1'x1' cutouts, just pngs
         elapsed = int(retval['elapsed'])
         if retval['status'] == 'ok':
             if statusjob == 'REVOKE':
@@ -767,7 +769,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
-    prefix = 'URLPATH'+'/static'
+    prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
@@ -1059,7 +1061,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
-    prefix = 'URLPATH'+'/static'
+    prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
@@ -1073,7 +1075,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
 
 
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, gband, rband, iband, zband, yband, xsize, ysize, return_list, send_email, email):
+def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -1111,6 +1113,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     if tiffs:
         args += ' --make_tiffs'
     if fits:
+        """
         colors = ''
         if gband:
             colors = (',').join((colors, 'g'))
@@ -1123,6 +1126,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         if yband:
             colors = (',').join((colors, 'y'))
         colors = colors.strip(',')
+        """
         args += ' --make_fits --colors {}'.format(colors)
     if pngs:
         args += ' --make_pngs'
@@ -1191,7 +1195,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
-    prefix = 'URLPATH'+'/static'
+    prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
