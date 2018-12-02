@@ -51706,18 +51706,14 @@ function keysrt(key,desc) {
 <dom-module id="des-results" assetpath="../des_components/des-pages/">
 <template>
     <style include="shared-styles">
-
     paper-dialog {
         height: 60%;
         width: 70%;
         overflow-y: scroll;
-
     }
     </style>
 
-    <iron-ajax id="getListAll" auto="" url="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" handle-as="text" las-response="{{listalltxt}}" on-response="
-
-    <iron-ajax id=" gettiles"="" last-response="{{jsondata}}">
+    <iron-ajax id="getTiles" auto="" url="/easyweb/static/workdir/{{username}}/{{jobid}}/list.json" handle-as="json" last-response="{{jsondata}}" on-response="_getTilesResponse">
     </iron-ajax>
 
     <iron-ajax id="getLogHelp" url="/easyweb/mylogs/" method="POST" handle-as="json" content-type="application/x-www-form-urlencoded" last-response="{{logdata}}" debounce-duration="300">
@@ -51771,14 +51767,11 @@ function keysrt(key,desc) {
     </template>
 
     <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}">
-    <template is="dom-if" if="{{jsondata.length <= 300}}">
+    <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle="{{item.title}}" imdisplay="{{item.name}}" jobid="[[jobid]]">
             </des-thumb>
         </template>
-    </template>
-    <template is="dom-if" if="{{jsondata.length > 300}}">
-        <h3>There are too many files to display. Check the <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt">list_all.txt</a> file for the outputs.</h3>
     </template>
     </template>
 
@@ -51819,30 +51812,25 @@ function keysrt(key,desc) {
                 type: String,
                 value: '',
             },
-
               jobtype: {
                 value : '',
                 type : String,
                 notify: true,
             },
           },
-
         _actionIsFC: function(job_type) {
-
             if (job_type == "finding chart") {
                 console.log("Finding Chart!")
                 return true;
             }
           },
         _actionIsDA: function(job_type) {
-
             if (job_type == "data analysis") {
                 console.log("Data Analysis!")
                 return true;
             }
           },
         _actionIsCoadd: function(job_type) {
-
             if (job_type == "coadd") {
                 console.log("COADD!")
                 return true;
@@ -51868,9 +51856,7 @@ function keysrt(key,desc) {
                 var link = document.createElement('a');
                 var siid = this.jobid;
                 var user = this.username;
-
                 link.href = "/easyweb/static/workdir/"+user+"/"+siid+"/"+siid+".tar.gz";
-
                 if (link.download !== undefined){
                     //Set HTML5 download attribute. This will prevent file from opening if supported.
                     var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
@@ -51893,7 +51879,6 @@ function keysrt(key,desc) {
               _closedialog: function(event){
                   document.getElementById('JobTiles').close();
               },
-
              patchOverlay: function (e) {
                  if (e.target.withBackdrop) {
                     e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
