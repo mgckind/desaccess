@@ -190,7 +190,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
                 return self.missingargs(response, msg)
         
         if 'csvfile' in arguments:
-            fileinfo = self.request.files['csvfiles'][0]
+            fileinfo = self.request.files['csvfile'][0]
             df = pd.DataFrame(pd.read_csv(io.BytesIO(fileinfo['body'])))              # will this work?
             #df = pd.DataFrame(fileinfo['body'].pd.Series.str.decode('ascii'))        # will this work?
             #df.columns = [x.upper() for x in df.columns]                             # capitalizes columns headers
@@ -201,7 +201,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
             coadd = [int(i) for i in arguments['coadd'].replace('[','').replace(']','').split(',')]
         else:
             msg = 'Missing input data.'
-            return missingargs(response, msg)
+            return self.missingargs(response, msg)
         
         if 'make_tiffs' not in arguments and 'make_pngs' not in arguments and 'make_fits' not in arguments:
             msg = 'Missing job task. Select at least 1 from {}.'.format(jtasks)
@@ -240,9 +240,11 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         
         input_csv = user_folder + jobid + '.csv'
         if 'ra' in arguments:
-            df = pd.DataFrame(np.array([ra, dec, xsize, ysize]).T, columns=['RA', 'DEC', 'XSIZE', 'YSIZE'])
+            #df = pd.DataFrame(np.array([ra, dec, xsize, ysize]).T, columns=['RA', 'DEC', 'XSIZE', 'YSIZE'])
+            df = pd.DataFrame(np.array([ra, dec]).T, columns=['RA', 'DEC'])
         elif 'coadd' in arguments:
-            df = pd.DataFrame(np.array([coadd, xsize, ysize]).T, columns=['COADD_OBJECT_ID', 'XSIZE', 'YSIZE'])
+            #df = pd.DataFrame(np.array([coadd, xsize, ysize]).T, columns=['COADD_OBJECT_ID', 'XSIZE', 'YSIZE'])
+            df = pd.DataFrame(np.array([coadd]).T, columns=['COADD_OBJECT_ID'])
         df.to_csv(input_csv, sep=',', index=False)
         
         dftemp_rows = len(df.index)
