@@ -194,14 +194,11 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
             df = pd.DataFrame(pd.read_csv(io.BytesIO(fileinfo['body'])))              # will this work?
             #df = pd.DataFrame(fileinfo['body'].pd.Series.str.decode('ascii'))        # will this work?
             #df.columns = [x.upper() for x in df.columns]                             # capitalizes columns headers
-        
         elif 'ra' in arguments and 'dec' in arguments:
             ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
             dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
-        
         elif 'coadd' in arguments:
             coadd = [int(i) for i in arguments['coadd'].replace('[','').replace(']','').split(',')]
-        
         else:
             msg = 'Missing input data.'
             return missingargs(response, msg)
@@ -209,6 +206,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         if 'make_tiffs' not in arguments and 'make_pngs' not in arguments and 'make_fits' not in arguments:
             msg = 'Missing job task. Select at least 1 from {}.'.format(jtasks)
             return self.missingargs(response, msg)
+        
         if 'make_fits' in arguments and 'colors' not in arguments:
             msg = 'Missing color band(s) for make_fits.'
             return self.missingargs(response, msg)
@@ -222,6 +220,9 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
             self.finish()
             return
         
+        xsize = arguments['xsize']
+        ysize = arguments['ysize']
+        
         try:
             email = arguments["email"]
         except:
@@ -232,47 +233,18 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         
         jobname = arguments["jobname"]
         
-        if 'ra' in arguments:
-            ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
-            dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
-            
-            xs = np.ones(len(ra))
-            ys = np.ones(len(ra))
-        
-        if 'coadd' in arguments:
-            coadd = [int(i) for i in arguments['coadd'].replace('[','').replace(']','').split(',')]
-            xs = np.ones(len(coadd))
-            ys = np.ones(len(coadd))
-        
-        xs_read = [float(i) for i in arguments['xsize'].replace('[', '').replace(']', '').split(',')]
-        if len(xs_read) == 1:
-            xs = xs*xs_read
-        if len(xs) >= len(xs_read):
-            xs[0:len(xs_read)] = xs_read
-        else:
-            xs = xs_read[0:len(xs)]
-        
-        ys_read = [float(i) for i in arguments['ysize'].replace('[', '').replace(']', '').split(',')]
-        if len(ys_read) == 1:
-            ys = ys*ys_read
-        if len(ys) >= len(ys_read):
-            ys[0:len(ys_read)] = ys_read
-        else:
-            ys = ys_read[0:len(ys)]
-        
         user_folder = os.path.join(Settings.WORKDIR, user)+'/'
         response['user'] = user
         response['elapsed'] = 0
         jobid = str(uuid.uuid4()).replace("-", "_")
         
-        if 'ra' in arguments:
-            df = pd.DataFrame(np.array([ra, dec, xs, ys]).T, columns=['RA', 'DEC', 'XSIZE', 'YSIZE'])
-        elif 'coadd' in arguments:
-            df = pd.DataFrame(np.array([coadd, xs, ys]).T, columns=['COADD_OBJECT_ID', 'XSIZE', 'YSIZE'])
         input_csv = user_folder + jobid + '.csv'
+        if 'ra' in arguments:
+            df = pd.DataFrame(np.array([ra, dec, xsize, ysize]).T, columns=['RA', 'DEC', 'XSIZE', 'YSIZE'])
+        elif 'coadd' in arguments:
+            df = pd.DataFrame(np.array([coadd, xsize, ysize]).T, columns=['COADD_OBJECT_ID', 'XSIZE', 'YSIZE'])
         df.to_csv(input_csv, sep=',', index=False)
         
-        job_size = ''
         dftemp_rows = len(df.index)
         if dftemp_rows <= SMALL_QUEUE:
             job_size = 'small'
@@ -285,8 +257,9 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
             nprocs = LARGE_QUEUE_MAX_CPUS
         
         del df
-        folder2 = user_folder+jobid+'/'
-        os.system('mkdir -p '+folder2)
+        
+        folder2 = user_folder + jobid + '/'
+        os.system('mkdir -p ' + folder2)
 
         db = 'dessci'
         tiffs = True if 'make_tiffs' in arguments and arguments['make_tiffs'].upper() == 'TRUE' else False
@@ -294,6 +267,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         fits = True if 'make_fits' in arguments and arguments['make_fits'].upper() == 'TRUE' else False
         rgb = False
         rgb_values = ''
+        
         if not tiffs and not pngs and not fits and not rgb:
             msg = 'At least 1 job task selected must be true: {}'.format(jtasks)
             return self.missingargs(response, msg)
@@ -301,8 +275,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         colors = ''
         if fits:
             colors = str(arguments['colors'])
-        xsize = 1.0
-        ysize = 1.0
+        
         return_list = True if 'return_list' in arguments and arguments['return_list'].upper() == 'TRUE' else False
 
         run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, user, lp, jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
