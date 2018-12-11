@@ -15,6 +15,7 @@ import numpy as np
 import backup
 import cx_Oracle
 from api import humantime
+import io
 
 dbConfig0 = Settings.dbConfig()
 app_log = Settings.app_log
@@ -172,24 +173,39 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
     
     @tornado.web.asynchronous
     def post(self):
-        SMALL_QUEUE = 300
-        MEDIUM_QUEUE = 1000
-        LARGE_QUEUE = 10000
-        SMALL_QUEUE_MAX_CPUS = 1
-        MEDIUM_QUEUE_MAX_CPUS = 4
-        LARGE_QUEUE_MAX_CPUS = 6
-        listargs = ['token', 'ra', 'dec', 'coadd', 'xsize', 'ysize', 'jobname']  # required
-        jtasks = ['make_tiffs','make_pngs','make_fits']
+        SMALL_QUEUE, SMALL_QUEUE_MAX_CPUS = 300, 1
+        MEDIUM_QUEUE, MEDIUM_QUEUE_MAX_CPUS = 1000, 4
+        LARGE_QUEUE, LARGE_QUEUE_MAX_CPUS = 10000, 6
+        
         response = {'status': 'error'}
+        
+        listargs = ['token','xsize','ysize','jobname']  # required
+        jtasks = ['make_tiffs','make_pngs','make_fits']
+        
         arguments = {k.lower(): self.get_argument(k, '') for k in self.request.arguments}
+        
         for l in listargs:
             if l not in arguments:
-                if l == 'coadd' and 'ra' in arguments and 'dec' in arguments:
-                    continue
-                elif l == 'ra' or l == 'dec' and 'coadd' in arguments:
-                    continue
                 msg = 'Missing {0}'.format(l)
                 return self.missingargs(response, msg)
+        
+        if 'csvfile' in arguments:
+            fileinfo = self.request.files['csvfiles'][0]
+            df = pd.DataFrame(pd.read_csv(io.BytesIO(fileinfo['body'])))              # will this work?
+            #df = pd.DataFrame(fileinfo['body'].pd.Series.str.decode('ascii'))        # will this work?
+            #df.columns = [x.upper() for x in df.columns]                             # capitalizes columns headers
+        
+        elif 'ra' in arguments and 'dec' in arguments:
+            ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
+            dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
+        
+        elif 'coadd' in arguments:
+            coadd = [int(i) for i in arguments['coadd'].replace('[','').replace(']','').split(',')]
+        
+        else:
+            msg = 'Missing input data.'
+            return missingargs(response, msg)
+        
         if 'make_tiffs' not in arguments and 'make_pngs' not in arguments and 'make_fits' not in arguments:
             msg = 'Missing job task. Select at least 1 from {}.'.format(jtasks)
             return self.missingargs(response, msg)
