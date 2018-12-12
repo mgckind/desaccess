@@ -52293,7 +52293,8 @@ function keysrt(key,desc) {
                         <span>{{imtitle}}</span> </div>
                         <paper-spinner class="big"></paper-spinner>
                         <!--<img src={{imdisplay}} height="200px" width="200px" />-->
-                        <img src="{{imdisplay}}" height="200px" width="200px" style="position: relative; top: 20px;">
+                        <!--<img src={{imdisplay}} height="200px" width="200px" style="position: relative; top: 20px;" />-->
+                        <img src="{{imdisplay}}" style="position: relative; top: 20px; height:200px; width:200px; object-fit:cover;">
                         <!--<div style="position:relative; left:-8px; top:-32px;">-->
                         <div style="position:relative; left:-8px; top:-12px;">
                               <paper-icon-button id="infoid" icon="info" class="mycolors">
@@ -52305,10 +52306,12 @@ function keysrt(key,desc) {
              -->
 
             <!-- DIALOG -->
-            <paper-dialog id="SingleTileDialog" class="centered" with-backdrop="" modal="" on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">
+            <!--<paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">-->
+            <paper-dialog id="SingleTileDialog" class="centered" with-backdrop="" modal="" on-iron-overlay-opened="patchOverlay" style="max-height:698px; max-width:698px;">
                   <h2 id="SingleTileTitle">{{imtitle}}</h2>
                   <!--<img id="SingleTileImg" class = "Image" />-->
-                  <img id="SingleTileImg" class="Image" style="width: 100%; max-width: 650px;">
+                  <!--<img id="SingleTileImg" class = "Image" style="width: 100%; max-width: 650px;" />-->
+                  <img id="SingleTileImg" class="Image" style="max-width: 650px; max-height:650px;">
                   <div class="buttons horizontal layout left-justified">
                         <paper-button class="indigo" on-tap="_gobackdialog" raised="" focused="">Close</paper-button>
                         <paper-button class="indigo" raised="" on-tap="download"> Download</paper-button>
