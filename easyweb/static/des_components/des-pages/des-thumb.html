@@ -93,10 +93,12 @@
              -->
 
             <!-- DIALOG -->
-            <paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">
+            <!--<paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="width:100%; max-width:698px;">-->
+            <paper-dialog  id="SingleTileDialog" class="centered"  with-backdrop modal on-iron-overlay-opened="patchOverlay" style="max-height:698px; max-width:698px;">
                   <h2 id="SingleTileTitle">{{imtitle}}</h2>
                   <!--<img id="SingleTileImg" class = "Image" />-->
-                  <img id="SingleTileImg" class = "Image" style="width: 100%; max-width: 650px;" />
+                  <!--<img id="SingleTileImg" class = "Image" style="width: 100%; max-width: 650px;" />-->
+                  <img id="SingleTileImg" class = "Image" style="max-width: 650px; max-height:650px;" />
                   <div class="buttons horizontal layout left-justified">
                         <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
                         <paper-button class="indigo" raised on-tap="download"> Download</paper-button>
