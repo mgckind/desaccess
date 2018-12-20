@@ -77,9 +77,9 @@ class FileHandler(BaseHandler):
 		print(name, 'name')
 		jobid = str(uuid.uuid4()).replace("-","_")	#'57b54f4f-ab85-4e4e-b366-1557c4b3ca0b' #str(uuid.uuid4())
 		if xs == 0.0:
-			xs = ''
+			xs = 1.0
 		if ys == 0.0:
-			ys = ''
+			ys = 1.0
 		if stype == "manual":
 			values = self.get_argument("fc_values")
 			print(values)

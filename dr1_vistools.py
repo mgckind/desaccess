@@ -78,7 +78,7 @@ class FileHandler(BaseHandler):
 		jobid = str(uuid.uuid4()).replace("-","_")
 		print(jobid)
 		if boxsize == 0.0:
-			boxsize = ''
+			boxsize = 4.0
 		if stype == "manualCoadds":
 			useCoadds = True
 			values = self.get_argument("da_coadds")

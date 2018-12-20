@@ -98,9 +98,9 @@ class FileHandler(BaseHandler):
         jobid = str(uuid.uuid4()).replace("-", "_")
 
         if xsize == 0.0:
-            xsize = ''
+            xsize = 1.0
         if ysize == 0.0:
-            ysize = ''
+            ysize = 1.0
 
         filename = user_folder + jobid + '.csv'
         if stype == 'manualCoadds':
