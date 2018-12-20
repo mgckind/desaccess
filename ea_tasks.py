@@ -815,8 +815,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             json.dump(response, fp)
         return response
 
-    ralst = ','.join(input_df['RA'].apply(str).tolist())
-    declst = ','.join(input_df['DEC'].apply(str).tolist())
+    ralst = ' '.join(input_df['RA'].apply(str).tolist())
+    declst = ' '.join(input_df['DEC'].apply(str).tolist())
 
     logfile.write('Selected Options:\n')
     logfile.write('    x size: ' + str(xs) + '\n')
@@ -878,7 +878,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
 
     urllst = []
     dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))
-    for tile in dftiles['TILENAME']:
+    for tile in dftiles['TILENAME'].unique():
         for fileitm in os.listdir(mypath+tile+'/'):
             if fileitm.endswith("_g.fits") and gband:
                 urllst.append(mypath + tile + '/' + fileitm)
@@ -895,6 +895,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     curs = conn.cursor()
 
     start_time = time.time()
+    print(urllst)
     for row in urllst:
         logfile.write('****************************************\n')
         logfile.write('Object: ' + row[-28:-5] + '\n')
@@ -983,7 +984,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         figname = outputs + filenm + '_' + band.lower() + '_chart.png' if band != 'Y' else outputs + filenm + '_' + band + '_chart.png'
 
         fig = plt.figure()
-        ax = plotutils.CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
+        ax = plotutils.CreateChart(logfile, image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
         fig.axes.append(ax)
 
         try:
