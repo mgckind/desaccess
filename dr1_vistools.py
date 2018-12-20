@@ -85,7 +85,7 @@ class FileHandler(BaseHandler):
 			print(values)
 			filename = user_folder+jobid+'.csv'
 			F = open(filename, 'w')
-			F.write("COADDID\n")
+			F.write("COADD_OBJECT_ID\n")
 			F.write(values)
 			F.close()
 		if stype == "manualCoords":
