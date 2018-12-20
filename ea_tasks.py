@@ -516,12 +516,12 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
 
         if intype == 'coadds':
             try:
-                a = int(input_df['COADDID'][row])
+                a = int(input_df['COADD_OBJECT_ID'][row])
             except (TypeError, ValueError):
                 logfile.write('****************************************\n')
-                logfile.write('ERROR - {0} is not a valid coadd ID.'.format(input_df['COADDID'][row]))
+                logfile.write('ERROR - {0} is not a valid coadd ID.'.format(input_df['COADD_OBJECT_ID'][row]))
             else:
-                COADDID = str(input_df['COADDID'][row])
+                COADDID = str(input_df['COADD_OBJECT_ID'][row])
                 logfile.write('****************************************\n')
                 logfile.write('Object: {0}'.format(COADDID))
 
