@@ -974,7 +974,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         else:
             helperPlot = True
             logfile.write('Below is the result of the query. The first object listed is the helper object.\n' + df.to_string(columns=None, header=True, index=False, justify='left') + '\n')
-            with open(outputs + filenm + '_' + band + '_objects.csv', 'a') as f:
+            with open(outputs + filenm + '_' + (band.lower() if band != 'Y' else band) + '_objects.csv', 'a') as f:
                 df.to_csv(f, sep=',', index=False, header=False)
 
         [dataMin, dataMax] = np.percentile(data,[30,99])
