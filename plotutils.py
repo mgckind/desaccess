@@ -279,7 +279,7 @@ def PixelstoWCS(header,x,y):
     wx, wy = w.wcs_pix2world(x, y, 1)
     return(wx, wy)
 
-def CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band):
+def CreateChart(logfile, image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection=WCS(image))
     
