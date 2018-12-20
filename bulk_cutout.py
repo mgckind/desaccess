@@ -102,32 +102,33 @@ class FileHandler(BaseHandler):
         if ysize == 0.0:
             ysize = ''
 
+        filename = user_folder + jobid + '.csv'
         if stype == 'manualCoadds':
             values = self.get_argument('bc_coadds')
-            filename = user_folder + jobid + '.csv'
+            #filename = user_folder + jobid + '.csv'
             F = open(filename, 'w')
             F.write("COADD_OBJECT_ID\n")
             F.write(values)
             F.close()
         if stype == 'manualCoords':
             values = self.get_argument('bc_coords')
-            filename = user_folder + jobid + '.csv'
+            #filename = user_folder + jobid + '.csv'
             F = open(filename, 'w')
             F.write('RA,DEC\n')
             F.write(values)
             F.close()
         if stype == 'coaddfile':
             fileinfo = self.request.files['csvfile1'][0]
-            fname = fileinfo['filename']
-            extn = os.path.splitext(fname)[1]
-            filename = user_folder + jobid + extn
+            #fname = fileinfo['filename']
+            #extn = os.path.splitext(fname)[1]
+            #filename = user_folder + jobid + extn
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
         if stype == 'coordfile':
             fileinfo = self.request.files['csvfile2'][0]
-            fname = fileinfo['filename']
-            extn = os.path.splitext(fname)[1]
-            filename = user_folder + jobid + extn
+            #fname = fileinfo['filename']
+            #extn = os.path.splitext(fname)[1]
+            #filename = user_folder + jobid + extn
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
         print('**************')
