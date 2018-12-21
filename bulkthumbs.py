@@ -182,7 +182,8 @@ def MakeLuptonRGB(tiledir, outdir, df, positions, xs, ys, colors, bp, s, q):
             else:
                 b = fits.getdata(file_b[0], 'SCI')
 
-            newimg, issmaller = MakeRGB(df, positions[p], xs, ys, r, g, b, w, bp, s, q)
+            #newimg, issmaller = MakeRGB(df, positions[p], xs, ys, r, g, b, w, bp, s, q)
+            newimg, issmaller = MakeRGB(df, p, xs, ys, r, g, b, w, bp, s, q)
             newimg.save(filenm, format='PNG')
 
             if issmaller:
