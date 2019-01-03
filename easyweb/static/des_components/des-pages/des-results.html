@@ -6,15 +6,20 @@
         width: 70%;
         overflow-y: scroll;
     }
+    iron-list {
+        height: 100%;
+    }
     </style>
 
     <iron-ajax id="getTiles"
-        auto
-        url=/easyweb/static/workdir/{{username}}/{{jobid}}/list.json
-        handle-as="json"
-        last-response="{{jsondata}}"
-        on-response="_getTilesResponse">
+               auto
+               url=/easyweb/static/workdir/{{username}}/{{jobid}}/list.json
+               handle-as="json"
+               last-response="{{jsondata}}"
+               on-response="_getTilesResponse">
     </iron-ajax>
+    
+    
 
     <iron-ajax id="getLogHelp"
                url="/easyweb/mylogs/"
@@ -52,9 +57,10 @@
         <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
         <paper-button class="custom indigo" on-tap="_closedialog"> Close</paper-button>
         <hr class="des-hr">
+    <!--<div class="card-content" style="height: 70%; overflow-y: scroll;">-->
     <div class="card-content" style="height: 70%; overflow-y: scroll;">
 
-    <template is="dom-if" if="{{_actionIsFC(jobtype)}}">
+    <template is="dom-if" if="{{_actionIsFC(jobtype)}}" restamp>
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
@@ -63,7 +69,7 @@
     </template>
     </template>
     
-    <template is="dom-if" if="{{_actionIsDA(jobtype)}}">
+    <template is="dom-if" if="{{_actionIsDA(jobtype)}}" restamp>
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
             <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
@@ -72,12 +78,34 @@
     </template>
     </template>
 
-    <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}">
-    <template is="dom-if" if="{{jsondata}}">
-        <template is="dom-repeat" items="{{jsondata}}">
+    <template is="dom-if" if="{{_actionIsCoadd(jobtype)}}" restamp>
+    <template is="dom-if" if="{{jsondata}}" restamp>
+        <!--<template is="dom-repeat" items="{{jsondata}}" initial-count="20" target-framerate="60">
             <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
             </des-thumb>
+        </template>-->
+        <template is="dom-if" if="{{!_checkLength(jsondata)}}" restamp>
+            <h3> Too many thumbnails to load here!</h3>
+            <!--<iron-ajax id="getTileList"
+               auto
+               url=/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt
+               handle-as="text"
+               last-response="{{textdata}}"
+               on-response="_getTextResponse">
+            </iron-ajax>-->
+            <p>Check the file "<a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt">list_all.txt</a>" for image URLs.</p>
         </template>
+        <template is="dom-if" if="{{_checkLength(jsondata)}}" restamp>
+            <template is="dom-repeat" items="{{jsondata}}" initial-count="20" target-framerate="60">
+                <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
+                </des-thumb>
+            </template>
+        </template>
+        <!--<iron-list items="{{jsondata}}" as="item" grid>
+            <template>
+                    <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]" style="z-index:[[_getIndex(index)]];"></des-thumb>
+            </template>
+        </iron-list>-->
     </template>
     </template>
 
@@ -95,20 +123,26 @@
     <template is="dom-if" if="{{!jsondata}}">
          <h3> There are no outputs for this job. Check logfile for details.</h3>
     </template>
+    
+    <paper-toast class="toast-position" id="da_toastresults" text="No archive file was created for this job." duration="5000"> </paper-toast>
+    
     </des-card>
     <!--<paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>-->
-
 
 
 </template>
 
 <script>
     Polymer({
-          is: "des-results",
-          properties : {
+        is: "des-results",
+        properties : {
             jsondata: {
                 type: Array,
             },
+//            textdata: {
+//                value: '',
+//                type: Array,
+//            },
             jobid: {
                 value : '',
                 type : String,
@@ -118,51 +152,53 @@
                 type: String,
                 value: '',
             },
-              jobtype: {
+            jobtype: {
                 value : '',
                 type : String,
                 notify: true,
             },
-          },
+        },
+        
         _actionIsFC: function(job_type) {
             if (job_type == "finding chart") {
                 console.log("Finding Chart!")
                 return true;
             }
-          },
+        },
         _actionIsDA: function(job_type) {
             if (job_type == "data analysis") {
                 console.log("Data Analysis!")
                 return true;
             }
-          },
+        },
         _actionIsCoadd: function(job_type) {
             if (job_type == "coadd") {
                 console.log("COADD!")
                 return true;
             }
-          },
-          _actionIsSE: function(job_type) {
+        },
+        _actionIsSE: function(job_type) {
             if (job_type == "epoch") {
                 console.log("EPOCH!")
                 return true;
             }
-          },
-          _seeLog: function(e) {
+        },
+        _seeLog: function(e) {
             e.stopPropagation();
             console.log('Log!');
             logform = document.getElementById('getLogHelp');
-             logform.body = {
+            logform.body = {
                   'jobid': this.jobid,
-              };
-              logform.generateRequest();
-              document.getElementById('logDialogHelp').open();
-          },
-          _getAll: function(){
-                var link = document.createElement('a');
-                var siid = this.jobid;
-                var user = this.username;
-                link.href = "/easyweb/static/workdir/"+user+"/"+siid+"/"+siid+".tar.gz";
+            };
+            logform.generateRequest();
+            document.getElementById('logDialogHelp').open();
+        },
+        _getAll: function(){
+            var link = document.createElement('a');
+            var siid = this.jobid;
+            var user = this.username;
+            link.href = "/easyweb/static/workdir/"+user+"/"+siid+"/"+siid+".tar.gz";
+            if (this._checkLength(this.jsondata)) {
                 if (link.download !== undefined){
                     //Set HTML5 download attribute. This will prevent file from opening if supported.
                     var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
@@ -176,30 +212,50 @@
                 }
                 var query = '?download';
                 window.open(link.href + query);
-            },
-              _gobackdialog: function(event){
-                  document.getElementById('logDialogHelp').close();
-                  document.getElementById('JobTiles').close();
-                  document.getElementById('JobTiles').open();
-              },
-              _closedialog: function(event){
-                  document.getElementById('JobTiles').close();
-              },
-             patchOverlay: function (e) {
-                 if (e.target.withBackdrop) {
-                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-                 }
-             },
-          _getTilesResponse: function() {
+            }
+            else {
+                document.querySelector('#da_toastresults').show();
+            }
+        },
+        _gobackdialog: function(event){
+            document.getElementById('logDialogHelp').close();
+            document.getElementById('JobTiles').close();
+            document.getElementById('JobTiles').open();
+        },
+        _closedialog: function(event){
+            document.getElementById('JobTiles').close();
+        },
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        },
+        _checkLength: function(data) {
+            if (data.length > 300) {
+                console.log('> 300');
+                return false;
+            }
+            else {
+                console.log('<= 300');
+                return true;
+            }
+        },
+        _getIndex: function(itemIndex) {
+            return this.jsondata.length-itemIndex;
+        },
+        _getTilesResponse: function() {
             console.log(this.jsondata);
             if (this.jsondata.length == 0 ) {
               //document.getElementById('getAllIcon').disabled=true;
               console.log('==0');
-               }
+            }
             else {
               console.log('!=0');
               //document.getElementById('getAllIcon').disabled=false;
-              }
+            }
+        },
+        _getTextResponse: function() {
+            console.log(this.textdata);
         },
 //        patchOverlay: function (e) {
 //            if (e.target.withBackdrop) {
