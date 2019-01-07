@@ -782,7 +782,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     return response
 
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email, email, gband, rband, iband, zband, yband, mag):
+def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_email, email, gband, rband, iband, zband, yband, mag):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -823,7 +823,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     logfile.write('    y size: ' + str(ys) + '\n')
     logfile.write('    Magnitude Limit: ' + str(mag) + '\n')
     logfile.write('    G Band: {0}, R Band {1}, I Band {2}, Z Band {3}, Y Band {4}\n'.format(gband, rband, iband, zband, yband))
-    logfile.write('    Return cutout too? {} \n'.format(not listonly))
+    logfile.write('    Return cutout too? {} \n'.format(return_cut))
     logfile.write('    Email: ' + str(email) + '\n')
     logfile.write('    Comment: ' + logname + '\n')
     logfile.write('****************************************\n')
@@ -996,7 +996,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         else:
             logfile.write('Chart exported to ' + figname + '\n')
 
-    if listonly:
+    if not return_cut:
         #print('just making the chart')
         tiles = glob.glob(mypath + '*.png')
         titles = []
@@ -1012,7 +1012,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             os.remove(mypath+"list.json")
         with open(mypath+"list.json", "w") as outfile:
             json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
-    else:
+    if return_cut:
         #print('making the chart and cutout too')
         tiles = glob.glob(mypath + '*.png')
         titles = []
@@ -1058,7 +1058,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     #conn.close()
 
     # writing files for wget
-    allfiles = glob.glob(mypath+'*.*')
+    allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
@@ -1158,6 +1158,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     except subprocess.CalledProcessError as e:
         print(e.output)
 
+    # Creates list.json
     tiles = glob.glob(mypath + '**/*.png')
     titles = []
     Ntiles = len(tiles)
@@ -1171,6 +1172,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     with open(mypath + "list.json", "w") as outfile:
         json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
     
+    # Creates list_all.json
     alltiles = glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
     alltitles = []
     allNtiles = len(alltiles)
@@ -1187,17 +1189,20 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     with open(mypath + "list_all.json", "w") as outfile:
         json.dump([dict(name=alltiles[i], title=alltitles[i], size=allNtiles) for i in range(len(alltiles))], outfile, indent=4)
 
+    # Creates the tarball
     if job_size == 'small':
         os.chdir(user_folder)
         os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
         os.chdir(os.path.dirname(__file__))
 
+    # Creates list_all.txt
     allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
     prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
+        print(ff, ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1)
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
     Fall.close()

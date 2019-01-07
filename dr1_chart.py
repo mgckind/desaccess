@@ -54,10 +54,10 @@ class FileHandler(BaseHandler):
 		name = self.get_argument("fc_name")
 		stype = self.get_argument("fc_submit_type")
 		
-		if return_cut:
-			list_only = False
-		else:
-			list_only = True
+		#if return_cut:
+		#	list_only = False
+		#else:
+		#	list_only = True
 		
 		if allbands:
 			gband = True
@@ -103,7 +103,7 @@ class FileHandler(BaseHandler):
 		now = datetime.datetime.now()
 		input_csv = user_folder + jobid + '.csv'
 		run = ea_tasks.make_chart.apply_async(args=[input_csv, loc_user, lp.decode(),
-												  folder2, db, xs, ys, jobid, list_only,
+												  folder2, db, xs, ys, jobid, return_cut,
 												  send_email, email, 
 												  gband, rband, iband, zband, yband, 
 												  mag], retry=True, task_id=jobid)
