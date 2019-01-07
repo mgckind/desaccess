@@ -66,6 +66,19 @@ class FileHandler(BaseHandler):
 			zband = True
 			yband = True
 		
+		colors = ''
+		if gband:
+			colors = (',').join((colors, 'g'))
+		if rband:
+			colors = (',').join((colors, 'r'))
+		if iband:
+			colors = (',').join((colors, 'i'))
+		if zband:
+			colors = (',').join((colors, 'z'))
+		if yband:
+			colors = (',').join((colors, 'y'))
+		colors = colors.strip(',')
+		
 		print('**************')
 		print(xs, ys, 'sizes')
 		print(gband, rband, iband, zband, yband, 'bands')
@@ -102,11 +115,8 @@ class FileHandler(BaseHandler):
 		os.system('mkdir -p '+folder2)
 		now = datetime.datetime.now()
 		input_csv = user_folder + jobid + '.csv'
-		run = ea_tasks.make_chart.apply_async(args=[input_csv, loc_user, lp.decode(),
-												  folder2, db, xs, ys, jobid, return_cut,
-												  send_email, email, 
-												  gband, rband, iband, zband, yband, 
-												  mag], retry=True, task_id=jobid)
+		
+		run = ea_tasks.make_chart.apply_async(args=[input_csv, loc_user, lp.decode(), folder2, db, xs, ys, jobid, return_cut, send_email, email, colors, mag], retry=True, task_id=jobid)
 		
 		with open('config/desaccess.yaml', 'r') as cfile:
 			conf = yaml.load(cfile)['mysql']

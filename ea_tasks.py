@@ -737,6 +737,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             logfile.write('Figure ' + filenm + '_spreadmag' + exten + ' has been created.\n')
             numPlots += 1
 
+    # Creates list.json
     tiles = sorted(glob.glob(mypath + '*.png'))
     titles = []
     Ntiles = len(tiles)
@@ -747,6 +748,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     for i in range(Ntiles):
         tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
     
+    # Creates the tarball
     os.chdir(user_folder)
     os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
     os.chdir(os.path.dirname(__file__))
@@ -764,7 +766,8 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     logfile.write('Done.\n')
     logfile.close()
 
-    # writing files for wget
+    # Writing files for wget
+    # Create list_all.txt
     allfiles = glob.glob(mypath+'*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
@@ -782,7 +785,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     return response
 
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_email, email, gband, rband, iband, zband, yband, mag):
+def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_email, email, colors, mag):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -822,7 +825,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     logfile.write('    x size: ' + str(xs) + '\n')
     logfile.write('    y size: ' + str(ys) + '\n')
     logfile.write('    Magnitude Limit: ' + str(mag) + '\n')
-    logfile.write('    G Band: {0}, R Band {1}, I Band {2}, Z Band {3}, Y Band {4}\n'.format(gband, rband, iband, zband, yband))
+    #logfile.write('    G Band: {0}, R Band {1}, I Band {2}, Z Band {3}, Y Band {4}\n'.format(gband, rband, iband, zband, yband))
+    logfile.write('    Colors: {} \n'.format(colors))
     logfile.write('    Return cutout too? {} \n'.format(return_cut))
     logfile.write('    Email: ' + str(email) + '\n')
     logfile.write('    Comment: ' + logname + '\n')
@@ -854,22 +858,29 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         iband = True
     """
 
+    gband = True if 'g' in colors else False
+    rband = True if 'r' in colors else False
+    iband = True if 'i' in colors else False
+    zband = True if 'z' in colors else False
+    yband = True if 'y' in colors else False
+
     logfile.write('Passing off to bulkthumbs to get the fits file...\n')
-    bulkthumbscolors = []
-    if gband:
-        bulkthumbscolors.append('g')
-    if rband:
-        bulkthumbscolors.append('r')
-    if iband:
+    #bulkthumbscolors = []
+    #if gband:
+    #    bulkthumbscolors.append('g')
+    #if rband:
+    #    bulkthumbscolors.append('r')
+    #if iband:
+    #    bulkthumbscolors.append('i')
+    #if zband:
+    #    bulkthumbscolors.append('z')
+    #if yband:
+    #    bulkthumbscolors.append('y')
+    if not colors:
         bulkthumbscolors.append('i')
-    if zband:
-        bulkthumbscolors.append('z')
-    if yband:
-        bulkthumbscolors.append('y')
-    if not bulkthumbscolors:
-        bulkthumbscolors.append('i')
-    bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
-    bulkthumbscom = "python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, bulkthumbscolors, "Y3A2", jobid, uu, pp, outputs)
+        colors = 'i'
+    #bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
+    bulkthumbscom = "python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "Y3A2", jobid, uu, pp, outputs)
     try:
         #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
         oo = subprocess.check_output([bulkthumbscom], shell=True)
@@ -1040,7 +1051,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     logfile.close()
     #conn.close()
 
-    # writing files for wget
+    # Writing files for wget
     allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
@@ -1178,6 +1189,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
         os.chdir(os.path.dirname(__file__))
 
+    # Writing files for wget
     # Creates list_all.txt
     allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
