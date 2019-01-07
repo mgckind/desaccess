@@ -255,7 +255,7 @@
 								<div class="around-cell">
 									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_gband">g</paper-checkbox>
 									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_rband">r</paper-checkbox>
-									<paper-checkbox class="bandbox" checked style="font-size:16px; padding-top:15px;" id="fc_iband">i</paper-checkbox>
+									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_iband">i</paper-checkbox>
 									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_zband">z</paper-checkbox>
 									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_Yband">Y</paper-checkbox>
                                     <paper-toggle-button style="font-size:16px; padding-top:15px;" id="fc_all_toggle">Select All</paper-toggle-button>
@@ -446,7 +446,7 @@
             
             document.getElementById("fc_gband").checked=false;
             document.getElementById("fc_rband").checked=false;
-            document.getElementById("fc_iband").checked=true;
+            document.getElementById("fc_iband").checked=false;
             document.getElementById("fc_zband").checked=false;
             document.getElementById("fc_Yband").checked=false;
             document.getElementById("fc_magSlider").value="20.0";
@@ -508,18 +508,28 @@
             formdata.append('fc_submit_type', this.submit_type);
             formdata.append('fc_values',document.getElementById("fc_enteredPositions").value);
             formdata.append('fc_all_toggle', document.getElementById("fc_all_toggle").checked);
-
-            $.ajax({
-                url: '/easyweb/dr1_chart/',
-                type: 'POST',
-                //beforeSend: this.beforeSendHandler,
-                success: this.completeHandler,
-                error: this.errorHandler,
-                data: formdata,
-                cache: false,
-                contentType: false,
-                processData: false
-            });
+            
+            var g = document.getElementById("fc_gband").checked;
+            var r = document.getElementById("fc_rband").checked;
+            var i = document.getElementById("fc_iband").checked;
+            var z = document.getElementById("fc_zband").checked;
+            var y = document.getElementById("fc_Yband").checked;
+            if (g == false && r == false && i == false && z == false && y == false){
+                document.getElementById('desFindingChart').errorHandler();
+            }
+            else {
+                $.ajax({
+                    url: '/easyweb/dr1_chart/',
+                    type: 'POST',
+                    //beforeSend: this.beforeSendHandler,
+                    success: this.completeHandler,
+                    error: this.errorHandler,
+                    data: formdata,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
         },
         _clearForm: function(){
             console.log('clear Form');
