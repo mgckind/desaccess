@@ -996,39 +996,22 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         else:
             logfile.write('Chart exported to ' + figname + '\n')
 
-    if not return_cut:
-        #print('just making the chart')
-        tiles = glob.glob(mypath + '*.png')
-        titles = []
-        pngtitles = []
-        Ntiles = len(tiles)
-        for i in tiles:
-            title = i.split('/')[-1][:-4]
-            titles.append(title)
-            pngtitles.append(mypath + title + '.png')    #pngfiles.append(c)
-        for i in range(Ntiles):
-            pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
-        if os.path.exists(mypath+"list.json"):
-            os.remove(mypath+"list.json")
-        with open(mypath+"list.json", "w") as outfile:
-            json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
+    tiles = glob.glob(mypath + '*.png')
+    titles = []
+    pngtitles = []
+    Ntiles = len(tiles)
+    for i in tiles:
+        title = i.split('/')[-1][:-4]
+        titles.append(title)
+        pngtitles.append(mypath + title + '.png')    #pngfiles.append(c)
+    for i in range(Ntiles):
+        pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
+    if os.path.exists(mypath+"list.json"):
+        os.remove(mypath+"list.json")
+    with open(mypath+"list.json", "w") as outfile:
+        json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
+    
     if return_cut:
-        #print('making the chart and cutout too')
-        tiles = glob.glob(mypath + '*.png')
-        titles = []
-        pngtitles = []
-        Ntiles = len(tiles)
-        for i in tiles:
-            title = i.split('/')[-1][:-4]
-            titles.append(title)
-            pngtitles.append(mypath + title + '.png')
-        for i in range(Ntiles):
-            pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
-        if os.path.exists(mypath + "list.json"):
-            os.remove(mypath + "list.json")
-        with open(mypath + "list.json", "w") as outfile:
-            json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
-        
         alltiles = glob.glob(mypath+'**/*.fits')
         alltitles = []
         allNtiles = len(alltiles)
