@@ -267,8 +267,8 @@ def MakeFitsCut(tiledir, outdir, size, positions, colors, df):
 
     for c in range(len(colors)):        # Iterate over all desired colors
         # Finish the tile's name and open the file. Camel-case check is required because Y band is always capitalized.
-        if colors[c] == 'Y':
-            tilename = glob.glob(tiledir + '*_{}.fits.fz'.format(colors[c]))
+        if colors[c] == 'Y' or colors[c] == 'y':
+            tilename = glob.glob(tiledir + '*_{}.fits.fz'.format(colors[c].upper()))
         else:
             tilename = glob.glob(tiledir + '*_{}.fits.fz'.format(colors[c].lower()))
         try:
