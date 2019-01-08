@@ -864,6 +864,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     zband = True if 'z' in colors else False
     yband = True if 'y' in colors else False
 
+    start_time1 = time.time()
     logfile.write('Passing off to bulkthumbs to get the fits file...\n')
     #bulkthumbscolors = []
     #if gband:
@@ -886,7 +887,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         oo = subprocess.check_output([bulkthumbscom], shell=True)
     except subprocess.CalledProcessError as e:
         print(e.output)
-
+    end_time1 = time.time()
+    
     urllst = []
     dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))
     for tile in dftiles['TILENAME'].unique():
@@ -905,8 +907,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     conn = ea.connect(db, user=uu, passwd=pp)
     curs = conn.cursor()
 
-    start_time = time.time()
-    print(urllst)
+    start_time2 = time.time()
+    #print(urllst)
     for row in urllst:
         logfile.write('****************************************\n')
         logfile.write('Object: ' + row[-28:-5] + '\n')
@@ -1044,9 +1046,11 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     os.chdir(os.path.dirname(__file__))
 
     logfile.write('****************************************\n')
-    end_time = time.time()
-    difference = end_time - start_time
-    logfile.write('The plot took ' + str(difference) + ' seconds to make.\n')
+    end_time2 = time.time()
+    difference1 = end_time1 - start_time1
+    difference2 = end_time2 - start_time2
+    logfile.write('Bulkthumbs took ' + str(difference1) + ' seconds.\n')
+    logfile.write('The plot took ' + str(difference2) + ' seconds to make.\n')
     logfile.write('Have a nice day.\n')
     logfile.close()
     #conn.close()
