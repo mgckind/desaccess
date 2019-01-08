@@ -163,6 +163,102 @@ class ApiTokenHandler(tornado.web.RequestHandler):
         self.finish()
 
 
+class ApiChartHandler(tornado.web.RequestHandler):
+    def missingargs(self, response, msg):
+        response['msg'] = msg
+        self.set_status(400)
+        app_log.warning(response['msg'])
+        self.write(response)
+        self.finish()
+    
+    @tornado.web.asynchronous
+    def post(self):
+        response = {'status': 'error'}
+        
+        listargs = ['token','xsize','ysize','jobname','colors','mag_limit','return_cut']
+        
+        arguments = {k.lower(): self.get_argument(k, '') for k in self.request.arguments}
+        
+        for l in listargs:
+            if l not in arguments:
+                msg = 'Missing {0}'.format(l)
+                return self.missingargs(response, msg)
+        
+        if 'csvfile' in arguments:
+            fileinfo = self.request.files['csvfile'][0]
+            df = pd.DataFrame(pd.read_csv(io.BytesIO(fileinfo['body'])))
+        elif 'ra' in arguments and 'dec' in arguments:
+            ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
+            dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
+        else:
+            msg = 'Missing input data.'
+            return self.missingargs(response, msg)
+        
+        token = arguments['token']
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
+            self.set_status(403)
+            self.write(response)
+            self.finish()
+            return
+        
+        xsize = float(arguments['xsize'])
+        ysize = float(arguments['ysize'])
+        mag = arguments['mag_limit']
+        jobname = arguments['jobname']
+        
+        try:
+            email = arguments['email']
+        except:
+            email = ''
+            send_email = False
+        else:
+            send_email = True
+        
+        user_folder = os.path.join(Settings.WORKDIR, user) + '/'
+        response['user'] = user
+        response['elapsed'] = 0
+        jobid = str(uuid.uuid4()).replace("-", "_")
+        
+        db = 'dessci'
+        input_csv = user_folder + jobid + '.csv'
+        if 'ra' in arguments:
+            df = pd.DataFrame(np.array([ra, dec]).T, columns=['RA','DEC'])
+        df.to_csv(input_csv, sep=',', index=False)
+        
+        del df
+        
+        folder2 = user_folder + jobid + '/'
+        os.system('mkdir -p ' + folder2)
+        
+        colors = str(arguments['colors'])
+        return_cut = True if 'return_cut' in arguments and arguments['return_cut'].upper() == 'TRUE' else False
+        
+        run = ea_tasks.make_chart.apply_async(args=[input_csv, user, lp, folder2, db, xsize, ysize, jobid, return_cut, send_email, email, colors, mag], retry=True, task_id=jobid)
+        
+        app_log.info('Job Finding Chart {} submitted'.format(run))
+        
+        with open('config/mysqlconfig.yaml','r') as cfile:
+            conf = yaml.load(cfile)['mysql']
+        con = mydb.connect(**conf)
+        
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        tup = tuple([user, jobid, jobname, 'PENDING', now, 'coadd', '', '', '', -1])
+
+        with con:
+            cur = con.cursor()
+            cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        con.close()
+        response['msg'] = 'Job {0} submitted'.format(jobid)
+        response['status'] = 'ok'
+        response['kind'] = 'cutout'
+        response['jobid'] = jobid
+        self.write(response)
+        self.flush()
+        self.finish()
+
+
 class ApiCutoutHandler(tornado.web.RequestHandler):
     def missingargs(self, response, msg):
         response['msg'] = msg

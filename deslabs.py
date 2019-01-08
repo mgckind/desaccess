@@ -123,6 +123,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/help/?", api.HelpHandler),
             (r"/easyweb/api/v1/token/?", pubapi.ApiTokenHandler),
             (r"/easyweb/api/v1/cutout/", pubapi.ApiCutoutHandler),
+            (r"/easyweb/api/v1/chart/", pubapi.ApiChartHandler),
             (r"/easyweb/api/v1/query/", pubapi.ApiQueryHandler),
             (r"/easyweb/api/v1/jobs/", pubapi.ApiJobHandler),
             (r"/easyweb/deslabs/deploy", jlab.LabLaunchHandler),
