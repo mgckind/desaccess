@@ -338,6 +338,7 @@
 
             <paper-toast class="toast-position" id="fc_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
             <paper-toast class="toast-position" id="fc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position" id="fc_toast3coadd" text="Form is incomplete for selected options!" duration="5000"> </paper-toast>
 
             <paper-dialog class="size-position2" id="fc_emaildialog" with-backdrop on-iron-overlay-opened="patchOverlay">
                 <paper-card elevation="0">
@@ -490,6 +491,10 @@
             document.getElementById('desFindingChart').clear();
             document.querySelector('#fc_toast2coadd').show();
         },
+        errorHandler2: function(){
+            console.log('NOOOO');
+            document.querySelector('#fc_toast3coadd').show();
+        },
         _submitJob: function(event){
             var formdata = new FormData();
             formdata.append('csvfile', this.$.file.files[0]);
@@ -514,8 +519,9 @@
             var i = document.getElementById("fc_iband").checked;
             var z = document.getElementById("fc_zband").checked;
             var y = document.getElementById("fc_Yband").checked;
-            if (g == false && r == false && i == false && z == false && y == false){
-                document.getElementById('desFindingChart').errorHandler();
+            var allbands = document.getElementById("fc_all_toggle").checked;
+            if (g == false && r == false && i == false && z == false && y == false && allbands == false){
+                document.getElementById('desFindingChart').errorHandler2();
             }
             else {
                 $.ajax({
