@@ -661,7 +661,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                 df = df.assign(I_FLUXERR=df['I_FLUX']*(1-(10**(-df['MAGERR_I']/2.5))))
                 df = df.assign(Z_FLUXERR=df['G_FLUX']*(1-(10**(-df['MAGERR_Z']/2.5))))
                 df = df.assign(Y_FLUXERR=df['Y_FLUX']*(1-(10**(-df['MAGERR_Y']/2.5))))
-                logfile.write('The following DES flux data has been calculated:\n' + df.to_string(columns=['G_FLUX','R_FLUX','I_FLUX','Z_FLUX','Y_FLUX','G_FLUXERR','R_FLUXERR','I_FLUXERR','Z_FLUXERR','Y_FLUXERR'], header=True, index=False, justify='left'))
+                logfile.write('The following DES flux data has been calculated:\n' + df.to_string(columns=['G_FLUX','R_FLUX','I_FLUX','Z_FLUX','Y_FLUX','G_FLUXERR','R_FLUXERR','I_FLUXERR','Z_FLUXERR','Y_FLUXERR'], header=True, index=False, justify='left') + '\n')
 
             if addwise:
                 if df['W1MPRO'][0] is None:
@@ -1201,7 +1201,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     Fall = open(mypath+'list_all.txt', 'w')
     prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
-        print(ff, ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1)
+        #print(ff, ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1)
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
     Fall.close()
