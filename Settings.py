@@ -8,7 +8,7 @@ DEBUG = False
 DIRNAME = os.path.dirname(__file__)
 TOKEN_TTL = 3600
 STATIC_PATH = os.path.join(DIRNAME, 'easyweb/static')
-URLPATH = 'http://desdr-server.ncsa.illinois.edu'
+URLPATH = 'http://desdr-server.ncsa.illinois.edu/easyweb'
 try:
     LOG_PATH = os.path.join(DIRNAME, 'logs', os.environ['POD_ID'])
 except:
