@@ -14,20 +14,16 @@
             /*border: 2px dotted #8da6ce;*/
             /*border-style: outset;*/
         }
-
         .card-content {
             @apply(--layout-vertical);
         }
-
         /*.middle {*/
         /*@apply(--layout-flex);*/
         /*}*/
-
         .coadd-container {
             margin-top: 10px;
             @apply(--layout-horizontal);
         }
-
         .container2 {
             @apply(--layout-horizontal);
             @apply(--layout-center-justified);
@@ -36,26 +32,21 @@
             @apply(--layout-horizontal);
             @apply(--layout-around-justified);
         }
-
         .left {
             @apply(--layout-flex);
         }
         .left2 {
             @apply(--layout-flex);
             text-align: center;
-
         }
         .right {
             @apply(--layout-flex);
 
         }
-
         .right2 {
             @apply(--layout-flex-2);
             text-align: center;
-
         }
-
         .mid {
             @apply(--layout-flex);
         }
@@ -65,111 +56,80 @@
         .flex4child {
             @apply(--layout-flex-4);
         }
-
         paper-slider {
             width: 100%;
         }
-
         hr {
             display: block;
             border: 1px solid gray;
             opacity: 0.2;
-
         }
-
         paper-icon-item {
             /*background: linear-gradient(to right, #efeaf4, white);*/
         }
-
         .buttonLook{
             border: 4px solid #ccc;
             border-style: outset;
             border-radius: 10px;
         }
-
-
-
         .btcell {
             text-align: center;
         }
-
         .around-cell {
             @apply(--layout-horizontal);
             @apply(--layout-around-justified);
         }
-
-
     </style>
     <template>
-        <paper-dialog class="dialog-position" id="jobHelpFindingChart" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <des-card heading="Help">
+        <paper-dialog class="dialog-position" id="jobHelpFindingChart" with-backdrop on-iron-overlay-opened="patchOverlay" style="max-width: 1000px; max-height: 800px;">
+            <des-card heading="Finding Chart Help">
                 <div class="card-content">
-                    <paper-carousel id="coadd-crs" items="1" dotText="false" controls="true">
-                        <div class="carousel-item">
-                            You can upload a csv file with positions or enter a list manually. The jobs is submitted asynchronously.
-                            Check <b>My Jobs</b> tab to see the status of your jobs.
+                    <paper-carousel id="fc-coadd-crs" items="1" dotText="false" controls="true">
+                        <div class="carousel-item" style="text-align: left;">
+                            <p>This form allows you to make a finding chart for a given position in any of the standard DES color bands in a PNG format image. The charts are based off the master FITS files for each tile of the DES footprint.</p>
+                            
+                            <p>The charts are annotated and highlight your object, the helper object (brightest object in the field of view), and the right ascension and declination changes (in arcseconds) between the two objects. The axes are labeled in DD:MM:SS (declination) and HH:MM:SS (right ascension).</p>
+                            
+                            <p>The accompanying objects.csv file lists up to 10 objects in the field that are brighter than your specified Magnitude Limit, in descending order of brightness. The first listed is the helper object selected. If your object is the brightest object in the field, a warning message will be shown in the log.log output file and no objects.csv file will be created.</p>
                         </div>
-
-                        <div class="carousel-item">
-                            <!--<div class="col">-->
-                            <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                            <div class="desc">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        <div class="carousel-item" style="text-align: left;">
+                            <p>You have the option to upload a CSV file of RA/DEC pairs or to enter a list manually.</p>
+                            <div>
+                                <img src="/easyweb/static/images/position_column_headers.png" style="width: 200px; float: right; border: 1px #000 solid;" />
+                                <p><span style="font-weight:bold;">Upload File:</span> If you upload a CSV, you must include the columns headers "RA,DEC" (without quotation marks). Example is shown at right.</p>
                             </div>
-
-                            <!--</div>-->
-                        </div>
-
-                        <div class="carousel-item">
-                            <div class="row">
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-                            </div>
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            <div style="clear:right;">
+                                <img src="/easyweb/static/images/manual_positions.png" style="width: 400px; float: right; border: 1px #000 solid;" />
+                                <p><span style="font-weight:bold;">Enter Values:</span> Otherwise you can enter a list of RA/DEC pairs manually. You do not need to include the column headers here.</p>
                             </div>
                         </div>
-
-                        <div class="carousel-item">
-                            <img src="/easyweb/static/images/demo1.gif">
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            </div>
+                        <div class="carousel-item" style="text-align: left;">
+                            <p><span style="font-weight:bold;">Xsize, Ysize:</span> You can use the Xsize and Ysize sliders to adjust how large the field around your object is. This is measured in arcminutes. The size of the field may affect which object is selected as the helper object, or if one is found at all. Ranges 0-12 arcminutes (0 defaults to 1).</p>
+                            
+                            <p><span style="font-weight:bold;">Filter Band:</span> You can choose between any or all DES color bands. Some objects are brighter in different bands and the helper object may not be the same across bands.</p>
+                            
+                            <p><span style="font-weight:bold;">Magnitude Limit:</span> The Magnitude Limit slider lets you specify how dim your helper object is allowed to be. Ranges 14-26 magnitude.</p>
+                            
+                            <p><span style="font-weight:bold;">Job Name:</span> The Job Name is for your records and does not affect the completiong of the job.</p>
+                            
+                            <p><span style="font-weight:bold;">Email Options:</span> If you wish, the server can send an email notification when the job is completed. Check "Send email on completion" and verify the email you wish thenotification to be sent to.</p>
+                            
+                            <p><span style="font-weight:bold;">Return Options:</span> Finally, the finding charts are all based on cutouts of the master tiles' FITS images. These cutouts are always created, but if you select "Include cutout with chart," a list_all.json file with URLs to the FITS cutouts will be generated to accompany the list.json file.</p>
                         </div>
-
+                        <div class="carousel-item">
+                            <div style="text-align: left;"><p>Example finding chart:</p></div>
+                            <img src="/easyweb/static/images/DESJ004034.0-620158.6_I.png" style="width:100%; max-width:500px; margin: 0 auto; border: 1px #000 solid;" />
+                        </div>
                     </paper-carousel>
                 </div>
                 <div class="row">
-                    <paper-button class="prev" on-tap="_prevPage">
-                        <iron-icon icon="image:navigate-before"></iron-icon>
-                        Prev
-                    </paper-button>
-
-                    <paper-button class="next" on-tap="_nextPage">
-                        Next
-                        <iron-icon icon="image:navigate-next"></iron-icon>
-                    </paper-button>
+                    <paper-button class="prev" on-tap="_prevPage"><iron-icon icon="image:navigate-before"></iron-icon>Prev</paper-button>
+                    <paper-button class="next" on-tap="_nextPage">Next<iron-icon icon="image:navigate-next"></iron-icon></paper-button>
                 </div>
-
             </des-card>
         </paper-dialog>
         <section>
-            <des-card heading = "Finding Chart Form" >
+            <des-card heading="Finding Chart Form">
                 <div class="card-content">
                     <div class="top">
                         Upload the file with the positions or enter the positions by hand and run the desthumb generator
@@ -347,14 +307,11 @@
                 </paper-card>
             </paper-dialog>
         </section>
-        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
     </template>
-
 </dom-module>
 
 <script>
-
     Polymer({
         is: "des-finding-chart",
         properties: {
@@ -387,6 +344,7 @@
                 document.getElementById('desFindingChart').toggle_bands();
             });
         },
+        
         toggle_bands:function(){
             var band_rads = document.querySelectorAll('.bandbox');
             if (this.$.fc_all_toggle.checked){
@@ -404,6 +362,7 @@
         get file(){
             return this.$.file.files[0]
         },
+        
         emailcheck: function(){
             var emailbox = document.getElementById("fc_sendemail");
             var edialog = document.getElementById("fc_emaildialog");
@@ -416,6 +375,7 @@
                 document.getElementById("fc_validemail").value='';
             }
         },
+        
         _fileChange: function(){
             this.file_name = this.file.name;
             console.log('File to read : ' + this.file_name );
@@ -427,6 +387,7 @@
             this.submit_type = 'csvfile';
 //            document.getElementById("filename").value = this.file_name;
         },
+        
         clear: function(){
             document.getElementById("fc_submitJobButton").disabled=true;
             document.getElementById("fc_enterValues").disabled=false;
@@ -470,6 +431,7 @@
             //$('#dothis')[0].checked=false;
             this.$.file.value = "";
         },
+        
         _countCoords: function(coords) {
             console.log(coords);
         },
@@ -479,17 +441,20 @@
             inputDialog.open();
             this.submit_type = 'manual';
         },
+        
         completeHandler: function(){
             console.log('YESSSSS');
             document.getElementById('desFindingChart').clear();
             document.querySelector('#fc_toast1coadd').show();
             document.getElementById("getMyJobs").generateRequest();
         },
+        
         errorHandler: function(){
             console.log('NOOOO');
             document.getElementById('desFindingChart').clear();
             document.querySelector('#fc_toast2coadd').show();
         },
+        
         _submitJob: function(event){
             var formdata = new FormData();
             formdata.append('csvfile', this.$.file.files[0]);
@@ -521,34 +486,32 @@
                 processData: false
             });
         },
+        
         _clearForm: function(){
             console.log('clear Form');
             desFindingChart=document.getElementById('desFindingChart');
             desFindingChart.clear();
         },
+        
         patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
             }
         },
+        
         _seeHelp: function(e){
             e.preventDefault();
             document.getElementById('jobHelpFindingChart').open();
         },
 
-
         _nextPage: function() {
-            var crs = document.getElementById("coadd-crs");
+            var crs = document.getElementById("fc-coadd-crs");
             crs.goToNextPage();
         },
 
         _prevPage: function() {
-            var crs = document.getElementById("coadd-crs");
+            var crs = document.getElementById("fc-coadd-crs");
             crs.goToPrevPage();
         },
-
     });
-
-
-
 </script>
