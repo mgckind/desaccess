@@ -101,75 +101,70 @@
 
     </style>
     <template>
-        <paper-dialog class="dialog-position" id="jobHelpDataAnalysis" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <des-card heading="Help">
+        <paper-dialog class="dialog-position" id="jobHelpDataAnalysis" with-backdrop on-iron-overlay-opened="patchOverlay" style="max-width: 1000px; max-height: 800px;">
+            <des-card heading="Help: Data Analysis Form">
                 <div class="card-content">
-                    <paper-carousel id="coadd-crs" items="1" dotText="false" controls="true">
+                    <paper-carousel id="da-coadd-crs" items="1" dotText="false" controls="true">
                         <div class="carousel-item">
-                            You can upload a csv file with positions or enter a list manually. The jobs is submitted asynchronously.
-                            Check <b>My Jobs</b> tab to see the status of your jobs.
+                            <p>This form generates several useful plots.</p>
+                            <p>The <span style="font-weight:bold;">Flux vs. Wavelength</span> and <span style="font-weight:bold;">Magnitude vs. Wavelength</span> options combine DES data with WISE and VHS data to create non-continuous SED plots. However, both WISE and VHS footprints do not fully overlap the DES footprint, and if your object is not covered by either or both these surveys then the plot will still be created, but with only the data that exists.</p>
+                            <p>The <span style="font-weight:bold;">G-R vs. R-I</span> plot is a color-color contour plot based on the stellar main sequence stars. From the <span style="font-style:italic;">g, r, i</span> colors of your object, the plot will make a guess as to which type of star it could be. Your object is displayed with color magnitude errors.</p>
+                            <p>The <span style="font-weight:bold;">G-Z vs. Z-W1</span> plot combines DES and WISE data and plots your object against a large sample of DES objects divided by quasars, galaxies, and stars. From the <span style="font-style:italic;">g, z, w1</span> colors of your object, the plot will show a guess as to which type your object might be. Color magnitude errors are plotted with your object. Because the WISE footprint does not fully overlap the DES footprint, it's possible your object won't have WISE data. In this case the plot cannot be created. Your object is displayed with color magnitude errors.</p>
+                            <p>The <span style="font-weight:bold;">Spread vs. Magnitude</span> plots your object against a large sample of DES objects divided by extended and pointlike spread in the i band. From these values for your object, a guess between pointlike and extended is made.</p>
                         </div>
-
                         <div class="carousel-item">
-                            <!--<div class="col">-->
-                            <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                            <div class="desc">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            <p>You can upload a CSV file with either Coadd IDs or RA/DEC pairs or you can enter a list of either manually.</p>
+                            <div>
+                                <p><span style="font-weight:bold;">Upload File:</span> If you upload a CSV, you must include the columns headers "COADD_OBJECT_ID" or "RA,DEC" (without quotation marks). Example is shown at right.</p>
+                                <img src="/easyweb/static/images/coaddid_column_header.png" style="width:200px; float: right; border: 1px #000 solid; margin:5px;" />
+                                <img src="/easyweb/static/images/position_column_headers.png" style="width: 200px; float: right; border: 1px #000 solid; margin:5px;" />
                             </div>
-
-                            <!--</div>-->
-                        </div>
-
-                        <div class="carousel-item">
-                            <div class="row">
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-                            </div>
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            <div style="clear:right;">
+                                <p><span style="font-weight:bold;">Enter Values:</span> You can enter a list of Coadd IDs or RA/DEC pairs manually. You do not need to include the column headers here.</p>
+                                <img src="/easyweb/static/images/manual_coadds.png" style="width: 300px; float: right; border: 1px #000 solid; margin:5px;" />
+                                <img src="/easyweb/static/images/manual_positions.png" style="width: 300px; float: right; border: 1px #000 solid; margin:5px;" />
                             </div>
                         </div>
-
                         <div class="carousel-item">
-                            <img src="/easyweb/static/images/demo1.gif">
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            </div>
+                            <p><span style="font-weight:bold;">Search Box:</span> The search box option allows you to set the radius (in arcseconds) to search for your object when using RA/DEC coordinates instead of Coadd IDs.</p>
+                            
+                            <p><span style="font-weight:bold;">Job Name:</span> The Job Name is for your records and does not affect the completion of the job.</p>
+                            
+                            <p><span style="font-weight:bold;">Email Options:</span> If you wish, the server can send an email notification when the job is completed. Check "Send email on completion" and verify the email you wish the notification to be sent to.</p>
                         </div>
-
+                        <div class="carousel-item">
+                            <div style="text-align: left;"><p>Example Flux vs. Wavelength:</p></div>
+                            
+                        </div>
+                        <div class="carousel-item">
+                            <div style="text-align: left;"><p>Example Magnitude vs. Wavelength:</p></div>
+                            
+                        </div>
+                        <div class="carousel-item">
+                            <div style="text-align: left;"><p>Example G-R vs. R-I:</p></div>
+                            
+                        </div>
+                        <div class="carousel-item">
+                            <div style="text-align: left;"><p>Example G-Z vs. Z-W1:</p></div>
+                            
+                        </div>
+                        <div class="carousel-item">
+                            <div style="text-align: left;"><p>Example Spread vs. Magnitude:</p></div>
+                            
+                        </div>
                     </paper-carousel>
                 </div>
                 <div class="row">
-                    <paper-button class="prev" on-tap="_prevPage">
-                        <iron-icon icon="image:navigate-before"></iron-icon>
-                        Prev
-                    </paper-button>
-
-                    <paper-button class="next" on-tap="_nextPage">
-                        Next
-                        <iron-icon icon="image:navigate-next"></iron-icon>
-                    </paper-button>
+                    <paper-button class="prev" on-tap="_prevPage"><iron-icon icon="image:navigate-before"></iron-icon>Prev</paper-button>
+                    <paper-button class="next" on-tap="_nextPage">Next<iron-icon icon="image:navigate-next"></iron-icon></paper-button>
                 </div>
-
+                <div class="row">
+                    <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
+                </div>
             </des-card>
         </paper-dialog>
         <section>
-            <des-card heading = "Data Analysis Form" >
+            <des-card heading="Data Analysis Form">
                 <div class="card-content">
                     <div class="top">
                         Upload the file with the positions or enter the positions by hand and run the plot generator
@@ -380,7 +375,7 @@
                 </paper-card>
             </paper-dialog>
         </section>
-        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
 
@@ -583,13 +578,16 @@
 
 
         _nextPage: function() {
-            var crs = document.getElementById("coadd-crs");
+            var crs = document.getElementById("da-coadd-crs");
             crs.goToNextPage();
         },
 
         _prevPage: function() {
-            var crs = document.getElementById("coadd-crs");
+            var crs = document.getElementById("da-coadd-crs");
             crs.goToPrevPage();
+        },
+        _gobackdialog: function(event){
+            document.getElementById('jobHelpDataAnalysis').close();
         },
 
     });

@@ -91,30 +91,32 @@
                             <p>The charts are annotated and highlight your object, the helper object (brightest object in the field of view), and the right ascension and declination changes (in arcseconds) between the two objects. The axes are labeled in DD:MM:SS (declination) and HH:MM:SS (right ascension).</p>
                             
                             <p>The accompanying objects.csv file lists up to 10 objects in the field that are brighter than your specified Magnitude Limit, in descending order of brightness. The first listed is the helper object selected. If your object is the brightest object in the field, a warning message will be shown in the log.log output file and no objects.csv file will be created.</p>
+                            
+                            <p><span style="font-weight:bold;">Why is there only one highlighted object in the finding chart?</span> This highlighted object is your object. The most likely reason for this is that your object is in fact the brightest object in the field of the cutout. You can try adjusting the magnitude limit slider and/or increasing the Xsize and Ysize of the cutout to include more objects in the field. There may be other noticeable objects in the field, but they are either dimmer than your object or have a missing magnitude data flag in the database.</p>
                         </div>
                         <div class="carousel-item" style="text-align: left;">
                             <p>You have the option to upload a CSV file of RA/DEC pairs or to enter a list manually.</p>
                             <div>
-                                <img src="/easyweb/static/images/position_column_headers.png" style="width: 200px; float: right; border: 1px #000 solid;" />
+                                <img src="/easyweb/static/images/position_column_headers.png" style="width: 200px; float: right; border: 1px #000 solid; margin:5px;" />
                                 <p><span style="font-weight:bold;">Upload File:</span> If you upload a CSV, you must include the columns headers "RA,DEC" (without quotation marks). Example is shown at right.</p>
                             </div>
                             <div style="clear:right;">
-                                <img src="/easyweb/static/images/manual_positions.png" style="width: 400px; float: right; border: 1px #000 solid;" />
+                                <img src="/easyweb/static/images/manual_positions.png" style="width: 400px; float: right; border: 1px #000 solid; margin:5px;" />
                                 <p><span style="font-weight:bold;">Enter Values:</span> Otherwise you can enter a list of RA/DEC pairs manually. You do not need to include the column headers here.</p>
                             </div>
                         </div>
                         <div class="carousel-item" style="text-align: left;">
-                            <p><span style="font-weight:bold;">Xsize, Ysize:</span> You can use the Xsize and Ysize sliders to adjust how large the field around your object is. This is measured in arcminutes. The size of the field may affect which object is selected as the helper object, or if one is found at all. Ranges 0-12 arcminutes (0 defaults to 1).</p>
+                            <p><span style="font-weight:bold;">Xsize, Ysize:</span> You can use the Xsize and Ysize sliders to adjust how large the field around your object is, with your object centered in the field. This is measured in arcminutes. The size of the field may affect which object is selected as the helper object, or if one is found at all. Ranges 0-12 arcminutes in 0.1 increments. A size of 0 defaults to 1 arcminute.</p>
                             
-                            <p><span style="font-weight:bold;">Filter Band:</span> You can choose between any or all DES color bands. Some objects are brighter in different bands and the helper object may not be the same across bands.</p>
+                            <p><span style="font-weight:bold;">Filter Band:</span> You can choose between any or all DES color bands (<span style="font-style:italic;">g, r, i, z, Y</span>). Some objects are brighter in different bands and the helper object may not be the same across bands. If no bands are selected when you submit the job, a message will pop up at the lower left of the screen that says, "Form is incomplete for selected options!"</p>
                             
                             <p><span style="font-weight:bold;">Magnitude Limit:</span> The Magnitude Limit slider lets you specify how dim your helper object is allowed to be. Ranges 14-26 magnitude.</p>
                             
-                            <p><span style="font-weight:bold;">Job Name:</span> The Job Name is for your records and does not affect the completiong of the job.</p>
+                            <p><span style="font-weight:bold;">Job Name:</span> The Job Name is for your records and does not affect the completion of the job.</p>
                             
-                            <p><span style="font-weight:bold;">Email Options:</span> If you wish, the server can send an email notification when the job is completed. Check "Send email on completion" and verify the email you wish thenotification to be sent to.</p>
+                            <p><span style="font-weight:bold;">Email Options:</span> If you wish, the server can send an email notification when the job is completed. Check "Send email on completion" and verify the email you wish the notification to be sent to.</p>
                             
-                            <p><span style="font-weight:bold;">Return Options:</span> Finally, the finding charts are all based on cutouts of the master tiles' FITS images. These cutouts are always created, but if you select "Include cutout with chart," a list_all.json file with URLs to the FITS cutouts will be generated to accompany the list.json file.</p>
+                            <p><span style="font-weight:bold;">Return Options:</span> Finally, the finding charts are all based on cutouts of the FITS master files of each DES tile. These cutouts are always created, but if you select "Include cutout with chart," a list_all.json file with URLs to the FITS cutouts will be generated to accompany the list.json file.</p>
                         </div>
                         <div class="carousel-item">
                             <div style="text-align: left;"><p>Example finding chart:</p></div>
@@ -125,6 +127,9 @@
                 <div class="row">
                     <paper-button class="prev" on-tap="_prevPage"><iron-icon icon="image:navigate-before"></iron-icon>Prev</paper-button>
                     <paper-button class="next" on-tap="_nextPage">Next<iron-icon icon="image:navigate-next"></iron-icon></paper-button>
+                </div>
+                <div class="row">
+                    <paper-button class="indigo" on-tap="_gobackdialog" raised focused>Close</paper-button>
                 </div>
             </des-card>
         </paper-dialog>
@@ -512,6 +517,9 @@
         _prevPage: function() {
             var crs = document.getElementById("fc-coadd-crs");
             crs.goToPrevPage();
+        },
+        _gobackdialog: function(event){
+            document.getElementById('jobHelpFindingChart').close();
         },
     });
 </script>

@@ -101,20 +101,21 @@
 
     </style>
     <template>
-        <paper-dialog class="dialog-position" id="jobHelpBulkCutout" with-backdrop on-iron-overlay-opened="patchOverlay">
-            <des-card heading="Help: Bulk Cutouts Form">
+        <paper-dialog class="dialog-position" id="jobHelpBulkCutouts" with-backdrop on-iron-overlay-opened="patchOverlay">
+            <des-card heading="Help: Cutouts Form">
                 <div class="card-content">
                     <paper-carousel id="coadd-crs" items="1" dotText="false" controls="true">
                         <div style="text-align: left;">
                             <p>This form allows you to generate cutouts on the order of up to 10^6 objects.</p>
                             <p>You can upload a CSV file with either CoaddIDs or RA/DEC positions or you can enter a list of either manually.</p>
-                            <p>Use the "xsize" and "ysize" sliders to define the field of view (in arcminutes) around these positions. The field is centered on the object or RA/DEC coordinates you enter.</p>
-                            <p>The "TIFF" option lets you generate 8-bit-per-channel RGB images with the TIFF file extension. This option generates a cutout from a pre-generated master file.</p>
-                            <p>The "PNG" option lets you generate 8-bit-per-channel RGB images with the PNG file extension. This option generates a cutout from a pre-generated master file.</p>
-                            <p>The "FITS" option lets you generate 8-bit FITS images for each color band you select.</p>
-                            <p>The "Generate RGB" option lets you generate PNG images using the color bands you input.</p>
+                            <p>When uploading a CSV with CoaddIDs, remember to use the column header "COADD_OBJECT_ID" (without quotation marks). When uploading a CSV with RA/DEC positions, use the columns headers "RA,DEC" (without quotation marks).</p>
+                            <p>Use the "xsize" and "ysize" sliders to define the size of the cutout (in arcminutes) around your objects/positions. The cutout is centered on your object/position.</p>
+                            <p>The "TIFF" option generates an 8-bit-per-channel RGB image in the TIFF file format.</p>
+                            <p>The "PNG" option generates an 8-bit-per-channel RGB image in the PNG file format.</p>
+                            <p>The "FITS" option generates an 8-bit FITS image for any color band you select in the "Color Bands" option of the form.</p>
+                            <p>The "Generate RGB" option generates PNG images using the color bands you input. You can enter as many 3-color combinations as you like. Each set of colors should be space-separated and each color per set should be comma-separated. Example: "i,r,g Y,z,r z,r,g" (without quotation marks).</p>
                             <p>You can specify a name for this job under "Job Name."</p>
-                            <p>You can have the server email-notify you when your job has been completed.</p>
+                            <p>You can have the server send you an email notification of when your job has been completed using the "Send email on completion" checkbox.</p>
                             <p>Under "Return Options" you have the option to retrieve the table of matching values between your input objects/coordinates and the survey tiles they are found in.</p>
                             <p>Check the <b>My Jobs</b> tab to see the status of your jobs.</p>
                         </div>
@@ -368,7 +369,7 @@
                 </paper-card>
             </paper-dialog>
         </section>
-        <paper-fab  class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
 
