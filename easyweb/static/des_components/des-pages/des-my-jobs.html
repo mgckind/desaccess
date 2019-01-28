@@ -99,6 +99,7 @@
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop on-iron-overlay-opened="patchOverlay">
         <h2>Job id: {{jobid}}</h2>
         <p> {{nfiles}} files generated  </p>
+        <p>Only up to 100 files are displayed here. Click <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">HERE</a> for the entire list of files.</p
         <div>
             <vaadin-grid items="{{myfiles}}" id="material">
                 <vaadin-grid-column width="450px" flex-grow="0">
@@ -126,7 +127,7 @@
                 </vaadin-grid-column>
             </vaadin-grid>
         </div>
-        <div style="bottom: 20px;" class="buttons" on-iron-overlay-opened="patchOverlay">
+        <div style="bottom: 50px;" class="buttons" on-iron-overlay-opened="patchOverlay">
             <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
         </div>
     </paper-dialog>
@@ -480,7 +481,7 @@
 	            type: String,
 	            value: '',
 	        },
-	          jobtype: {
+            jobtype: {
 	            type: String,
 	            value: '',
 	        }
@@ -524,7 +525,6 @@
             	app.editor.refresh();
             	app.editor.focus();
         	},20);
-
     	},
     	_checkFiles: function(jfiles){
         	if (jfiles != '') {return true;}
@@ -609,7 +609,7 @@
         	this.jobsizes = JSON.parse(e.model.item.jsizes);
         	this.nfiles = this.jobfiles.length;
         	this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
-        	for (i=0; i< this.jobfiles.length; i++){
+        	for (i=0; i<Math.min(this.jobfiles.length, 100); i++){
             	this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
             }
         	this.myfiles=this.jobs.sort(keysrt('file'));
