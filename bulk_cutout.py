@@ -155,8 +155,11 @@ class FileHandler(BaseHandler):
         if dftemp_rows > SMALL_QUEUE and dftemp_rows <= MEDIUM_QUEUE:
             job_size = 'medium'
             nprocs = MEDIUM_QUEUE_MAX_CPUS
-        if dftemp_rows > MEDIUM_QUEUE:
+        if dftemp_rows > MEDIUM_QUEUE and dftemp_rows <= LARGE_QUEUE:
             job_size = 'large'
+            nprocs = LARGE_QUEUE_MAX_CPUS
+        if dftemp_rows > LARGE_QUEUE:
+            job_size = 'manual'
             nprocs = LARGE_QUEUE_MAX_CPUS
 
         run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')

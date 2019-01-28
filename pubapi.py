@@ -350,8 +350,11 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         if dftemp_rows > SMALL_QUEUE and dftemp_rows <= MEDIUM_QUEUE:
             job_size = 'medium'
             nprocs = MEDIUM_QUEUE_MAX_CPUS
-        if dftemp_rows > MEDIUM_QUEUE:
+        if dftemp_rows > MEDIUM_QUEUE and dftemp_rows <= LARGE_QUEUE:
             job_size = 'large'
+            nprocs = LARGE_QUEUE_MAX_CPUS
+        if dftemp_rows > LARGE_QUEUE:
+            job_size = 'manual'
             nprocs = LARGE_QUEUE_MAX_CPUS
         
         del df

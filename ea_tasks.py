@@ -1095,6 +1095,12 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     jsonfile = user_folder + jobid + '.json'
     mypath = user_folder + jobid + '/'
 
+    if job_size == 'manual':
+        response['status'] = 'error'
+        with open(jsonfile, 'w') as fp:
+            json.dump(response, fp)
+        return response
+
     """
     MAX_CPUS = 2
     dftemp = pd.DataFrame(pd.read_csv(input_csv))
