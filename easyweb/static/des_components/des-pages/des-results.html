@@ -93,7 +93,7 @@
                last-response="{{textdata}}"
                on-response="_getTextResponse">
             </iron-ajax>-->
-            <p>Check the file "<a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt">list_all.txt</a>" for image URLs.</p>
+            <p>Check the file "<a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">list_all.txt</a>" for image URLs.</p>
         </template>
         <template is="dom-if" if="{{_checkLength(jsondata)}}" restamp>
             <template is="dom-repeat" items="{{jsondata}}" initial-count="20" target-framerate="60">
