@@ -7,55 +7,51 @@
 <link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-behavior.html">
 <dom-module id="des-my-jobs">
 <template>
-<style include="shared-styles">
+    <style include="shared-styles">
+        /* carousel table design*/
+        paper-icon-item {
+            --paper-item-disabled-color: black;
+        }
+        paper-item {
+            --paper-item-disabled-color: black;
+            color: black;
+            --paper-item-focused: {
+            };
+            --paper-item-selected: {
+                background: var(--paper-amber-50) ;
+            };
+            --paper-item-focused-before: {
+                opacity:0.0;
+            };
+        }
+        .status {
+            display: inline-block;
+            box-sizing: border-box;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--paper-yellow-500);
+        }
+        .green {background: var(--paper-green-500);}
+        .red {background: var(--paper-red-500);}
+    </style>
 
-    /* carousel table design*/
-
-    paper-icon-item {
-        --paper-item-disabled-color: black;
-    }
-    paper-item {
-        --paper-item-disabled-color: black;
-        color: black;
-        --paper-item-focused: {
-        };
-        --paper-item-selected: {
-            background: var(--paper-amber-50) ;
-        };
-        --paper-item-focused-before: {
-            opacity:0.0;
-        };
-    }
-    .status {
-        display: inline-block;
-        box-sizing: border-box;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: var(--paper-yellow-500);
-    }
-    .green {background: var(--paper-green-500);}
-    .red {background: var(--paper-red-500);}
-
-</style>
     <iron-ajax id="getMyJobs"
-    auto
-    url="/easyweb/myjobs/"
-    params='{"part":"fff"}'
-    handle-as="json"
-    on-response="_handleResponse"
-    debounce-duration="300">
+               auto
+               url="/easyweb/myjobs/"
+               params='{"part":"fff"}'
+               handle-as="json"
+               on-response="_handleResponse"
+               debounce-duration="300">
     </iron-ajax>
-
     <iron-ajax id="killJob"
-    method="DELETE"
-    url="/easyweb/myjobs/"
-    params='{{_getJobId(username,jobid)}}'
-    handle-as="json"
-    on-response="_handleTermination"
-    debounce-duration="300">
+               method="DELETE"
+               url="/easyweb/myjobs/"
+               params='{{_getJobId(username,jobid)}}'
+               handle-as="json"
+               on-response="_handleTermination"
+               debounce-duration="300">
     </iron-ajax>
-
     <iron-ajax id="DeleteReq"
                url="/easyweb/delete/"
                method="DELETE"
@@ -63,7 +59,6 @@
                on-response="_afterDelete"
                debounce-duration="300">
     </iron-ajax>
-
     <iron-ajax id="ChangeNameReq"
                url="/easyweb/change/"
                method="POST"
@@ -73,19 +68,21 @@
                debounce-duration="300">
     </iron-ajax>
 
+
     <paper-dialog class="dialog-position-query" id="JobQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
-              <h2>Job id: {{jobid}}</h2>
-              <div class="insideDialog" >
-                  <textarea id="jobQueryBox" autofocus></textarea>
-              </div>
-              <div class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised dialog-confirm on-tap="_copyQuery">Copy query</paper-button>
-                  <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
-              </div>
+        <h2>Job id: {{jobid}}</h2>
+        <div class="insideDialog">
+            <textarea id="jobQueryBox" autofocus></textarea>
+        </div>
+        <div class="buttons" on-iron-overlay-opened="patchOverlay">
+            <paper-button class="indigo" raised dialog-confirm on-tap="_copyQuery">Copy query</paper-button>
+            <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
+        </div>
     </paper-dialog>
 
+
     <paper-dialog class="dialog-position" id="JobTiles" with-backdrop on-iron-overlay-opened="patchOverlay">
-              <des-results id="desTiles" username={{username}} jobid={{jobid}} jobtype={{jobtype}}></des-results>
+        <des-results id="desTiles" username={{username}} jobid={{jobid}} jobtype={{jobtype}}></des-results>
     </paper-dialog>
 
 
@@ -100,47 +97,38 @@
 
 
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop on-iron-overlay-opened="patchOverlay">
-              <h2>Job id: {{jobid}}</h2>
-              <p> {{nfiles}} files generated  </p>
-              <div>
-        <vaadin-grid items="{{myfiles}}" id="material">
-
-
-              <vaadin-grid-column width="450px" flex-grow="0">
-                <template class="header">
-
-
-            <vaadin-grid-filter aria-label="Filename" path="file" value="[[_filterFileName]]">
-            <input placeholder="Filename" value="{{_filterFileName::input}}" focus-target>
-                 <vaadin-grid-sorter path="file"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-                      </vaadin-grid-filter>
-
-                </template>
-                <template>{{item.file}}</template>
-              </vaadin-grid-column>
-
-              <vaadin-grid-column flex-grow="1">
-                <template class="header">
-
-                 <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-                </template>
-                <template>{{item.size}}</template>
-              </vaadin-grid-column>
-
-              <vaadin-grid-column flex-grow="1">
-              <template class="header">Download Files</template>
-              <template>
-                <paper-button class="SeeFilesButton" raised on-click="_downloadFile">Download</paper-button>
-              </template>
-              </vaadin-grid-column>
-
-
+        <h2>Job id: {{jobid}}</h2>
+        <p> {{nfiles}} files generated  </p>
+        <div>
+            <vaadin-grid items="{{myfiles}}" id="material">
+                <vaadin-grid-column width="450px" flex-grow="0">
+                    <template class="header">
+                        <vaadin-grid-filter aria-label="Filename" path="file" value="[[_filterFileName]]">
+                            <input placeholder="Filename" value="{{_filterFileName::input}}" focus-target>
+                            <vaadin-grid-sorter path="file"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                        </vaadin-grid-filter>
+                    </template>
+                    <template>{{item.file}}</template>
+                </vaadin-grid-column>
+                
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">
+                        <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                    </template>
+                    <template>{{item.size}}</template>
+                </vaadin-grid-column>
+                
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Download Files</template>
+                    <template>
+                        <paper-button class="SeeFilesButton" raised on-click="_downloadFile">Download</paper-button>
+                    </template>
+                </vaadin-grid-column>
             </vaadin-grid>
-              </div>
-
-              <div style="bottom: 20px;" class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
-              </div>
+        </div>
+        <div style="bottom: 20px;" class="buttons" on-iron-overlay-opened="patchOverlay">
+            <paper-button class="indigo" raised dialog-confirm>Close</paper-button><br />
+        </div>
     </paper-dialog>
 
 
@@ -150,7 +138,6 @@
                 <paper-carousel id="jobs-crs" items="1" dotText="false" controls="true">
                     <div class="carousel-item" >
                         <table class="crs-table" style="width:100%">
-
                             <tr class="crs-tr">
                                 <th class="crs-th" colspan="2">General Instruction</th>
                             </tr>
@@ -263,11 +250,9 @@
                             </tr>
                         </table>
 
-
                         <div>
                             Select one or more jobs for deletion.
                         </div>
-
                     </div>
 
                     <div class="carousel-item">
@@ -311,9 +296,9 @@
                             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
                         </div>
                     </div>
-
                 </paper-carousel>
             </div>
+            
             <div class="row bottom">
                 <paper-button class="prev" on-tap="_prevPage">
                     <iron-icon icon="image:navigate-before"></iron-icon>
@@ -325,412 +310,380 @@
                     <iron-icon icon="image:navigate-next"></iron-icon>
                 </paper-button>
             </div>
-
         </des-card>
     </paper-dialog>
 
 
-<paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
+    <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
-<des-card heading = "My Jobs">
+    <des-card heading = "My Jobs">
+        <div  style="padding-right: 20px">
+	        <vaadin-grid items="{{data}}" id ="material">
+	          	<vaadin-grid-column width="10px" flex-grow="0">
+	              	<template class="header"></template>
+	              	<template></template>
+	         	</vaadin-grid-column>
 
-<div  style="padding-right: 20px">
-<vaadin-grid items="{{data}}" id ="material">
+	          	<vaadin-grid-selection-column id="auto" auto-select>
+	          	</vaadin-grid-selection-column>
 
+	            <vaadin-grid-column width="50px" flex-grow="0">
+	              	<template class="header">#</template>
+	              	<template>{{index}}</template>
+	              	<!-- If necessary, the footer could be set using <template class="footer"> -->
+	            </vaadin-grid-column>
 
-    <vaadin-grid-column width="10px" flex-grow="0">
-        <template class="header"></template>
-        <template></template>
-    </vaadin-grid-column>
+	            <vaadin-grid-column width="80px" flex-grow="0">
+	              	<!--<template class="header">Status</template>-->
+	                <template class="header" style="padding-left: 5px">
+	                    <vaadin-grid-sorter path="status">Status<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+	                </template>
 
-    <vaadin-grid-selection-column id="auto" auto-select>
-    </vaadin-grid-selection-column>
+	                <template>
+	                    <template is="dom-if" if="{{_completed(item.status)}}">
+	                        <div class="status green size" item-icon></div>
+	                    </template>
 
-      <vaadin-grid-column width="50px" flex-grow="0">
-        <template class="header">#</template>
-        <template>{{index}}</template>
-        <!-- If necessary, the footer could be set using <template class="footer"> -->
-      </vaadin-grid-column>
+	                    <template is="dom-if" if="{{_pending(item.status)}}">
+	                        <div class="status yellow size" item-icon></div>
+	                    </template>
 
-      <vaadin-grid-column width="80px" flex-grow="0">
-        <!--<template class="header">Status</template>-->
-          <template class="header" style="padding-left: 5px">
-              <vaadin-grid-sorter path="status">Status<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-          </template>
+	                    <template is="dom-if" if="{{_stop(item.status)}}">
+	                        <div class="status red size" item-icon></div>
+	                    </template>
+	                </template>
+	            </vaadin-grid-column>
+		        <!--<vaadin-grid-column flex-grow="2">-->
+		            <!--<template class="header">Check</template>-->
+		            <!--<template>{{item.status}}<br />-->
+		                <!--&lt;!&ndash;<span style="font-size: 0.7em;">{{item.elapsed}}</span>&ndash;&gt;-->
+		            <!--</template>-->
+		        <!--</vaadin-grid-column>-->
 
-          <template>
-              <template is="dom-if" if="{{_completed(item.status)}}">
-                  <div class="status green size" item-icon></div>
-              </template>
+            	<vaadin-grid-column flex-grow="0" width="290px">
+              		<template class="header">
+                  		<vaadin-grid-filter aria-label="Job Name" path="jname" value="[[_filterJobName]]">
+                  			<input placeholder="Job Name" value="{{_filterJobName::input}}" focus-target>
+                        </vaadin-grid-filter>
+              		</template>
+                	<template>
+                		<paper-item-body two-line>
+                    		<div>
+		                        <!--{{returnName(item.job)}}-->
+		                        <!--it can be changed in api.py-->
+		                        <span style="font-size: 10px"> Name: {{item.jname}} </span> <br />
+		                        <span style="font-size: 10px"> Job id: {{item.job}} </span>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
+                    		</div>
+		                    <div secondary>
+		                        <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
+		                        <template is="dom-if" if="{{item.jwarning}}">
+		                         	<span style="color:red; font-size: 10px;">{{item.elapsed}}</span>
+		                        </template>
+		                        <template is="dom-if" if="{{!item.jwarning}}">
+		                         	<span style="font-size: 10px;">{{item.elapsed}}</span>
+		                        </template>
+		                    </div>
+                		</paper-item-body>
+                	</template>
+            	</vaadin-grid-column>
 
-              <template is="dom-if" if="{{_pending(item.status)}}">
-                  <div class="status yellow size" item-icon></div>
-              </template>
+            	<vaadin-grid-column flex-grow="0" width="110px">
+              		<template class="header" style="padding-left: 5px">
+               			<vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+              		</template>
+              		
+              		<template>{{item.jobtype}}<br />
+              		</template>
+            	</vaadin-grid-column>
 
-              <template is="dom-if" if="{{_stop(item.status)}}">
-                  <div class="status red size" item-icon></div>
-              </template>
-          </template>
-      </vaadin-grid-column>
-    <!--<vaadin-grid-column flex-grow="2">-->
-        <!--<template class="header">Check</template>-->
-        <!--<template>{{item.status}}<br />-->
-            <!--&lt;!&ndash;<span style="font-size: 0.7em;">{{item.elapsed}}</span>&ndash;&gt;-->
-        <!--</template>-->
-    <!--</vaadin-grid-column>-->
+            	<vaadin-grid-column flex-grow="0" width="120px">
+              		<template class="header" style="padding-left: 5px">
+               			Execution time (s)
+              		</template>
+              
+              		<template>{{item.jruntime}}<br />
+              		</template>
+            	</vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="0" width="290px">
-        <template class="header">
+                <!--Cancel job button-->
+                <vaadin-grid-column flex-grow="0" width="80px">
+                    <template class="header">Cancel Job</template>
+                    <template>
+                        <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}"  on-click="_killQuery"  ></paper-icon-button>
+                    </template>
+                </vaadin-grid-column>
 
-            <vaadin-grid-filter aria-label="Job Name" path="jname" value="[[_filterJobName]]">
-            <input placeholder="Job Name" value="{{_filterJobName::input}}" focus-target>
-                      </vaadin-grid-filter>
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Queries</template>
+                    <template>
+                        <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
+                    </template>
+                </vaadin-grid-column>
 
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Results</template>
+                    <template>
+                        <!--<paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>-->
+                        <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Images</paper-button>
+                    </template>
+                </vaadin-grid-column>
 
-        </template>
-          <template>
-          <paper-item-body two-line>
-              <div>
-                  <!--{{returnName(item.job)}}-->
-                  <!--it can be changed in api.py-->
-                  <span style="font-size: 10px"> Name: {{item.jname}} </span> <br />
-                  <span style="font-size: 10px"> Job id: {{item.job}} </span>
-                  <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Files</template>
+                    <template>
+                	    <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles"> Files</paper-button>
+                    </template>
+                </vaadin-grid-column>
+          	</vaadin-grid>
+        </div>
+        
+        <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
+            <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
+            <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
+            <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        </div>
 
-              </div>
-              <div secondary>
-                  <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
-                  <template is="dom-if" if="{{item.jwarning}}">
-                   <span style="color:red; font-size: 10px;">{{item.elapsed}}</span>
-                  </template>
-                  <template is="dom-if" if="{{!item.jwarning}}">
-                   <span style="font-size: 10px;">{{item.elapsed}}</span>
-                  </template>
-              </div>
-          </paper-item-body>
-          </template>
-
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="0" width="110px">
-
-        <template class="header" style="padding-left: 5px">
-         <vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-        </template>
-        <template>{{item.jobtype}}<br />
-        </template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="0" width="120px">
-
-        <template class="header" style="padding-left: 5px">
-         Execution time (s)
-        </template>
-        <template>{{item.jruntime}}<br />
-        </template>
-      </vaadin-grid-column>
-
-    <!--Cancel job button-->
-      <vaadin-grid-column flex-grow="0" width="80px">
-        <template class="header">Cancel Job</template>
-          <template>
-
-              <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}"  on-click="_killQuery"  ></paper-icon-button>
-              </template>
-      </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Queries</template>
-              <template>
-                <paper-button class="SeeFilesButton" raised disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Results</template>
-              <template>
-                <!--<paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>-->
-                <paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Images</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Files</template>
-              <template>
-
-                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised on-click="_seeFiles"> Files</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-    </vaadin-grid>
-    </div>
-    <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
-        <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
-        <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-        <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
-    </div>
-
-    <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
-    <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-</des-card>
+        <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
+        <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+    </des-card>
 </template>
 
 <script>
-function keysrt(key,desc) {
-  return function(a,b){
-   return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
-  }
-}
-
+	function keysrt(key,desc) {
+  		return function(a,b){
+   			return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
+  		}
+	}
 </script>
 
 <script>
-      Polymer({
-      is: "des-my-jobs",
-      properties: {
-        username: {
-            type: String,
-            value: '',
+    Polymer({
+        is: "des-my-jobs",
+        properties: {
+	        username: {
+	            type: String,
+	            value: '',
+	        },
+	        jobid: {
+	            type: String,
+	            value: '',
+	        },
+	        nfiles: {
+	            value: 0,
+	        },
+	        jobquery: {
+	            type: String,
+	            value: '',
+	        },
+	        jobname: {
+	            type: String,
+	            value: '',
+	        },
+	          jobtype: {
+	            type: String,
+	            value: '',
+	        }
         },
-        jobid: {
-            type: String,
-            value: '',
-        },
-        nfiles: {
-            value: 0,
-        },
-        jobquery: {
-            type: String,
-            value: '',
-        },
-        jobname: {
-            type: String,
-            value: '',
-        },
-          jobtype: {
-            type: String,
-            value: '',
-        }
-      },
-      _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
-      attached: function() {
-        myJobQuery = document.getElementById("jobQueryBox");
-        },
-      _handleResponse: function(e){
-        var _self = this;
-        _self.data = e.detail.response;
-        _self.count = _self.data.length;
-    },
-      _handleTermination: function(e){
-      document.getElementById("getMyJobs").generateRequest();
-    },
-      _refreshJobs: function(e){
-      document.getElementById("getMyJobs").generateRequest();
-    },
-      _completed: function(status) {
-          if (status === "SUCCESS") {
-              return true;
-          }
-      },
-      _pending: function(status) {
-          if (status === "PENDING") {
-              return true;
-          }
-      },
-      _stop: function(status) {
-          if (status != "PENDING" && status != "SUCCESS" ) {
-              return true;
-          }
-      },
+        _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
+        attached: function() {
+    		myJobQuery = document.getElementById("jobQueryBox");
+    	},
+      	_handleResponse: function(e){
+        	var _self = this;
+        	_self.data = e.detail.response;
+        	_self.count = _self.data.length;
+    	},
+      	_handleTermination: function(e){
+      		document.getElementById("getMyJobs").generateRequest();
+    	},
+      	_refreshJobs: function(e){
+      		document.getElementById("getMyJobs").generateRequest();
+    	},
+      	_completed: function(status) {
+          	if (status === "SUCCESS") {
+              	return true;
+          	}
+      	},
+      	_pending: function(status) {
+          	if (status === "PENDING") {
+              	return true;
+          	}
+      	},
+      	_stop: function(status) {
+          	if (status != "PENDING" && status != "SUCCESS" ) {
+              	return true;
+          	}
+      	},
+    	_copyQuery: function(){
+        	document.getElementById("desQuery").clearQueryBox();
+        	document.querySelector('#toastCopy').show();
+        	app.editor.setValue(app.jobquerybox.getValue());
+        	console.log("-> line number: ", app.editor.lineCount());
+        	setTimeout(function() {
+            	app.editor.refresh();
+            	app.editor.focus();
+        	},20);
 
-    _copyQuery: function(){
-        document.getElementById("desQuery").clearQueryBox();
-        document.querySelector('#toastCopy').show();
-        app.editor.setValue(app.jobquerybox.getValue());
-
-        console.log("-> line number: ", app.editor.lineCount());
-        setTimeout(function() {
-            app.editor.refresh();
-            app.editor.focus();
-        },20);
-
-    },
-    _checkFiles: function(jfiles){
-        if (jfiles != '') {return true;}
-        else {return false;}
-    },
-    _downloadFile: function(e){
-        e.preventDefault();
-        var filename =  e.model.item.file;
-        console.log("Click download!")
-        console.log("==>>FILES: ", e.model.item.file);
-        var jobid = this.jobid;
-        var user = this.username;
-        var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
-              if (link.download !== undefined){
-                  //Set HTML5 download attribute. This will prevent file from opening if supported.
-                  var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
-                  link.download = fileName;
-                }
-                if (document.createEvent) {
-                  var e = document.createEvent('MouseEvents');
-                  e.initEvent('click' ,true ,true);
-                  link.dispatchEvent(e);
-                  return true;
-                }
-                  var query = '?download';
-                  window.open(link.href + query);
-
-    },
-     _seeQuery: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.jobquery = e.model.item.jquery;
-        document.getElementById('JobQuery').open();
-        app.jobquerybox.setValue(this.jobquery);
-        setTimeout(function() {
-            app.jobquerybox.refresh();
-//            app.jobquerybox.focus();
-        },10);
-     },
-     _killQuery: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        document.getElementById("killJob").generateRequest();
-     },
-
-      _genDeleteReq: function(){
-          var list = document.getElementById("material");
-          var listAll = this.$.material.selectedItems;
-          this.mytemp = JSON.parse(JSON.stringify(listAll));
-          if(this.$.material.selectedItems.length === 0) {
-              alert("Invalid number of jobs.");
-          }
-          else {
-              var result = confirm("Do you want to delete these "+this.$.material.selectedItems.length+" jobs? They will be also erased from disk storage");
-              var toDel=[];
-              if (result){
-                  for (i = 0; i < this.mytemp.length ; i++) {
-                      toDel.push(listAll[i].job);
-                  }
-                  req = document.getElementById("DeleteReq");
-                  req.params = toDel;
-                  req.generateRequest();
-                  this._resetSelection();
-              }
-          }
-      },
-
-      _afterDelete: function(e){
-          var list = document.getElementById("material");
-          req = document.getElementById("getMyJobs");
-          req.generateRequest();
-          this._resetSelection();
-      },
-
-
-      _resetSelection: function() {
-          this.$.material.selectedItems = [];
-          this.updateStyles();
-      },
-
-     _seeFiles: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        this.jobfiles = JSON.parse(e.model.item.jfiles);
-        this.jobsizes = JSON.parse(e.model.item.jsizes);
-        this.nfiles = this.jobfiles.length;
-        this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
-        for (i=0; i< this.jobfiles.length; i++){
-            this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
+    	},
+    	_checkFiles: function(jfiles){
+        	if (jfiles != '') {return true;}
+        	else {return false;}
+    	},
+    	_downloadFile: function(e){
+        	e.preventDefault();
+        	var filename =  e.model.item.file;
+        	console.log("Click download!")
+        	console.log("==>>FILES: ", e.model.item.file);
+        	var jobid = this.jobid;
+        	var user = this.username;
+        	var link = document.createElement('a');
+        	link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
+            if (link.download !== undefined){
+                //Set HTML5 download attribute. This will prevent file from opening if supported.
+                var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+                link.download = fileName;
             }
-        this.myfiles=this.jobs.sort(keysrt('file'));
-        document.getElementById('JobFiles').open();
-     },
-
-     _seeTiles: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        this.jobtype = e.model.item.jobtype;
-
-        document.getElementById('JobTiles').open();
-     },
-      _seeHelp: function(e){
-          e.preventDefault();
-          document.getElementById('jobHelpMyJobs').open();
-      },
-
-      _seeName: function(e){
-          e.preventDefault();
-          this.jobid = e.model.item.job;
-          this.jobname = e.model.item.jname;
-          this.username = e.model.item.user;
-          //document.getElementById('desTiles').username = this.username;
-          //document.getElementById('desTiles').jobid = this.jobid;
-          document.getElementById('JobName').open();
-      },
-
-      _genChangeReq: function() {
-          var newjname = document.getElementById("newname").value;
-          console.log('New name: ', newjname);
-          if(newjname === "") {
-              console.log("No new name entered");
-          }
-          else {
-              var formdata = new FormData();
-              formdata.append('username', this.username);
-              formdata.append('jobid', this.jobid);
-              formdata.append('jobname', newjname);
-
-              $.ajax({
-                  url: '/easyweb/change/',
-                  type: 'POST',
-                  //beforeSend: this.beforeSendHandler,
-                  success: this.completeHandler,
-                  error: this.errorHandler,
-                  data: formdata,
-                  cache: false,
-                  contentType: false,
-                  processData: false
-              });
-          }
-
-      },
-
-          completeHandler: function(){
-              console.log('YESSSSS');
-              var req = document.getElementById("getMyJobs");
-              req.generateRequest();
-              document.querySelector('#toast-nm-good').show();
-              document.getElementById("newname").value = "";
-
-          },
-          errorHandler: function(){
-              console.log('NOOOO');
-              document.querySelector('#toast-nm-bad').show();
-          },
-     patchOverlay: function (e) {
-         if (e.target.withBackdrop) {
-            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-         }
-     },
-      _nextPage: function() {
-          var crs = document.getElementById("jobs-crs");
-          crs.goToNextPage();
-      },
-
-    _prevPage: function() {
-      var crs = document.getElementById("jobs-crs");
-      crs.goToPrevPage();
-    }
-
+            if (document.createEvent) {
+                var e = document.createEvent('MouseEvents');
+                e.initEvent('click' ,true ,true);
+                link.dispatchEvent(e);
+                return true;
+            }
+            var query = '?download';
+            window.open(link.href + query);
+    	},
+        _seeQuery: function(e){
+            e.preventDefault();
+        	this.jobid = e.model.item.job;
+        	this.jobquery = e.model.item.jquery;
+        	document.getElementById('JobQuery').open();
+       	 	app.jobquerybox.setValue(this.jobquery);
+        	setTimeout(function() {
+            	app.jobquerybox.refresh();
+//            	app.jobquerybox.focus();
+        	},10);
+     	},
+     	_killQuery: function(e){
+        	e.preventDefault();
+        	this.jobid = e.model.item.job;
+        	this.username = e.model.item.user;
+        	document.getElementById("killJob").generateRequest();
+     	},
+      	_genDeleteReq: function(){
+          	var list = document.getElementById("material");
+          	var listAll = this.$.material.selectedItems;
+          	this.mytemp = JSON.parse(JSON.stringify(listAll));
+          	if(this.$.material.selectedItems.length === 0) {
+              	alert("Invalid number of jobs.");
+          	}
+          	else {
+              	var result = confirm("Do you want to delete these "+this.$.material.selectedItems.length+" jobs? They will be also erased from disk storage");
+              	var toDel=[];
+              	if (result){
+                  	for (i = 0; i < this.mytemp.length ; i++) {
+                      	toDel.push(listAll[i].job);
+                  	}
+                  	req = document.getElementById("DeleteReq");
+                  	req.params = toDel;
+                  	req.generateRequest();
+                  	this._resetSelection();
+             	}
+          	}
+      	},
+      	_afterDelete: function(e){
+          	var list = document.getElementById("material");
+          	req = document.getElementById("getMyJobs");
+          	req.generateRequest();
+          	this._resetSelection();
+      	},
+      	_resetSelection: function() {
+          	this.$.material.selectedItems = [];
+          	this.updateStyles();
+      	},
+     	_seeFiles: function(e){
+        	e.preventDefault();
+        	this.jobid = e.model.item.job;
+       	 	this.username = e.model.item.user;
+        	this.jobfiles = JSON.parse(e.model.item.jfiles);
+        	this.jobsizes = JSON.parse(e.model.item.jsizes);
+        	this.nfiles = this.jobfiles.length;
+        	this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
+        	for (i=0; i< this.jobfiles.length; i++){
+            	this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
+            }
+        	this.myfiles=this.jobs.sort(keysrt('file'));
+        	document.getElementById('JobFiles').open();
+     	},
+     	_seeTiles: function(e){
+        	e.preventDefault();
+        	this.jobid = e.model.item.job;
+        	this.username = e.model.item.user;
+        	this.jobtype = e.model.item.jobtype;
+        	document.getElementById('JobTiles').open();
+     	},
+      	_seeHelp: function(e){
+          	e.preventDefault();
+          	document.getElementById('jobHelpMyJobs').open();
+      	},
+      	_seeName: function(e){
+          	e.preventDefault();
+          	this.jobid = e.model.item.job;
+          	this.jobname = e.model.item.jname;
+          	this.username = e.model.item.user;
+          	//document.getElementById('desTiles').username = this.username;
+          	//document.getElementById('desTiles').jobid = this.jobid;
+          	document.getElementById('JobName').open();
+      	},
+      	_genChangeReq: function() {
+          	var newjname = document.getElementById("newname").value;
+          	console.log('New name: ', newjname);
+          	if(newjname === "") {
+              	console.log("No new name entered");
+          	}
+          	else {
+              	var formdata = new FormData();
+              	formdata.append('username', this.username);
+              	formdata.append('jobid', this.jobid);
+              	formdata.append('jobname', newjname);
+              
+              	$.ajax({
+                  	url: '/easyweb/change/',
+                 	type: 'POST',
+                  	//beforeSend: this.beforeSendHandler,
+                  	success: this.completeHandler,
+                  	error: this.errorHandler,
+                  	data: formdata,
+                  	cache: false,
+                  	contentType: false,
+                  	processData: false
+              	});
+          	}
+      	},
+        completeHandler: function(){
+            console.log('YESSSSS');
+    	    var req = document.getElementById("getMyJobs");
+            req.generateRequest();
+            document.querySelector('#toast-nm-good').show();
+            document.getElementById("newname").value = "";
+        },
+        errorHandler: function(){
+            console.log('NOOOO');
+            document.querySelector('#toast-nm-bad').show();
+        },
+     	patchOverlay: function (e) {
+        	if (e.target.withBackdrop) {
+            	e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         	}
+     	},
+      	_nextPage: function() {
+          	var crs = document.getElementById("jobs-crs");
+          	crs.goToNextPage();
+      	},
+    	_prevPage: function() {
+      		var crs = document.getElementById("jobs-crs");
+      		crs.goToPrevPage();
+    	},
     });
-
-
 </script>
 </dom-module>
