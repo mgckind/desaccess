@@ -137,12 +137,12 @@
         <section>
             <des-card heading = "Bulk Cutouts Form" >
                 <div class="card-content">
-                    <div class="top">
+                    <!--<div class="top">
                         Upload a file with CoaddIDs or RA/DEC positions, or enter them manually and run the cutout generator
-                    </div>
+                    </div>-->
 
-                    <!-- table -->
                     <table id="coadd-table" style="width:100%">
+                        <!--
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -150,7 +150,6 @@
                                     <span style="overflow-x: auto; overflow-wrap: break-word;">
                                     Upload File (csv, with "COADD_OBJECT_ID" or "RA,DEC" as uncommented header)
                                     </span>
-                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
@@ -206,6 +205,74 @@
                                 </div>
                             </td>
                         </tr>
+                        -->
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload file (CSV, with "COADD_OBJECT_ID" or "RA,DEC" as header). <br />Or enter values manually (with "COADD_OBJECT_ID" or "RA,DEC" as header). <br />See help button for examples.</span>
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <div class="around-cell">
+                                    <paper-button raised class="indigo" id="bc_uploadFile">
+                                        <div id="bc_uploadicon" style="display: inline-block;">
+                                            <i class="fa fa-cloud-upload"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                            [[file_name]]
+                                        </span>
+                                        <input type="file" class="upload" id="filesAB" on-change="_fileChange" />
+                                    </paper-button>
+                                    <paper-button raised class="indigo" id="bc_enterManually" on-tap="_bc_openManualEntry">
+                                        <div id ="bc_keyboardicon" style="display: inline-block;">
+                                            <i class="fa fa-keyboard-o"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span>[[enter_values]]</span>
+                                    </paper-button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                         
                         
                         <tr class="coadd-tr">
@@ -353,9 +420,12 @@
                     </div>
                 </div>
             </des-card>
-
+            
+            <des-positions-bc id="desPositionsBC"></des-positions-bc>
+            <!--
             <des-positions-coadds-bc id="desPositionsCoaddsBC"></des-positions-coadds-bc>
             <des-positions-coords-bc id="desPositionsCoordsBC"></des-positions-coords-bc>
+            -->
 
             <paper-toast class="toast-position" id="bc_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
             <paper-toast class="toast-position" id="bc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
@@ -376,71 +446,82 @@
 </dom-module>
 
 <script>
-
     Polymer({
         is: "des-bulk-cutouts",
         properties: {
-            file_name : {
+            file_name: {
                 type : String,
                 value : "Upload File"
             },
-            enter_values : {
+            enter_values: {
                 type : String,
                 value : "Enter Values"
             },
-
-            submit_type : {
+            submit_type: {
                 type: String,
-                value: "csvfile",
+                value: "csvfile"
             },
             email: {
                 type: String,
-                values: "",
+                values: ""
             },
             job_comment: {
                 type : String,
                 value : ""
             }
         },
-        
-        ready:function(){
+        ready: function () {
             var bc_all_toggle = this.$.bc_all_toggle;
-            bc_all_toggle.addEventListener('change', function(){
+            bc_all_toggle.addEventListener('change', function () {
                 document.getElementById('desBulkCutouts').toggle_bands();
             });
         },
-        toggle_bands:function(){
+        toggle_bands: function () {
             var band_rads = document.querySelectorAll('.bandbox');
-            if (this.$.bc_all_toggle.checked){
-                for (var j=0; j<5; j++){
+            if (this.$.bc_all_toggle.checked) {
+                for (var j=0; j<5; j++) {
                     band_rads[j].disabled=true;
                 }
             }
-            else{
-                for (var i=0; i<5; i++){
+            else {
+                for (var i=0; i<5; i++) {
                     band_rads[i].disabled=false;
                 }
             }
         },
         
+        get filesAB(){
+            return this.$.filesAB.files[0];
+        },
+        /*
         get file1(){
             return this.$.file1.files[0];
         },
         get file2(){
             return this.$.file2.files[0];
         },
-        emailcheck: function(){
+        */
+        emailcheck: function () {
             var emailbox = document.getElementById("bc_sendemail");
             var edialog = document.getElementById("bc_emaildialog");
             document.getElementById("bc_validemail").value=this.email;
-            if (emailbox.checked == true){
+            if (emailbox.checked == true) {
                 //edialog.open();
             }
-            else
-            {
+            else {
                 document.getElementById("bc_validemail").value='';
             }
         },
+        _fileChange: function () {
+            this.file_name = this.filesAB.name;
+            console.log('File to read: ' + this.file_name);
+            document.getElementById("bc_submitJobButton").disabled=false;
+            document.getElementById("bc_enterManually").disabled=true;
+            document.getElementById("bc_uploadicon").icon = "done";
+            
+            this.submit_type = 'csvfileAB';
+        },
+        /*
         _fileChange1: function(){
             this.file_name = this.file1.name;
             console.log('File to read : ' + this.file_name );
@@ -467,14 +548,20 @@
             this.submit_type = 'coordfile';
 //            document.getElementById("filename").value = this.file_name;
         },
-        clear: function(){
+        */
+        clear: function () {
             document.getElementById("bc_submitJobButton").disabled=true;
+            document.getElementById("bc_enterManually").disabled=false;
+            document.getElementById("bc_uploadFile").disabled=false;
+            document.getElementById("bc_keyboardicon").style.display="inline-block";
+            /*
             document.getElementById("bc_enterCoadds").disabled=false;
             document.getElementById("bc_enterCoords").disabled=false;
             document.getElementById("bc_uploadFileCoadd").disabled=false;
             document.getElementById("bc_uploadFileCoord").disabled=false;
             document.getElementById("bc_keyboardiconcoadd").style.display='inline-block';
             document.getElementById("bc_keyboardiconcoord").style.display='inline-block';
+            */
             document.getElementById("bc_tiffs").checked=false;
             document.getElementById("bc_pngs").checked=false;
             document.getElementById("bc_fits").checked=false;
@@ -486,7 +573,7 @@
             document.getElementById("bc_all_toggle").checked=false;
             
             var band_rads = document.querySelectorAll('.bandbox');
-            for (var j=0; j<5; j++){
+            for (var j=0; j<5; j++) {
                 band_rads[j].checked=false;
                 band_rads[j].disabled=false;
             }
@@ -498,31 +585,52 @@
             document.getElementById("bc_Yband").checked=false;
             document.getElementById("bc_sendemail").checked=false;
             document.getElementById("bc_returnList").checked=false;
+            document.getElementById("desPositionsBC").clear();
+            /*
             document.getElementById("desPositionsCoaddsBC").clear();
             document.getElementById("desPositionsCoordsBC").clear();
+            */
             document.getElementById("bc_rgb_values").value='';
             document.getElementById("bc_validemail").value='';
             document.getElementById("bc_validname").value='';
+            document.getElementById("bc_uploadicon").icon = "backup";
+            document.getElementById("bc_keyboardicon").icon = "hardware:keyboard";
+            /*
             document.getElementById("bc_uploadiconcoadd").icon = "backup";
             document.getElementById("bc_uploadiconcoord").icon = "backup";
             document.getElementById("bc_keyboardiconcoadd").icon = "hardware:keyboard";
             document.getElementById("bc_keyboardiconcoord").icon = "hardware:keyboard";
+            */
             this.file_name = "Upload File";
             this.job_comment = "";
 
+            var upIcon = document.getElementById("bc_uploadicon").style.display="inline-block";
+            /*
             var upIcon1 = document.getElementById("bc_uploadiconcoadd").style.display='inline-block';
             var upIcon2 = document.getElementById("bc_uploadiconcoord").style.display='inline-block';
+            */
             this.enter_values = "Enter Values";
+            this.$.filesAB.value = "";
+            /*
             this.$.file1.value = "";
             this.$.file2.value = "";
+            */
         },
+        /*
         _countCoadds: function(coadds) {
             console.log(coadds);
         },
         _countCoords: function(coords) {
             console.log(coords);
         },
-
+        */
+        
+        _bc_openManualEntry: function () {
+            var inputDialog = document.getElementById("bc_inputDialog");
+            inputDialog.open();
+            this.submit_type = 'manualAB';
+        },
+        /*
         _bc_openCoadds: function(){
             var inputCoaddDialog = document.getElementById("bc_inputCoaddsDialog");
             inputCoaddDialog.open();
@@ -533,25 +641,29 @@
             inputCoordDialog.open();
             this.submit_type = 'manualCoords';
         },
-        completeHandler: function(){
+        */
+        completeHandler: function () {
             console.log('YESSSSS');
             document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast1coadd').show();
             document.getElementById("getMyJobs").generateRequest();
         },
-        errorHandler: function(){
+        errorHandler: function () {
             console.log('NOOOO');
             document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast2coadd').show();
         },
-        errorHandler2: function(){
+        errorHandler2: function () {
             console.log('NOOOO');
             document.querySelector('#bc_toast3coadd').show();
         },
-        _submitJob: function(event){
+        _submitJob: function (event) {
             var formdata = new FormData();
+            formdata.append('csvfile', this.$.filesAB.files[0]);
+            /*
             formdata.append('csvfile1', this.$.file1.files[0]);
             formdata.append('csvfile2', this.$.file2.files[0]);
+            */
             
             formdata.append('make_tiffs', document.getElementById("bc_tiffs").checked);
             formdata.append('make_pngs', document.getElementById("bc_pngs").checked);
@@ -567,15 +679,19 @@
             formdata.append('bc_iband', document.getElementById("bc_iband").checked);
             formdata.append('bc_zband', document.getElementById("bc_zband").checked);
             formdata.append('bc_Yband', document.getElementById("bc_Yband").checked);
+            formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
             
             formdata.append('bc_returnList', document.getElementById("bc_returnList").checked);
             formdata.append('bc_send_email', document.getElementById("bc_sendemail").checked);
             formdata.append('bc_email', document.getElementById("bc_validemail").value);
             formdata.append('bc_name', document.getElementById("bc_validname").value);
             formdata.append('bc_submit_type', this.submit_type);
+            
+            formdata.append('bc_positions',document.getElementById("bc_enteredPositions").value);
+            /*
             formdata.append('bc_coadds',document.getElementById("bc_enteredCoadds").value);
             formdata.append('bc_coords',document.getElementById("bc_enteredCoords").value);
-            formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
+            */
 
             var tiffs = document.getElementById("bc_tiffs").checked;
             var pngs = document.getElementById("bc_pngs").checked;
@@ -588,7 +704,7 @@
             var z = document.getElementById("bc_zband").checked;
             var y = document.getElementById("bc_Yband").checked;
             var allbands = document.getElementById("bc_all_toggle").checked;
-            if (tiffs == false && pngs == false && fits == false && rgbs == false){
+            if (tiffs == false && pngs == false && fits == false && rgbs == false) {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else if (fits == true && (g == false && r == false && i == false && z == false && y == false && allbands == false)) {
@@ -597,7 +713,7 @@
             else if (rgbs == true && rgb_val === "") {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
-            else{
+            else {
                 $.ajax({
                     url: '/easyweb/bulk_cutout/',
                     type: 'POST',
@@ -611,7 +727,7 @@
                 });
             }
         },
-        _clearForm: function(){
+        _clearForm: function () {
             console.log('clear Form');
             desBulkCutouts=document.getElementById('desBulkCutouts');
             desBulkCutouts.clear();
@@ -621,24 +737,21 @@
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
             }
         },
-        _seeHelp: function(e){
+        _seeHelp: function (e) {
             e.preventDefault();
             document.getElementById('jobHelpBulkCutouts').open();
         },
 
 
-        _nextPage: function() {
+        _nextPage: function () {
             var crs = document.getElementById("coadd-crs");
             crs.goToNextPage();
         },
 
-        _prevPage: function() {
+        _prevPage: function () {
             var crs = document.getElementById("coadd-crs");
             crs.goToPrevPage();
         },
 
     });
-
-
-
 </script>

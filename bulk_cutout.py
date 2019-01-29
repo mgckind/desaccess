@@ -103,6 +103,17 @@ class FileHandler(BaseHandler):
             ysize = 1.0
 
         filename = user_folder + jobid + '.csv'
+        if stype == 'csvfileAB':
+            fileinfo = self.request.files['csvfile'][0]
+            with open(filename, 'w') as F:
+                F.write(fileinfo['body'].decode('ascii'))
+        if stype == 'manualAB':
+            values = self.get_argument('bc_positions')
+            F = open(filename, 'w')
+            F.write(values)
+            F.close()
+        
+        """
         if stype == 'manualCoadds':
             values = self.get_argument('bc_coadds')
             #filename = user_folder + jobid + '.csv'
@@ -131,6 +142,7 @@ class FileHandler(BaseHandler):
             #filename = user_folder + jobid + extn
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
+        """
         print('**************')
 
         folder2 = user_folder + jobid + '/'
