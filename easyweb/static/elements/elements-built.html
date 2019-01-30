@@ -12,6 +12,8 @@
 <!-- App Elements -->
 <!-- Iron Elements -->
 <!-- DES Elements -->
+<!--<link rel="import" href="../des_components/des-pages/des-positions-coadds-bc.html">-->
+<!--<link rel="import" href="../des_components/des-pages/des-positions-coords-bc.html">-->
 <!--<link rel="import" href="../des_components/des-card-help.html">-->
 <!-- Neon  -->
 <!-- help page -->
@@ -46601,62 +46603,59 @@ This program is available under Apache License Version 2.0, available at https:/
 </script>
 <dom-module id="des-my-jobs" assetpath="../des_components/des-pages/">
 <template>
-<style include="shared-styles">
+    <style include="shared-styles">
+        /* carousel table design*/
+        paper-icon-item {
+            --paper-item-disabled-color: black;
+        }
+        paper-item {
+            --paper-item-disabled-color: black;
+            color: black;
+            --paper-item-focused: {
+            };
+            --paper-item-selected: {
+                background: var(--paper-amber-50) ;
+            };
+            --paper-item-focused-before: {
+                opacity:0.0;
+            };
+        }
+        .status {
+            display: inline-block;
+            box-sizing: border-box;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--paper-yellow-500);
+        }
+        .green {background: var(--paper-green-500);}
+        .red {background: var(--paper-red-500);}
+    </style>
 
-    /* carousel table design*/
-
-    paper-icon-item {
-        --paper-item-disabled-color: black;
-    }
-    paper-item {
-        --paper-item-disabled-color: black;
-        color: black;
-        --paper-item-focused: {
-        };
-        --paper-item-selected: {
-            background: var(--paper-amber-50) ;
-        };
-        --paper-item-focused-before: {
-            opacity:0.0;
-        };
-    }
-    .status {
-        display: inline-block;
-        box-sizing: border-box;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: var(--paper-yellow-500);
-    }
-    .green {background: var(--paper-green-500);}
-    .red {background: var(--paper-red-500);}
-
-</style>
     <iron-ajax id="getMyJobs" auto="" url="/easyweb/myjobs/" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
     </iron-ajax>
-
     <iron-ajax id="killJob" method="DELETE" url="/easyweb/myjobs/" params="{{_getJobId(username,jobid)}}" handle-as="json" on-response="_handleTermination" debounce-duration="300">
     </iron-ajax>
-
     <iron-ajax id="DeleteReq" url="/easyweb/delete/" method="DELETE" params="[1,2,3]" on-response="_afterDelete" debounce-duration="300">
     </iron-ajax>
-
     <iron-ajax id="ChangeNameReq" url="/easyweb/change/" method="POST" params="{&quot;part&quot;:&quot;fff&quot;}" on-response="_afterChange" handle-as="json" debounce-duration="300">
     </iron-ajax>
 
+
     <paper-dialog class="dialog-position-query" id="JobQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <h2>Job id: {{jobid}}</h2>
-              <div class="insideDialog">
-                  <textarea id="jobQueryBox" autofocus=""></textarea>
-              </div>
-              <div class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised="" dialog-confirm="" on-tap="_copyQuery">Copy query</paper-button>
-                  <paper-button class="indigo" raised="" dialog-confirm="">Close</paper-button><br>
-              </div>
+        <h2>Job id: {{jobid}}</h2>
+        <div class="insideDialog">
+            <textarea id="jobQueryBox" autofocus=""></textarea>
+        </div>
+        <div class="buttons" on-iron-overlay-opened="patchOverlay">
+            <paper-button class="indigo" raised="" dialog-confirm="" on-tap="_copyQuery">Copy query</paper-button>
+            <paper-button class="indigo" raised="" dialog-confirm="">Close</paper-button><br>
+        </div>
     </paper-dialog>
 
+
     <paper-dialog class="dialog-position" id="JobTiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <des-results id="desTiles" username="{{username}}" jobid="{{jobid}}" jobtype="{{jobtype}}"></des-results>
+        <des-results id="desTiles" username="{{username}}" jobid="{{jobid}}" jobtype="{{jobtype}}"></des-results>
     </paper-dialog>
 
 
@@ -46671,47 +46670,38 @@ This program is available under Apache License Version 2.0, available at https:/
 
 
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <h2>Job id: {{jobid}}</h2>
-              <p> {{nfiles}} files generated  </p>
-              <div>
-        <vaadin-grid items="{{myfiles}}" id="material">
-
-
-              <vaadin-grid-column width="450px" flex-grow="0">
-                <template class="header">
-
-
-            <vaadin-grid-filter aria-label="Filename" path="file" value="[[_filterFileName]]">
-            <input placeholder="Filename" value="{{_filterFileName::input}}" focus-target="">
-                 <vaadin-grid-sorter path="file"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-                      </vaadin-grid-filter>
-
-                </template>
-                <template>{{item.file}}</template>
-              </vaadin-grid-column>
-
-              <vaadin-grid-column flex-grow="1">
-                <template class="header">
-
-                 <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-                </template>
-                <template>{{item.size}}</template>
-              </vaadin-grid-column>
-
-              <vaadin-grid-column flex-grow="1">
-              <template class="header">Download Files</template>
-              <template>
-                <paper-button class="SeeFilesButton" raised="" on-click="_downloadFile">Download</paper-button>
-              </template>
-              </vaadin-grid-column>
-
-
+        <h2>Job id: {{jobid}}</h2>
+        <p> {{nfiles}} files generated  </p>
+        <p>Only up to 100 files are displayed here. Click <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">HERE</a> for the entire list of files.</p>
+            <vaadin-grid items="{{myfiles}}" id="material">
+                <vaadin-grid-column width="450px" flex-grow="0">
+                    <template class="header">
+                        <vaadin-grid-filter aria-label="Filename" path="file" value="[[_filterFileName]]">
+                            <input placeholder="Filename" value="{{_filterFileName::input}}" focus-target="">
+                            <vaadin-grid-sorter path="file"><iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                        </vaadin-grid-filter>
+                    </template>
+                    <template>{{item.file}}</template>
+                </vaadin-grid-column>
+                
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">
+                        <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+                    </template>
+                    <template>{{item.size}}</template>
+                </vaadin-grid-column>
+                
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Download Files</template>
+                    <template>
+                        <paper-button class="SeeFilesButton" raised="" on-click="_downloadFile">Download</paper-button>
+                    </template>
+                </vaadin-grid-column>
             </vaadin-grid>
-              </div>
-
-              <div style="bottom: 20px;" class="buttons" on-iron-overlay-opened="patchOverlay">
-                  <paper-button class="indigo" raised="" dialog-confirm="">Close</paper-button><br>
-              </div>
+        
+        <div style="bottom: 50px;" class="buttons" on-iron-overlay-opened="patchOverlay">
+            <paper-button class="indigo" raised="" dialog-confirm="">Close</paper-button><br>
+        </div>
     </paper-dialog>
 
 
@@ -46721,7 +46711,6 @@ This program is available under Apache License Version 2.0, available at https:/
                 <paper-carousel id="jobs-crs" items="1" dottext="false" controls="true">
                     <div class="carousel-item">
                         <table class="crs-table" style="width:100%">
-
                             <tbody><tr class="crs-tr">
                                 <th class="crs-th" colspan="2">General Instruction</th>
                             </tr>
@@ -46834,11 +46823,9 @@ This program is available under Apache License Version 2.0, available at https:/
                             </tr>
                         </tbody></table>
 
-
                         <div>
                             Select one or more jobs for deletion.
                         </div>
-
                     </div>
 
                     <div class="carousel-item">
@@ -46882,9 +46869,9 @@ This program is available under Apache License Version 2.0, available at https:/
                             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
                         </div>
                     </div>
-
                 </paper-carousel>
             </div>
+            
             <div class="row bottom">
                 <paper-button class="prev" on-tap="_prevPage">
                     <iron-icon icon="image:navigate-before"></iron-icon>
@@ -46896,413 +46883,380 @@ This program is available under Apache License Version 2.0, available at https:/
                     <iron-icon icon="image:navigate-next"></iron-icon>
                 </paper-button>
             </div>
-
         </des-card>
     </paper-dialog>
 
 
-<paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
+    <paper-toast class="toast-position" id="toastCopy" text="Query copied to main editor" duration="3000"> </paper-toast>
 
-<des-card heading="My Jobs">
+    <des-card heading="My Jobs">
+        <div style="padding-right: 20px">
+	        <vaadin-grid items="{{data}}" id="material">
+	          	<vaadin-grid-column width="10px" flex-grow="0">
+	              	<template class="header"></template>
+	              	<template></template>
+	         	</vaadin-grid-column>
 
-<div style="padding-right: 20px">
-<vaadin-grid items="{{data}}" id="material">
+	          	<vaadin-grid-selection-column id="auto" auto-select="">
+	          	</vaadin-grid-selection-column>
 
+	            <vaadin-grid-column width="50px" flex-grow="0">
+	              	<template class="header">#</template>
+	              	<template>{{index}}</template>
+	              	<!-- If necessary, the footer could be set using <template class="footer"> -->
+	            </vaadin-grid-column>
 
-    <vaadin-grid-column width="10px" flex-grow="0">
-        <template class="header"></template>
-        <template></template>
-    </vaadin-grid-column>
+	            <vaadin-grid-column width="80px" flex-grow="0">
+	              	<!--<template class="header">Status</template>-->
+	                <template class="header" style="padding-left: 5px">
+	                    <vaadin-grid-sorter path="status">Status<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+	                </template>
 
-    <vaadin-grid-selection-column id="auto" auto-select="">
-    </vaadin-grid-selection-column>
+	                <template>
+	                    <template is="dom-if" if="{{_completed(item.status)}}">
+	                        <div class="status green size" item-icon=""></div>
+	                    </template>
 
-      <vaadin-grid-column width="50px" flex-grow="0">
-        <template class="header">#</template>
-        <template>{{index}}</template>
-        <!-- If necessary, the footer could be set using <template class="footer"> -->
-      </vaadin-grid-column>
+	                    <template is="dom-if" if="{{_pending(item.status)}}">
+	                        <div class="status yellow size" item-icon=""></div>
+	                    </template>
 
-      <vaadin-grid-column width="80px" flex-grow="0">
-        <!--<template class="header">Status</template>-->
-          <template class="header" style="padding-left: 5px">
-              <vaadin-grid-sorter path="status">Status<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-          </template>
+	                    <template is="dom-if" if="{{_stop(item.status)}}">
+	                        <div class="status red size" item-icon=""></div>
+	                    </template>
+	                </template>
+	            </vaadin-grid-column>
+		        <!--<vaadin-grid-column flex-grow="2">-->
+		            <!--<template class="header">Check</template>-->
+		            <!--<template>{{item.status}}<br />-->
+		                <!--&lt;!&ndash;<span style="font-size: 0.7em;">{{item.elapsed}}</span>&ndash;&gt;-->
+		            <!--</template>-->
+		        <!--</vaadin-grid-column>-->
 
-          <template>
-              <template is="dom-if" if="{{_completed(item.status)}}">
-                  <div class="status green size" item-icon=""></div>
-              </template>
+            	<vaadin-grid-column flex-grow="0" width="290px">
+              		<template class="header">
+                  		<vaadin-grid-filter aria-label="Job Name" path="jname" value="[[_filterJobName]]">
+                  			<input placeholder="Job Name" value="{{_filterJobName::input}}" focus-target="">
+                        </vaadin-grid-filter>
+              		</template>
+                	<template>
+                		<paper-item-body two-line="">
+                    		<div>
+		                        <!--{{returnName(item.job)}}-->
+		                        <!--it can be changed in api.py-->
+		                        <span style="font-size: 10px"> Name: {{item.jname}} </span> <br>
+		                        <span style="font-size: 10px"> Job id: {{item.job}} </span>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
+                    		</div>
+		                    <div secondary="">
+		                        <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
+		                        <template is="dom-if" if="{{item.jwarning}}">
+		                         	<span style="color:red; font-size: 10px;">{{item.elapsed}}</span>
+		                        </template>
+		                        <template is="dom-if" if="{{!item.jwarning}}">
+		                         	<span style="font-size: 10px;">{{item.elapsed}}</span>
+		                        </template>
+		                    </div>
+                		</paper-item-body>
+                	</template>
+            	</vaadin-grid-column>
 
-              <template is="dom-if" if="{{_pending(item.status)}}">
-                  <div class="status yellow size" item-icon=""></div>
-              </template>
+            	<vaadin-grid-column flex-grow="0" width="110px">
+              		<template class="header" style="padding-left: 5px">
+               			<vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
+              		</template>
+              		
+              		<template>{{item.jobtype}}<br>
+              		</template>
+            	</vaadin-grid-column>
 
-              <template is="dom-if" if="{{_stop(item.status)}}">
-                  <div class="status red size" item-icon=""></div>
-              </template>
-          </template>
-      </vaadin-grid-column>
-    <!--<vaadin-grid-column flex-grow="2">-->
-        <!--<template class="header">Check</template>-->
-        <!--<template>{{item.status}}<br />-->
-            <!--&lt;!&ndash;<span style="font-size: 0.7em;">{{item.elapsed}}</span>&ndash;&gt;-->
-        <!--</template>-->
-    <!--</vaadin-grid-column>-->
+            	<vaadin-grid-column flex-grow="0" width="120px">
+              		<template class="header" style="padding-left: 5px">
+               			Execution time (s)
+              		</template>
+              
+              		<template>{{item.jruntime}}<br>
+              		</template>
+            	</vaadin-grid-column>
 
-      <vaadin-grid-column flex-grow="0" width="290px">
-        <template class="header">
+                <!--Cancel job button-->
+                <vaadin-grid-column flex-grow="0" width="80px">
+                    <template class="header">Cancel Job</template>
+                    <template>
+                        <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}" on-click="_killQuery"></paper-icon-button>
+                    </template>
+                </vaadin-grid-column>
 
-            <vaadin-grid-filter aria-label="Job Name" path="jname" value="[[_filterJobName]]">
-            <input placeholder="Job Name" value="{{_filterJobName::input}}" focus-target="">
-                      </vaadin-grid-filter>
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Queries</template>
+                    <template>
+                        <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
+                    </template>
+                </vaadin-grid-column>
 
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Results</template>
+                    <template>
+                        <!--<paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>-->
+                        <paper-button class="SeeFilesButton" raised="" disabled$="{{item.jquerybool}}" on-click="_seeTiles">Images</paper-button>
+                    </template>
+                </vaadin-grid-column>
 
-        </template>
-          <template>
-          <paper-item-body two-line="">
-              <div>
-                  <!--{{returnName(item.job)}}-->
-                  <!--it can be changed in api.py-->
-                  <span style="font-size: 10px"> Name: {{item.jname}} </span> <br>
-                  <span style="font-size: 10px"> Job id: {{item.job}} </span>
-                  <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="_seeName"></iron-icon>
+                <vaadin-grid-column flex-grow="1">
+                    <template class="header">Files</template>
+                    <template>
+                	    <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised="" on-click="_seeFiles"> Files</paper-button>
+                    </template>
+                </vaadin-grid-column>
+          	</vaadin-grid>
+        </div>
+        
+        <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
+            <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
+            <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
+            <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+        </div>
 
-              </div>
-              <div secondary="">
-                  <!--{{item.elapsed}} ({{returnDate(item.time)}})-->
-                  <template is="dom-if" if="{{item.jwarning}}">
-                   <span style="color:red; font-size: 10px;">{{item.elapsed}}</span>
-                  </template>
-                  <template is="dom-if" if="{{!item.jwarning}}">
-                   <span style="font-size: 10px;">{{item.elapsed}}</span>
-                  </template>
-              </div>
-          </paper-item-body>
-          </template>
-
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="0" width="110px">
-
-        <template class="header" style="padding-left: 5px">
-         <vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
-        </template>
-        <template>{{item.jobtype}}<br>
-        </template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column flex-grow="0" width="120px">
-
-        <template class="header" style="padding-left: 5px">
-         Execution time (s)
-        </template>
-        <template>{{item.jruntime}}<br>
-        </template>
-      </vaadin-grid-column>
-
-    <!--Cancel job button-->
-      <vaadin-grid-column flex-grow="0" width="80px">
-        <template class="header">Cancel Job</template>
-          <template>
-
-              <paper-icon-button icon="icons:highlight-off" disabled$="{{!_pending(item.status)}}" on-click="_killQuery"></paper-icon-button>
-              </template>
-      </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Queries</template>
-              <template>
-                <paper-button class="SeeFilesButton" raised="" disabled$="{{!item.jquerybool}}" on-click="_seeQuery">Query</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Results</template>
-              <template>
-                <!--<paper-button class="SeeFilesButton" raised disabled$="{{item.jquerybool}}" on-click="_seeTiles">Cutouts</paper-button>-->
-                <paper-button class="SeeFilesButton" raised="" disabled$="{{item.jquerybool}}" on-click="_seeTiles">Images</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-        <vaadin-grid-column flex-grow="1">
-              <template class="header">Files</template>
-              <template>
-
-                <paper-button class="SeeFilesButton" disabled$="{{!item.jbool}}" raised="" on-click="_seeFiles"> Files</paper-button>
-              </template>
-            </vaadin-grid-column>
-
-    </vaadin-grid>
-    </div>
-    <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
-        <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
-        <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
-        <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
-
-    </div>
-
-    <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
-    <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-</des-card>
+        <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
+        <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+    </des-card>
 </template>
 
 <script>
-function keysrt(key,desc) {
-  return function(a,b){
-   return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
-  }
-}
-
+	function keysrt(key,desc) {
+  		return function(a,b){
+   			return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
+  		}
+	}
 </script>
 
 <script>
-      Polymer({
-      is: "des-my-jobs",
-      properties: {
-        username: {
-            type: String,
-            value: '',
+    Polymer({
+        is: "des-my-jobs",
+        properties: {
+	        username: {
+	            type: String,
+	            value: '',
+	        },
+	        jobid: {
+	            type: String,
+	            value: '',
+	        },
+	        nfiles: {
+	            value: 0,
+	        },
+	        jobquery: {
+	            type: String,
+	            value: '',
+	        },
+	        jobname: {
+	            type: String,
+	            value: '',
+	        },
+            jobtype: {
+	            type: String,
+	            value: '',
+	        }
         },
-        jobid: {
-            type: String,
-            value: '',
-        },
-        nfiles: {
-            value: 0,
-        },
-        jobquery: {
-            type: String,
-            value: '',
-        },
-        jobname: {
-            type: String,
-            value: '',
-        },
-          jobtype: {
-            type: String,
-            value: '',
-        }
-      },
-      _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
-      attached: function() {
-        myJobQuery = document.getElementById("jobQueryBox");
-        },
-      _handleResponse: function(e){
-        var _self = this;
-        _self.data = e.detail.response;
-        _self.count = _self.data.length;
-    },
-      _handleTermination: function(e){
-      document.getElementById("getMyJobs").generateRequest();
-    },
-      _refreshJobs: function(e){
-      document.getElementById("getMyJobs").generateRequest();
-    },
-      _completed: function(status) {
-          if (status === "SUCCESS") {
-              return true;
-          }
-      },
-      _pending: function(status) {
-          if (status === "PENDING") {
-              return true;
-          }
-      },
-      _stop: function(status) {
-          if (status != "PENDING" && status != "SUCCESS" ) {
-              return true;
-          }
-      },
-
-    _copyQuery: function(){
-        document.getElementById("desQuery").clearQueryBox();
-        document.querySelector('#toastCopy').show();
-        app.editor.setValue(app.jobquerybox.getValue());
-
-        console.log("-> line number: ", app.editor.lineCount());
-        setTimeout(function() {
-            app.editor.refresh();
-            app.editor.focus();
-        },20);
-
-    },
-    _checkFiles: function(jfiles){
-        if (jfiles != '') {return true;}
-        else {return false;}
-    },
-    _downloadFile: function(e){
-        e.preventDefault();
-        var filename =  e.model.item.file;
-        console.log("Click download!")
-        console.log("==>>FILES: ", e.model.item.file);
-        var jobid = this.jobid;
-        var user = this.username;
-        var link = document.createElement('a');
-        link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
-              if (link.download !== undefined){
-                  //Set HTML5 download attribute. This will prevent file from opening if supported.
-                  var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
-                  link.download = fileName;
-                }
-                if (document.createEvent) {
-                  var e = document.createEvent('MouseEvents');
-                  e.initEvent('click' ,true ,true);
-                  link.dispatchEvent(e);
-                  return true;
-                }
-                  var query = '?download';
-                  window.open(link.href + query);
-
-    },
-     _seeQuery: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.jobquery = e.model.item.jquery;
-        document.getElementById('JobQuery').open();
-        app.jobquerybox.setValue(this.jobquery);
-        setTimeout(function() {
-            app.jobquerybox.refresh();
-//            app.jobquerybox.focus();
-        },10);
-     },
-     _killQuery: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        document.getElementById("killJob").generateRequest();
-     },
-
-      _genDeleteReq: function(){
-          var list = document.getElementById("material");
-          var listAll = this.$.material.selectedItems;
-          this.mytemp = JSON.parse(JSON.stringify(listAll));
-          if(this.$.material.selectedItems.length === 0) {
-              alert("Invalid number of jobs.");
-          }
-          else {
-              var result = confirm("Do you want to delete these "+this.$.material.selectedItems.length+" jobs? They will be also erased from disk storage");
-              var toDel=[];
-              if (result){
-                  for (i = 0; i < this.mytemp.length ; i++) {
-                      toDel.push(listAll[i].job);
-                  }
-                  req = document.getElementById("DeleteReq");
-                  req.params = toDel;
-                  req.generateRequest();
-                  this._resetSelection();
-              }
-          }
-      },
-
-      _afterDelete: function(e){
-          var list = document.getElementById("material");
-          req = document.getElementById("getMyJobs");
-          req.generateRequest();
-          this._resetSelection();
-      },
-
-
-      _resetSelection: function() {
-          this.$.material.selectedItems = [];
-          this.updateStyles();
-      },
-
-     _seeFiles: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        this.jobfiles = JSON.parse(e.model.item.jfiles);
-        this.jobsizes = JSON.parse(e.model.item.jsizes);
-        this.nfiles = this.jobfiles.length;
-        this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
-        for (i=0; i< this.jobfiles.length; i++){
-            this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
+        _getJobId: function(username, jobid){return {username:username, jobid:jobid};},
+        attached: function() {
+    		myJobQuery = document.getElementById("jobQueryBox");
+    	},
+      	_handleResponse: function(e){
+        	var _self = this;
+        	_self.data = e.detail.response;
+        	_self.count = _self.data.length;
+    	},
+      	_handleTermination: function(e){
+      		document.getElementById("getMyJobs").generateRequest();
+    	},
+      	_refreshJobs: function(e){
+      		document.getElementById("getMyJobs").generateRequest();
+    	},
+      	_completed: function(status) {
+          	if (status === "SUCCESS") {
+              	return true;
+          	}
+      	},
+      	_pending: function(status) {
+          	if (status === "PENDING") {
+              	return true;
+          	}
+      	},
+      	_stop: function(status) {
+          	if (status != "PENDING" && status != "SUCCESS" ) {
+              	return true;
+          	}
+      	},
+    	_copyQuery: function(){
+        	document.getElementById("desQuery").clearQueryBox();
+        	document.querySelector('#toastCopy').show();
+        	app.editor.setValue(app.jobquerybox.getValue());
+        	console.log("-> line number: ", app.editor.lineCount());
+        	setTimeout(function() {
+            	app.editor.refresh();
+            	app.editor.focus();
+        	},20);
+    	},
+    	_checkFiles: function(jfiles){
+        	if (jfiles != '') {return true;}
+        	else {return false;}
+    	},
+    	_downloadFile: function(e){
+        	e.preventDefault();
+        	var filename =  e.model.item.file;
+        	console.log("Click download!")
+        	console.log("==>>FILES: ", e.model.item.file);
+        	var jobid = this.jobid;
+        	var user = this.username;
+        	var link = document.createElement('a');
+        	link.href = "/easyweb/static/workdir/"+user+"/"+jobid+"/"+filename;
+            if (link.download !== undefined){
+                //Set HTML5 download attribute. This will prevent file from opening if supported.
+                var fileName = link.href.substring(link.href.lastIndexOf('/') + 1, link.href.length);
+                link.download = fileName;
             }
-        this.myfiles=this.jobs.sort(keysrt('file'));
-        document.getElementById('JobFiles').open();
-     },
-
-     _seeTiles: function(e){
-        e.preventDefault();
-        this.jobid = e.model.item.job;
-        this.username = e.model.item.user;
-        this.jobtype = e.model.item.jobtype;
-
-        document.getElementById('JobTiles').open();
-     },
-      _seeHelp: function(e){
-          e.preventDefault();
-          document.getElementById('jobHelpMyJobs').open();
-      },
-
-      _seeName: function(e){
-          e.preventDefault();
-          this.jobid = e.model.item.job;
-          this.jobname = e.model.item.jname;
-          this.username = e.model.item.user;
-          //document.getElementById('desTiles').username = this.username;
-          //document.getElementById('desTiles').jobid = this.jobid;
-          document.getElementById('JobName').open();
-      },
-
-      _genChangeReq: function() {
-          var newjname = document.getElementById("newname").value;
-          console.log('New name: ', newjname);
-          if(newjname === "") {
-              console.log("No new name entered");
-          }
-          else {
-              var formdata = new FormData();
-              formdata.append('username', this.username);
-              formdata.append('jobid', this.jobid);
-              formdata.append('jobname', newjname);
-
-              $.ajax({
-                  url: '/easyweb/change/',
-                  type: 'POST',
-                  //beforeSend: this.beforeSendHandler,
-                  success: this.completeHandler,
-                  error: this.errorHandler,
-                  data: formdata,
-                  cache: false,
-                  contentType: false,
-                  processData: false
-              });
-          }
-
-      },
-
-          completeHandler: function(){
-              console.log('YESSSSS');
-              var req = document.getElementById("getMyJobs");
-              req.generateRequest();
-              document.querySelector('#toast-nm-good').show();
-              document.getElementById("newname").value = "";
-
-          },
-          errorHandler: function(){
-              console.log('NOOOO');
-              document.querySelector('#toast-nm-bad').show();
-          },
-     patchOverlay: function (e) {
-         if (e.target.withBackdrop) {
-            e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-         }
-     },
-      _nextPage: function() {
-          var crs = document.getElementById("jobs-crs");
-          crs.goToNextPage();
-      },
-
-    _prevPage: function() {
-      var crs = document.getElementById("jobs-crs");
-      crs.goToPrevPage();
-    }
-
+            if (document.createEvent) {
+                var e = document.createEvent('MouseEvents');
+                e.initEvent('click' ,true ,true);
+                link.dispatchEvent(e);
+                return true;
+            }
+            var query = '?download';
+            window.open(link.href + query);
+    	},
+        _seeQuery: function(e){
+            e.preventDefault();
+        	this.jobid = e.model.item.job;
+        	this.jobquery = e.model.item.jquery;
+        	document.getElementById('JobQuery').open();
+       	 	app.jobquerybox.setValue(this.jobquery);
+        	setTimeout(function() {
+            	app.jobquerybox.refresh();
+//            	app.jobquerybox.focus();
+        	},10);
+     	},
+     	_killQuery: function(e){
+        	e.preventDefault();
+        	this.jobid = e.model.item.job;
+        	this.username = e.model.item.user;
+        	document.getElementById("killJob").generateRequest();
+     	},
+      	_genDeleteReq: function(){
+          	var list = document.getElementById("material");
+          	var listAll = this.$.material.selectedItems;
+          	this.mytemp = JSON.parse(JSON.stringify(listAll));
+          	if(this.$.material.selectedItems.length === 0) {
+              	alert("Invalid number of jobs.");
+          	}
+          	else {
+              	var result = confirm("Do you want to delete these "+this.$.material.selectedItems.length+" jobs? They will be also erased from disk storage");
+              	var toDel=[];
+              	if (result){
+                  	for (i = 0; i < this.mytemp.length ; i++) {
+                      	toDel.push(listAll[i].job);
+                  	}
+                  	req = document.getElementById("DeleteReq");
+                  	req.params = toDel;
+                  	req.generateRequest();
+                  	this._resetSelection();
+             	}
+          	}
+      	},
+      	_afterDelete: function(e){
+          	var list = document.getElementById("material");
+          	req = document.getElementById("getMyJobs");
+          	req.generateRequest();
+          	this._resetSelection();
+      	},
+      	_resetSelection: function() {
+          	this.$.material.selectedItems = [];
+          	this.updateStyles();
+      	},
+     	_seeFiles: function(e){
+        	e.preventDefault();
+        	this.jobid = e.model.item.job;
+       	 	this.username = e.model.item.user;
+        	this.jobfiles = JSON.parse(e.model.item.jfiles);
+        	this.jobsizes = JSON.parse(e.model.item.jsizes);
+        	this.nfiles = this.jobfiles.length;
+        	this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
+        	for (i=0; i<Math.min(this.jobfiles.length, 100); i++){
+            	this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
+            }
+        	this.myfiles=this.jobs.sort(keysrt('file'));
+        	document.getElementById('JobFiles').open();
+     	},
+     	_seeTiles: function(e){
+        	e.preventDefault();
+        	this.jobid = e.model.item.job;
+        	this.username = e.model.item.user;
+        	this.jobtype = e.model.item.jobtype;
+        	document.getElementById('JobTiles').open();
+     	},
+      	_seeHelp: function(e){
+          	e.preventDefault();
+          	document.getElementById('jobHelpMyJobs').open();
+      	},
+      	_seeName: function(e){
+          	e.preventDefault();
+          	this.jobid = e.model.item.job;
+          	this.jobname = e.model.item.jname;
+          	this.username = e.model.item.user;
+          	//document.getElementById('desTiles').username = this.username;
+          	//document.getElementById('desTiles').jobid = this.jobid;
+          	document.getElementById('JobName').open();
+      	},
+      	_genChangeReq: function() {
+          	var newjname = document.getElementById("newname").value;
+          	console.log('New name: ', newjname);
+          	if(newjname === "") {
+              	console.log("No new name entered");
+          	}
+          	else {
+              	var formdata = new FormData();
+              	formdata.append('username', this.username);
+              	formdata.append('jobid', this.jobid);
+              	formdata.append('jobname', newjname);
+              
+              	$.ajax({
+                  	url: '/easyweb/change/',
+                 	type: 'POST',
+                  	//beforeSend: this.beforeSendHandler,
+                  	success: this.completeHandler,
+                  	error: this.errorHandler,
+                  	data: formdata,
+                  	cache: false,
+                  	contentType: false,
+                  	processData: false
+              	});
+          	}
+      	},
+        completeHandler: function(){
+            console.log('YESSSSS');
+    	    var req = document.getElementById("getMyJobs");
+            req.generateRequest();
+            document.querySelector('#toast-nm-good').show();
+            document.getElementById("newname").value = "";
+        },
+        errorHandler: function(){
+            console.log('NOOOO');
+            document.querySelector('#toast-nm-bad').show();
+        },
+     	patchOverlay: function (e) {
+        	if (e.target.withBackdrop) {
+            	e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+         	}
+     	},
+      	_nextPage: function() {
+          	var crs = document.getElementById("jobs-crs");
+          	crs.goToNextPage();
+      	},
+    	_prevPage: function() {
+      		var crs = document.getElementById("jobs-crs");
+      		crs.goToPrevPage();
+    	},
     });
-
-
 </script>
 </dom-module>
 <dom-module id="des-all-tables" assetpath="../des_components/des-pages/">
@@ -51314,6 +51268,137 @@ function keysrt(key,desc) {
 
     </script>
 </dom-module>
+<dom-module id="des-positions-bc" assetpath="../des_components/des-pages/">
+<template>
+    <style include="shared-styles">
+
+    </style>
+    
+    <paper-dialog id="bc_inputDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC below" elevation="0">
+            <div class="card-content">
+               <iron-autogrow-textarea id="bc_enteredPositions" max-rows="10" rows="8" placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
+            </div>
+            <div class="card-actions">
+                <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
+                <paper-button on-tap="_bc_submitPositions" raised="" class="indigo"> Accept</paper-button>
+            </div>
+        </paper-card>
+    </paper-dialog>
+    <paper-dialog class="dialog-position" id="jobHelpCoaddsBC" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif" width="500px">
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <!--<div class="col">-->
+                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+                        </div>
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif">
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </div>
+                    </div>
+
+                </paper-carousel>
+            </div>
+            <div class="row">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+        </des-card>
+    </paper-dialog>
+</template>
+
+<script>
+    Polymer({
+        is: "des-positions-bc",
+        properties : {
+            place_holder: {
+                type: String,
+                value: "COADD_OBJECT_ID \nCOADD_OBJECT_ID \n... \nor \nRA,DEC \nRA,DEC \n..."
+            },
+        },
+        _bc_submitPositions: function(){
+            document.getElementById("bc_inputDialog").close();
+            document.getElementById("bc_submitJobButton").disabled=false;
+            document.getElementById("bc_uploadFile").disabled=true;
+            document.getElementById("bc_keyboardicon").icon = "done";
+            document.getElementById("desBulkCutouts").enter_values = "Values Entered";
+        },
+        clear: function(){
+            document.getElementById("bc_enteredPositions").value="";
+        },
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        },
+        _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpCoaddsBC').open();
+      },
+
+      _nextPage: function() {
+            var crs = document.getElementById("position-crs");
+            crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("position-crs");
+          crs.goToPrevPage();
+      }
+    });
+</script>
+</dom-module>
 <dom-module id="des-positions-fc" assetpath="../des_components/des-pages/">
 <template>
     <style include="shared-styles">
@@ -51729,284 +51814,6 @@ function keysrt(key,desc) {
 
 </script>
 </dom-module>
-<dom-module id="des-positions-coadds-bc" assetpath="../des_components/des-pages/">
-<template>
-    <style include="shared-styles">
-
-    </style>
-    
-    <paper-dialog id="bc_inputCoaddsDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <paper-card heading="Enter coadd ID's below" elevation="0">
-            <div class="card-content">
-               <iron-autogrow-textarea id="bc_enteredCoadds" max-rows="10" rows="8" placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
-            </div>
-            <div class="card-actions">
-                <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
-                <paper-button on-tap="_bc_submitCoadds" raised="" class="indigo"> Accept</paper-button>
-            </div>
-        </paper-card>
-    </paper-dialog>
-    
-    <paper-dialog class="dialog-position" id="jobHelpCoaddsBC" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-card heading="Help">
-            <div class="card-content">
-                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif" width="500px">
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
-                </paper-carousel>
-            </div>
-            <div class="row">
-                <paper-button class="prev" on-tap="_prevPage">
-                    <iron-icon icon="image:navigate-before"></iron-icon>
-                    Prev
-                </paper-button>
-
-                <paper-button class="next" on-tap="_nextPage">
-                    Next
-                    <iron-icon icon="image:navigate-next"></iron-icon>
-                </paper-button>
-            </div>
-        </des-card>
-    </paper-dialog>
-
-</template>
-
-<script>
-    Polymer({
-      is: "des-positions-coadds-bc",
-      properties : {
-        place_holder: {
-            type: String,
-            value: "COADD_OBJECT_ID \nCOADD_OBJECT_ID\n... , ..."
-        },
-      },
-      _bc_submitCoadds: function(){
-            document.getElementById("bc_inputCoaddsDialog").close();
-            document.getElementById("bc_submitJobButton").disabled=false;
-            document.getElementById("bc_uploadFileCoadd").disabled=true;
-			document.getElementById("bc_uploadFileCoord").disabled=true;
-            document.getElementById("bc_keyboardiconcoadd").icon = "done";
-			document.getElementById("bc_enterCoords").disabled=true;
-            document.getElementById("desBulkCutouts").enter_values = "Values Entered";
-
-      },
-      clear: function(){
-            document.getElementById("bc_enteredCoadds").value="";
-      },
-      patchOverlay: function (e) {
-            if (e.target.withBackdrop) {
-                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-            }
-      },
-
-      _seeHelp: function(e){
-            e.preventDefault();
-            document.getElementById('jobHelpCoaddsBC').open();
-      },
-
-      _nextPage: function() {
-            var crs = document.getElementById("position-crs");
-            crs.goToNextPage();
-      },
-
-      _prevPage: function() {
-          var crs = document.getElementById("position-crs");
-          crs.goToPrevPage();
-      }
-    });
-
-
-</script>
-</dom-module>
-<dom-module id="des-positions-coords-bc" assetpath="../des_components/des-pages/">
-<template>
-    <style include="shared-styles">
-
-    </style>
-    
-    <paper-dialog id="bc_inputCoordsDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <paper-card heading="Enter positions below" elevation="0">
-            <div class="card-content">
-               <iron-autogrow-textarea id="bc_enteredCoords" max-rows="10" rows="8" placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
-            </div>
-            <div class="card-actions">
-                <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
-                <paper-button on-tap="_bc_submitCoords" raised="" class="indigo"> Accept</paper-button>
-            </div>
-        </paper-card>
-    </paper-dialog>
-    
-    <paper-dialog class="dialog-position" id="jobHelpCoordsBC" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-card heading="Help">
-            <div class="card-content">
-                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif" width="500px">
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
-                </paper-carousel>
-            </div>
-            <div class="row">
-                <paper-button class="prev" on-tap="_prevPage">
-                    <iron-icon icon="image:navigate-before"></iron-icon>
-                    Prev
-                </paper-button>
-
-                <paper-button class="next" on-tap="_nextPage">
-                    Next
-                    <iron-icon icon="image:navigate-next"></iron-icon>
-                </paper-button>
-            </div>
-        </des-card>
-    </paper-dialog>
-
-</template>
-
-<script>
-    Polymer({
-      is: "des-positions-coords-bc",
-      properties : {
-        place_holder: {
-            type: String,
-            value: "RA , DEC \nRA , DEC\n... , ..."
-        },
-      },
-      _bc_submitCoords: function(){
-            document.getElementById("bc_inputCoordsDialog").close();
-            document.getElementById("bc_submitJobButton").disabled=false;
-			document.getElementById("bc_uploadFileCoadd").disabled=true;
-            document.getElementById("bc_uploadFileCoord").disabled=true;
-			document.getElementById("bc_enterCoadds").disabled=true;
-            document.getElementById("bc_keyboardiconcoord").icon = "done";
-            document.getElementById("desBulkCutouts").enter_values = "Values Entered";
-
-      },
-      clear: function(){
-            document.getElementById("bc_enteredCoords").value="";
-      },
-      patchOverlay: function (e) {
-            if (e.target.withBackdrop) {
-                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-            }
-      },
-
-      _seeHelp: function(e){
-            e.preventDefault();
-            document.getElementById('jobHelpCoordsBC').open();
-      },
-
-      _nextPage: function() {
-            var crs = document.getElementById("position-crs");
-            crs.goToNextPage();
-      },
-
-      _prevPage: function() {
-          var crs = document.getElementById("position-crs");
-          crs.goToPrevPage();
-      }
-    });
-
-
-</script>
-</dom-module>
 <dom-module id="des-results" assetpath="../des_components/des-pages/">
 <template>
     <style include="shared-styles">
@@ -52091,7 +51898,7 @@ function keysrt(key,desc) {
                last-response="{{textdata}}"
                on-response="_getTextResponse">
             </iron-ajax>-->
-            <p>Check the file "<a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt">list_all.txt</a>" for image URLs.</p>
+            <p>Check the file "<a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">list_all.txt</a>" for image URLs.</p>
         </template>
         <template is="dom-if" if="{{_checkLength(jsondata)}}" restamp="">
             <template is="dom-repeat" items="{{jsondata}}" initial-count="20" target-framerate="60">
@@ -54694,25 +54501,24 @@ function keysrt(key,desc) {
         <section>
             <des-card heading="Bulk Cutouts Form">
                 <div class="card-content">
-                    <div class="top">
+                    <!--<div class="top">
                         Upload a file with CoaddIDs or RA/DEC positions, or enter them manually and run the cutout generator
-                    </div>
+                    </div>-->
 
-                    <!-- table -->
                     <table id="coadd-table" style="width:100%">
-                        <tbody><tr class="coadd-tr">
+                        <!--
+                        <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="backup" slot="item-icon"></iron-icon>
                                     <span style="overflow-x: auto; overflow-wrap: break-word;">
                                     Upload File (csv, with "COADD_OBJECT_ID" or "RA,DEC" as uncommented header)
                                     </span>
-                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
                                 <div class="around-cell">
-                                    <paper-button raised="" class="indigo" id="bc_uploadFileCoadd">
+                                    <paper-button raised class="indigo" id="bc_uploadFileCoadd">
                                         <div id="bc_uploadiconcoadd" style="display: inline-block;">
                                             <i class="fa fa-cloud-upload"></i>
                                             &nbsp;  &nbsp;
@@ -54721,9 +54527,9 @@ function keysrt(key,desc) {
                                         <span style="overflow-x: auto; overflow-wrap: break-word;">
                                             [[file_name]]
                                         </span>
-                                        <input type="file" class="upload" id="file1" on-change="_fileChange1">
+                                        <input type="file" class="upload" id="file1" on-change="_fileChange1" />
                                     </paper-button>
-                                    <paper-button raised="" class="indigo" id="bc_uploadFileCoord">
+                                    <paper-button raised class="indigo" id="bc_uploadFileCoord">
                                         <div id="bc_uploadiconcoord" style="display: inline-block;">
                                             <i class="fa fa-cloud-upload"></i>
                                                 &nbsp;  &nbsp;
@@ -54732,7 +54538,7 @@ function keysrt(key,desc) {
                                         <span style="overflow-x: auto; overflow-wrap: break-word;">
                                             [[file_name]]
                                         </span>
-                                        <input type="file" class="upload" id="file2" on-change="_fileChange2">
+                                        <input type="file" class="upload" id="file2" on-change="_fileChange2" />
                                     </paper-button>
                                 </div>
                             </td>
@@ -54746,14 +54552,14 @@ function keysrt(key,desc) {
                             </td>
                             <td class="btcell">
                                 <div class="around-cell">
-                                    <paper-button raised="" class="indigo" id="bc_enterCoadds" on-tap="_bc_openCoadds">
-                                        <div id="bc_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                    <paper-button raised class="indigo" id="bc_enterCoadds" on-tap="_bc_openCoadds">
+                                        <div id ="bc_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
                                             &nbsp;  &nbsp;
                                             Coadd ID: &nbsp;
                                         </div>
                                         <span>[[enter_values]]</span>
                                     </paper-button>
-                                    <paper-button raised="" class="indigo" id="bc_enterCoords" on-tap="_bc_openCoords">
+                                    <paper-button raised class="indigo" id="bc_enterCoords" on-tap="_bc_openCoords">
                                         <div id="bc_keyboardiconcoord" style="display: online-block;"> <i class="fa fa-keyboard-o"></i>
                                             &nbsp;  &nbsp;
                                             RA,DEC: &nbsp;
@@ -54763,12 +54569,43 @@ function keysrt(key,desc) {
                                 </div>
                             </td>
                         </tr>
+                        -->
                         
+                        <tbody><tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload file (CSV, with "COADD_OBJECT_ID" or "RA,DEC" as header). <br>Or enter values manually (with "COADD_OBJECT_ID" or "RA,DEC" as header). <br>See help button for examples.</span>
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <div class="around-cell">
+                                    <paper-button raised="" class="indigo" id="bc_uploadFile">
+                                        <div id="bc_uploadicon" style="display: inline-block;">
+                                            <i class="fa fa-cloud-upload"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                            [[file_name]]
+                                        </span>
+                                        <input type="file" class="upload" id="filesAB" on-change="_fileChange">
+                                    </paper-button>
+                                    <paper-button raised="" class="indigo" id="bc_enterManually" on-tap="_bc_openManualEntry">
+                                        <div id="bc_keyboardicon" style="display: inline-block;">
+                                            <i class="fa fa-keyboard-o"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span>[[enter_values]]</span>
+                                    </paper-button>
+                                </div>
+                            </td>
+                        </tr>
                         
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
-                                    <icon-icon icon="image:tune" slot="item-item"></icon-icon>
+                                    <iron-icon icon="check" slot="item-icon"></iron-icon>
                                     Pregenerated (i, r, g) or FITS cutout
                                 </paper-icon-item>
                             </td>
@@ -54791,7 +54628,7 @@ function keysrt(key,desc) {
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
-                                    <icon-icon icon="image:tune" slot="item-item"></icon-icon>
+                                    <iron-icon icon="picture-in-picture" slot="item-icon"></iron-icon>
                                     "Any band" 3-color PNG (e.g., "i,r,g Y,z,r z,i,r")
                                 </paper-icon-item>
                             </td>
@@ -54811,7 +54648,7 @@ function keysrt(key,desc) {
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
-                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="check" slot="item-icon"></iron-icon>
                                     Color Bands (for FITS option above)
                                 </paper-icon-item>
                             </td>
@@ -54910,9 +54747,12 @@ function keysrt(key,desc) {
                     </div>
                 </div>
             </des-card>
-
+            
+            <des-positions-bc id="desPositionsBC"></des-positions-bc>
+            <!--
             <des-positions-coadds-bc id="desPositionsCoaddsBC"></des-positions-coadds-bc>
             <des-positions-coords-bc id="desPositionsCoordsBC"></des-positions-coords-bc>
+            -->
 
             <paper-toast class="toast-position" id="bc_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
             <paper-toast class="toast-position" id="bc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
@@ -54933,71 +54773,82 @@ function keysrt(key,desc) {
 </dom-module>
 
 <script>
-
     Polymer({
         is: "des-bulk-cutouts",
         properties: {
-            file_name : {
+            file_name: {
                 type : String,
                 value : "Upload File"
             },
-            enter_values : {
+            enter_values: {
                 type : String,
                 value : "Enter Values"
             },
-
-            submit_type : {
+            submit_type: {
                 type: String,
-                value: "csvfile",
+                value: "csvfile"
             },
             email: {
                 type: String,
-                values: "",
+                values: ""
             },
             job_comment: {
                 type : String,
                 value : ""
             }
         },
-        
-        ready:function(){
+        ready: function () {
             var bc_all_toggle = this.$.bc_all_toggle;
-            bc_all_toggle.addEventListener('change', function(){
+            bc_all_toggle.addEventListener('change', function () {
                 document.getElementById('desBulkCutouts').toggle_bands();
             });
         },
-        toggle_bands:function(){
+        toggle_bands: function () {
             var band_rads = document.querySelectorAll('.bandbox');
-            if (this.$.bc_all_toggle.checked){
-                for (var j=0; j<5; j++){
+            if (this.$.bc_all_toggle.checked) {
+                for (var j=0; j<5; j++) {
                     band_rads[j].disabled=true;
                 }
             }
-            else{
-                for (var i=0; i<5; i++){
+            else {
+                for (var i=0; i<5; i++) {
                     band_rads[i].disabled=false;
                 }
             }
         },
         
+        get filesAB(){
+            return this.$.filesAB.files[0];
+        },
+        /*
         get file1(){
             return this.$.file1.files[0];
         },
         get file2(){
             return this.$.file2.files[0];
         },
-        emailcheck: function(){
+        */
+        emailcheck: function () {
             var emailbox = document.getElementById("bc_sendemail");
             var edialog = document.getElementById("bc_emaildialog");
             document.getElementById("bc_validemail").value=this.email;
-            if (emailbox.checked == true){
+            if (emailbox.checked == true) {
                 //edialog.open();
             }
-            else
-            {
+            else {
                 document.getElementById("bc_validemail").value='';
             }
         },
+        _fileChange: function () {
+            this.file_name = this.filesAB.name;
+            console.log('File to read: ' + this.file_name);
+            document.getElementById("bc_submitJobButton").disabled=false;
+            document.getElementById("bc_enterManually").disabled=true;
+            document.getElementById("bc_uploadicon").icon = "done";
+            
+            this.submit_type = 'csvfileAB';
+        },
+        /*
         _fileChange1: function(){
             this.file_name = this.file1.name;
             console.log('File to read : ' + this.file_name );
@@ -55024,14 +54875,20 @@ function keysrt(key,desc) {
             this.submit_type = 'coordfile';
 //            document.getElementById("filename").value = this.file_name;
         },
-        clear: function(){
+        */
+        clear: function () {
             document.getElementById("bc_submitJobButton").disabled=true;
+            document.getElementById("bc_enterManually").disabled=false;
+            document.getElementById("bc_uploadFile").disabled=false;
+            document.getElementById("bc_keyboardicon").style.display="inline-block";
+            /*
             document.getElementById("bc_enterCoadds").disabled=false;
             document.getElementById("bc_enterCoords").disabled=false;
             document.getElementById("bc_uploadFileCoadd").disabled=false;
             document.getElementById("bc_uploadFileCoord").disabled=false;
             document.getElementById("bc_keyboardiconcoadd").style.display='inline-block';
             document.getElementById("bc_keyboardiconcoord").style.display='inline-block';
+            */
             document.getElementById("bc_tiffs").checked=false;
             document.getElementById("bc_pngs").checked=false;
             document.getElementById("bc_fits").checked=false;
@@ -55043,7 +54900,7 @@ function keysrt(key,desc) {
             document.getElementById("bc_all_toggle").checked=false;
             
             var band_rads = document.querySelectorAll('.bandbox');
-            for (var j=0; j<5; j++){
+            for (var j=0; j<5; j++) {
                 band_rads[j].checked=false;
                 band_rads[j].disabled=false;
             }
@@ -55055,31 +54912,52 @@ function keysrt(key,desc) {
             document.getElementById("bc_Yband").checked=false;
             document.getElementById("bc_sendemail").checked=false;
             document.getElementById("bc_returnList").checked=false;
+            document.getElementById("desPositionsBC").clear();
+            /*
             document.getElementById("desPositionsCoaddsBC").clear();
             document.getElementById("desPositionsCoordsBC").clear();
+            */
             document.getElementById("bc_rgb_values").value='';
             document.getElementById("bc_validemail").value='';
             document.getElementById("bc_validname").value='';
+            document.getElementById("bc_uploadicon").icon = "backup";
+            document.getElementById("bc_keyboardicon").icon = "hardware:keyboard";
+            /*
             document.getElementById("bc_uploadiconcoadd").icon = "backup";
             document.getElementById("bc_uploadiconcoord").icon = "backup";
             document.getElementById("bc_keyboardiconcoadd").icon = "hardware:keyboard";
             document.getElementById("bc_keyboardiconcoord").icon = "hardware:keyboard";
+            */
             this.file_name = "Upload File";
             this.job_comment = "";
 
+            var upIcon = document.getElementById("bc_uploadicon").style.display="inline-block";
+            /*
             var upIcon1 = document.getElementById("bc_uploadiconcoadd").style.display='inline-block';
             var upIcon2 = document.getElementById("bc_uploadiconcoord").style.display='inline-block';
+            */
             this.enter_values = "Enter Values";
+            this.$.filesAB.value = "";
+            /*
             this.$.file1.value = "";
             this.$.file2.value = "";
+            */
         },
+        /*
         _countCoadds: function(coadds) {
             console.log(coadds);
         },
         _countCoords: function(coords) {
             console.log(coords);
         },
-
+        */
+        
+        _bc_openManualEntry: function () {
+            var inputDialog = document.getElementById("bc_inputDialog");
+            inputDialog.open();
+            this.submit_type = 'manualAB';
+        },
+        /*
         _bc_openCoadds: function(){
             var inputCoaddDialog = document.getElementById("bc_inputCoaddsDialog");
             inputCoaddDialog.open();
@@ -55090,25 +54968,29 @@ function keysrt(key,desc) {
             inputCoordDialog.open();
             this.submit_type = 'manualCoords';
         },
-        completeHandler: function(){
+        */
+        completeHandler: function () {
             console.log('YESSSSS');
             document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast1coadd').show();
             document.getElementById("getMyJobs").generateRequest();
         },
-        errorHandler: function(){
+        errorHandler: function () {
             console.log('NOOOO');
             document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast2coadd').show();
         },
-        errorHandler2: function(){
+        errorHandler2: function () {
             console.log('NOOOO');
             document.querySelector('#bc_toast3coadd').show();
         },
-        _submitJob: function(event){
+        _submitJob: function (event) {
             var formdata = new FormData();
+            formdata.append('csvfile', this.$.filesAB.files[0]);
+            /*
             formdata.append('csvfile1', this.$.file1.files[0]);
             formdata.append('csvfile2', this.$.file2.files[0]);
+            */
             
             formdata.append('make_tiffs', document.getElementById("bc_tiffs").checked);
             formdata.append('make_pngs', document.getElementById("bc_pngs").checked);
@@ -55124,15 +55006,19 @@ function keysrt(key,desc) {
             formdata.append('bc_iband', document.getElementById("bc_iband").checked);
             formdata.append('bc_zband', document.getElementById("bc_zband").checked);
             formdata.append('bc_Yband', document.getElementById("bc_Yband").checked);
+            formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
             
             formdata.append('bc_returnList', document.getElementById("bc_returnList").checked);
             formdata.append('bc_send_email', document.getElementById("bc_sendemail").checked);
             formdata.append('bc_email', document.getElementById("bc_validemail").value);
             formdata.append('bc_name', document.getElementById("bc_validname").value);
             formdata.append('bc_submit_type', this.submit_type);
+            
+            formdata.append('bc_positions',document.getElementById("bc_enteredPositions").value);
+            /*
             formdata.append('bc_coadds',document.getElementById("bc_enteredCoadds").value);
             formdata.append('bc_coords',document.getElementById("bc_enteredCoords").value);
-            formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
+            */
 
             var tiffs = document.getElementById("bc_tiffs").checked;
             var pngs = document.getElementById("bc_pngs").checked;
@@ -55145,7 +55031,7 @@ function keysrt(key,desc) {
             var z = document.getElementById("bc_zband").checked;
             var y = document.getElementById("bc_Yband").checked;
             var allbands = document.getElementById("bc_all_toggle").checked;
-            if (tiffs == false && pngs == false && fits == false && rgbs == false){
+            if (tiffs == false && pngs == false && fits == false && rgbs == false) {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else if (fits == true && (g == false && r == false && i == false && z == false && y == false && allbands == false)) {
@@ -55154,7 +55040,7 @@ function keysrt(key,desc) {
             else if (rgbs == true && rgb_val === "") {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
-            else{
+            else {
                 $.ajax({
                     url: '/easyweb/bulk_cutout/',
                     type: 'POST',
@@ -55168,7 +55054,7 @@ function keysrt(key,desc) {
                 });
             }
         },
-        _clearForm: function(){
+        _clearForm: function () {
             console.log('clear Form');
             desBulkCutouts=document.getElementById('desBulkCutouts');
             desBulkCutouts.clear();
@@ -55178,26 +55064,23 @@ function keysrt(key,desc) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
             }
         },
-        _seeHelp: function(e){
+        _seeHelp: function (e) {
             e.preventDefault();
             document.getElementById('jobHelpBulkCutouts').open();
         },
 
 
-        _nextPage: function() {
+        _nextPage: function () {
             var crs = document.getElementById("coadd-crs");
             crs.goToNextPage();
         },
 
-        _prevPage: function() {
+        _prevPage: function () {
             var crs = document.getElementById("coadd-crs");
             crs.goToPrevPage();
         },
 
     });
-
-
-
 </script>
 <dom-module id="des-card-intro" assetpath="../des_components/">
     <style>
