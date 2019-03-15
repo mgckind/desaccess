@@ -78,14 +78,14 @@ class FileHandler(BaseHandler):
 		jobid = str(uuid.uuid4()).replace("-","_")
 		print(jobid)
 		if boxsize == 0.0:
-			boxsize = ''
+			boxsize = 4.0
 		if stype == "manualCoadds":
 			useCoadds = True
 			values = self.get_argument("da_coadds")
 			print(values)
 			filename = user_folder+jobid+'.csv'
 			F = open(filename, 'w')
-			F.write("COADDID\n")
+			F.write("COADD_OBJECT_ID\n")
 			F.write(values)
 			F.close()
 		if stype == "manualCoords":

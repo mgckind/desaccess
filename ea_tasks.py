@@ -516,12 +516,12 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
 
         if intype == 'coadds':
             try:
-                a = int(input_df['COADDID'][row])
+                a = int(input_df['COADD_OBJECT_ID'][row])
             except (TypeError, ValueError):
                 logfile.write('****************************************\n')
-                logfile.write('ERROR - {0} is not a valid coadd ID.'.format(input_df['COADDID'][row]))
+                logfile.write('ERROR - {0} is not a valid coadd ID.'.format(input_df['COADD_OBJECT_ID'][row]))
             else:
-                COADDID = str(input_df['COADDID'][row])
+                COADDID = str(input_df['COADD_OBJECT_ID'][row])
                 logfile.write('****************************************\n')
                 logfile.write('Object: {0}'.format(COADDID))
 
@@ -661,7 +661,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
                 df = df.assign(I_FLUXERR=df['I_FLUX']*(1-(10**(-df['MAGERR_I']/2.5))))
                 df = df.assign(Z_FLUXERR=df['G_FLUX']*(1-(10**(-df['MAGERR_Z']/2.5))))
                 df = df.assign(Y_FLUXERR=df['Y_FLUX']*(1-(10**(-df['MAGERR_Y']/2.5))))
-                logfile.write('The following DES flux data has been calculated:\n' + df.to_string(columns=['G_FLUX','R_FLUX','I_FLUX','Z_FLUX','Y_FLUX','G_FLUXERR','R_FLUXERR','I_FLUXERR','Z_FLUXERR','Y_FLUXERR'], header=True, index=False, justify='left'))
+                logfile.write('The following DES flux data has been calculated:\n' + df.to_string(columns=['G_FLUX','R_FLUX','I_FLUX','Z_FLUX','Y_FLUX','G_FLUXERR','R_FLUXERR','I_FLUXERR','Z_FLUXERR','Y_FLUXERR'], header=True, index=False, justify='left') + '\n')
 
             if addwise:
                 if df['W1MPRO'][0] is None:
@@ -737,6 +737,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
             logfile.write('Figure ' + filenm + '_spreadmag' + exten + ' has been created.\n')
             numPlots += 1
 
+    # Creates list.json
     tiles = sorted(glob.glob(mypath + '*.png'))
     titles = []
     Ntiles = len(tiles)
@@ -747,6 +748,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     for i in range(Ntiles):
         tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
     
+    # Creates the tarball
     os.chdir(user_folder)
     os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
     os.chdir(os.path.dirname(__file__))
@@ -764,7 +766,8 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     logfile.write('Done.\n')
     logfile.close()
 
-    # writing files for wget
+    # Writing files for wget
+    # Create list_all.txt
     allfiles = glob.glob(mypath+'*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
@@ -782,7 +785,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
     return response
 
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email, email, gband, rband, iband, zband, yband, mag):
+def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_email, email, colors, mag):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -815,15 +818,16 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
             json.dump(response, fp)
         return response
 
-    ralst = ','.join(input_df['RA'].apply(str).tolist())
-    declst = ','.join(input_df['DEC'].apply(str).tolist())
+    ralst = ' '.join(input_df['RA'].apply(str).tolist())
+    declst = ' '.join(input_df['DEC'].apply(str).tolist())
 
     logfile.write('Selected Options:\n')
     logfile.write('    x size: ' + str(xs) + '\n')
     logfile.write('    y size: ' + str(ys) + '\n')
     logfile.write('    Magnitude Limit: ' + str(mag) + '\n')
-    logfile.write('    G Band: {0}, R Band {1}, I Band {2}, Z Band {3}, Y Band {4}\n'.format(gband, rband, iband, zband, yband))
-    logfile.write('    Return cutout too? {} \n'.format(not listonly))
+    #logfile.write('    G Band: {0}, R Band {1}, I Band {2}, Z Band {3}, Y Band {4}\n'.format(gband, rband, iband, zband, yband))
+    logfile.write('    Colors: {} \n'.format(colors))
+    logfile.write('    Return cutout too? {} \n'.format(return_cut))
     logfile.write('    Email: ' + str(email) + '\n')
     logfile.write('    Comment: ' + logname + '\n')
     logfile.write('****************************************\n')
@@ -854,31 +858,40 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         iband = True
     """
 
+    gband = True if 'g' in colors else False
+    rband = True if 'r' in colors else False
+    iband = True if 'i' in colors else False
+    zband = True if 'z' in colors else False
+    yband = True if 'y' in colors else False
+
+    start_time1 = time.time()
     logfile.write('Passing off to bulkthumbs to get the fits file...\n')
-    bulkthumbscolors = []
-    if gband:
-        bulkthumbscolors.append('g')
-    if rband:
-        bulkthumbscolors.append('r')
-    if iband:
+    #bulkthumbscolors = []
+    #if gband:
+    #    bulkthumbscolors.append('g')
+    #if rband:
+    #    bulkthumbscolors.append('r')
+    #if iband:
+    #    bulkthumbscolors.append('i')
+    #if zband:
+    #    bulkthumbscolors.append('z')
+    #if yband:
+    #    bulkthumbscolors.append('y')
+    if not colors:
         bulkthumbscolors.append('i')
-    if zband:
-        bulkthumbscolors.append('z')
-    if yband:
-        bulkthumbscolors.append('y')
-    if not bulkthumbscolors:
-        bulkthumbscolors.append('i')
-    bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
-    bulkthumbscom = "python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, bulkthumbscolors, "Y3A2", jobid, uu, pp, outputs)
+        colors = 'i'
+    #bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
+    bulkthumbscom = "python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "Y3A2", jobid, uu, pp, outputs)
     try:
         #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
         oo = subprocess.check_output([bulkthumbscom], shell=True)
     except subprocess.CalledProcessError as e:
         print(e.output)
-
+    end_time1 = time.time()
+    
     urllst = []
     dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))
-    for tile in dftiles['TILENAME']:
+    for tile in dftiles['TILENAME'].unique():
         for fileitm in os.listdir(mypath+tile+'/'):
             if fileitm.endswith("_g.fits") and gband:
                 urllst.append(mypath + tile + '/' + fileitm)
@@ -894,7 +907,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     conn = ea.connect(db, user=uu, passwd=pp)
     curs = conn.cursor()
 
-    start_time = time.time()
+    start_time2 = time.time()
+    #print(urllst)
     for row in urllst:
         logfile.write('****************************************\n')
         logfile.write('Object: ' + row[-28:-5] + '\n')
@@ -973,7 +987,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         else:
             helperPlot = True
             logfile.write('Below is the result of the query. The first object listed is the helper object.\n' + df.to_string(columns=None, header=True, index=False, justify='left') + '\n')
-            with open(outputs + filenm + '_' + band + '_objects.csv', 'a') as f:
+            with open(outputs + filenm + '_' + (band.lower() if band != 'Y' else band) + '_objects.csv', 'a') as f:
                 df.to_csv(f, sep=',', index=False, header=False)
 
         [dataMin, dataMax] = np.percentile(data,[30,99])
@@ -983,7 +997,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         figname = outputs + filenm + '_' + band.lower() + '_chart.png' if band != 'Y' else outputs + filenm + '_' + band + '_chart.png'
 
         fig = plt.figure()
-        ax = plotutils.CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
+        ax = plotutils.CreateChart(logfile, image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band)
         fig.axes.append(ax)
 
         try:
@@ -995,39 +1009,22 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
         else:
             logfile.write('Chart exported to ' + figname + '\n')
 
-    if listonly:
-        #print('just making the chart')
-        tiles = glob.glob(mypath + '*.png')
-        titles = []
-        pngtitles = []
-        Ntiles = len(tiles)
-        for i in tiles:
-            title = i.split('/')[-1][:-4]
-            titles.append(title)
-            pngtitles.append(mypath + title + '.png')    #pngfiles.append(c)
-        for i in range(Ntiles):
-            pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
-        if os.path.exists(mypath+"list.json"):
-            os.remove(mypath+"list.json")
-        with open(mypath+"list.json", "w") as outfile:
-            json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
-    else:
-        #print('making the chart and cutout too')
-        tiles = glob.glob(mypath + '*.png')
-        titles = []
-        pngtitles = []
-        Ntiles = len(tiles)
-        for i in tiles:
-            title = i.split('/')[-1][:-4]
-            titles.append(title)
-            pngtitles.append(mypath + title + '.png')
-        for i in range(Ntiles):
-            pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
-        if os.path.exists(mypath + "list.json"):
-            os.remove(mypath + "list.json")
-        with open(mypath + "list.json", "w") as outfile:
-            json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
-        
+    tiles = glob.glob(mypath + '*.png')
+    titles = []
+    pngtitles = []
+    Ntiles = len(tiles)
+    for i in tiles:
+        title = i.split('/')[-1][:-4]
+        titles.append(title)
+        pngtitles.append(mypath + title + '.png')    #pngfiles.append(c)
+    for i in range(Ntiles):
+        pngtitles[i] = pngtitles[i][pngtitles[i].find('/easyweb'):]
+    if os.path.exists(mypath+"list.json"):
+        os.remove(mypath+"list.json")
+    with open(mypath+"list.json", "w") as outfile:
+        json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
+    
+    if return_cut:
         alltiles = glob.glob(mypath+'**/*.fits')
         alltitles = []
         allNtiles = len(alltiles)
@@ -1049,15 +1046,17 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, listonly, send_email,
     os.chdir(os.path.dirname(__file__))
 
     logfile.write('****************************************\n')
-    end_time = time.time()
-    difference = end_time - start_time
-    logfile.write('The plot took ' + str(difference) + ' seconds to make.\n')
+    end_time2 = time.time()
+    difference1 = end_time1 - start_time1
+    difference2 = end_time2 - start_time2
+    logfile.write('Bulkthumbs took ' + str(difference1) + ' seconds.\n')
+    logfile.write('The plot took ' + str(difference2) + ' seconds to make.\n')
     logfile.write('Have a nice day.\n')
     logfile.close()
     #conn.close()
 
-    # writing files for wget
-    allfiles = glob.glob(mypath+'*.*')
+    # Writing files for wget
+    allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
@@ -1095,6 +1094,12 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     user_folder = Settings.WORKDIR + uu + '/'
     jsonfile = user_folder + jobid + '.json'
     mypath = user_folder + jobid + '/'
+
+    if job_size == 'manual':
+        response['status'] = 'error'
+        with open(jsonfile, 'w') as fp:
+            json.dump(response, fp)
+        return response
 
     """
     MAX_CPUS = 2
@@ -1157,6 +1162,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     except subprocess.CalledProcessError as e:
         print(e.output)
 
+    # Creates list.json
     tiles = glob.glob(mypath + '**/*.png')
     titles = []
     Ntiles = len(tiles)
@@ -1170,6 +1176,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     with open(mypath + "list.json", "w") as outfile:
         json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
     
+    # Creates list_all.json
     alltiles = glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
     alltitles = []
     allNtiles = len(alltiles)
@@ -1186,17 +1193,21 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     with open(mypath + "list_all.json", "w") as outfile:
         json.dump([dict(name=alltiles[i], title=alltitles[i], size=allNtiles) for i in range(len(alltiles))], outfile, indent=4)
 
+    # Creates the tarball
     if job_size == 'small':
         os.chdir(user_folder)
         os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
         os.chdir(os.path.dirname(__file__))
 
+    # Writing files for wget
+    # Creates list_all.txt
     allfiles = glob.glob(mypath+'*.*') + glob.glob(mypath+'**/*.*')
     response['files'] = [os.path.basename(i) for i in allfiles]
     response['sizes'] = [get_filesize(i) for i in allfiles]
     Fall = open(mypath+'list_all.txt', 'w')
     prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
+        #print(ff, ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1)
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
     Fall.close()

@@ -1,0 +1,131 @@
+<dom-module id="des-positions-bc">
+<template>
+    <style include="shared-styles">
+
+    </style>
+    
+    <paper-dialog id="bc_inputDialog" with-backdrop on-iron-overlay-opened="patchOverlay" >
+        <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC below" elevation="0">
+            <div class="card-content">
+               <iron-autogrow-textarea id="bc_enteredPositions" max-rows="10" rows=8 placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
+            </div>
+            <div class="card-actions">
+                <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
+                <paper-button on-tap="_bc_submitPositions" raised class="indigo"> Accept</paper-button>
+            </div>
+        </paper-card>
+    </paper-dialog>
+    <paper-dialog class="dialog-position" id="jobHelpCoaddsBC" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <des-card heading="Help">
+            <div class="card-content">
+                <paper-carousel id="position-crs" items="1" dotText="false" controls="true">
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif" width="500px">
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <!--<div class="col">-->
+                        <img src="/easyweb/static/images/demo1.gif" width="400px">
+
+                        <div class="desc">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+
+                        <!--</div>-->
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row">
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+
+                            <div class="left">
+                                <img src="/easyweb/static/images/demo1.gif">
+                            </div>
+                        </div>
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="/easyweb/static/images/demo1.gif">
+                        <div class="desc">
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                        </div>
+                    </div>
+
+                </paper-carousel>
+            </div>
+            <div class="row">
+                <paper-button class="prev" on-tap="_prevPage">
+                    <iron-icon icon="image:navigate-before"></iron-icon>
+                    Prev
+                </paper-button>
+
+                <paper-button class="next" on-tap="_nextPage">
+                    Next
+                    <iron-icon icon="image:navigate-next"></iron-icon>
+                </paper-button>
+            </div>
+        </des-card>
+    </paper-dialog>
+</template>
+
+<script>
+    Polymer({
+        is: "des-positions-bc",
+        properties : {
+            place_holder: {
+                type: String,
+                value: "COADD_OBJECT_ID \nCOADD_OBJECT_ID \n... \nor \nRA,DEC \nRA,DEC \n..."
+            },
+        },
+        _bc_submitPositions: function(){
+            document.getElementById("bc_inputDialog").close();
+            document.getElementById("bc_submitJobButton").disabled=false;
+            document.getElementById("bc_uploadFile").disabled=true;
+            document.getElementById("bc_keyboardicon").icon = "done";
+            document.getElementById("desBulkCutouts").enter_values = "Values Entered";
+        },
+        clear: function(){
+            document.getElementById("bc_enteredPositions").value="";
+        },
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        },
+        _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpCoaddsBC').open();
+      },
+
+      _nextPage: function() {
+            var crs = document.getElementById("position-crs");
+            crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("position-crs");
+          crs.goToPrevPage();
+      }
+    });
+</script>
+</dom-module>

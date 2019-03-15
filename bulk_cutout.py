@@ -98,38 +98,51 @@ class FileHandler(BaseHandler):
         jobid = str(uuid.uuid4()).replace("-", "_")
 
         if xsize == 0.0:
-            xsize = ''
+            xsize = 1.0
         if ysize == 0.0:
-            ysize = ''
+            ysize = 1.0
 
+        filename = user_folder + jobid + '.csv'
+        if stype == 'csvfileAB':
+            fileinfo = self.request.files['csvfile'][0]
+            with open(filename, 'w') as F:
+                F.write(fileinfo['body'].decode('ascii'))
+        if stype == 'manualAB':
+            values = self.get_argument('bc_positions')
+            F = open(filename, 'w')
+            F.write(values)
+            F.close()
+        
+        """
         if stype == 'manualCoadds':
             values = self.get_argument('bc_coadds')
-            filename = user_folder + jobid + '.csv'
+            #filename = user_folder + jobid + '.csv'
             F = open(filename, 'w')
             F.write("COADD_OBJECT_ID\n")
             F.write(values)
             F.close()
         if stype == 'manualCoords':
             values = self.get_argument('bc_coords')
-            filename = user_folder + jobid + '.csv'
+            #filename = user_folder + jobid + '.csv'
             F = open(filename, 'w')
             F.write('RA,DEC\n')
             F.write(values)
             F.close()
         if stype == 'coaddfile':
             fileinfo = self.request.files['csvfile1'][0]
-            fname = fileinfo['filename']
-            extn = os.path.splitext(fname)[1]
-            filename = user_folder + jobid + extn
+            #fname = fileinfo['filename']
+            #extn = os.path.splitext(fname)[1]
+            #filename = user_folder + jobid + extn
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
         if stype == 'coordfile':
             fileinfo = self.request.files['csvfile2'][0]
-            fname = fileinfo['filename']
-            extn = os.path.splitext(fname)[1]
-            filename = user_folder + jobid + extn
+            #fname = fileinfo['filename']
+            #extn = os.path.splitext(fname)[1]
+            #filename = user_folder + jobid + extn
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
+        """
         print('**************')
 
         folder2 = user_folder + jobid + '/'
@@ -154,8 +167,11 @@ class FileHandler(BaseHandler):
         if dftemp_rows > SMALL_QUEUE and dftemp_rows <= MEDIUM_QUEUE:
             job_size = 'medium'
             nprocs = MEDIUM_QUEUE_MAX_CPUS
-        if dftemp_rows > MEDIUM_QUEUE:
+        if dftemp_rows > MEDIUM_QUEUE and dftemp_rows <= LARGE_QUEUE:
             job_size = 'large'
+            nprocs = LARGE_QUEUE_MAX_CPUS
+        if dftemp_rows > LARGE_QUEUE:
+            job_size = 'manual'
             nprocs = LARGE_QUEUE_MAX_CPUS
 
         run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')

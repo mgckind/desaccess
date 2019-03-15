@@ -1,5 +1,6 @@
 ## plotutils.py
 
+import logging
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -19,6 +20,8 @@ des = [['g','r','i','z','y'],[475,635,775,925,1000],[150,150,150,150,110],[400,5
 vhs = [['J','H','Ks'],[1252,1645,2147],[172,291,309],[1166,1499.5,1992.5],[1338,1790.5,2301.5]]        # [filter,cwl,fwhm,min,max] (nanometers)
 wise = [['w1','w2','w3','w4'],[3352.6,4602.8,11560.8,22088.3],[662.56,1042.3,5506.9,4101.3],[3021.32,4081.65,8807.35,20037.65],[3683.88,5123.95,14314.25,24138.95]]        # [filter,cwl,fwhm,min,max] (nanometers)
 
+logger = logging.getLogger('matplotlib')
+logger.setLevel(logging.WARNING)
 
 
 def DecConverter(ra, dec):
@@ -279,7 +282,7 @@ def PixelstoWCS(header,x,y):
     wx, wy = w.wcs_pix2world(x, y, 1)
     return(wx, wy)
 
-def CreateChart(image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band):
+def CreateChart(logfile, image, header, data, xs, ys, makePlot, helperPlot, USERObject, df, filenm, band):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection=WCS(image))
     

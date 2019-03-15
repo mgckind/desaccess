@@ -54,10 +54,10 @@ class FileHandler(BaseHandler):
 		name = self.get_argument("fc_name")
 		stype = self.get_argument("fc_submit_type")
 		
-		if return_cut:
-			list_only = False
-		else:
-			list_only = True
+		#if return_cut:
+		#	list_only = False
+		#else:
+		#	list_only = True
 		
 		if allbands:
 			gband = True
@@ -65,6 +65,19 @@ class FileHandler(BaseHandler):
 			iband = True
 			zband = True
 			yband = True
+		
+		colors = ''
+		if gband:
+			colors = (',').join((colors, 'g'))
+		if rband:
+			colors = (',').join((colors, 'r'))
+		if iband:
+			colors = (',').join((colors, 'i'))
+		if zband:
+			colors = (',').join((colors, 'z'))
+		if yband:
+			colors = (',').join((colors, 'y'))
+		colors = colors.strip(',')
 		
 		print('**************')
 		print(xs, ys, 'sizes')
@@ -77,9 +90,9 @@ class FileHandler(BaseHandler):
 		print(name, 'name')
 		jobid = str(uuid.uuid4()).replace("-","_")	#'57b54f4f-ab85-4e4e-b366-1557c4b3ca0b' #str(uuid.uuid4())
 		if xs == 0.0:
-			xs = ''
+			xs = 1.0
 		if ys == 0.0:
-			ys = ''
+			ys = 1.0
 		if stype == "manual":
 			values = self.get_argument("fc_values")
 			print(values)
@@ -102,11 +115,8 @@ class FileHandler(BaseHandler):
 		os.system('mkdir -p '+folder2)
 		now = datetime.datetime.now()
 		input_csv = user_folder + jobid + '.csv'
-		run = ea_tasks.make_chart.apply_async(args=[input_csv, loc_user, lp.decode(),
-												  folder2, db, xs, ys, jobid, list_only,
-												  send_email, email, 
-												  gband, rband, iband, zband, yband, 
-												  mag], retry=True, task_id=jobid)
+		
+		run = ea_tasks.make_chart.apply_async(args=[input_csv, loc_user, lp.decode(), folder2, db, xs, ys, jobid, return_cut, send_email, email, colors, mag], retry=True, task_id=jobid)
 		
 		with open('config/desaccess.yaml', 'r') as cfile:
 			conf = yaml.load(cfile)['mysql']

@@ -15,6 +15,7 @@ import numpy as np
 import backup
 import cx_Oracle
 from api import humantime
+import io
 
 dbConfig0 = Settings.dbConfig()
 app_log = Settings.app_log
@@ -162,6 +163,102 @@ class ApiTokenHandler(tornado.web.RequestHandler):
         self.finish()
 
 
+class ApiChartHandler(tornado.web.RequestHandler):
+    def missingargs(self, response, msg):
+        response['msg'] = msg
+        self.set_status(400)
+        app_log.warning(response['msg'])
+        self.write(response)
+        self.finish()
+    
+    @tornado.web.asynchronous
+    def post(self):
+        response = {'status': 'error'}
+        
+        listargs = ['token','xsize','ysize','jobname','colors','mag_limit','return_cut']
+        
+        arguments = {k.lower(): self.get_argument(k, '') for k in self.request.arguments}
+        
+        for l in listargs:
+            if l not in arguments:
+                msg = 'Missing {0}'.format(l)
+                return self.missingargs(response, msg)
+        
+        if 'csvfile' in arguments:
+            fileinfo = self.request.files['csvfile'][0]
+            df = pd.DataFrame(pd.read_csv(io.BytesIO(fileinfo['body'])))
+        elif 'ra' in arguments and 'dec' in arguments:
+            ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
+            dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
+        else:
+            msg = 'Missing input data.'
+            return self.missingargs(response, msg)
+        
+        token = arguments['token']
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one'
+            self.set_status(403)
+            self.write(response)
+            self.finish()
+            return
+        
+        xsize = float(arguments['xsize'])
+        ysize = float(arguments['ysize'])
+        mag = arguments['mag_limit']
+        jobname = arguments['jobname']
+        
+        try:
+            email = arguments['email']
+        except:
+            email = ''
+            send_email = False
+        else:
+            send_email = True
+        
+        user_folder = os.path.join(Settings.WORKDIR, user) + '/'
+        response['user'] = user
+        response['elapsed'] = 0
+        jobid = str(uuid.uuid4()).replace("-", "_")
+        
+        db = 'dessci'
+        input_csv = user_folder + jobid + '.csv'
+        if 'ra' in arguments:
+            df = pd.DataFrame(np.array([ra, dec]).T, columns=['RA','DEC'])
+        df.to_csv(input_csv, sep=',', index=False)
+        
+        del df
+        
+        folder2 = user_folder + jobid + '/'
+        os.system('mkdir -p ' + folder2)
+        
+        colors = str(arguments['colors'])
+        return_cut = True if 'return_cut' in arguments and arguments['return_cut'].upper() == 'TRUE' else False
+        
+        run = ea_tasks.make_chart.apply_async(args=[input_csv, user, lp, folder2, db, xsize, ysize, jobid, return_cut, send_email, email, colors, mag], retry=True, task_id=jobid)
+        
+        app_log.info('Job Finding Chart {} submitted'.format(run))
+        
+        with open('config/mysqlconfig.yaml','r') as cfile:
+            conf = yaml.load(cfile)['mysql']
+        con = mydb.connect(**conf)
+        
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        tup = tuple([user, jobid, jobname, 'PENDING', now, 'coadd', '', '', '', -1])
+
+        with con:
+            cur = con.cursor()
+            cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        con.close()
+        response['msg'] = 'Job {0} submitted'.format(jobid)
+        response['status'] = 'ok'
+        response['kind'] = 'cutout'
+        response['jobid'] = jobid
+        self.write(response)
+        self.flush()
+        self.finish()
+
+
 class ApiCutoutHandler(tornado.web.RequestHandler):
     def missingargs(self, response, msg):
         response['msg'] = msg
@@ -172,27 +269,40 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
     
     @tornado.web.asynchronous
     def post(self):
-        SMALL_QUEUE = 300
-        MEDIUM_QUEUE = 1000
-        LARGE_QUEUE = 10000
-        SMALL_QUEUE_MAX_CPUS = 1
-        MEDIUM_QUEUE_MAX_CPUS = 4
-        LARGE_QUEUE_MAX_CPUS = 6
-        listargs = ['token', 'ra', 'dec', 'coadd', 'xsize', 'ysize', 'jobname']  # required
-        jtasks = ['make_tiffs','make_pngs','make_fits']
+        SMALL_QUEUE, SMALL_QUEUE_MAX_CPUS = 300, 1
+        MEDIUM_QUEUE, MEDIUM_QUEUE_MAX_CPUS = 1000, 4
+        LARGE_QUEUE, LARGE_QUEUE_MAX_CPUS = 10000, 6
+        
         response = {'status': 'error'}
+        
+        listargs = ['token','xsize','ysize','jobname']  # required
+        jtasks = ['make_tiffs','make_pngs','make_fits']
+        
         arguments = {k.lower(): self.get_argument(k, '') for k in self.request.arguments}
+        
         for l in listargs:
             if l not in arguments:
-                if l == 'coadd' and 'ra' in arguments and 'dec' in arguments:
-                    continue
-                elif l == 'ra' or l == 'dec' and 'coadd' in arguments:
-                    continue
                 msg = 'Missing {0}'.format(l)
                 return self.missingargs(response, msg)
+        
+        if 'csvfile' in arguments:
+            fileinfo = self.request.files['csvfile'][0]
+            df = pd.DataFrame(pd.read_csv(io.BytesIO(fileinfo['body'])))              # will this work?
+            #df = pd.DataFrame(fileinfo['body'].pd.Series.str.decode('ascii'))        # will this work?
+            #df.columns = [x.upper() for x in df.columns]                             # capitalizes columns headers
+        elif 'ra' in arguments and 'dec' in arguments:
+            ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
+            dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
+        elif 'coadd' in arguments:
+            coadd = [int(i) for i in arguments['coadd'].replace('[','').replace(']','').split(',')]
+        else:
+            msg = 'Missing input data.'
+            return self.missingargs(response, msg)
+        
         if 'make_tiffs' not in arguments and 'make_pngs' not in arguments and 'make_fits' not in arguments:
             msg = 'Missing job task. Select at least 1 from {}.'.format(jtasks)
             return self.missingargs(response, msg)
+        
         if 'make_fits' in arguments and 'colors' not in arguments:
             msg = 'Missing color band(s) for make_fits.'
             return self.missingargs(response, msg)
@@ -206,6 +316,9 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
             self.finish()
             return
         
+        xsize = arguments['xsize']
+        ysize = arguments['ysize']
+        
         try:
             email = arguments["email"]
         except:
@@ -216,47 +329,20 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         
         jobname = arguments["jobname"]
         
-        if 'ra' in arguments:
-            ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
-            dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
-            
-            xs = np.ones(len(ra))
-            ys = np.ones(len(ra))
-        
-        if 'coadd' in arguments:
-            coadd = [int(i) for i in arguments['coadd'].replace('[','').replace(']','').split(',')]
-            xs = np.ones(len(coadd))
-            ys = np.ones(len(coadd))
-        
-        xs_read = [float(i) for i in arguments['xsize'].replace('[', '').replace(']', '').split(',')]
-        if len(xs_read) == 1:
-            xs = xs*xs_read
-        if len(xs) >= len(xs_read):
-            xs[0:len(xs_read)] = xs_read
-        else:
-            xs = xs_read[0:len(xs)]
-        
-        ys_read = [float(i) for i in arguments['ysize'].replace('[', '').replace(']', '').split(',')]
-        if len(ys_read) == 1:
-            ys = ys*ys_read
-        if len(ys) >= len(ys_read):
-            ys[0:len(ys_read)] = ys_read
-        else:
-            ys = ys_read[0:len(ys)]
-        
         user_folder = os.path.join(Settings.WORKDIR, user)+'/'
         response['user'] = user
         response['elapsed'] = 0
         jobid = str(uuid.uuid4()).replace("-", "_")
         
-        if 'ra' in arguments:
-            df = pd.DataFrame(np.array([ra, dec, xs, ys]).T, columns=['RA', 'DEC', 'XSIZE', 'YSIZE'])
-        elif 'coadd' in arguments:
-            df = pd.DataFrame(np.array([coadd, xs, ys]).T, columns=['COADD_OBJECT_ID', 'XSIZE', 'YSIZE'])
         input_csv = user_folder + jobid + '.csv'
+        if 'ra' in arguments:
+            #df = pd.DataFrame(np.array([ra, dec, xsize, ysize]).T, columns=['RA', 'DEC', 'XSIZE', 'YSIZE'])
+            df = pd.DataFrame(np.array([ra, dec]).T, columns=['RA', 'DEC'])
+        elif 'coadd' in arguments:
+            #df = pd.DataFrame(np.array([coadd, xsize, ysize]).T, columns=['COADD_OBJECT_ID', 'XSIZE', 'YSIZE'])
+            df = pd.DataFrame(np.array([coadd]).T, columns=['COADD_OBJECT_ID'])
         df.to_csv(input_csv, sep=',', index=False)
         
-        job_size = ''
         dftemp_rows = len(df.index)
         if dftemp_rows <= SMALL_QUEUE:
             job_size = 'small'
@@ -264,13 +350,17 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         if dftemp_rows > SMALL_QUEUE and dftemp_rows <= MEDIUM_QUEUE:
             job_size = 'medium'
             nprocs = MEDIUM_QUEUE_MAX_CPUS
-        if dftemp_rows > MEDIUM_QUEUE:
+        if dftemp_rows > MEDIUM_QUEUE and dftemp_rows <= LARGE_QUEUE:
             job_size = 'large'
+            nprocs = LARGE_QUEUE_MAX_CPUS
+        if dftemp_rows > LARGE_QUEUE:
+            job_size = 'manual'
             nprocs = LARGE_QUEUE_MAX_CPUS
         
         del df
-        folder2 = user_folder+jobid+'/'
-        os.system('mkdir -p '+folder2)
+        
+        folder2 = user_folder + jobid + '/'
+        os.system('mkdir -p ' + folder2)
 
         db = 'dessci'
         tiffs = True if 'make_tiffs' in arguments and arguments['make_tiffs'].upper() == 'TRUE' else False
@@ -278,6 +368,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         fits = True if 'make_fits' in arguments and arguments['make_fits'].upper() == 'TRUE' else False
         rgb = False
         rgb_values = ''
+        
         if not tiffs and not pngs and not fits and not rgb:
             msg = 'At least 1 job task selected must be true: {}'.format(jtasks)
             return self.missingargs(response, msg)
@@ -285,8 +376,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         colors = ''
         if fits:
             colors = str(arguments['colors'])
-        xsize = 1.0
-        ysize = 1.0
+        
         return_list = True if 'return_list' in arguments and arguments['return_list'].upper() == 'TRUE' else False
 
         run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, user, lp, jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
