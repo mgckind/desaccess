@@ -1,5 +1,4 @@
 import tornado.web
-import pusher
 import json
 import ea_tasks
 import uuid
@@ -13,11 +12,6 @@ import MySQLdb as mydb
 import yaml
 from Settings import app_log
 
-def after_return(retval):
-    url = Settings.ROOT_URL+'/easyweb/pusher/'
-    data = {'username': retval['user'], 'result': retval['data'], 'status': retval['status']}
-    requests.post(url, data=data)
-    return
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -52,7 +46,7 @@ class QueryHandler(BaseHandler):
         query_email = self.get_argument("queryemail", "")
         compression = self.get_argument("querycomp", "") == "true"
         if query == "":
-            print('No query string')
+            app_log.info('No query string')
             return
         query = query.replace(';', '')
         lines = query.split('\n')
@@ -63,13 +57,14 @@ class QueryHandler(BaseHandler):
                 continue
             newquery += ' ' + line.split('--')[0]
         query = newquery
-        print(query)
-        print('*******')
-        print(query_kind)
-        print(query_name)
-        print(query_email)
-        print(compression)
-        print('*******')
+        app_log.info(query)
+        app_log.info(jobid)
+        app_log.info('*******')
+        app_log.info(query_kind)
+        app_log.info(query_name)
+        app_log.info(query_email)
+        app_log.info(compression)
+        app_log.info('*******')
         file_error = False
         tf = filename
         if filename == "nofile":
@@ -80,7 +75,7 @@ class QueryHandler(BaseHandler):
             file_error = True
         elif not tf.endswith('.csv') and not tf.endswith('.fits') and not tf.endswith('.h5'):
             file_error = True
-        print(filename)
+        app_log.info(filename)
         if file_error:
             response['data'] = 'ERROR: File format allowed : .csv, .fits and .h5'
             response['kind'] = 'query'
@@ -133,7 +128,6 @@ class QueryHandler(BaseHandler):
             response['data'] = 'Job {0} submitted'.format(jobid)
             response['status'] = 'ok'
             response['kind'] = 'query'
-            pusher.SendMessage('refreshJobs')
             con.close()
             with open(jsonfile, 'w') as fp:
                 json.dump(response, fp)

@@ -112,7 +112,7 @@ class FileHandler(BaseHandler):
             F = open(filename, 'w')
             F.write(values)
             F.close()
-        
+
         """
         if stype == 'manualCoadds':
             values = self.get_argument('bc_coadds')
@@ -157,10 +157,10 @@ class FileHandler(BaseHandler):
         MEDIUM_QUEUE_MAX_CPUS = 4
         LARGE_QUEUE_MAX_CPUS = 6
         job_size = ''
-        
+
         dftemp = pd.DataFrame(pd.read_csv(input_csv))
         dftemp_rows = len(dftemp.index)
-        
+
         if dftemp_rows <= SMALL_QUEUE:
             job_size = 'small'
             nprocs = SMALL_QUEUE_MAX_CPUS
@@ -182,9 +182,9 @@ class FileHandler(BaseHandler):
 
         tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'), 'coadd', '', '', '', -1])
 
-        with con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        cur = con.cursor()
+        cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        con.commit()
         con.close()
         self.set_status(200)
         self.flush()
