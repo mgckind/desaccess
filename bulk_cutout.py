@@ -16,6 +16,7 @@ import MySQLdb as mydb
 import yaml
 import ea_tasks
 import pandas as pd
+from Settings import app_log
 
 
 def dt_t(entry):
@@ -79,23 +80,24 @@ class FileHandler(BaseHandler):
             colors = (',').join((colors, 'y'))
         colors = colors.strip(',')
 
-        print('**************')
-        print(tiffs, 'make tiff')
-        print(pngs, 'make png')
-        print(fits, 'make fits')
-        if fits:
-            print(gband, rband, iband, zband, yband, 'bands for fits')
-        print(rgb, 'make rgb')
-        if rgb:
-            print((';').join(rgb_values), 'rgb bands')
-        print(xsize, ysize, 'sizes')
-        print(return_list, 'return list of tiles with objects')
-        print(send_email, 'send_email')
-        print(email, 'email')
-        print(name, 'name')
-        print(stype, 'type')
-
         jobid = str(uuid.uuid4()).replace("-", "_")
+        app_log.info('***** JOB *****')
+        app_log.info('Cutouts Job: {} by {}'.format(jobid, loc_user))
+        app_log.info('{} make tiff'.format(tiffs))
+        app_log.info('{} make png'.format(pngs))
+        app_log.info('{} make fits'.format(fits))
+        if fits:
+            app_log.info(gband, rband, iband, zband, yband, 'bands for fits')
+        app_log.info('{} make rgb'.format(rgb))
+        if rgb:
+            app_log.info((';').join(rgb_values) + ', rgb bands')
+        app_log.info('{} , {} sizes'.format(xsize, ysize))
+        app_log.info('{}, return list of tiles with objects'.format(return_list))
+        app_log.info('{} send_email'.format(send_email))
+        app_log.info('{} email'.format(email))
+        app_log.info('{} : name'.format(name))
+        app_log.info('{} type'.format(stype))
+
 
         if xsize == 0.0:
             xsize = 1.0
@@ -143,7 +145,7 @@ class FileHandler(BaseHandler):
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
         """
-        print('**************')
+        app_log.info('**************')
 
         folder2 = user_folder + jobid + '/'
         os.system('mkdir -p '+folder2)

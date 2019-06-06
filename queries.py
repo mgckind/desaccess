@@ -57,14 +57,13 @@ class QueryHandler(BaseHandler):
                 continue
             newquery += ' ' + line.split('--')[0]
         query = newquery
+        app_log.info('***** JOB *****')
+        app_log.info('Query Job: {} by {}'.format(jobid, loc_user))
         app_log.info(query)
-        app_log.info(jobid)
-        app_log.info('*******')
         app_log.info(query_kind)
         app_log.info(query_name)
         app_log.info(query_email)
         app_log.info(compression)
-        app_log.info('*******')
         file_error = False
         tf = filename
         if filename == "nofile":
@@ -76,6 +75,7 @@ class QueryHandler(BaseHandler):
         elif not tf.endswith('.csv') and not tf.endswith('.fits') and not tf.endswith('.h5'):
             file_error = True
         app_log.info(filename)
+        app_log.info('***************')
         if file_error:
             response['data'] = 'ERROR: File format allowed : .csv, .fits and .h5'
             response['kind'] = 'query'

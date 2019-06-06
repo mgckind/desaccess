@@ -1100,7 +1100,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         nprocs = 1
     """
 
-    args = 'mpirun -n {} python3 bulkthumbs.py'.format(nprocs)
+    args = 'python bulkthumbs.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
     if tiffs:
         args += ' --make_tiffs'
