@@ -111,14 +111,14 @@
                     </template>
                     <template>{{item.file}}</template>
                 </vaadin-grid-column>
-                
+
                 <vaadin-grid-column flex-grow="1">
                     <template class="header">
                         <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
                     </template>
                     <template>{{item.size}}</template>
                 </vaadin-grid-column>
-                
+
                 <vaadin-grid-column flex-grow="1">
                     <template class="header">Download Files</template>
                     <template>
@@ -299,7 +299,7 @@
                     </div>
                 </paper-carousel>
             </div>
-            
+
             <div class="row bottom">
                 <paper-button class="prev" on-tap="_prevPage">
                     <iron-icon icon="image:navigate-before"></iron-icon>
@@ -393,7 +393,7 @@
               		<template class="header" style="padding-left: 5px">
                			<vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
               		</template>
-              		
+
               		<template>{{item.jobtype}}<br />
               		</template>
             	</vaadin-grid-column>
@@ -402,7 +402,7 @@
               		<template class="header" style="padding-left: 5px">
                			Execution time (s)
               		</template>
-              
+
               		<template>{{item.jruntime}}<br />
               		</template>
             	</vaadin-grid-column>
@@ -438,7 +438,7 @@
                 </vaadin-grid-column>
           	</vaadin-grid>
         </div>
-        
+
         <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
             <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
             <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
@@ -456,6 +456,10 @@
    			return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
   		}
 	}
+
+    window.setInterval(function(){
+      		document.getElementById("getMyJobs").generateRequest();
+     }, 2000);
 </script>
 
 <script>
@@ -646,7 +650,7 @@
               	formdata.append('username', this.username);
               	formdata.append('jobid', this.jobid);
               	formdata.append('jobname', newjname);
-              
+
               	$.ajax({
                   	url: '/easyweb/change/',
                  	type: 'POST',
