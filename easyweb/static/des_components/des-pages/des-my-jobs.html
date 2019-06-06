@@ -458,7 +458,10 @@
 	}
 
     window.setInterval(function(){
-      		document.getElementById("getMyJobs").generateRequest();
+      		tt = document.getElementById("mainPages").selected;
+      		if (tt == 9) document.getElementById("getMyJobs").generateRequest();
+
+
      }, 2000);
 </script>
 
