@@ -112,7 +112,7 @@ class FileHandler(BaseHandler):
         if stype == 'manualAB':
             values = self.get_argument('bc_positions')
             F = open(filename, 'w')
-            F.write(values)
+            F.write(values.upper())
             F.close()
 
         """

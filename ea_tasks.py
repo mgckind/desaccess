@@ -2,19 +2,16 @@ from celery import Celery, Task
 from celery.result import AsyncResult, allow_join_result
 from celery.utils.log import get_task_logger
 import easyaccess as ea
-import requests
 from Crypto.Cipher import AES
 import base64
 import Settings
 import plotutils
-import bulkthumbs
 import os
 import threading
 import time
 import json
 import MySQLdb as mydb
 import yaml
-import time
 import subprocess
 from celery.exceptions import SoftTimeLimitExceeded
 import glob
@@ -1100,10 +1097,10 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         nprocs = 1
     """
 
-    args = 'python bulkthumbs.py'.format(nprocs)
+    args = 'python bulkthumbs2.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
     if tiffs:
-        args += ' --make_tiffs'
+        args += ' --make_rgb_stiff --colors_stiff g,r,i'
     if fits:
         """
         colors = ''
@@ -1143,6 +1140,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     args += ' --usernm {} --passwd {}'.format(uu, pp)
     args += ' --jobid {}'.format(jobid)
     args += ' --outdir {}'.format(outdir)
+    logger.info(args)
 
     try:
         oo = subprocess.check_output([args], shell=True)
