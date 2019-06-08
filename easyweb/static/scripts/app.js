@@ -84,7 +84,7 @@
             mode: 'text/x-plsql',
             autofocus: true,
         });
-        app.editor.setValue('-- Insert Query --\n');
+        app.editor.setValue('-- Insert Query --\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
         app.editor.focus();
         app.editor.execCommand('goLineDown');
         myJobQuery = document.getElementById("jobQueryBox");
