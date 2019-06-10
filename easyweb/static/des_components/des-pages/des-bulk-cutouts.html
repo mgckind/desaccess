@@ -14,21 +14,13 @@
             /*border: 2px dotted #8da6ce;*/
             /*border-style: outset;*/
         }
-
         .card-content {
             @apply(--layout-vertical);
         }
-
-
-        /*.middle {*/
-        /*@apply(--layout-flex);*/
-        /*}*/
-
         .coadd-container {
             margin-top: 10px;
             @apply(--layout-horizontal);
         }
-
         .container2 {
             @apply(--layout-horizontal);
             @apply(--layout-center-justified);
@@ -48,9 +40,7 @@
         }
         .right {
             @apply(--layout-flex);
-
         }
-
         .right2 {
             @apply(--layout-flex-2);
             text-align: center;
@@ -87,9 +77,6 @@
             border-style: outset;
             border-radius: 10px;
         }
-
-
-
         .btcell {
             text-align: center;
         }
@@ -206,27 +193,6 @@
                         </tr>
 
 
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="picture-in-picture" slot="item-icon"></iron-icon>
-                                    "Any band" 3-color PNG (e.g., "i,r,g Y,z,r z,i,r")
-                                </paper-icon-item>
-                            </td>
-                            <td class="coadd-td">
-                                <div class="around-cell">
-                                    <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_rgb">Make RGB</paper-checkbox>
-                                    </div>
-                                    <div class="right">
-                                        <paper-input always-float-label id="bc_rgb_values" name="rgbbands" label="RGB Bands" value=""></paper-input>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-
-
-
 
                         <tr class="coadd-tr">
                             <td class="coadd-td">
@@ -331,7 +297,13 @@
             <paper-dialog id="bc_rgbbandsDialog" with-backdrop on-iron-overlay-opened="patchOverlay">
                 <paper-card elevation="0">
                     <div class="card-content">
-                        Please enter RGB Bands
+                        Please enter RGB Bands to create color cutouts, e.g.: i,r,g
+                          <div class="right">
+                              <paper-input always-float-label id="bc_rgb_values" name="rgbbands" label="RGB Bands" value="i,r,g"></paper-input>
+                          </div>
+                      <div class="card-actions">
+                        <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
+                    </div>
                     </div>
                 </paper-card>
             </paper-dialog>
@@ -470,51 +442,14 @@
 
             this.submit_type = 'csvfileAB';
         },
-        /*
-        _fileChange1: function(){
-            this.file_name = this.file1.name;
-            console.log('File to read : ' + this.file_name );
-            document.getElementById("bc_submitJobButton").disabled=false;
-            document.getElementById("bc_enterCoadds").disabled=true;
-            document.getElementById("bc_enterCoords").disabled=true;
-//            document.getElementById("bc_uploadicon").style.display='none';
-            document.getElementById("bc_uploadiconcoadd").icon = "done";
-            document.getElementById("bc_uploadFileCoord").disabled=true;
-
-            this.submit_type = 'coaddfile';
-//            document.getElementById("filename").value = this.file_name;
-        },
-        _fileChange2: function(){
-            this.file_name = this.file2.name;
-            console.log('File to read : ' + this.file_name );
-            document.getElementById("bc_submitJobButton").disabled=false;
-            document.getElementById("bc_enterCoadds").disabled=true;
-            document.getElementById("bc_enterCoords").disabled=true;
-//            document.getElementById("bc_uploadicon").style.display='none';
-            document.getElementById("bc_uploadiconcoord").icon = "done";
-            document.getElementById("bc_uploadFileCoadd").disabled=true;
-
-            this.submit_type = 'coordfile';
-//            document.getElementById("filename").value = this.file_name;
-        },
-        */
         clear: function () {
             document.getElementById("bc_submitJobButton").disabled=true;
             document.getElementById("bc_enterManually").disabled=false;
             document.getElementById("bc_uploadFile").disabled=false;
             document.getElementById("bc_keyboardicon").style.display="inline-block";
-            /*
-            document.getElementById("bc_enterCoadds").disabled=false;
-            document.getElementById("bc_enterCoords").disabled=false;
-            document.getElementById("bc_uploadFileCoadd").disabled=false;
-            document.getElementById("bc_uploadFileCoord").disabled=false;
-            document.getElementById("bc_keyboardiconcoadd").style.display='inline-block';
-            document.getElementById("bc_keyboardiconcoord").style.display='inline-block';
-            */
             document.getElementById("bc_tiffs").checked=false;
             document.getElementById("bc_pngs").checked=false;
             document.getElementById("bc_fits").checked=false;
-            document.getElementById("bc_rgb").checked=false;
             document.getElementById("bc_xsizeSlider").value="1.0";
             document.getElementById("bc_ysizeSlider").value="1.0";
             document.getElementById("bc_xsizeLabel").innerHTML="1.0";
@@ -535,21 +470,11 @@
             document.getElementById("bc_sendemail").checked=false;
             document.getElementById("bc_returnList").checked=false;
             document.getElementById("desPositionsBC").clear();
-            /*
-            document.getElementById("desPositionsCoaddsBC").clear();
-            document.getElementById("desPositionsCoordsBC").clear();
-            */
-            document.getElementById("bc_rgb_values").value='';
+            document.getElementById("bc_rgb_values").value='i,r,g';
             document.getElementById("bc_validemail").value='';
             document.getElementById("bc_validname").value='';
             document.getElementById("bc_uploadicon").icon = "backup";
             document.getElementById("bc_keyboardicon").icon = "hardware:keyboard";
-            /*
-            document.getElementById("bc_uploadiconcoadd").icon = "backup";
-            document.getElementById("bc_uploadiconcoord").icon = "backup";
-            document.getElementById("bc_keyboardiconcoadd").icon = "hardware:keyboard";
-            document.getElementById("bc_keyboardiconcoord").icon = "hardware:keyboard";
-            */
             this.file_name = "Upload File";
             this.job_comment = "";
 
@@ -579,18 +504,6 @@
             inputDialog.open();
             this.submit_type = 'manualAB';
         },
-        /*
-        _bc_openCoadds: function(){
-            var inputCoaddDialog = document.getElementById("bc_inputCoaddsDialog");
-            inputCoaddDialog.open();
-            this.submit_type = 'manualCoadds';
-        },
-        _bc_openCoords: function(){
-            var inputCoordDialog = document.getElementById("bc_inputCoordsDialog");
-            inputCoordDialog.open();
-            this.submit_type = 'manualCoords';
-        },
-        */
         completeHandler: function () {
             document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast1coadd').show();
@@ -598,7 +511,7 @@
         },
         errorHandler: function (data) {
             var response = data.responseJSON;
-            document.getElementById('desBulkCutouts').clear();
+            // document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast2coadd').text = response.msg;
             document.querySelector('#bc_toast2coadd').show();
         },
@@ -616,7 +529,6 @@
             formdata.append('make_tiffs', document.getElementById("bc_tiffs").checked);
             formdata.append('make_pngs', document.getElementById("bc_pngs").checked);
             formdata.append('make_fits', document.getElementById("bc_fits").checked);
-            formdata.append('make_rgb', document.getElementById("bc_rgb").checked);
             formdata.append('rgb_values', document.getElementById("bc_rgb_values").value);
 
             formdata.append('bc_xsize', document.getElementById("bc_xsizeSlider").value);
@@ -636,15 +548,10 @@
             formdata.append('bc_submit_type', this.submit_type);
 
             formdata.append('bc_positions',document.getElementById("bc_enteredPositions").value);
-            /*
-            formdata.append('bc_coadds',document.getElementById("bc_enteredCoadds").value);
-            formdata.append('bc_coords',document.getElementById("bc_enteredCoords").value);
-            */
 
             var tiffs = document.getElementById("bc_tiffs").checked;
             var pngs = document.getElementById("bc_pngs").checked;
             var fits = document.getElementById("bc_fits").checked;
-            var rgbs = document.getElementById("bc_rgb").checked;
             var rgb_val = document.getElementById("bc_rgb_values").value;
             var g = document.getElementById("bc_gband").checked;
             var r = document.getElementById("bc_rband").checked;
@@ -652,13 +559,12 @@
             var z = document.getElementById("bc_zband").checked;
             var y = document.getElementById("bc_Yband").checked;
             var allbands = document.getElementById("bc_all_toggle").checked;
-            if (tiffs == false && pngs == false && fits == false && rgbs == false) {
+            fits = true;
+            g = true;
+            if (tiffs == false && pngs == false && fits == false) {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else if (fits == true && (g == false && r == false && i == false && z == false && y == false && allbands == false)) {
-                document.getElementById('desBulkCutouts').errorHandler2();
-            }
-            else if (rgbs == true && rgb_val === "") {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else {

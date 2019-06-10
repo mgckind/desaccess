@@ -1058,7 +1058,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
 
 
 @app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
+def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -1068,13 +1068,10 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     response['email'] = 'no'
     if send_email:
         response['email'] = email
-
     t1 = time.time()
-
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
-
     user_folder = Settings.WORKDIR + uu + '/'
     jsonfile = user_folder + jobid + '.json'
     mypath = user_folder + jobid + '/'
@@ -1085,7 +1082,6 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
             json.dump(response, fp)
         return response
 
-    """
     MAX_CPUS = 2
     dftemp = pd.DataFrame(pd.read_csv(input_csv))
     dftemp_rows = len(dftemp.index)
@@ -1095,12 +1091,12 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         nprocs = dftemp_rows
     else:
         nprocs = 1
-    """
 
+    logger.info('Running in {} processors'.format(nprocs))
     args = 'python bulkthumbs2.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
     if tiffs:
-        args += ' --make_rgb_stiff --colors_stiff g,r,i'
+        args += ' --make_rgb_stiff --colors_stiff {}'.format(rgbvalues)
     if fits:
         """
         colors = ''
@@ -1118,10 +1114,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         """
         args += ' --make_fits --colors {}'.format(colors)
     if pngs:
-        args += ' --make_pngs'
-    if rgbs:
-        for _i in rgbvalues:
-            args += ' --make_rgbs {}'.format(_i)
+        args += ' --make_rgbs {}'.format(rgbvalues)
         """
         if rgb_minimum:
             args += ' --rgb_minimum {}'.format(rgb_minimum)

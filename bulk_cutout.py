@@ -16,6 +16,7 @@ import MySQLdb as mydb
 import yaml
 import ea_tasks
 import pandas as pd
+from datetime import timedelta
 from Settings import app_log
 
 
@@ -42,8 +43,10 @@ class FileHandler(BaseHandler):
         tiffs = self.get_argument("make_tiffs") == 'true'
         pngs = self.get_argument("make_pngs") == 'true'
         fits = self.get_argument("make_fits") == 'true'
-        rgb = self.get_argument("make_rgb") == 'true'
-        rgb_values = self.get_argument("rgb_values").split(' ')
+        if not any([tiffs, pngs, fits]):
+            self.finish_early(400, 'You need to select one option')
+            return
+        rgb_values = self.get_argument("rgb_values").replace(' ', '')
         #rgb_minimum = float(self.get_argument("bc_rgb_minimum"))
         #rgb_stretch = float(self.get_argument("bc_rgb_stretch"))
         #rgb_asinh = float(self.get_argument("bc_rgb_asinh"))
@@ -53,6 +56,9 @@ class FileHandler(BaseHandler):
         zband = self.get_argument("bc_zband") == 'true'
         yband = self.get_argument("bc_Yband") == 'true'
         allbands = self.get_argument("bc_all_toggle") == 'true'
+        if fits and not any([gband, rband, iband, zband, yband, allbands]):
+            self.finish_early(400, 'For fits cutouts, you need to specify the bands')
+            return
         xsize = float(self.get_argument("bc_xsize"))
         ysize = float(self.get_argument("bc_ysize"))
         return_list = self.get_argument("bc_returnList") == 'true'
@@ -61,12 +67,6 @@ class FileHandler(BaseHandler):
         name = self.get_argument("bc_name")
         stype = self.get_argument("bc_submit_type")
 
-        if allbands:
-            gband = True
-            rband = True
-            iband = True
-            zband = True
-            yband = True
         colors = ''
         if gband:
             colors = (',').join((colors, 'g'))
@@ -87,9 +87,8 @@ class FileHandler(BaseHandler):
         app_log.info('{} make png'.format(pngs))
         app_log.info('{} make fits'.format(fits))
         if fits:
-            app_log.info(gband, rband, iband, zband, yband, 'bands for fits')
-        app_log.info('{} make rgb'.format(rgb))
-        if rgb:
+            app_log.info('{} {} {} {} {} bands for fits'.format(gband, rband, iband, zband, yband))
+        if pngs:
             app_log.info((';').join(rgb_values) + ', rgb bands')
         app_log.info('{} , {} sizes'.format(xsize, ysize))
         app_log.info('{}, return list of tiles with objects'.format(return_list))
@@ -114,37 +113,6 @@ class FileHandler(BaseHandler):
             F = open(filename, 'w')
             F.write(values.upper())
             F.close()
-
-        """
-        if stype == 'manualCoadds':
-            values = self.get_argument('bc_coadds')
-            #filename = user_folder + jobid + '.csv'
-            F = open(filename, 'w')
-            F.write("COADD_OBJECT_ID\n")
-            F.write(values)
-            F.close()
-        if stype == 'manualCoords':
-            values = self.get_argument('bc_coords')
-            #filename = user_folder + jobid + '.csv'
-            F = open(filename, 'w')
-            F.write('RA,DEC\n')
-            F.write(values)
-            F.close()
-        if stype == 'coaddfile':
-            fileinfo = self.request.files['csvfile1'][0]
-            #fname = fileinfo['filename']
-            #extn = os.path.splitext(fname)[1]
-            #filename = user_folder + jobid + extn
-            with open(filename, 'w') as F:
-                F.write(fileinfo['body'].decode('ascii'))
-        if stype == 'coordfile':
-            fileinfo = self.request.files['csvfile2'][0]
-            #fname = fileinfo['filename']
-            #extn = os.path.splitext(fname)[1]
-            #filename = user_folder + jobid + extn
-            with open(filename, 'w') as F:
-                F.write(fileinfo['body'].decode('ascii'))
-        """
         app_log.info('**************')
 
         folder2 = user_folder + jobid + '/'
@@ -176,7 +144,31 @@ class FileHandler(BaseHandler):
             job_size = 'manual'
             nprocs = LARGE_QUEUE_MAX_CPUS
 
-        run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, loc_user, lp.decode(), jobid, folder2, db, tiffs, pngs, fits, rgb, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
+        if dftemp_rows > LARGE_QUEUE:
+            self.finish_early(400, 'You can only submit up to {} objects at a time'.format(LARGE_QUEUE))
+            return
+        run = ea_tasks.bulktasks.apply_async(args=[job_size,
+                                                   nprocs,
+                                                   input_csv,
+                                                   loc_user,
+                                                   lp.decode(),
+                                                   jobid,
+                                                   folder2,
+                                                   db,
+                                                   tiffs,
+                                                   pngs,
+                                                   fits,
+                                                   rgb_values,
+                                                   colors,
+                                                   xsize,
+                                                   ysize,
+                                                   return_list,
+                                                   send_email,
+                                                   email],
+                                             retry=True,
+                                             task_id=jobid,
+                                             expires=now + timedelta(days=1),
+                                             queue='bulk-queue')
 
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
@@ -188,9 +180,14 @@ class FileHandler(BaseHandler):
         cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
         con.commit()
         con.close()
-        response = {}
-        response['msg'] = 'All good'
         self.set_status(200)
+        self.flush()
+        self.finish()
+
+    def finish_early(self, status, msg):
+        response = {}
+        response['msg'] = msg
+        self.set_status(status)
         self.write(response)
         self.flush()
         self.finish()

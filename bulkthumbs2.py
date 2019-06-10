@@ -153,10 +153,10 @@ def MakeLuptonRGB(tiledir, outdir, df, positions, xs, ys, colors, bp, s, q):
         for p in range(len(positions)):
             if 'COADD_OBJECT_ID' in df:
                 nm = df['COADD_OBJECT_ID'][p]
-                filenm = outdir + '{0}_{1}{2}{3}.png'.format(nm, c[0], c[1], c[2])
+                filenm = outdir + '{0}_{1}{2}{3}_lupton.png'.format(nm, c[0], c[1], c[2])
             else:
                 nm = 'DESJ' + _DecConverter(df['RA'][p], df['DEC'][p])
-                filenm = outdir + '{0}_{1}{2}{3}.png'.format(nm, c[0], c[1], c[2])
+                filenm = outdir + '{0}_{1}{2}{3}_lupton.png'.format(nm, c[0], c[1], c[2])
 
             try:
                 file_r = glob.glob(outdir+'{0}_{1}.fits'.format(nm, c[0]))
@@ -380,7 +380,24 @@ def MakeStiffRGB(par):
     # [(g1,g2), (r1,r2), (z1,z2)]
     for band_set in tiff_bands:
         print('Calling with band set: {0}'.format(band_set))
-        MakeFitsCut(tiledir, outdir, size, positions, band_set.split(','), df)
+        #MakeFitsCut(tiledir, outdir, size, positions, band_set.split(','), df)
+        c = band_set.split(',')
+        if not os.path.exists(outdir):    # Nothing has been created. No color bands exist.
+            # Call to MakeFitsCut with all colors
+            MakeFitsCut(tiledir, outdir, size, positions, c, df)
+        else:        # Outdir exists, now check if the right color bands exist.
+            print('outdir exists')
+            c2 = []
+            if not glob.glob(outdir+'*_{}.fits'.format(c[0])):        # Color band doesn't exist
+                c2.append(c[0])            # append color to list to make
+            if not glob.glob(outdir+'*_{}.fits'.format(c[1])):        # Color band doesn't exist
+                c2.append(c[1])            # append color to list to make
+            if not glob.glob(outdir+'*_{}.fits'.format(c[2])):        # Color band doesn't exist
+                c2.append(c[2])            # append color to list to make
+
+            if c2:        # Call to MakeFitsCut with necessary colors
+                logger.info('MakeStiffRGB  - Some required color band fits files are missing so we will call MakeFitsCut.')
+                MakeFitsCut(tiledir, outdir, size, positions, c, df)
 
     # Using the same order in the dataframe, create the output name for the
     # RGB combined TIF
@@ -391,7 +408,7 @@ def MakeStiffRGB(par):
 
         # Check 3 needed band for combination
         if (len(blist) != 3):
-            print('3 bands are needed for STIFF RGB image combine.')
+            logger.info('MakeStiffRGB  - 3 bands are needed for STIFF RGB image combine.')
             sys.exit(1)
 
         # Iterate over each requested position
@@ -424,7 +441,7 @@ def MakeStiffRGB(par):
             else:
                 print('Error in naming of the TIF tmp image')
                 outnm = outnm.replace('fits', 'tif')
-            tmp_fits_fnm = tmp_fits_fnm[::-1]
+            #tmp_fits_fnm = tmp_fits_fnm[::-1]
             cmd_stiff = 'stiff {0}'.format(' '.join(tmp_fits_fnm))
             cmd_stiff += ' -OUTFILE_NAME {0}'.format(outnm)
             cmd_stiff = shlex.split(cmd_stiff)
@@ -432,13 +449,13 @@ def MakeStiffRGB(par):
                 subprocess.call(cmd_stiff)
                 print('Written: {0}'.format(outnm))
             except OSError as e:
-                logging.error(e)
+                logger.error(e)
                 raise
 
             # Convert TIF to PNG. Then remove TIF
             outnm_png = outnm.replace(
                 '.tif',
-                '_{0}.png'.format(''.join(list(blist)))
+                '_{0}_stiff.png'.format(''.join(list(blist)))
             )
             cmd_convert = 'convert {0} {1}'.format(outnm, outnm_png)
             cmd_convert = shlex.split(cmd_convert)
@@ -446,15 +463,15 @@ def MakeStiffRGB(par):
                 subprocess.call(cmd_convert)
                 print('Written: {0}'.format(outnm_png))
             except OSError as e:
-                logging.error(e)
+                logger.error(e)
                 raise
             try:
                 os.remove(outnm)
             except OSError as e:
-                logging.error(e)
+                logger.error(e)
                 raise
-    t_i = 'MakeStiffRGB - Tile {0} complete.'.format(df['TILENAME'].unique())
-    logging.info(t_i)
+    t_i = 'MakeStiffRGB  - Tile {0} complete.'.format(df['TILENAME'].unique())
+    logger.info(t_i)
     return True
 
 def run(args):
@@ -543,7 +560,8 @@ def run(args):
         logger.info('    Make TIFFs? '+str(args.make_tiffs))
         logger.info('    Make PNGs? '+str(args.make_pngs))
         logger.info('    Make FITS? '+str(args.make_fits))
-        logger.info('    Make RGBs? {}'.format('True' if args.make_rgbs else 'False'))
+        logger.info('    Make Stiff PNG? '+str(args.make_rgb_stiff))
+        logger.info('    Make Lupton RGBs? {}'.format('True' if args.make_rgbs else 'False'))
         summary['xsize'] = str(args.xsize)
         summary['ysize'] = str(args.ysize)
         summary['make_tiffs'] = str(args.make_tiffs)
@@ -551,7 +569,7 @@ def run(args):
         summary['make_fits'] = str(args.make_fits)
         summary['make_rgbs'] = 'True' if args.make_rgbs else 'False'
         if args.make_fits:
-            logger.info('        Bands: '+args.colors)
+            logger.info('        Bands (FITS): '+args.colors)
             summary['bands'] = args.colors
         if args.make_rgbs:
             logger.info('        Bands: '+str(args.make_rgbs))

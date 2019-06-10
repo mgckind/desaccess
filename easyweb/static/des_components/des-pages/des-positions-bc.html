@@ -50,7 +50,8 @@
             document.getElementById("desBulkCutouts").enter_values = "Values Entered";
         },
         clear: function(){
-            document.getElementById("bc_enteredPositions").value="";
+            document.getElementById("bc_enteredPositions").value=this.place_holder;
+            document.getElementById("coords_id").checked = false;
         },
         _switchInput: function(){
             var tempBox = document.getElementById("bc_enteredPositions");
