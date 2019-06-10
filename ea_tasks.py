@@ -1140,7 +1140,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     args += ' --usernm {} --passwd {}'.format(uu, pp)
     args += ' --jobid {}'.format(jobid)
     args += ' --outdir {}'.format(outdir)
-    logger.info(args)
+    #logger.info(args)
 
     try:
         oo = subprocess.check_output([args], shell=True)

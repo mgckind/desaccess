@@ -188,6 +188,9 @@ class FileHandler(BaseHandler):
         cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
         con.commit()
         con.close()
+        response = {}
+        response['msg'] = 'All good'
         self.set_status(200)
+        self.write(response)
         self.flush()
         self.finish()
