@@ -44,6 +44,16 @@
 
     }
 
+        paper-checkbox.y5a1 {
+
+        --paper-checkbox-checked-color: #e59400;
+        --paper-checkbox-checked-ink-color: #e59400;
+        --paper-checkbox-unchecked-color: #e59400;
+        --paper-checkbox-unchecked-ink-color: #e59400;
+        --paper-checkbox-label-color: #e59400;
+
+    }
+
 
         .flex2 {
       @apply --layout-horizontal;
@@ -208,6 +218,7 @@
                     <div class=" flex">
                 <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
                 <paper-checkbox class="dr1" style="margin-left: 20px; margin-top: 20px;"  id="check_dr1" checked on-change="display_dr1">Y3A2 TILES</paper-checkbox>
+                <paper-checkbox class="y5a1" style="margin-left: 20px; margin-top: 20px;" id="check_y5a1" on-change="display_y5a1">Y5A1 TILES</paper-checkbox>
                 <paper-checkbox class="y1a1" style="margin-left: 20px; margin-top: 20px;"  id="check_y1a1"  on-change="display_y1a1">Y1A1 TILES</paper-checkbox>
                 <paper-checkbox class="sva1" style="margin-left: 20px; margin-top: 20px;"  id="check_sva1"  on-change="display_sva1">SVA1 TILES</paper-checkbox>
                 <!--<paper-checkbox style="margin-left: 20px; margin-top: 20px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>-->
@@ -228,7 +239,7 @@
                                 <br />
                             <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Y3A2 Tile Files</paper-button> <br /> <br />
                             <paper-button class="indigo" disabled raised on-tap="_getTilesY1" id ="downloadTileY1"> Get Y1A1 Tile Files</paper-button> <br /> <br />
-                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all Y3A2 tiles
+                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all campaign tiles
                             </div>
 
                         </div>
@@ -586,6 +597,20 @@
                         globe.addLayer(vectorLayer);
                         window.y1a1_tiles = vectorLayer;
                     });
+                    loadTiles('/easyweb/static/tiles/y5a1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : [0.8,0.517647059,0,1.],
+                                strokeWidth: 1.0,
+                                fill: false,
+                                zIndex: 80,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.y5a1_tiles = vectorLayer;
+                    });
                     loadTiles('/easyweb/static/tiles/sva1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -819,6 +844,16 @@
                 }
                 else{
                     y1a1_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_y5a1: function(){
+            var checky5a1 = document.getElementById("check_y5a1");
+                if (checky5a1.checked) {
+                    y5a1_tiles._visible = true;
+                }
+                else{
+                    y5a1_tiles._visible = false;
                 }
                 globe.refresh();
             },
