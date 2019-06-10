@@ -84,14 +84,14 @@
             mode: 'text/x-plsql',
             autofocus: true,
         });
-        app.editor.setValue('-- Insert Query --\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
+        app.editor.setValue('-- Insert Query --\n\n\n');
         app.editor.focus();
         app.editor.execCommand('goLineDown');
         myJobQuery = document.getElementById("jobQueryBox");
         app.jobquerybox = CodeMirror.fromTextArea(myJobQuery, {
             lineNumbers: false,
             mode: 'text/x-plsql',
-            readOnly: true,
+            readOnly: 'nocursor',
             autofocus: true,
         });
         app.jobquerybox.setValue('\n\n\n\n\n\n\n\n\n\n');
@@ -100,7 +100,7 @@
         app.examplequerybox = CodeMirror.fromTextArea(myExampleQuery, {
             lineNumbers: false,
             mode: 'text/x-plsql',
-            readOnly: true,
+            readOnly: 'nocursor',
             autofocus: true,
             viewportMargin: 50,
         });

@@ -636,7 +636,7 @@
             },
             clearQueryBox: function(){
                 this.querystr = '';
-                app.editor.setValue('-- Insert Query --\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
+                app.editor.setValue('-- Insert Query --\n\n');
                 app.editor.focus();
                 app.editor.execCommand('goLineDown');
                 document.getElementById('inputOutputFile').disabled = true;
