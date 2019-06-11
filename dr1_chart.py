@@ -19,19 +19,22 @@ import datetime as dt
 import MySQLdb as mydb
 import yaml
 import ea_tasks
+from Settings import app_log
+
 
 def dt_t(entry):
     t = dt.datetime.strptime(entry['time'], '%a %b %d %H:%M:%S %Y')
     return t.strftime('%Y-%m-%d %H:%M:%S')
 
+
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("usera")
 
+
 class FileHandler(BaseHandler):
     @tornado.web.asynchronous
     @tornado.web.authenticated
-
     def post(self):
         loc_user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
         loc_passw = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
@@ -79,38 +82,33 @@ class FileHandler(BaseHandler):
             colors = (',').join((colors, 'y'))
         colors = colors.strip(',')
 
-        print('**************')
-        print(xs, ys, 'sizes')
-        print(gband, rband, iband, zband, yband, 'bands')
-        print(mag, 'magnitude limit')
-        print(stype, 'type')
-        print(return_cut, 'return_cut')
-        print(send_email, 'send_email')
-        print(email, 'email')
-        print(name, 'name')
         jobid = str(uuid.uuid4()).replace("-","_")    #'57b54f4f-ab85-4e4e-b366-1557c4b3ca0b' #str(uuid.uuid4())
+        app_log.info('***** JOB *****')
+        app_log.info('Cutouts Job: {} by {}'.format(jobid, loc_user))
+        app_log.info('{} {} sizes'.format(xs,ys))
+        app_log.info(' {} {} {} {} {} bands'.format(gband, rband, iband, zband, yband))
+        app_log.info('magnitude limit: {}'.format(mag))
+        app_log.info('type {} '.format(stype))
+        app_log.info('return_cut: {}'.format(return_cut))
+        app_log.info('send_email: {}'.format(send_email))
+        app_log.info('email: {}'.format(email))
+        app_log.info('name: {}'.format(name))
         if xs == 0.0:
             xs = 1.0
         if ys == 0.0:
             ys = 1.0
+        filename = user_folder + jobid + '.csv'
         if stype == "manual":
             values = self.get_argument("fc_values")
-            print(values)
-            filename = user_folder+jobid+'.csv'
             F = open(filename, 'w')
-            F.write("RA,DEC\n")
-            F.write(values)
+            F.write(values.upper())
             F.close()
         if stype == "csvfile":
-            fileinfo = self.request.files["csvfile"][0]
-            fname = fileinfo['filename']
-            extn = os.path.splitext(fname)[1]
-            print(fname)
-            print(fileinfo['content_type'])
-            filename = user_folder+jobid+extn
+            fileinfo = self.request.files['csvfile'][0]
             with open(filename, 'w') as F:
                 F.write(fileinfo['body'].decode('ascii'))
-        print('**************')
+            app_log.info(fileinfo['content_type'])
+        app_log.info('**************')
         folder2 = user_folder+jobid+'/'
         os.system('mkdir -p '+folder2)
         now = datetime.datetime.now()

@@ -824,23 +824,6 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         conf = yaml.load(cfile)['descut']
     uu1 = conf['username']
     pp1 = conf['password']
-    """
-    com = "makeDESthumbs {0} --user {1}1 --password {3} --MP --outdir={3}".format(inputs, uu1, pp1, outputs)
-
-    if xs != "":
-        com += ' --xsize {}'.format(xs)
-    if ys != "":
-        com += ' --ysize {}'.format(ys)
-    com += " --logg {}".format(outputs + 'log.log')
-    com += " --tag Y3A1_COADD"
-
-    os.chdir(mypath)
-    oo = subprocess.check_output([com], shell=True)
-
-    # If no options were selected in the form, set it to use iband.
-    if not gband and not rband and not iband and not zband and not yband:
-        iband = True
-    """
 
     gband = True if 'g' in colors else False
     rband = True if 'r' in colors else False
@@ -872,7 +855,6 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     except subprocess.CalledProcessError as e:
         logger.info(e.output)
     end_time1 = time.time()
-    logger.info(bulkthumbscom)
 
     urllst = []
     dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))

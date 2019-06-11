@@ -181,6 +181,11 @@
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload csv file (with header). <br />Or enter values manually (with header).</span>
+                                </paper-icon-item>
+                                <!-- <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
                                     <span style="overflow-x: auto; overflow-wrap: break-word;">
                                     Upload File (csv, with RA,DEC as uncommented header)
                                     </span>
@@ -188,6 +193,7 @@
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
+                                <div class="around-cell">
                                 <paper-button raised class="indigo" id="fc_uploadFile">
                                     <div id="fc_uploadicon" style="display: inline-block;">
                                         <i class="fa fa-cloud-upload"></i>
@@ -198,10 +204,17 @@
 									</span>
                                     <input type="file" class="upload" id="file" on-change="_fileChange" />
                                 </paper-button>
+                                <paper-button raised class="indigo" id="fc_enterValues" on-tap="_fc_openPositions">
+                                    <div id ="fc_keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span>[[enter_values]]</span>
+                                </paper-button>
+                                </div>
                             </td>
                         </tr>
 
-                        <tr class="coadd-tr">
+                        <!-- <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
@@ -216,7 +229,7 @@
                                     <span>[[enter_values]]</span>
                                 </paper-button>
                             </td>
-                        </tr>
+                        </tr> -->
 
                         <tr class="coadd-tr">
                             <td class="coadd-td">
@@ -243,7 +256,7 @@
                                 <paper-slider id="fc_ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
                             </td>
                         </tr>
-                        
+
                         <tr class="coadd-tr">
 							<td class="coadd-td">
 								<paper-icon-item>
@@ -253,16 +266,16 @@
 							</td>
 							<td class="coadd-td">
 								<div class="around-cell">
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_gband">g</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_rband">r</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_iband">i</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_zband">z</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_Yband">Y</paper-checkbox>
-                                    <paper-toggle-button style="font-size:16px; padding-top:15px;" id="fc_all_toggle">Select All</paper-toggle-button>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_gband">g</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_rband">r</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_iband">i</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_zband">z</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_Yband">Y</paper-checkbox>
+                  <paper-toggle-button style="font-size:16px; padding-top:15px;" id="fc_all_toggle" on-change="toggle_bands">Select All</paper-toggle-button>
 								</div>
 							</td>
                         </tr>
-                        
+
                         <tr class="coadd-tr">
 							<td class="coadd-td">
                                 <paper-icon-item>
@@ -381,7 +394,7 @@
                 value : ""
             }
         },
-        
+
         ready:function(){
             var fc_all_toggle = this.$.fc_all_toggle;
             fc_all_toggle.addEventListener('change', function(){
@@ -389,19 +402,21 @@
             });
         },
         toggle_bands:function(){
-            var band_rads = document.querySelectorAll('.bandbox');
+            var band_rads = document.querySelectorAll('.bandbox_fc');
             if (this.$.fc_all_toggle.checked){
                 for (var j=0; j<5; j++){
+                    band_rads[j].checked=true;
                     band_rads[j].disabled=true;
                 }
             }
             else{
                 for (var i=0; i<5; i++){
+                    band_rads[i].checked=false;
                     band_rads[i].disabled=false;
                 }
             }
         },
-        
+
         get file(){
             return this.$.file.files[0]
         },
@@ -438,13 +453,13 @@
             document.getElementById("fc_xsizeLabel").innerHTML="1.0";
             document.getElementById("fc_ysizeLabel").innerHTML="1.0";
             document.getElementById("fc_all_toggle").checked=false;
-            
-            var band_rads = document.querySelectorAll('.bandbox');
+
+            var band_rads = document.querySelectorAll('.bandbox_fc');
             for (var j=0; j<5; j++){
                 band_rads[j].checked=false;
                 band_rads[j].disabled=false;
             }
-            
+
             document.getElementById("fc_gband").checked=false;
             document.getElementById("fc_rband").checked=false;
             document.getElementById("fc_iband").checked=false;
@@ -513,7 +528,7 @@
             formdata.append('fc_submit_type', this.submit_type);
             formdata.append('fc_values',document.getElementById("fc_enteredPositions").value);
             formdata.append('fc_all_toggle', document.getElementById("fc_all_toggle").checked);
-            
+
             var g = document.getElementById("fc_gband").checked;
             var r = document.getElementById("fc_rband").checked;
             var i = document.getElementById("fc_iband").checked;
