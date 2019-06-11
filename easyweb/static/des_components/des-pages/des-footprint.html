@@ -18,6 +18,55 @@
       @apply --layout-horizontal;
         }
 
+
+        paper-button.y3 {
+      background-color: #4C72B0;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #4C72B0 !important;
+        color: white !important;
+      };
+    }
+        paper-button.y1 {
+      background-color: #55A868;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #55A868 !important;
+        color: white !important;
+      };
+    }
+        paper-button.y5 {
+      background-color: #e59400;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #e59400 !important;
+        color: white !important;
+      };
+    }
+        paper-button.sv {
+      background-color: #C44E52;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #C44E52 !important;
+        color: white !important;
+      };
+    }
+
+    paper-button[disabled] {
+        background: #eaeaea;
+        color: #a8a8a8;
+        cursor: auto;
+        pointer-events: none;
+    }
+
         paper-checkbox.dr1 {
 
                 --paper-checkbox-checked-color: #4C72B0;
@@ -96,8 +145,26 @@
     debounce-duration="300">
     </iron-ajax>
 
+    <iron-ajax id="getFilesTileSV"
+    method="POST"
+    url="/easyweb/gettilesv/"
+    params='{{_getTilename(tilename)}}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getFilesTileY5"
+    method="POST"
+    url="/easyweb/gettiley5/"
+    params='{{_getTilename(tilename)}}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
     <paper-dialog class="dialog-position" id="GetTiles" with-backdrop on-iron-overlay-opened="patchOverlay">
-              <h2>TILE: {{tilename}}</h2>
+              <h2>TILE: {{tilename}} in {{release}}</h2>
               <div class="insideDialog">
         <vaadin-grid id="material" items="{{data}}">
 
@@ -229,7 +296,7 @@
                                 <table id="tileTable" class="localTable">
                                 <tr><td>Name</td><td>:</td></tr>
                                 <tr><td>Tile Center</td><td>:</td></tr>
-                                <tr><td>No Objects</td><td>:</td></tr>
+                                <tr><td>No Objects (Y3)</td><td>:</td></tr>
                                 <tr><td>RA Corners</td><td>:</td></tr>
                                 <tr><td>DEC Corners</td><td>:</td></tr>
                                 </table>
@@ -237,8 +304,11 @@
                         </div>
                             <div class="card-content">
                                 <br />
-                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Y3A2 Tile Files</paper-button> <br /> <br />
-                            <paper-button class="indigo" disabled raised on-tap="_getTilesY1" id ="downloadTileY1"> Get Y1A1 Tile Files</paper-button> <br /> <br />
+                            <span> Click below to get the files for this tile (if avaialble)</span><br />
+                            <paper-button class="y3" disabled raised on-tap="_getTiles" id ="downloadTile"> Y3A2</paper-button>
+                            <paper-button class="y5" disabled raised on-tap="_getTilesY5" id ="downloadTileY5">Y5A1</paper-button>
+                            <paper-button class="y1" disabled raised on-tap="_getTilesY1" id ="downloadTileY1">Y1A1</paper-button>
+                            <paper-button class="sv" disabled raised on-tap="_getTilesSV" id ="downloadTileSV">SVA1</paper-button> <br /><br />
                             Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all campaign tiles
                             </div>
 
@@ -307,6 +377,10 @@
                     value: {},
                 },
                 tilename: {
+                    type: String,
+                    value: 'test'
+                },
+                release: {
                     type: String,
                     value: 'test'
                 },
@@ -380,10 +454,22 @@
              },
              _getTiles: function(e){
                  document.getElementById('getFilesTile').generateRequest();
+                 this.release = 'Y3A2';
                  document.getElementById('GetTiles').open();
              },
              _getTilesY1: function(e){
                  document.getElementById('getFilesTileY1').generateRequest();
+                 this.release = 'Y1A1';
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesSV: function(e){
+                 document.getElementById('getFilesTileSV').generateRequest();
+                 this.release = 'SVA1';
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesY5: function(e){
+                 document.getElementById('getFilesTileY5').generateRequest();
+                 this.release = 'Y5A1';
                  document.getElementById('GetTiles').open();
              },
               _handleResponse: function(e){
@@ -717,6 +803,8 @@
                              //document.getElementById('downloadTile').style.visibility = 'visible';
                              document.getElementById('downloadTile').disabled = false;
                              document.getElementById('downloadTileY1').disabled = false;
+                             document.getElementById('downloadTileSV').disabled = false;
+                             document.getElementById('downloadTileY5').disabled = false;
 
 
                     };
@@ -774,6 +862,8 @@
                                  //document.getElementById('downloadTile').style.visibility = 'visible';
                                  document.getElementById('downloadTile').disabled=false;
                                  document.getElementById('downloadTileY1').disabled=false;
+                                 document.getElementById('downloadTileSV').disabled=false;
+                                 document.getElementById('downloadTileY5').disabled=false;
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }
