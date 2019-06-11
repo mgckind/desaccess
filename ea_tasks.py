@@ -865,13 +865,14 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         bulkthumbscolors.append('i')
         colors = 'i'
     #bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
-    bulkthumbscom = "python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "Y3A2", jobid, uu, pp, outputs)
+    bulkthumbscom = "python3 bulkthumbs2.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "Y3A2", jobid, uu, pp, outputs)
     try:
         #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
         oo = subprocess.check_output([bulkthumbscom], shell=True)
     except subprocess.CalledProcessError as e:
         logger.info(e.output)
     end_time1 = time.time()
+    logger.info(bulkthumbscom)
 
     urllst = []
     dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))
