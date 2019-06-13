@@ -39649,6 +39649,21 @@ paper-item {
         z-index: 1000;
     }
 
+    .toast-error {
+  --paper-toast-color: #FFD2D2 ;
+  --paper-toast-background-color: #D8000C;
+}
+
+
+    .toast-success {
+  --paper-toast-color:  #DFF2BF;
+  --paper-toast-background-color: #4F8A10;
+}
+
+.desc {
+  color:black;
+}
+
 
 @media all and (max-width: 1000px) {
     .wideScreen {
@@ -39835,102 +39850,30 @@ paper-item {
 
             <des-card heading="Help">
                 <div class="card-content">
-                    <paper-carousel id="query-crs" items="1" dottext="false" controls="true">
+                    <paper-carousel id="query-crs" items="1" dottext="false" controls="true" ""="">
                         <div class="carousel-item">
-                            <table class="crs-table">
-                                <tbody><tr class="crs-tr">
-                                    <th class="crs-th">Button</th>
-                                    <th class="crs-th">Description</th>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised="">Submit Job</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Submit a job on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised="">Clear</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Clear the form on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised="">Check</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Check valid input on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised="">Quick</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Quick peek of the query result on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised="">Example Query</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        See example queries on click
-                                    </td>
-                                </tr>
-                            </tbody></table>
+                          <paper-card>
+                            <div clas="card-content">
+                            <img src="/easyweb/static/images/help/public_queries_0.gif" width="60%">
+                            <br>
+                              Type your query into the box. Queries are used to communicate with the database and are written in standard SQL format. From here, you can hit one of
+the blue buttons below the query box to do different things with your results.
+                        </div>
+                          </paper-card>
                         </div>
 
                         <div class="carousel-item">
-                            <!--<div class="col">-->
-                            <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                            <div class="desc">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-
-                            <!--</div>-->
+                          <paper-card>
+                            <div clas="card-content">
+                            <img src="/easyweb/static/images/help/public_queries_0.gif" width="60%">
+                        </div>
+                            <div clas="card-content">
+                              Type your query into the box. Queries are used to communicate with the database and are written in standard SQL format. From here, you can hit one of
+the blue buttons below the query box to do different things with your results.
+                        </div>
+                          </paper-card>
                         </div>
 
-                        <div class="carousel-item">
-                            <div class="row">
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-                            </div>
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-                        </div>
-
-                        <div class="carousel-item">
-                            <img src="/easyweb/static/images/demo1.gif">
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            </div>
-                        </div>
 
                     </paper-carousel>
                 </div>
@@ -40098,8 +40041,8 @@ paper-item {
 
             <div id="response2">
 
-                <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
-                <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+                <paper-toast class="toast-position toast-success" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
+                <paper-toast class="toast-position toast-error" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
                 <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
@@ -40623,11 +40566,11 @@ paper-item {
             <span style=" position: absolute; top:12px;">DES Footprint</span>
         </a>
         </paper-item>
-        <paper-item>
-		<a class="ahidden" href="/easyweb/data-analysis">
+        <!-- <paper-item>
+		<a  class="ahidden" href="/easyweb/data-analysis" >
 			<span style=" position: absolute; top:12px;">Data Analysis</span>
 		</a>
-		</paper-item>
+		</paper-item> -->
         <paper-item>
         <a class="ahidden" href="/easyweb/my-jobs">
             <span style=" position: absolute; top:12px;">My Jobs</span>
@@ -40685,7 +40628,7 @@ paper-item {
         <des-jlabs username="{{username}}"></des-jlabs>
         <des-finding-chart id="desFindingChart" email="{{email}}"></des-finding-chart>
         <des-footprint id="FootprintPage"></des-footprint>
-        <des-data-analysis id="desDataAnalysis" email="{{email}}"></des-data-analysis>
+        <!-- <des-data-analysis id="desDataAnalysis" email={{email}}></des-data-analysis> -->
         <des-my-jobs></des-my-jobs>
         <des-help></des-help>
 
@@ -46683,14 +46626,14 @@ This program is available under Apache License Version 2.0, available at https:/
                     </template>
                     <template>{{item.file}}</template>
                 </vaadin-grid-column>
-                
+
                 <vaadin-grid-column flex-grow="1">
                     <template class="header">
                         <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
                     </template>
                     <template>{{item.size}}</template>
                 </vaadin-grid-column>
-                
+
                 <vaadin-grid-column flex-grow="1">
                     <template class="header">Download Files</template>
                     <template>
@@ -46871,7 +46814,7 @@ This program is available under Apache License Version 2.0, available at https:/
                     </div>
                 </paper-carousel>
             </div>
-            
+
             <div class="row bottom">
                 <paper-button class="prev" on-tap="_prevPage">
                     <iron-icon icon="image:navigate-before"></iron-icon>
@@ -46965,7 +46908,7 @@ This program is available under Apache License Version 2.0, available at https:/
               		<template class="header" style="padding-left: 5px">
                			<vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
               		</template>
-              		
+
               		<template>{{item.jobtype}}<br>
               		</template>
             	</vaadin-grid-column>
@@ -46974,7 +46917,7 @@ This program is available under Apache License Version 2.0, available at https:/
               		<template class="header" style="padding-left: 5px">
                			Execution time (s)
               		</template>
-              
+
               		<template>{{item.jruntime}}<br>
               		</template>
             	</vaadin-grid-column>
@@ -47010,7 +46953,7 @@ This program is available under Apache License Version 2.0, available at https:/
                 </vaadin-grid-column>
           	</vaadin-grid>
         </div>
-        
+
         <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
             <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
             <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
@@ -47028,6 +46971,13 @@ This program is available under Apache License Version 2.0, available at https:/
    			return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
   		}
 	}
+
+    window.setInterval(function(){
+      		tt = document.getElementById("mainPages").selected;
+      		if (tt == 9) document.getElementById("getMyJobs").generateRequest();
+
+
+     }, 2000);
 </script>
 
 <script>
@@ -47218,7 +47168,7 @@ This program is available under Apache License Version 2.0, available at https:/
               	formdata.append('username', this.username);
               	formdata.append('jobid', this.jobid);
               	formdata.append('jobname', newjname);
-              
+
               	$.ajax({
                   	url: '/easyweb/change/',
                  	type: 'POST',
@@ -47803,6 +47753,13 @@ This program is available under Apache License Version 2.0, available at https:/
     }
     .green {background: var(--paper-green-500);}
     .red {background: var(--paper-red-500);}
+
+    .labs {
+        --paper-card {
+            width: 500px;
+        }
+    }
+
         </style>
 
     <iron-ajax id="deployLabReq" url="/easyweb/deslabs/deploy" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
@@ -47815,6 +47772,9 @@ This program is available under Apache License Version 2.0, available at https:/
     </iron-ajax>
 
     <iron-ajax id="gotoLabReq" url="/easyweb/deslabs/goto" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getTokenReq" url="/easyweb/deslabs/token" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponseToken" debounce-duration="300">
     </iron-ajax>
 
         <paper-dialog class="dialog-position" id="labsHelp" with-backdrop="" on-iron-overlay-opened="patchOverlay">
@@ -47883,11 +47843,20 @@ This program is available under Apache License Version 2.0, available at https:/
             </des-card>
         </paper-dialog>
 
+
+            <paper-dialog style="width: 420px; cursor: text ;" id="labTokenDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+                <paper-card elevation="0" style="width: 390px; cursor: text;">
+                    <div class="card-content" style="cursor: text;">
+                        <span style="cursor: text;"> Token: {{token}} </span>
+                    </div>
+                </paper-card>
+            </paper-dialog>
+
         <des-card heading="DES Jupyter Labs (Beta)">
             <div class="card-content">
-                This feature is experimental only. Please use with caution. <br>
-                You can launch, access and delete your Jupyter Notebook.
-                This Notebook will run with 1 CPU and 2GB of RAM.
+                This feature is still under development. Please use with caution. <br>
+                You can launch, access and delete your Jupyter Lab from here. <br>
+                This Lab will run with 1 CPU and 2GB of RAM.
             </div>
             <hr>
 
@@ -47898,7 +47867,7 @@ This program is available under Apache License Version 2.0, available at https:/
             <br>
             </div>
             <div class="card-content">
-            <paper-card heading="Status">
+            <paper-card style="width: 80%; max-width:400px;" heading="Lab status">
                 <div class="card-content">
 
 
@@ -47921,6 +47890,7 @@ This program is available under Apache License Version 2.0, available at https:/
                 </div>
             <div class="card-actions">
             <paper-button class="indigo" raised="" disabled="" on-tap="_gotoLab" id="GotoLab"> Go To Lab &nbsp; &nbsp; <i class="fa fa-arrow-circle-right"></i></paper-button>
+            <paper-button class="indigo" raised="" disabled="" on-tap="_getToken" id="GetToken"> See Token &nbsp; &nbsp; <i class="fa fa-key"></i></paper-button>
 
             </div>
         </paper-card><br>
@@ -47947,6 +47917,10 @@ This program is available under Apache License Version 2.0, available at https:/
                 status: {
                     type: String,
                     value: 'Lab Not Ready'
+                },
+                token: {
+                    type: String,
+                    value: ''
                 },
                 stop: {
                     type: Boolean,
@@ -47998,6 +47972,7 @@ This program is available under Apache License Version 2.0, available at https:/
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            document.getElementById('GetToken').disabled=true;
             var _self = this
             _self.statusv = 0;
             var i;
@@ -48017,10 +47992,22 @@ This program is available under Apache License Version 2.0, available at https:/
                 window.open('/easyweb/deslabs/goto','_blank');
                 //document.getElementById("gotoLabReq").generateRequest();
             },
+            _getToken: function(e){
+                var _=0;
+
+                //window.open('/easyweb/deslabs/goto','_blank');
+                document.getElementById("getTokenReq").generateRequest();
+                document.getElementById("labTokenDialog").open();
+            },
           _handleResponse: function(e){
             var _self = this;
             var data = e.detail.response;
             _self.status = data.status;
+        },
+          _handleResponseToken: function(e){
+            var _self = this;
+            var data = e.detail.response;
+            _self.token = data.token;
         },
           _handleResponseStatus: function(e){
             var _self = this;
@@ -48034,6 +48021,7 @@ This program is available under Apache License Version 2.0, available at https:/
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=false;
             document.getElementById('GotoLab').disabled=false;
+            document.getElementById('GetToken').disabled=false;
             }
             else if (_self.ready == 2){
             _self.stop = false;
@@ -48042,6 +48030,7 @@ This program is available under Apache License Version 2.0, available at https:/
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            document.getElementById('GetToken').disabled=true;
             }
             else {
             _self.stop = true;
@@ -48050,6 +48039,7 @@ This program is available under Apache License Version 2.0, available at https:/
             document.getElementById('DeployLab').disabled=false;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            document.getElementById('GetToken').disabled=true;
             }
         },
             _seeHelp: function(e){
@@ -50158,10 +50148,12 @@ function keysrt(key,desc) {
                 <a style="text-transform: none; color:black;" href="/easyweb/footprint" tabindex="-1">
                 <des-card-welcome heading="DES FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint"></des-card-welcome>
                 </a>
-                <a style="text-transform: none; color:black;" href="/easyweb/data-analysis" tabindex="-1">
+
+                <!-- <a style = "text-transform: none; color:black;" href="/easyweb/data-analysis" tabindex="-1"> -->
                 <!--<des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/home-footprint-old.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome>-->
-                <des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/DESJ001952.9-485955.6_magnitude.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome>
-                </a>
+                <!-- <des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/DESJ001952.9-485955.6_magnitude.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome> -->
+                <!-- </a> -->
+
                 <a style="text-transform: none; color:black;" href="/easyweb/my-jobs" tabindex="-1">
                 <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs"></des-card-welcome>
                 </a>
@@ -50257,6 +50249,55 @@ function keysrt(key,desc) {
       @apply --layout-horizontal;
         }
 
+
+        paper-button.y3 {
+      background-color: #4C72B0;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #4C72B0 !important;
+        color: white !important;
+      };
+    }
+        paper-button.y1 {
+      background-color: #55A868;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #55A868 !important;
+        color: white !important;
+      };
+    }
+        paper-button.y5 {
+      background-color: #e59400;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #e59400 !important;
+        color: white !important;
+      };
+    }
+        paper-button.sv {
+      background-color: #C44E52;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #C44E52 !important;
+        color: white !important;
+      };
+    }
+
+    paper-button[disabled] {
+        background: #eaeaea;
+        color: #a8a8a8;
+        cursor: auto;
+        pointer-events: none;
+    }
+
         paper-checkbox.dr1 {
 
                 --paper-checkbox-checked-color: #4C72B0;
@@ -50280,6 +50321,16 @@ function keysrt(key,desc) {
         --paper-checkbox-unchecked-color: #55A868;
         --paper-checkbox-unchecked-ink-color: #55A868;
         --paper-checkbox-label-color: #55A868;
+
+    }
+
+        paper-checkbox.y5a1 {
+
+        --paper-checkbox-checked-color: #e59400;
+        --paper-checkbox-checked-ink-color: #e59400;
+        --paper-checkbox-unchecked-color: #e59400;
+        --paper-checkbox-unchecked-ink-color: #e59400;
+        --paper-checkbox-label-color: #e59400;
 
     }
 
@@ -50313,8 +50364,14 @@ function keysrt(key,desc) {
     <iron-ajax id="getFilesTileY1" method="POST" url="/easyweb/gettiley1/" params="{{_getTilename(tilename)}}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
     </iron-ajax>
 
+    <iron-ajax id="getFilesTileSV" method="POST" url="/easyweb/gettilesv/" params="{{_getTilename(tilename)}}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getFilesTileY5" method="POST" url="/easyweb/gettiley5/" params="{{_getTilename(tilename)}}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    </iron-ajax>
+
     <paper-dialog class="dialog-position" id="GetTiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-              <h2>TILE: {{tilename}}</h2>
+              <h2>TILE: {{tilename}} in {{release}}</h2>
               <div class="insideDialog">
         <vaadin-grid id="material" items="{{data}}">
 
@@ -50435,6 +50492,7 @@ function keysrt(key,desc) {
                     <div class=" flex">
                 <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_coord" checked="" on-change="display_coord">Coordinates</paper-checkbox>
                 <paper-checkbox class="dr1" style="margin-left: 20px; margin-top: 20px;" id="check_dr1" checked="" on-change="display_dr1">Y3A2 TILES</paper-checkbox>
+                <paper-checkbox class="y5a1" style="margin-left: 20px; margin-top: 20px;" id="check_y5a1" on-change="display_y5a1">Y5A1 TILES</paper-checkbox>
                 <paper-checkbox class="y1a1" style="margin-left: 20px; margin-top: 20px;" id="check_y1a1" on-change="display_y1a1">Y1A1 TILES</paper-checkbox>
                 <paper-checkbox class="sva1" style="margin-left: 20px; margin-top: 20px;" id="check_sva1" on-change="display_sva1">SVA1 TILES</paper-checkbox>
                 <!--<paper-checkbox style="margin-left: 20px; margin-top: 20px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>-->
@@ -50445,7 +50503,7 @@ function keysrt(key,desc) {
                                 <table id="tileTable" class="localTable">
                                 <tbody><tr><td>Name</td><td>:</td></tr>
                                 <tr><td>Tile Center</td><td>:</td></tr>
-                                <tr><td>No Objects</td><td>:</td></tr>
+                                <tr><td>No Objects (Y3)</td><td>:</td></tr>
                                 <tr><td>RA Corners</td><td>:</td></tr>
                                 <tr><td>DEC Corners</td><td>:</td></tr>
                                 </tbody></table>
@@ -50453,9 +50511,12 @@ function keysrt(key,desc) {
                         </div>
                             <div class="card-content">
                                 <br>
-                            <paper-button class="indigo" disabled="" raised="" on-tap="_getTiles" id="downloadTile"> Get Y3A2 Tile Files</paper-button> <br> <br>
-                            <paper-button class="indigo" disabled="" raised="" on-tap="_getTilesY1" id="downloadTileY1"> Get Y1A1 Tile Files</paper-button> <br> <br>
-                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all Y3A2 tiles
+                            <span> Click below to get the files for this tile (if avaialble)</span><br>
+                            <paper-button class="y3" disabled="" raised="" on-tap="_getTiles" id="downloadTile"> Y3A2</paper-button>
+                            <paper-button class="y5" disabled="" raised="" on-tap="_getTilesY5" id="downloadTileY5">Y5A1</paper-button>
+                            <paper-button class="y1" disabled="" raised="" on-tap="_getTilesY1" id="downloadTileY1">Y1A1</paper-button>
+                            <paper-button class="sv" disabled="" raised="" on-tap="_getTilesSV" id="downloadTileSV">SVA1</paper-button> <br><br>
+                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all campaign tiles
                             </div>
 
                         </div>
@@ -50523,6 +50584,10 @@ function keysrt(key,desc) {
                     value: {},
                 },
                 tilename: {
+                    type: String,
+                    value: 'test'
+                },
+                release: {
                     type: String,
                     value: 'test'
                 },
@@ -50596,10 +50661,22 @@ function keysrt(key,desc) {
              },
              _getTiles: function(e){
                  document.getElementById('getFilesTile').generateRequest();
+                 this.release = 'Y3A2';
                  document.getElementById('GetTiles').open();
              },
              _getTilesY1: function(e){
                  document.getElementById('getFilesTileY1').generateRequest();
+                 this.release = 'Y1A1';
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesSV: function(e){
+                 document.getElementById('getFilesTileSV').generateRequest();
+                 this.release = 'SVA1';
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesY5: function(e){
+                 document.getElementById('getFilesTileY5').generateRequest();
+                 this.release = 'Y5A1';
                  document.getElementById('GetTiles').open();
              },
               _handleResponse: function(e){
@@ -50813,6 +50890,20 @@ function keysrt(key,desc) {
                         globe.addLayer(vectorLayer);
                         window.y1a1_tiles = vectorLayer;
                     });
+                    loadTiles('/easyweb/static/tiles/y5a1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : [0.8,0.517647059,0,1.],
+                                strokeWidth: 1.0,
+                                fill: false,
+                                zIndex: 80,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.y5a1_tiles = vectorLayer;
+                    });
                     loadTiles('/easyweb/static/tiles/sva1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -50919,6 +51010,8 @@ function keysrt(key,desc) {
                              //document.getElementById('downloadTile').style.visibility = 'visible';
                              document.getElementById('downloadTile').disabled = false;
                              document.getElementById('downloadTileY1').disabled = false;
+                             document.getElementById('downloadTileSV').disabled = false;
+                             document.getElementById('downloadTileY5').disabled = false;
 
 
                     };
@@ -50976,6 +51069,8 @@ function keysrt(key,desc) {
                                  //document.getElementById('downloadTile').style.visibility = 'visible';
                                  document.getElementById('downloadTile').disabled=false;
                                  document.getElementById('downloadTileY1').disabled=false;
+                                 document.getElementById('downloadTileSV').disabled=false;
+                                 document.getElementById('downloadTileY5').disabled=false;
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }
@@ -51046,6 +51141,16 @@ function keysrt(key,desc) {
                 }
                 else{
                     y1a1_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_y5a1: function(){
+            var checky5a1 = document.getElementById("check_y5a1");
+                if (checky5a1.checked) {
+                    y5a1_tiles._visible = true;
+                }
+                else{
+                    y5a1_tiles._visible = false;
                 }
                 globe.refresh();
             },
@@ -51272,89 +51377,30 @@ function keysrt(key,desc) {
 <template>
     <style include="shared-styles">
 
+    paper-toggle-button.pink {
+      --paper-toggle-button-checked-bar-color:  var(--paper-pink-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-pink-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-pink-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-indigo-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-indigo-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-indigo-900);
+    }
+
     </style>
-    
+
     <paper-dialog id="bc_inputDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC below" elevation="0">
+        <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC" elevation="0">
             <div class="card-content">
-               <iron-autogrow-textarea id="bc_enteredPositions" max-rows="10" rows="8" placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
+                 <paper-toggle-button class="pink" id="coords_id" noink="" on-tap="_switchInput"> Switch between positions and ids (Header is needed)
+            </paper-toggle-button>
+            <br>
+               <iron-autogrow-textarea id="bc_enteredPositions" max-rows="15" rows="12" placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
             </div>
             <div class="card-actions">
                 <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
                 <paper-button on-tap="_bc_submitPositions" raised="" class="indigo"> Accept</paper-button>
             </div>
         </paper-card>
-    </paper-dialog>
-    <paper-dialog class="dialog-position" id="jobHelpCoaddsBC" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-card heading="Help">
-            <div class="card-content">
-                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif" width="500px">
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
-                </paper-carousel>
-            </div>
-            <div class="row">
-                <paper-button class="prev" on-tap="_prevPage">
-                    <iron-icon icon="image:navigate-before"></iron-icon>
-                    Prev
-                </paper-button>
-
-                <paper-button class="next" on-tap="_nextPage">
-                    Next
-                    <iron-icon icon="image:navigate-next"></iron-icon>
-                </paper-button>
-            </div>
-        </des-card>
     </paper-dialog>
 </template>
 
@@ -51364,7 +51410,11 @@ function keysrt(key,desc) {
         properties : {
             place_holder: {
                 type: String,
-                value: "COADD_OBJECT_ID \nCOADD_OBJECT_ID \n... \nor \nRA,DEC \nRA,DEC \n..."
+                value: "RA,DEC\n"
+            },
+            input_box: {
+                type: String,
+                value: "coords"
             },
         },
         _bc_submitPositions: function(){
@@ -51375,27 +51425,25 @@ function keysrt(key,desc) {
             document.getElementById("desBulkCutouts").enter_values = "Values Entered";
         },
         clear: function(){
-            document.getElementById("bc_enteredPositions").value="";
+            document.getElementById("bc_enteredPositions").value=this.place_holder;
+            document.getElementById("coords_id").checked = false;
+        },
+        _switchInput: function(){
+            var tempBox = document.getElementById("bc_enteredPositions");
+            if (this.input_box == 'coords') {
+                tempBox.value = 'COADD_OBJECT_ID\n';
+                this.input_box = 'id';}
+            else {
+                tempBox.value = 'RA,DEC\n';
+                this.input_box = 'coords';
+            }
+            console.log(this.input_box);
         },
         patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
             }
-        },
-        _seeHelp: function(e){
-            e.preventDefault();
-            document.getElementById('jobHelpCoaddsBC').open();
-      },
-
-      _nextPage: function() {
-            var crs = document.getElementById("position-crs");
-            crs.goToNextPage();
-      },
-
-      _prevPage: function() {
-          var crs = document.getElementById("position-crs");
-          crs.goToPrevPage();
-      }
+        }
     });
 </script>
 </dom-module>
@@ -51404,11 +51452,11 @@ function keysrt(key,desc) {
     <style include="shared-styles">
 
     </style>
-    
+
     <paper-dialog id="fc_inputValuesDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <paper-card heading="Enter positions below" elevation="0">
+        <paper-card heading="Enter positions below (include header)" elevation="0">
             <div class="card-content">
-               <iron-autogrow-textarea id="fc_enteredPositions" max-rows="10" rows="8" placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
+               <iron-autogrow-textarea id="fc_enteredPositions" max-rows="15" rows="12" placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
             </div>
             <div class="card-actions">
                 <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
@@ -51416,78 +51464,7 @@ function keysrt(key,desc) {
             </div>
         </paper-card>
     </paper-dialog>
-    
-    <paper-dialog class="dialog-position" id="jobHelpPositionsFC" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-card heading="Help">
-            <div class="card-content">
-                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif" width="500px">
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
 
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
-                </paper-carousel>
-            </div>
-            <div class="row">
-                <paper-button class="prev" on-tap="_prevPage">
-                    <iron-icon icon="image:navigate-before"></iron-icon>
-                    Prev
-                </paper-button>
-
-                <paper-button class="next" on-tap="_nextPage">
-                    Next
-                    <iron-icon icon="image:navigate-next"></iron-icon>
-                </paper-button>
-            </div>
-        </des-card>
-    </paper-dialog>
 
 </template>
 
@@ -51497,7 +51474,7 @@ function keysrt(key,desc) {
       properties : {
         place_holder: {
             type: String,
-            value: "RA , DEC \nRA , DEC\n... , ..."
+            value: "RA,DEC\n"
         },
       },
       _fc_submitPositions: function(){
@@ -51509,7 +51486,7 @@ function keysrt(key,desc) {
 
       },
       clear: function(){
-            document.getElementById("fc_enteredPositions").value="";
+            document.getElementById("fc_enteredPositions").value=this.place_holder;
       },
       patchOverlay: function (e) {
             if (e.target.withBackdrop) {
@@ -53122,8 +53099,8 @@ function keysrt(key,desc) {
             </div>
 
         </des-card>
-        <paper-toast style="z-index: 9999; margin-left:260px;" id="toast1" text="Form has been submitted! Thanks"> </paper-toast>
-        <paper-toast style="z-index: 9999; margin-left:260px; color:red;" id="toast2" text="ERROR!, Please Check Form"> </paper-toast>
+        <paper-toast class="toast-success" style="z-index: 9999; margin-left:260px;" id="toast1" text="Form has been submitted! Thanks"> </paper-toast>
+        <paper-toast class="toast-error" style="z-index: 9999; margin-left:260px;" id="toast2" text="ERROR!, Please Check Form"> </paper-toast>
         <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
 
@@ -53975,13 +53952,19 @@ function keysrt(key,desc) {
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload csv file (with header). <br>Or enter values manually (with header).</span>
+                                </paper-icon-item>
+                                <!-- <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
                                     <span style="overflow-x: auto; overflow-wrap: break-word;">
                                     Upload File (csv, with RA,DEC as uncommented header)
                                     </span>
                                     <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                                </paper-icon-item>
+                                
                             </td>
                             <td class="btcell">
+                                <div class="around-cell">
                                 <paper-button raised="" class="indigo" id="fc_uploadFile">
                                     <div id="fc_uploadicon" style="display: inline-block;">
                                         <i class="fa fa-cloud-upload"></i>
@@ -53992,10 +53975,17 @@ function keysrt(key,desc) {
 									</span>
                                     <input type="file" class="upload" id="file" on-change="_fileChange">
                                 </paper-button>
+                                <paper-button raised="" class="indigo" id="fc_enterValues" on-tap="_fc_openPositions">
+                                    <div id="fc_keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                        &nbsp;  &nbsp;
+                                    </div>
+                                    <span>[[enter_values]]</span>
+                                </paper-button>
+                                </div>
                             </td>
                         </tr>
 
-                        <tr class="coadd-tr">
+                        <!-- <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
@@ -54003,14 +53993,14 @@ function keysrt(key,desc) {
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
-                                <paper-button raised="" class="indigo" id="fc_enterValues" on-tap="_fc_openPositions">
-                                    <div id="fc_keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+                                <paper-button raised class="indigo" id="fc_enterValues" on-tap="_fc_openPositions">
+                                    <div id ="fc_keyboardicon" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
                                         &nbsp;  &nbsp;
                                     </div>
                                     <span>[[enter_values]]</span>
                                 </paper-button>
                             </td>
-                        </tr>
+                        </tr> -->
 
                         <tr class="coadd-tr">
                             <td class="coadd-td">
@@ -54037,26 +54027,27 @@ function keysrt(key,desc) {
                                 <paper-slider id="fc_ysizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
                             </td>
                         </tr>
-                        
+
                         <tr class="coadd-tr">
 							<td class="coadd-td">
 								<paper-icon-item>
 									<iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-									Filter Band (default i band)
+									Filter Band &nbsp; &nbsp; <span style="color:red"> required</span>
+
 								</paper-icon-item>
 							</td>
 							<td class="coadd-td">
 								<div class="around-cell">
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_gband">g</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_rband">r</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_iband">i</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_zband">z</paper-checkbox>
-									<paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="fc_Yband">Y</paper-checkbox>
-                                    <paper-toggle-button style="font-size:16px; padding-top:15px;" id="fc_all_toggle">Select All</paper-toggle-button>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_gband">g</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_rband">r</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_iband">i</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_zband">z</paper-checkbox>
+									<paper-checkbox class="bandbox_fc" style="font-size:16px; padding-top:15px;" id="fc_Yband">Y</paper-checkbox>
+                  <paper-toggle-button style="font-size:16px; padding-top:15px;" id="fc_all_toggle" on-change="toggle_bands">Select All</paper-toggle-button>
 								</div>
 							</td>
                         </tr>
-                        
+
                         <tr class="coadd-tr">
 							<td class="coadd-td">
                                 <paper-icon-item>
@@ -54101,7 +54092,7 @@ function keysrt(key,desc) {
                             </td>
                         </tr>
 
-                        <tr class="coadd-tr">
+                        <!-- <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="save" slot="item-icon"></iron-icon>
@@ -54111,7 +54102,7 @@ function keysrt(key,desc) {
                             <td class="coadd-td">
                                 <paper-checkbox style="font-size:16px;" id="fc_returnCutoutPng">Include cutout with chart</paper-checkbox>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody></table>
                     <div class="coadd-container">
                         <div class="left">
@@ -54130,9 +54121,9 @@ function keysrt(key,desc) {
 
             <des-positions-fc id="desPositionsFC"></des-positions-fc>
 
-            <paper-toast class="toast-position" id="fc_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
-            <paper-toast class="toast-position" id="fc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-            <paper-toast class="toast-position" id="fc_toast3coadd" text="Form is incomplete for selected options!" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position toast-sucess" id="fc_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position toast-error " id="fc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position toast-error" id="fc_toast3coadd" text="Form is incomplete for selected options!" duration="5000"> </paper-toast>
 
             <paper-dialog class="size-position2" id="fc_emaildialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
                 <paper-card elevation="0">
@@ -54175,7 +54166,7 @@ function keysrt(key,desc) {
                 value : ""
             }
         },
-        
+
         ready:function(){
             var fc_all_toggle = this.$.fc_all_toggle;
             fc_all_toggle.addEventListener('change', function(){
@@ -54183,19 +54174,21 @@ function keysrt(key,desc) {
             });
         },
         toggle_bands:function(){
-            var band_rads = document.querySelectorAll('.bandbox');
+            var band_rads = document.querySelectorAll('.bandbox_fc');
             if (this.$.fc_all_toggle.checked){
                 for (var j=0; j<5; j++){
+                    band_rads[j].checked=true;
                     band_rads[j].disabled=true;
                 }
             }
             else{
                 for (var i=0; i<5; i++){
+                    band_rads[i].checked=false;
                     band_rads[i].disabled=false;
                 }
             }
         },
-        
+
         get file(){
             return this.$.file.files[0]
         },
@@ -54232,13 +54225,13 @@ function keysrt(key,desc) {
             document.getElementById("fc_xsizeLabel").innerHTML="1.0";
             document.getElementById("fc_ysizeLabel").innerHTML="1.0";
             document.getElementById("fc_all_toggle").checked=false;
-            
-            var band_rads = document.querySelectorAll('.bandbox');
+
+            var band_rads = document.querySelectorAll('.bandbox_fc');
             for (var j=0; j<5; j++){
                 band_rads[j].checked=false;
                 band_rads[j].disabled=false;
             }
-            
+
             document.getElementById("fc_gband").checked=false;
             document.getElementById("fc_rband").checked=false;
             document.getElementById("fc_iband").checked=false;
@@ -54247,7 +54240,7 @@ function keysrt(key,desc) {
             document.getElementById("fc_magSlider").value="20.0";
             document.getElementById("fc_magLabel").innerHTML="20.0";
             document.getElementById("fc_sendemail").checked=false;
-            document.getElementById("fc_returnCutoutPng").checked=false;
+            // document.getElementById("fc_returnCutoutPng").checked=false;
             document.getElementById("desPositionsFC").clear();
             document.getElementById("fc_validemail").value='';
             document.getElementById("fc_validname").value='';
@@ -54300,14 +54293,15 @@ function keysrt(key,desc) {
             formdata.append('fc_zband', document.getElementById("fc_zband").checked);
             formdata.append('fc_yband', document.getElementById("fc_Yband").checked);
             formdata.append('fc_mag', document.getElementById("fc_magSlider").value);
-            formdata.append('return_cutout_png', document.getElementById("fc_returnCutoutPng").checked);
+            // formdata.append('return_cutout_png', document.getElementById("fc_returnCutoutPng").checked);
+            formdata.append('return_cutout_png', true);
             formdata.append('fc_send_email', document.getElementById("fc_sendemail").checked);
             formdata.append('fc_email', document.getElementById("fc_validemail").value);
             formdata.append('fc_name', document.getElementById("fc_validname").value);
             formdata.append('fc_submit_type', this.submit_type);
             formdata.append('fc_values',document.getElementById("fc_enteredPositions").value);
             formdata.append('fc_all_toggle', document.getElementById("fc_all_toggle").checked);
-            
+
             var g = document.getElementById("fc_gband").checked;
             var r = document.getElementById("fc_rband").checked;
             var i = document.getElementById("fc_iband").checked;
@@ -54378,20 +54372,13 @@ function keysrt(key,desc) {
             /*border: 2px dotted #8da6ce;*/
             /*border-style: outset;*/
         }
-
         .card-content {
             @apply(--layout-vertical);
         }
-
-        /*.middle {*/
-        /*@apply(--layout-flex);*/
-        /*}*/
-
         .coadd-container {
             margin-top: 10px;
             @apply(--layout-horizontal);
         }
-
         .container2 {
             @apply(--layout-horizontal);
             @apply(--layout-center-justified);
@@ -54411,9 +54398,7 @@ function keysrt(key,desc) {
         }
         .right {
             @apply(--layout-flex);
-
         }
-
         .right2 {
             @apply(--layout-flex-2);
             text-align: center;
@@ -54450,9 +54435,6 @@ function keysrt(key,desc) {
             border-style: outset;
             border-radius: 10px;
         }
-
-
-
         .btcell {
             text-align: center;
         }
@@ -54462,10 +54444,15 @@ function keysrt(key,desc) {
             @apply(--layout-around-justified);
         }
 
+        .around-cell2 {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-justified);
+        }
+
 
     </style>
     <template>
-        <paper-dialog class="dialog-position" id="jobHelpBulkCutout" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <paper-dialog class="dialog-position" id="jobHelpBulkCutouts" with-backdrop="" on-iron-overlay-opened="patchOverlay">
             <des-card heading="Help: Bulk Cutouts Form">
                 <div class="card-content">
                     <paper-carousel id="coadd-crs" items="1" dottext="false" controls="true">
@@ -54506,77 +54493,13 @@ function keysrt(key,desc) {
                     </div>-->
 
                     <table id="coadd-table" style="width:100%">
-                        <!--
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
-                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                    Upload File (csv, with "COADD_OBJECT_ID" or "RA,DEC" as uncommented header)
-                                    </span>
-                                </paper-icon-item>
-                            </td>
-                            <td class="btcell">
-                                <div class="around-cell">
-                                    <paper-button raised class="indigo" id="bc_uploadFileCoadd">
-                                        <div id="bc_uploadiconcoadd" style="display: inline-block;">
-                                            <i class="fa fa-cloud-upload"></i>
-                                            &nbsp;  &nbsp;
-                                            Coadd ID: &nbsp;
-                                        </div>
-                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                            [[file_name]]
-                                        </span>
-                                        <input type="file" class="upload" id="file1" on-change="_fileChange1" />
-                                    </paper-button>
-                                    <paper-button raised class="indigo" id="bc_uploadFileCoord">
-                                        <div id="bc_uploadiconcoord" style="display: inline-block;">
-                                            <i class="fa fa-cloud-upload"></i>
-                                                &nbsp;  &nbsp;
-                                                RA,DEC: &nbsp;
-                                        </div>
-                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                            [[file_name]]
-                                        </span>
-                                        <input type="file" class="upload" id="file2" on-change="_fileChange2" />
-                                    </paper-button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
-                                    Enter Values for COADD_OBJECT_ID or RA,DEC
-                                </paper-icon-item>
-                            </td>
-                            <td class="btcell">
-                                <div class="around-cell">
-                                    <paper-button raised class="indigo" id="bc_enterCoadds" on-tap="_bc_openCoadds">
-                                        <div id ="bc_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                                            &nbsp;  &nbsp;
-                                            Coadd ID: &nbsp;
-                                        </div>
-                                        <span>[[enter_values]]</span>
-                                    </paper-button>
-                                    <paper-button raised class="indigo" id="bc_enterCoords" on-tap="_bc_openCoords">
-                                        <div id="bc_keyboardiconcoord" style="display: online-block;"> <i class="fa fa-keyboard-o"></i>
-                                            &nbsp;  &nbsp;
-                                            RA,DEC: &nbsp;
-                                        </div>
-                                        <span>[[enter_values]]</span>
-                                    </paper-button>
-                                </div>
-                            </td>
-                        </tr>
-                        -->
-                        
+
                         <tbody><tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="backup" slot="item-icon"></iron-icon>
                                     <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
-                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload file (CSV, with "COADD_OBJECT_ID" or "RA,DEC" as header). <br>Or enter values manually (with "COADD_OBJECT_ID" or "RA,DEC" as header). <br>See help button for examples.</span>
+                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload csv file (with header). <br>Or enter values manually (with header).</span>
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
@@ -54601,68 +54524,32 @@ function keysrt(key,desc) {
                                 </div>
                             </td>
                         </tr>
-                        
+
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="check" slot="item-icon"></iron-icon>
-                                    Pregenerated (i, r, g) or FITS cutout
+                                    Generate color png or  just FITS cutouts &nbsp; <span style="color:red"> required</span>
                                 </paper-icon-item>
                             </td>
                             <td class="coadd-td">
                                 <div class="around-cell">
                                     <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_tiffs">TIFF</paper-checkbox>
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_tiffs">Stiff_RGB</paper-checkbox>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="rgboptions"></iron-icon>
                                     </div>
                                     <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_pngs">PNG</paper-checkbox>
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_pngs">Lupton_RGB</paper-checkbox>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="rgboptions"></iron-icon>
                                     </div>
                                     <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_fits">FITS</paper-checkbox>
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_fits" on-change="fitsoptions"> Just FITS</paper-checkbox>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="fitsoptions"></iron-icon>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                        
-                        
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="picture-in-picture" slot="item-icon"></iron-icon>
-                                    "Any band" 3-color PNG (e.g., "i,r,g Y,z,r z,i,r")
-                                </paper-icon-item>
-                            </td>
-                            <td class="coadd-td">
-                                <div class="around-cell">
-                                    <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_rgb">Make RGB</paper-checkbox>
-                                    </div>
-                                    <div class="right">
-                                        <paper-input always-float-label="" id="bc_rgb_values" name="rgbbands" label="RGB Bands" value=""></paper-input>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="check" slot="item-icon"></iron-icon>
-                                    Color Bands (for FITS option above)
-                                </paper-icon-item>
-                            </td>
-                            <td class="coadd-td">
-                                <div class="around-cell">
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_gband">g</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_rband">r</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_iband">i</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_zband">z</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_Yband">Y</paper-checkbox>
-                                    <paper-toggle-button style="font-size:16px; padding-top:15px;" id="bc_all_toggle">Select All</paper-toggle-button>
-                                </div>
-                            </td>
-                        </tr>
+
 
 
                         <tr class="coadd-tr">
@@ -54747,16 +54634,16 @@ function keysrt(key,desc) {
                     </div>
                 </div>
             </des-card>
-            
+
             <des-positions-bc id="desPositionsBC"></des-positions-bc>
             <!--
             <des-positions-coadds-bc id="desPositionsCoaddsBC"></des-positions-coadds-bc>
             <des-positions-coords-bc id="desPositionsCoordsBC"></des-positions-coords-bc>
             -->
 
-            <paper-toast class="toast-position" id="bc_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
-            <paper-toast class="toast-position" id="bc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-            <paper-toast class="toast-position" id="bc_toast3coadd" text="Form is incomplete for selected options!" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position toast-success" id="bc_toast1coadd" text="Job has been submitted!" duration="6000"> </paper-toast>
+            <paper-toast class="toast-position toast-error" id="bc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="6000"> </paper-toast>
+            <paper-toast class="toast-position toast-error" id="bc_toast3coadd" text="Form is incomplete for selected options!" duration="6000"> </paper-toast>
 
             <paper-dialog class="size-position2" id="bc_emaildialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
                 <paper-card elevation="0">
@@ -54765,7 +54652,49 @@ function keysrt(key,desc) {
                     </div>
                 </paper-card>
             </paper-dialog>
-        </section>
+            <paper-dialog id="bc_rgbbandsDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+                <paper-card elevation="0">
+                    <div class="card-content">
+                        Please enter RGB Bands to create color cutouts, e.g.: i,r,g
+                          <div class="right">
+                              <paper-input always-float-label="" id="bc_rgb_values" name="rgbbands" label="RGB Bands" value="i,r,g"></paper-input>
+                          </div>
+                      <div class="card-actions">
+                        <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
+                    </div>
+                    </div>
+                </paper-card>
+            </paper-dialog>
+            <paper-dialog style="width: 40%;" id="bc_fitsOptionsDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+                <paper-card heading="Select bands" elevation="0">
+                    <div class="card-content">
+                                <div class="around-cell">
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_gband">g</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_rband">r</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_iband">i</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_zband">z</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_Yband">Y</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-toggle-button style="font-size:16px; padding-top:15px;" id="bc_all_toggle" on-change="toggle_all_bands">Select All</paper-toggle-button>
+                                    &nbsp;
+                                    <br>
+                    </div>
+                                    <br>
+                    <div class="card-actions">
+                        <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
+                    </div>
+                
+            
+        </div></paper-card></paper-dialog></section>
         <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
     </template>
@@ -54816,7 +54745,20 @@ function keysrt(key,desc) {
                 }
             }
         },
-        
+        toggle_all_bands: function () {
+            var band_rads = document.querySelectorAll('.bandbox');
+            if (this.$.bc_all_toggle.checked) {
+                for (var j=0; j<5; j++) {
+                    band_rads[j].checked=true;
+                }
+            }
+            else {
+                for (var i=0; i<5; i++) {
+                    band_rads[i].checked=false;
+                }
+            }
+        },
+
         get filesAB(){
             return this.$.filesAB.files[0];
         },
@@ -54839,72 +54781,45 @@ function keysrt(key,desc) {
                 document.getElementById("bc_validemail").value='';
             }
         },
+        fitsoptions: function (e) {
+            e.preventDefault();
+            if (document.getElementById("bc_fits").checked) {
+            document.getElementById('bc_fitsOptionsDialog').open();
+            }
+        },
+        rgboptions: function (e) {
+            e.preventDefault();
+            document.getElementById('bc_rgbbandsDialog').open();
+        },
         _fileChange: function () {
             this.file_name = this.filesAB.name;
             console.log('File to read: ' + this.file_name);
             document.getElementById("bc_submitJobButton").disabled=false;
             document.getElementById("bc_enterManually").disabled=true;
             document.getElementById("bc_uploadicon").icon = "done";
-            
+
             this.submit_type = 'csvfileAB';
         },
-        /*
-        _fileChange1: function(){
-            this.file_name = this.file1.name;
-            console.log('File to read : ' + this.file_name );
-            document.getElementById("bc_submitJobButton").disabled=false;
-            document.getElementById("bc_enterCoadds").disabled=true;
-            document.getElementById("bc_enterCoords").disabled=true;
-//            document.getElementById("bc_uploadicon").style.display='none';
-            document.getElementById("bc_uploadiconcoadd").icon = "done";
-            document.getElementById("bc_uploadFileCoord").disabled=true;
-
-            this.submit_type = 'coaddfile';
-//            document.getElementById("filename").value = this.file_name;
-        },
-        _fileChange2: function(){
-            this.file_name = this.file2.name;
-            console.log('File to read : ' + this.file_name );
-            document.getElementById("bc_submitJobButton").disabled=false;
-            document.getElementById("bc_enterCoadds").disabled=true;
-            document.getElementById("bc_enterCoords").disabled=true;
-//            document.getElementById("bc_uploadicon").style.display='none';
-            document.getElementById("bc_uploadiconcoord").icon = "done";
-            document.getElementById("bc_uploadFileCoadd").disabled=true;
-
-            this.submit_type = 'coordfile';
-//            document.getElementById("filename").value = this.file_name;
-        },
-        */
         clear: function () {
             document.getElementById("bc_submitJobButton").disabled=true;
             document.getElementById("bc_enterManually").disabled=false;
             document.getElementById("bc_uploadFile").disabled=false;
             document.getElementById("bc_keyboardicon").style.display="inline-block";
-            /*
-            document.getElementById("bc_enterCoadds").disabled=false;
-            document.getElementById("bc_enterCoords").disabled=false;
-            document.getElementById("bc_uploadFileCoadd").disabled=false;
-            document.getElementById("bc_uploadFileCoord").disabled=false;
-            document.getElementById("bc_keyboardiconcoadd").style.display='inline-block';
-            document.getElementById("bc_keyboardiconcoord").style.display='inline-block';
-            */
             document.getElementById("bc_tiffs").checked=false;
             document.getElementById("bc_pngs").checked=false;
             document.getElementById("bc_fits").checked=false;
-            document.getElementById("bc_rgb").checked=false;
             document.getElementById("bc_xsizeSlider").value="1.0";
             document.getElementById("bc_ysizeSlider").value="1.0";
             document.getElementById("bc_xsizeLabel").innerHTML="1.0";
             document.getElementById("bc_ysizeLabel").innerHTML="1.0";
             document.getElementById("bc_all_toggle").checked=false;
-            
+
             var band_rads = document.querySelectorAll('.bandbox');
             for (var j=0; j<5; j++) {
                 band_rads[j].checked=false;
                 band_rads[j].disabled=false;
             }
-            
+
             document.getElementById("bc_gband").checked=false;
             document.getElementById("bc_rband").checked=false;
             document.getElementById("bc_iband").checked=false;
@@ -54913,21 +54828,11 @@ function keysrt(key,desc) {
             document.getElementById("bc_sendemail").checked=false;
             document.getElementById("bc_returnList").checked=false;
             document.getElementById("desPositionsBC").clear();
-            /*
-            document.getElementById("desPositionsCoaddsBC").clear();
-            document.getElementById("desPositionsCoordsBC").clear();
-            */
-            document.getElementById("bc_rgb_values").value='';
+            document.getElementById("bc_rgb_values").value='i,r,g';
             document.getElementById("bc_validemail").value='';
             document.getElementById("bc_validname").value='';
             document.getElementById("bc_uploadicon").icon = "backup";
             document.getElementById("bc_keyboardicon").icon = "hardware:keyboard";
-            /*
-            document.getElementById("bc_uploadiconcoadd").icon = "backup";
-            document.getElementById("bc_uploadiconcoord").icon = "backup";
-            document.getElementById("bc_keyboardiconcoadd").icon = "hardware:keyboard";
-            document.getElementById("bc_keyboardiconcoord").icon = "hardware:keyboard";
-            */
             this.file_name = "Upload File";
             this.job_comment = "";
 
@@ -54951,37 +54856,24 @@ function keysrt(key,desc) {
             console.log(coords);
         },
         */
-        
+
         _bc_openManualEntry: function () {
             var inputDialog = document.getElementById("bc_inputDialog");
             inputDialog.open();
             this.submit_type = 'manualAB';
         },
-        /*
-        _bc_openCoadds: function(){
-            var inputCoaddDialog = document.getElementById("bc_inputCoaddsDialog");
-            inputCoaddDialog.open();
-            this.submit_type = 'manualCoadds';
-        },
-        _bc_openCoords: function(){
-            var inputCoordDialog = document.getElementById("bc_inputCoordsDialog");
-            inputCoordDialog.open();
-            this.submit_type = 'manualCoords';
-        },
-        */
         completeHandler: function () {
-            console.log('YESSSSS');
             document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast1coadd').show();
             document.getElementById("getMyJobs").generateRequest();
         },
-        errorHandler: function () {
-            console.log('NOOOO');
-            document.getElementById('desBulkCutouts').clear();
+        errorHandler: function (data) {
+            var response = data.responseJSON;
+            // document.getElementById('desBulkCutouts').clear();
+            document.querySelector('#bc_toast2coadd').text = response.msg;
             document.querySelector('#bc_toast2coadd').show();
         },
         errorHandler2: function () {
-            console.log('NOOOO');
             document.querySelector('#bc_toast3coadd').show();
         },
         _submitJob: function (event) {
@@ -54991,39 +54883,33 @@ function keysrt(key,desc) {
             formdata.append('csvfile1', this.$.file1.files[0]);
             formdata.append('csvfile2', this.$.file2.files[0]);
             */
-            
+
             formdata.append('make_tiffs', document.getElementById("bc_tiffs").checked);
             formdata.append('make_pngs', document.getElementById("bc_pngs").checked);
             formdata.append('make_fits', document.getElementById("bc_fits").checked);
-            formdata.append('make_rgb', document.getElementById("bc_rgb").checked);
             formdata.append('rgb_values', document.getElementById("bc_rgb_values").value);
-            
+
             formdata.append('bc_xsize', document.getElementById("bc_xsizeSlider").value);
             formdata.append('bc_ysize', document.getElementById("bc_ysizeSlider").value);
-            
+
             formdata.append('bc_gband', document.getElementById("bc_gband").checked);
             formdata.append('bc_rband', document.getElementById("bc_rband").checked);
             formdata.append('bc_iband', document.getElementById("bc_iband").checked);
             formdata.append('bc_zband', document.getElementById("bc_zband").checked);
             formdata.append('bc_Yband', document.getElementById("bc_Yband").checked);
             formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
-            
+
             formdata.append('bc_returnList', document.getElementById("bc_returnList").checked);
             formdata.append('bc_send_email', document.getElementById("bc_sendemail").checked);
             formdata.append('bc_email', document.getElementById("bc_validemail").value);
             formdata.append('bc_name', document.getElementById("bc_validname").value);
             formdata.append('bc_submit_type', this.submit_type);
-            
+
             formdata.append('bc_positions',document.getElementById("bc_enteredPositions").value);
-            /*
-            formdata.append('bc_coadds',document.getElementById("bc_enteredCoadds").value);
-            formdata.append('bc_coords',document.getElementById("bc_enteredCoords").value);
-            */
 
             var tiffs = document.getElementById("bc_tiffs").checked;
             var pngs = document.getElementById("bc_pngs").checked;
             var fits = document.getElementById("bc_fits").checked;
-            var rgbs = document.getElementById("bc_rgb").checked;
             var rgb_val = document.getElementById("bc_rgb_values").value;
             var g = document.getElementById("bc_gband").checked;
             var r = document.getElementById("bc_rband").checked;
@@ -55031,13 +54917,12 @@ function keysrt(key,desc) {
             var z = document.getElementById("bc_zband").checked;
             var y = document.getElementById("bc_Yband").checked;
             var allbands = document.getElementById("bc_all_toggle").checked;
-            if (tiffs == false && pngs == false && fits == false && rgbs == false) {
+            fits = true;
+            g = true;
+            if (tiffs == false && pngs == false && fits == false) {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else if (fits == true && (g == false && r == false && i == false && z == false && y == false && allbands == false)) {
-                document.getElementById('desBulkCutouts').errorHandler2();
-            }
-            else if (rgbs == true && rgb_val === "") {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else {

@@ -22,7 +22,7 @@ import count
 import jlab
 from version import __version__
 
-define("port", default=8081, help="run on the given port", type=int)
+define("port", default=8080, help="run on the given port", type=int)
 
 
 def create_db(delete=False):
