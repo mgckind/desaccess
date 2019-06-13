@@ -123,9 +123,8 @@ class FileHandler(BaseHandler):
         tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'),
                      'finding chart', '', '', '', -1])
 
-        with con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
+        cur = con.cursor()
+        cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
         con.close()
         self.set_status(200)
         self.flush()
