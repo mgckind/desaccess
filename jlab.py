@@ -56,6 +56,18 @@ class LabGotoHandler(BaseHandler):
         self.redirect('/easyweb/deslabs/labs/{user}/?token={token}'.format(user=user, token=token))
 
 
+class LabGetTokenHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
+        with open('config/desaccess.yaml', 'r') as cfile:
+            conf = yaml.load(cfile)['jlab']
+        url = 'http://{host}:{port}'.format(**conf)
+        r = requests.post(url + '/labs/api/v1/token', data={'user': user})
+        token = r.json()['token']
+        temp = json.dumps({'token': token}, indent=4)
+        self.write(temp)
+
 class LabDeleteHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
