@@ -237,6 +237,11 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
                     files = glob.glob(job_folder + '*')
                     response['files'] = [os.path.basename(i) for i in files]
                     response['sizes'] = [get_filesize(i) for i in files]
+                    Fall = open(job_folder + 'list_all.txt', 'w')
+                    prefix = Settings.URLPATH #'URLPATH' +'/static'
+                    for ff in files:
+                        Fall.write(prefix+ff.split('static')[-1]+'\n')
+                        Fall.close()
                     data = 'Job {0} done'.format(jid)
                     response['kind'] = 'query'
                 else:
