@@ -122,6 +122,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/gettile/?", api.GetTileHandler),
             (r"/easyweb/gettiley1/?", api.GetY1TileHandler),
             (r"/easyweb/gettiley5/?", api.GetY5TileHandler),
+            (r"/easyweb/gettiley6/?", api.GetY6TileHandler),
             (r"/easyweb/gettilesv/?", api.GetSVTileHandler),
             (r"/easyweb/help/?", api.HelpHandler),
             (r"/easyweb/api/v1/token/?", pubapi.ApiTokenHandler),
