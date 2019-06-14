@@ -46586,7 +46586,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
 
     <paper-dialog class="dialog-position-query" id="JobQuery" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <h2>Job id: {{jobid}}</h2>
+        <h2>Job [ {{jobname}} ]: {{jobid}}</h2>
         <div class="insideDialog">
             <textarea id="jobQueryBox" autofocus=""></textarea>
         </div>
@@ -46598,7 +46598,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
 
     <paper-dialog class="dialog-position" id="JobTiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-results id="desTiles" username="{{username}}" jobid="{{jobid}}" jobtype="{{jobtype}}"></des-results>
+        <des-results id="desTiles" username="{{username}}" jobid="{{jobid}}" jobtype="{{jobtype}}" jobname="{{jobname}}"></des-results>
     </paper-dialog>
 
 
@@ -46613,9 +46613,9 @@ This program is available under Apache License Version 2.0, available at https:/
 
 
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <h2>Job id: {{jobid}}</h2>
+        <h2>Job [ {{jobname}} ]: {{jobid}}</h2>
         <p> {{nfiles}} files generated  </p>
-        <p>Only up to 100 files are displayed here. Click <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">HERE</a> for the entire list of files.</p>
+        <p>Only up to 300 files are displayed here. Click <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">HERE</a> for the entire list of files.</p>
             <vaadin-grid items="{{myfiles}}" id="material">
                 <vaadin-grid-column width="450px" flex-grow="0">
                     <template class="header">
@@ -46960,8 +46960,8 @@ This program is available under Apache License Version 2.0, available at https:/
             <paper-fab disabled="" class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
         </div>
 
-        <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
-        <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+        <paper-toast class="toast-position toast-success" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
+        <paper-toast class="toast-position toast-error" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
     </des-card>
 </template>
 
@@ -47079,6 +47079,7 @@ This program is available under Apache License Version 2.0, available at https:/
             e.preventDefault();
         	this.jobid = e.model.item.job;
         	this.jobquery = e.model.item.jquery;
+          this.jobname = e.model.item.jname;
         	document.getElementById('JobQuery').open();
        	 	app.jobquerybox.setValue(this.jobquery);
         	setTimeout(function() {
@@ -47127,11 +47128,12 @@ This program is available under Apache License Version 2.0, available at https:/
         	e.preventDefault();
         	this.jobid = e.model.item.job;
        	 	this.username = e.model.item.user;
+          this.jobname = e.model.item.jname;
         	this.jobfiles = JSON.parse(e.model.item.jfiles);
         	this.jobsizes = JSON.parse(e.model.item.jsizes);
         	this.nfiles = this.jobfiles.length;
         	this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
-        	for (i=0; i<Math.min(this.jobfiles.length, 100); i++){
+        	for (i=0; i<Math.min(this.jobfiles.length, 300); i++){
             	this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
             }
         	this.myfiles=this.jobs.sort(keysrt('file'));
@@ -47141,6 +47143,7 @@ This program is available under Apache License Version 2.0, available at https:/
         	e.preventDefault();
         	this.jobid = e.model.item.job;
         	this.username = e.model.item.user;
+          this.jobname = e.model.item.jname;
         	this.jobtype = e.model.item.jobtype;
         	document.getElementById('JobTiles').open();
      	},
@@ -51806,8 +51809,8 @@ function keysrt(key,desc) {
 
     <iron-ajax id="getTiles" auto="" url="/easyweb/static/workdir/{{username}}/{{jobid}}/list.json" handle-as="json" last-response="{{jsondata}}" on-response="_getTilesResponse">
     </iron-ajax>
-    
-    
+
+
 
     <iron-ajax id="getLogHelp" url="/easyweb/mylogs/" method="POST" handle-as="json" content-type="application/x-www-form-urlencoded" last-response="{{logdata}}" debounce-duration="300">
     </iron-ajax>
@@ -51832,11 +51835,11 @@ function keysrt(key,desc) {
     </paper-dialog>
 
 
-    <des-card heading="Job1 : [[jobid]] ( [[jsondata.length]] objects)">
+    <des-card heading="Job [ [[jobname]] ]: [[jobid]] ( [[jsondata.length]] images)">
         <!--<br>-->
         <!--<b>Comment:</b> {{jobcomment}}-->
         <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
-        <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
+        <paper-button class="custom indigo" on-tap="_getAll"> Download All(tar file)</paper-button>
         <paper-button class="custom indigo" on-tap="_closedialog"> Close</paper-button>
         <hr class="des-hr">
     <!--<div class="card-content" style="height: 70%; overflow-y: scroll;">-->
@@ -51850,7 +51853,7 @@ function keysrt(key,desc) {
         </template>
     </template>
     </template>
-    
+
     <template is="dom-if" if="{{_actionIsDA(jobtype)}}" restamp="">
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
@@ -51905,9 +51908,9 @@ function keysrt(key,desc) {
     <template is="dom-if" if="{{!jsondata}}">
          <h3> There are no outputs for this job. Check logfile for details.</h3>
     </template>
-    
-    <paper-toast class="toast-position" id="da_toastresults" text="No archive file was created for this job." duration="5000"> </paper-toast>
-    
+
+    <paper-toast class="toast-position toast-error" id="da_toastresults" text="No archive file was created for this job." duration="5000"> </paper-toast>
+
     </des-card>
     <!--<paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>-->
 
@@ -51930,6 +51933,11 @@ function keysrt(key,desc) {
                 type : String,
                 notify: true,
             },
+            jobname: {
+                value : '',
+                type : String,
+                notify: true,
+            },
             username:{
                 type: String,
                 value: '',
@@ -51940,7 +51948,7 @@ function keysrt(key,desc) {
                 notify: true,
             },
         },
-        
+
         _actionIsFC: function(job_type) {
             if (job_type == "finding chart") {
                 console.log("Finding Chart!")
@@ -52056,7 +52064,7 @@ function keysrt(key,desc) {
         :host {
             display: block;
             height : 240px; // 220px;
-            width: 285px; // 220px;
+            width: 240px; // 220px;
             margin: 10px;
             float : left;
             background-color: white;
@@ -52069,7 +52077,7 @@ function keysrt(key,desc) {
             margin-bottom: 0px;
         }
         .mycard{
-            width: 265px;
+            width: 200px;
             height: 220px; // 200px;
             padding: 10px;
             border-radius: 5px;
@@ -52132,7 +52140,7 @@ function keysrt(key,desc) {
     <template>
         <!--<paper-material class="thumb" elevation="[[_elevation]]" on-mouseover="_mouseover" on-mouseout="_mouseout" on-click="openBig">-->
             <div class="mycard" on-click="openBig"> <div style="position:absolute;">
-                <span>{{imtitle}}</span> </div>
+                <span style="font-size: 8px; font-family: monospace; ">{{imtitle}}</span> </div>
                 <paper-spinner class="big"></paper-spinner>
                 <img src="{{imdisplay}}" style="position:relative; top:20px; height:200px; width:200px; object-fit:cover;">
                 <!--<div style="position:relative; left:-8px; top:-32px;">-->
@@ -52144,83 +52152,14 @@ function keysrt(key,desc) {
         <!--</paper-material>-->
 
         <!-- DIALOG -->
-        <paper-dialog id="SingleTileDialog" class="centered" with-backdrop="" modal="" on-iron-overlay-opened="patchOverlay" style="max-width:698px; height:auto;">
-            <h2 id="SingleTileTitle">{{imtitle}}</h2>
-            <img id="SingleTileImg" style="max-width: 650px; height:auto;">
+        <paper-dialog id="SingleTileDialog" class="centered" with-backdrop="" modal="" on-iron-overlay-opened="patchOverlay" style="max-width:698px; height:auto; max-height: 800px;">
+            <h3 id="SingleTileTitle">{{imtitle}}</h3>
+            <img id="SingleTileImg" style="max-width: 650px; height:auto; max-height: 750px;">
             <div class="buttons horizontal layout left-justified">
                   <paper-button class="indigo" on-tap="_gobackdialog" raised="" focused="">Close</paper-button>
                   <paper-button class="indigo" raised="" on-tap="download"> Download</paper-button>
             </div>
-        </paper-dialog>
-        <paper-dialog class="dialog-position" id="jobHelpThumb" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-            <des-card heading="Help">
-                <div class="card-content">
-                    <paper-carousel id="thumb-crs" items="1" dottext="false" controls="true">
-                        <div class="carousel-item">
-                            <img src="/easyweb/static/images/demo1.gif" width="500px">
-                            <div class="desc">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-                        </div>
-
-                        <div class="carousel-item">
-                            <!--<div class="col">-->
-                                <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                                <div class="desc">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                </div>
-                            <!--</div>-->
-                        </div>
-
-                        <div class="carousel-item">
-                            <div class="row">
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-                            </div>
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-                        </div>
-
-                        <div class="carousel-item">
-                            <img src="/easyweb/static/images/demo1.gif">
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            </div>
-                        </div>
-
-                    </paper-carousel>
-                </div>
-                <div class="row">
-                    <paper-button class="prev" on-tap="_prevPage">
-                        <iron-icon icon="image:navigate-before"></iron-icon>
-                        Prev
-                    </paper-button>
-
-                    <paper-button class="next" on-tap="_nextPage">
-                        Next
-                        <iron-icon icon="image:navigate-next"></iron-icon>
-                    </paper-button>
-                </div>
-            </des-card>
+            <span style="font-size: 9px;"> *Image is displayed to fit the screen, original might be larger</span>
         </paper-dialog>
     </template>
 
@@ -52253,7 +52192,7 @@ function keysrt(key,desc) {
                 keyBindings:{
                     'enter:keydown':'_gobackdialog',
                 },
-                  
+
                 _nextPage: function() {
                     var crs = document.getElementById("thumb-crs");
                     crs.goToNextPage();
@@ -52267,23 +52206,23 @@ function keysrt(key,desc) {
                 _mouseout: function(){
                     this._elevation = 0;
                 },
-                
+
                 _mouseover: function(){
                     this._elevation = 5;
                 },
-            
+
                 openBig: function(event){
                     document.getElementById('SingleTileImg').src=this.imdisplay;
                     document.getElementById('SingleTileTitle').innerHTML=this.imtitle;
                     document.getElementById('SingleTileDialog').open();
                 },
-                
+
                 _gobackdialog: function(event){
                     document.getElementById('SingleTileDialog').close();
                     document.getElementById('JobTiles').close();
                     document.getElementById('JobTiles').open();
                 },
-                 
+
                 completeHandler: function(){
                     var link = document.createElement('a');
                     var pathL = singlepath.replace('.tif.png','.tar.gz');
@@ -52306,22 +52245,22 @@ function keysrt(key,desc) {
                     window.open(pathL + query);
                     //window.open(this.imdisplay,'_self');
                 },
-            
+
                 errorHandler: function(){
                     console.log('Oh no!');
                 },
-            
+
                 patchOverlay: function (e) {
                     if (e.target.withBackdrop) {
                         e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-                    } 
+                    }
                 },
-             
+
                 _seeHelp: function(e){
                     e.preventDefault();
                     document.getElementById('jobHelpThumb').open();
                 },
-             
+
                 download: function(event){
                     var siid = this.jobid;
                     console.log(siid);
@@ -52332,7 +52271,7 @@ function keysrt(key,desc) {
                     data.append('title', singletitle);
                     data.append('jobid', siid);
                     data.append('path', singlepath);
-                   
+
                     $.ajax({
                         url: '/easyweb/download/coadd/object/',  //Server script to process data
                         type: 'POST',
