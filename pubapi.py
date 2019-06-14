@@ -69,9 +69,8 @@ def create_token(user, cp):
         con = mydb.connect(**conf)
         nows = now.strftime('%Y-%m-%d %H:%M:%S')
         tup = tuple([user, token, nows, cp.decode()])
-        with con:
-            cur = con.cursor()
-            cur.execute("REPLACE INTO Tokens VALUES {0}".format(tup))
+        cur = con.cursor()
+        cur.execute("REPLACE INTO Tokens VALUES {0}".format(tup))
         con.close()
         app_log.info('Adding Token to  {}'.format(user))
         return token
@@ -246,9 +245,8 @@ class ApiChartHandler(tornado.web.RequestHandler):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         tup = tuple([user, jobid, jobname, 'PENDING', now, 'coadd', '', '', '', -1])
 
-        with con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        cur = con.cursor()
+        cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
         con.close()
         response['msg'] = 'Job {0} submitted'.format(jobid)
         response['status'] = 'ok'
@@ -403,9 +401,8 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         tup = tuple([user, jobid, jobname, 'PENDING', now, 'coadd', '', '', '', -1])
 
-        with con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        cur = con.cursor()
+        cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
         con.close()
         response['msg'] = 'Job {0} submitted'.format(jobid)
         response['status'] = 'ok'
