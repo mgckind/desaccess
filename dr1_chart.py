@@ -125,6 +125,7 @@ class FileHandler(BaseHandler):
 
         cur = con.cursor()
         cur.execute("INSERT INTO Jobs VALUES {0}".format(tup))
+        con.commit()
         con.close()
         self.set_status(200)
         self.flush()
