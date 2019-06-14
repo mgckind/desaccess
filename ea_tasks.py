@@ -432,7 +432,7 @@ run_vistools, make_chart, bulktasks written by Landon Gelman for use by DES Data
 ARCSEC_TO_DEG = 0.000278
 
 
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, grri, gzzw1, spreadmag, addwise, addvhs, jobid, send_email, email):
     response = {}
     response['user'] = uu
@@ -768,7 +768,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
         json.dump(response, fp)
     return response
 
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_email, email, colors, mag):
     response = {}
     response['user'] = uu
@@ -1040,7 +1040,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     return response
 
 
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
@@ -1076,7 +1076,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         nprocs = 1
 
     logger.info('Running in {} processors'.format(nprocs))
-    args = 'python bulkthumbs2.py'.format(nprocs)
+    args = 'mpirun -n {} python bulkthumbs2.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
     if tiffs:
         args += ' --make_rgb_stiff --colors_stiff {}'.format(rgbvalues)
