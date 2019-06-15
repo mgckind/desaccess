@@ -347,7 +347,7 @@ def run_quick(query, db, username, lp):
 
 #@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)
 #@app.task(base=CustomTask)
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email):
     with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['descut']
@@ -1045,7 +1045,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     return response
 
 
-@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
+@app.task(base=CustomTask, soft_time_limit=3600*46, time_limit=3600*48)
 def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
@@ -1080,8 +1080,8 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     else:
         nprocs = 1
 
-    logger.info('Running in {} processors'.format(nprocs))
-    args = 'mpirun -n {} python bulkthumbs2.py'.format(nprocs)
+    logger.info('Running in 1 processors'.format(nprocs))
+    args = 'python bulkthumbs2.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
     if tiffs:
         args += ' --make_rgb_stiff --colors_stiff {}'.format(rgbvalues)
