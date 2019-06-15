@@ -71,6 +71,7 @@ def create_token(user, cp):
         tup = tuple([user, token, nows, cp.decode()])
         cur = con.cursor()
         cur.execute("REPLACE INTO Tokens VALUES {0}".format(tup))
+        con.commit()
         con.close()
         app_log.info('Adding Token to  {}'.format(user))
         return token
@@ -247,6 +248,7 @@ class ApiChartHandler(tornado.web.RequestHandler):
 
         cur = con.cursor()
         cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        con.commit()
         con.close()
         response['msg'] = 'Job {0} submitted'.format(jobid)
         response['status'] = 'ok'
@@ -403,6 +405,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
 
         cur = con.cursor()
         cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        con.commit()
         con.close()
         response['msg'] = 'Job {0} submitted'.format(jobid)
         response['status'] = 'ok'
