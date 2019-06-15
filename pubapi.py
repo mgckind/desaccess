@@ -239,7 +239,7 @@ class ApiChartHandler(tornado.web.RequestHandler):
 
         app_log.info('Job Finding Chart {} submitted'.format(run))
 
-        with open('config/mysqlconfig.yaml','r') as cfile:
+        with open('config/desaccess.yaml','r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
@@ -396,7 +396,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
 
         app_log.info('Job Cutouts {} submitted'.format(run))
 
-        with open('config/mysqlconfig.yaml', 'r') as cfile:
+        with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
