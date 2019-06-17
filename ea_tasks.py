@@ -94,7 +94,7 @@ class CustomTask(Task):
             if retval['email'] != 'no':
                 user = retval['user']
                 email = retval['email']
-                logger.info('SEND EMAIL TO: ', email)
+                logger.info('SEND EMAIL TO: {}'.format(email))
                 logger.info(namejob)
                 try:
                     if failed_job:
