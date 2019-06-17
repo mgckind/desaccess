@@ -55,6 +55,7 @@
         <!--<b>Comment:</b> {{jobcomment}}-->
         <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
         <paper-button class="custom indigo" on-tap="_getAll"> Download All(tar file)</paper-button>
+        <paper-button class="custom indigo" on-tap="_getList"> See Files</paper-button>
         <paper-button class="custom indigo" on-tap="_closedialog"> Close</paper-button>
         <hr class="des-hr">
     <!--<div class="card-content" style="height: 70%; overflow-y: scroll;">-->
@@ -197,6 +198,12 @@
             };
             logform.generateRequest();
             document.getElementById('logDialogHelp').open();
+        },
+        _getList: function(){
+            var siid = this.jobid;
+            var user = this.username;
+            var url = "/easyweb/static/workdir/"+user+"/"+siid+"/list_all.txt"
+            window.open(url,'_blank');
         },
         _getAll: function(){
             var link = document.createElement('a');
