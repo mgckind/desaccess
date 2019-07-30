@@ -1,19 +1,17 @@
 from celery import Celery, Task
 from celery.result import AsyncResult, allow_join_result
+from celery.utils.log import get_task_logger
 import easyaccess as ea
-import requests
 from Crypto.Cipher import AES
 import base64
 import Settings
 import plotutils
-import bulkthumbs
 import os
 import threading
 import time
 import json
 import MySQLdb as mydb
 import yaml
-import time
 import subprocess
 from celery.exceptions import SoftTimeLimitExceeded
 import glob
@@ -28,6 +26,7 @@ from astropy.wcs import WCS, _wcs
 app = Celery('ea_tasks')
 app.config_from_object('config.celeryconfig')
 app.conf.broker_transport_options = {'visibility_timeout': 3600}
+logger = get_task_logger(__name__)
 
 
 def get_filesize(filename):
@@ -49,30 +48,27 @@ class CustomTask(Task):
     #reject_on_worker_lost = True
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        url = 'http://localhost:8080/easyweb/pusher/'
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
         q0 = "UPDATE Jobs SET status='{0}' where job = '{1}'".format('REVOKE', task_id)
         cur = con.cursor()
-        print('FAILED')
-        print(exc)
-        print(einfo)
+        logger.info('FAILED')
+        logger.info(exc)
+        logger.info(einfo)
         cur.execute(q0)
         con.commit()
         con.close()
-        #requests.post(url, data={'jobid': task_id}, verify=False)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
-        print(einfo)
-        print(status)
-        print('Done?')
+        logger.info(einfo)
+        logger.info(status)
+        logger.info('Done?')
         failed_job = False
         try:
             test = retval['status']
         except:
             return
-        url = 'http://localhost:8080/easyweb/pusher/'
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
@@ -80,7 +76,7 @@ class CustomTask(Task):
         cur.execute("SELECT status,name from Jobs where job = '{}'".format(task_id))
         cc = cur.fetchone()
         statusjob = cc[0]
-        print(statusjob)
+        logger.info(statusjob)
         namejob = cc[1]
         if namejob == '':
             namejob = task_id
@@ -98,17 +94,17 @@ class CustomTask(Task):
             if retval['email'] != 'no':
                 user = retval['user']
                 email = retval['email']
-                print('SEND EMAIL TO: ', email)
-                print(namejob)
+                logger.info('SEND EMAIL TO: {}'.format(email))
+                logger.info(namejob)
                 try:
                     if failed_job:
                         email_utils.send_fail(user, namejob, email)
                     else:
                         email_utils.send_note(user, namejob, email)
                 except Exception as e:
-                    print(str(e).strip())
+                    logger.info(str(e).strip())
             else:
-                print('NO EMAIL')
+                logger.info('NO EMAIL')
 
         else:
             temp_status = 'FAIL'
@@ -118,13 +114,12 @@ class CustomTask(Task):
         q3 = "UPDATE Jobs SET runtime='{0}' where job = '{1}'".format(elapsed, task_id)
         cur.execute(q0)
         cur.execute(q3)
-        print(elapsed)
+        logger.info('Finished in {} seconds'.format(elapsed))
         if retval['files'] is not None:
             cur.execute(q1)
             cur.execute(q2)
         con.commit()
         con.close()
-        #requests.post(url, data=retval, verify=False)
 
 
 def check_query(query, db, username, lp):
@@ -159,7 +154,7 @@ def error_handler(uuid):
     result = AsyncResult(uuid)
     with allow_join_result():
         exc = result.get(propagate=False)
-    print('Task {0} raised exception: {1!r}\n{2!r}'.format(
+    logger.info('Task {0} raised exception: {1!r}\n{2!r}'.format(
           uuid, exc, result.traceback))
 
 
@@ -206,18 +201,18 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
         response['email'] = 'no'
         if email != "":
             response['email'] = email
-        user_folder = os.path.join(Settings.WORKDIR, username)+'/'
+        user_folder = os.path.join(Settings.WORKDIR, username) + '/'
         if filename is not None:
             if not os.path.exists(os.path.join(user_folder, jid)):
                 os.mkdir(os.path.join(user_folder, jid))
-        jsonfile = os.path.join(user_folder, jid+'.json')
+        jsonfile = os.path.join(user_folder, jid + '.json')
         cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
         dlp = cipher.decrypt(base64.b64decode(lp)).strip()
         try:
             connection = ea.connect(db, user=username, passwd=dlp.decode())
             cursor = connection.cursor()
         except Exception as e:
-                print(str(e).strip())
+                logger.info(str(e).strip())
                 response['status'] = 'error'
                 response['data'] = str(e).strip()
                 response['kind'] = 'query'
@@ -238,10 +233,15 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
                     if timeout is not None:
                         tt.cancel()
                     t2 = time.time()
-                    job_folder = os.path.join(user_folder, jid)+'/'
-                    files = glob.glob(job_folder+'*')
+                    job_folder = os.path.join(user_folder, jid) + '/'
+                    files = glob.glob(job_folder + '*')
                     response['files'] = [os.path.basename(i) for i in files]
                     response['sizes'] = [get_filesize(i) for i in files]
+                    Fall = open(job_folder + 'list_all.txt', 'w')
+                    prefix = Settings.URLPATH #'URLPATH' +'/static'
+                    for ff in files:
+                        Fall.write(prefix+ff.split('static')[-1]+'\n')
+                        Fall.close()
                     data = 'Job {0} done'.format(jid)
                     response['kind'] = 'query'
                 else:
@@ -257,8 +257,8 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
                 if timeout is not None:
                     tt.cancel()
                 t2 = time.time()
-                print('query job finished')
-                print(str(e).strip())
+                logger.info('query job finished')
+                logger.info(str(e).strip())
                 response['status'] = 'error'
                 response['data'] = str(e).strip()
                 response['kind'] = 'query'
@@ -287,20 +287,9 @@ def run_query(query, filename, db, username, lp, jid, email, compression, timeou
         connection.close()
         return response
     except Exception as e:
-        print(str(e).strip())
-        print('Exiting')
+        logger.info(str(e).strip())
+        logger.info('Exiting')
         raise
-
-def notify(jobid):
-    print('*****')
-    url = Settings.ROOT_URL+'/easyweb/pusher/'
-    resp = {}
-    resp['status'] = 'error'
-    resp['data'] = 'Time Exceeded (30 sec)'
-    resp['kind'] = 'query'
-    resp['jobid'] = jobid
-    resp['stopJob'] = 'yes'
-    #requests.post(url, data=resp, verify=False)
 
 
 def run_quick(query, db, username, lp):
@@ -325,8 +314,8 @@ def run_quick(query, db, username, lp):
                 response['status'] = 'ok'
                 response['data'] = data
             except Exception as e:
-                print('query job finished')
-                print(str(e).strip())
+                logger.info('query job finished')
+                logger.info(str(e).strip())
                 response['status'] = 'error'
                 err_out = str(e).strip()
                 if 'ORA-01013' in err_out:
@@ -358,7 +347,7 @@ def run_quick(query, db, username, lp):
 
 #@app.task(base=CustomTask, soft_time_limit=10, time_limit=20)
 #@app.task(base=CustomTask)
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email):
     with open('config/desaccess.yaml', 'r') as cfile:
         conf = yaml.load(cfile)['descut']
@@ -390,7 +379,7 @@ def desthumb(inputs, uu, pp, outputs, xs, ys, jobid, listonly, send_email, email
         com += ' --ysize %s ' % ys
     com += " --logfile %s" % (outputs + 'log.log')
     com += " --tag Y3A1_COADD"
-    # print(com)
+    # logger.info(com)
     # time.sleep(40)
     os.chdir(mypath)
     oo = subprocess.check_output([com], shell=True)
@@ -448,7 +437,7 @@ run_vistools, make_chart, bulktasks written by Landon Gelman for use by DES Data
 ARCSEC_TO_DEG = 0.000278
 
 
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, grri, gzzw1, spreadmag, addwise, addvhs, jobid, send_email, email):
     response = {}
     response['user'] = uu
@@ -747,12 +736,12 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
         titles.append(title)
     for i in range(Ntiles):
         tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
-    
+
     # Creates the tarball
     os.chdir(user_folder)
     os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
     os.chdir(os.path.dirname(__file__))
-    
+
     if os.path.exists(mypath + "list.json"):
         os.remove(mypath + "list.json")
     with open(mypath + "list.json", "w") as outfile:
@@ -784,7 +773,7 @@ def run_vistools(intype, inputs, uu, pp, outputs, db, boxsize, fluxwav, magwav, 
         json.dump(response, fp)
     return response
 
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
 def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_email, email, colors, mag):
     response = {}
     response['user'] = uu
@@ -840,23 +829,6 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         conf = yaml.load(cfile)['descut']
     uu1 = conf['username']
     pp1 = conf['password']
-    """
-    com = "makeDESthumbs {0} --user {1}1 --password {3} --MP --outdir={3}".format(inputs, uu1, pp1, outputs)
-
-    if xs != "":
-        com += ' --xsize {}'.format(xs)
-    if ys != "":
-        com += ' --ysize {}'.format(ys)
-    com += " --logg {}".format(outputs + 'log.log')
-    com += " --tag Y3A1_COADD"
-
-    os.chdir(mypath)
-    oo = subprocess.check_output([com], shell=True)
-
-    # If no options were selected in the form, set it to use iband.
-    if not gband and not rband and not iband and not zband and not yband:
-        iband = True
-    """
 
     gband = True if 'g' in colors else False
     rband = True if 'r' in colors else False
@@ -881,14 +853,14 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         bulkthumbscolors.append('i')
         colors = 'i'
     #bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
-    bulkthumbscom = "python3 bulkthumbs.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "Y3A2", jobid, uu, pp, outputs)
+    bulkthumbscom = "python3 bulkthumbs2.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "Y3A2", jobid, uu, pp, outputs)
     try:
         #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
         oo = subprocess.check_output([bulkthumbscom], shell=True)
     except subprocess.CalledProcessError as e:
-        print(e.output)
+        logger.info(e.output)
     end_time1 = time.time()
-    
+
     urllst = []
     dftiles = pd.DataFrame(pd.read_csv(mypath+'BTL_'+jobid.upper()+'.csv'))
     for tile in dftiles['TILENAME'].unique():
@@ -908,7 +880,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     curs = conn.cursor()
 
     start_time2 = time.time()
-    #print(urllst)
+    #logger.info(urllst)
     for row in urllst:
         logfile.write('****************************************\n')
         logfile.write('Object: ' + row[-28:-5] + '\n')
@@ -1023,7 +995,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         os.remove(mypath+"list.json")
     with open(mypath+"list.json", "w") as outfile:
         json.dump([dict(name=pngtitles[i], title=titles[i], size=Ntiles) for i in range(len(pngtitles))], outfile, indent=4)
-    
+
     if return_cut:
         alltiles = glob.glob(mypath+'**/*.fits')
         alltitles = []
@@ -1040,7 +1012,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
             os.remove(mypath+"list_all.json")
         with open(mypath+"list_all.json", "w") as outfile:
             json.dump([dict(name=alltiles[i], title=alltitles[i], size=allNtiles) for i in range(len(alltiles))], outfile, indent=4)
-    
+
     os.chdir(user_folder)
     os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
     os.chdir(os.path.dirname(__file__))
@@ -1073,8 +1045,8 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
     return response
 
 
-@app.task(base=CustomTask, soft_time_limit=3600*2, time_limit=3600*4)
-def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbs, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
+@app.task(base=CustomTask, soft_time_limit=3600*46, time_limit=3600*48)
+def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -1084,13 +1056,10 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     response['email'] = 'no'
     if send_email:
         response['email'] = email
-
     t1 = time.time()
-
     cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
     dlp = cipher.decrypt(base64.b64decode(pp)).strip()
     pp = dlp.decode()
-
     user_folder = Settings.WORKDIR + uu + '/'
     jsonfile = user_folder + jobid + '.json'
     mypath = user_folder + jobid + '/'
@@ -1101,7 +1070,6 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
             json.dump(response, fp)
         return response
 
-    """
     MAX_CPUS = 2
     dftemp = pd.DataFrame(pd.read_csv(input_csv))
     dftemp_rows = len(dftemp.index)
@@ -1111,12 +1079,12 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         nprocs = dftemp_rows
     else:
         nprocs = 1
-    """
 
-    args = 'mpirun -n {} python3 bulkthumbs.py'.format(nprocs)
+    logger.info('Running in 1 processors'.format(nprocs))
+    args = 'python bulkthumbs2.py'.format(nprocs)
     args += ' --csv {}'.format(input_csv)
     if tiffs:
-        args += ' --make_tiffs'
+        args += ' --make_rgb_stiff --colors_stiff {}'.format(rgbvalues)
     if fits:
         """
         colors = ''
@@ -1134,10 +1102,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         """
         args += ' --make_fits --colors {}'.format(colors)
     if pngs:
-        args += ' --make_pngs'
-    if rgbs:
-        for _i in rgbvalues:
-            args += ' --make_rgbs {}'.format(_i)
+        args += ' --make_rgbs {}'.format(rgbvalues)
         """
         if rgb_minimum:
             args += ' --rgb_minimum {}'.format(rgb_minimum)
@@ -1156,11 +1121,12 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     args += ' --usernm {} --passwd {}'.format(uu, pp)
     args += ' --jobid {}'.format(jobid)
     args += ' --outdir {}'.format(outdir)
+    #logger.info(args)
 
     try:
         oo = subprocess.check_output([args], shell=True)
     except subprocess.CalledProcessError as e:
-        print(e.output)
+        logger.info(e.output)
 
     # Creates list.json
     tiles = glob.glob(mypath + '**/*.png')
@@ -1175,7 +1141,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
         os.remove(mypath + "list.json")
     with open(mypath + "list.json", "w") as outfile:
         json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
-    
+
     # Creates list_all.json
     alltiles = glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
     alltitles = []
@@ -1207,7 +1173,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     Fall = open(mypath+'list_all.txt', 'w')
     prefix = Settings.URLPATH #'URLPATH' +'/static'
     for ff in allfiles:
-        #print(ff, ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1)
+        #logger.info(ff, ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1)
         if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
             Fall.write(prefix+ff.split('static')[-1]+'\n')
     Fall.close()

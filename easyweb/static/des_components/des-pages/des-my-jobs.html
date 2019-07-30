@@ -70,7 +70,7 @@
 
 
     <paper-dialog class="dialog-position-query" id="JobQuery" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <h2>Job id: {{jobid}}</h2>
+        <h2>Job [ {{jobname}} ]: {{jobid}}</h2>
         <div class="insideDialog">
             <textarea id="jobQueryBox" autofocus></textarea>
         </div>
@@ -82,7 +82,7 @@
 
 
     <paper-dialog class="dialog-position" id="JobTiles" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <des-results id="desTiles" username={{username}} jobid={{jobid}} jobtype={{jobtype}}></des-results>
+        <des-results id="desTiles" username={{username}} jobid={{jobid}} jobtype={{jobtype}} jobname={{jobname}}></des-results>
     </paper-dialog>
 
 
@@ -97,9 +97,9 @@
 
 
     <paper-dialog class="dialog-position" id="JobFiles" with-backdrop on-iron-overlay-opened="patchOverlay">
-        <h2>Job id: {{jobid}}</h2>
+        <h2>Job [ {{jobname}} ]: {{jobid}}</h2>
         <p> {{nfiles}} files generated  </p>
-        <p>Only up to 100 files are displayed here. Click <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">HERE</a> for the entire list of files.</p
+        <p>Only up to 300 files are displayed here. Click <a href="/easyweb/static/workdir/{{username}}/{{jobid}}/list_all.txt" target="_blank">HERE</a> for the entire list of files.</p
         <div>
             <vaadin-grid items="{{myfiles}}" id="material">
                 <vaadin-grid-column width="450px" flex-grow="0">
@@ -111,14 +111,14 @@
                     </template>
                     <template>{{item.file}}</template>
                 </vaadin-grid-column>
-                
+
                 <vaadin-grid-column flex-grow="1">
                     <template class="header">
                         <vaadin-grid-sorter path="size">Size<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
                     </template>
                     <template>{{item.size}}</template>
                 </vaadin-grid-column>
-                
+
                 <vaadin-grid-column flex-grow="1">
                     <template class="header">Download Files</template>
                     <template>
@@ -299,7 +299,7 @@
                     </div>
                 </paper-carousel>
             </div>
-            
+
             <div class="row bottom">
                 <paper-button class="prev" on-tap="_prevPage">
                     <iron-icon icon="image:navigate-before"></iron-icon>
@@ -393,7 +393,7 @@
               		<template class="header" style="padding-left: 5px">
                			<vaadin-grid-sorter path="jobtype">Job type<iron-icon icon="icons:swap-vert"></iron-icon></vaadin-grid-sorter>
               		</template>
-              		
+
               		<template>{{item.jobtype}}<br />
               		</template>
             	</vaadin-grid-column>
@@ -402,7 +402,7 @@
               		<template class="header" style="padding-left: 5px">
                			Execution time (s)
               		</template>
-              
+
               		<template>{{item.jruntime}}<br />
               		</template>
             	</vaadin-grid-column>
@@ -438,15 +438,15 @@
                 </vaadin-grid-column>
           	</vaadin-grid>
         </div>
-        
+
         <div style="text-align: center; padding-top: 10px; padding-bottom: 20px">
             <paper-button on-click="_refreshJobs"> refresh <iron-icon icon="icons:refresh"></iron-icon></paper-button>
             <paper-button on-tap="_genDeleteReq">delete<iron-icon icon="delete"></iron-icon>  </paper-button>
             <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
         </div>
 
-        <paper-toast class="toast-position" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
-        <paper-toast class="toast-position" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+        <paper-toast class="toast-position toast-success" id="toast-nm-good" text="Name has been changed" duration="5000"> </paper-toast>
+        <paper-toast class="toast-position toast-error" id="toast-nm-bad" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
     </des-card>
 </template>
 
@@ -456,6 +456,13 @@
    			return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
   		}
 	}
+
+    window.setInterval(function(){
+      		tt = document.getElementById("mainPages").selected;
+      		if (tt == 8) document.getElementById("getMyJobs").generateRequest();
+
+
+     }, 2000);
 </script>
 
 <script>
@@ -557,6 +564,7 @@
             e.preventDefault();
         	this.jobid = e.model.item.job;
         	this.jobquery = e.model.item.jquery;
+          this.jobname = e.model.item.jname;
         	document.getElementById('JobQuery').open();
        	 	app.jobquerybox.setValue(this.jobquery);
         	setTimeout(function() {
@@ -605,11 +613,12 @@
         	e.preventDefault();
         	this.jobid = e.model.item.job;
        	 	this.username = e.model.item.user;
+          this.jobname = e.model.item.jname;
         	this.jobfiles = JSON.parse(e.model.item.jfiles);
         	this.jobsizes = JSON.parse(e.model.item.jsizes);
         	this.nfiles = this.jobfiles.length;
         	this.jobs = []//{file:this.jobfiles[0], size:this.jobsizes[0]}] ;
-        	for (i=0; i<Math.min(this.jobfiles.length, 100); i++){
+        	for (i=0; i<Math.min(this.jobfiles.length, 300); i++){
             	this.jobs.push({file:this.jobfiles[i], size:this.jobsizes[i]});
             }
         	this.myfiles=this.jobs.sort(keysrt('file'));
@@ -619,6 +628,7 @@
         	e.preventDefault();
         	this.jobid = e.model.item.job;
         	this.username = e.model.item.user;
+          this.jobname = e.model.item.jname;
         	this.jobtype = e.model.item.jobtype;
         	document.getElementById('JobTiles').open();
      	},
@@ -646,7 +656,7 @@
               	formdata.append('username', this.username);
               	formdata.append('jobid', this.jobid);
               	formdata.append('jobname', newjname);
-              
+
               	$.ajax({
                   	url: '/easyweb/change/',
                  	type: 'POST',

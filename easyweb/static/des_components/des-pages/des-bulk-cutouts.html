@@ -14,20 +14,13 @@
             /*border: 2px dotted #8da6ce;*/
             /*border-style: outset;*/
         }
-
         .card-content {
             @apply(--layout-vertical);
         }
-
-        /*.middle {*/
-        /*@apply(--layout-flex);*/
-        /*}*/
-
         .coadd-container {
             margin-top: 10px;
             @apply(--layout-horizontal);
         }
-
         .container2 {
             @apply(--layout-horizontal);
             @apply(--layout-center-justified);
@@ -47,9 +40,7 @@
         }
         .right {
             @apply(--layout-flex);
-
         }
-
         .right2 {
             @apply(--layout-flex-2);
             text-align: center;
@@ -86,9 +77,6 @@
             border-style: outset;
             border-radius: 10px;
         }
-
-
-
         .btcell {
             text-align: center;
         }
@@ -98,10 +86,15 @@
             @apply(--layout-around-justified);
         }
 
+        .around-cell2 {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-justified);
+        }
+
 
     </style>
     <template>
-        <paper-dialog class="dialog-position" id="jobHelpBulkCutout" with-backdrop on-iron-overlay-opened="patchOverlay">
+        <paper-dialog class="dialog-position" id="jobHelpBulkCutouts" with-backdrop on-iron-overlay-opened="patchOverlay">
             <des-card heading="Help: Bulk Cutouts Form">
                 <div class="card-content">
                     <paper-carousel id="coadd-crs" items="1" dotText="false" controls="true">
@@ -142,77 +135,13 @@
                     </div>-->
 
                     <table id="coadd-table" style="width:100%">
-                        <!--
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
-                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                    Upload File (csv, with "COADD_OBJECT_ID" or "RA,DEC" as uncommented header)
-                                    </span>
-                                </paper-icon-item>
-                            </td>
-                            <td class="btcell">
-                                <div class="around-cell">
-                                    <paper-button raised class="indigo" id="bc_uploadFileCoadd">
-                                        <div id="bc_uploadiconcoadd" style="display: inline-block;">
-                                            <i class="fa fa-cloud-upload"></i>
-                                            &nbsp;  &nbsp;
-                                            Coadd ID: &nbsp;
-                                        </div>
-                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                            [[file_name]]
-                                        </span>
-                                        <input type="file" class="upload" id="file1" on-change="_fileChange1" />
-                                    </paper-button>
-                                    <paper-button raised class="indigo" id="bc_uploadFileCoord">
-                                        <div id="bc_uploadiconcoord" style="display: inline-block;">
-                                            <i class="fa fa-cloud-upload"></i>
-                                                &nbsp;  &nbsp;
-                                                RA,DEC: &nbsp;
-                                        </div>
-                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                            [[file_name]]
-                                        </span>
-                                        <input type="file" class="upload" id="file2" on-change="_fileChange2" />
-                                    </paper-button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
-                                    Enter Values for COADD_OBJECT_ID or RA,DEC
-                                </paper-icon-item>
-                            </td>
-                            <td class="btcell">
-                                <div class="around-cell">
-                                    <paper-button raised class="indigo" id="bc_enterCoadds" on-tap="_bc_openCoadds">
-                                        <div id ="bc_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
-                                            &nbsp;  &nbsp;
-                                            Coadd ID: &nbsp;
-                                        </div>
-                                        <span>[[enter_values]]</span>
-                                    </paper-button>
-                                    <paper-button raised class="indigo" id="bc_enterCoords" on-tap="_bc_openCoords">
-                                        <div id="bc_keyboardiconcoord" style="display: online-block;"> <i class="fa fa-keyboard-o"></i>
-                                            &nbsp;  &nbsp;
-                                            RA,DEC: &nbsp;
-                                        </div>
-                                        <span>[[enter_values]]</span>
-                                    </paper-button>
-                                </div>
-                            </td>
-                        </tr>
-                        -->
-                        
+
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="backup" slot="item-icon"></iron-icon>
                                     <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
-                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload file (CSV, with "COADD_OBJECT_ID" or "RA,DEC" as header). <br />Or enter values manually (with "COADD_OBJECT_ID" or "RA,DEC" as header). <br />See help button for examples.</span>
+                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload csv file (with header). <br />Or enter values manually (with header).</span>
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
@@ -237,68 +166,32 @@
                                 </div>
                             </td>
                         </tr>
-                        
+
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="check" slot="item-icon"></iron-icon>
-                                    Pregenerated (i, r, g) or FITS cutout
+                                    Generate color png or  just FITS cutouts &nbsp; <span style="color:red"> required</span>
                                 </paper-icon-item>
                             </td>
                             <td class="coadd-td">
                                 <div class="around-cell">
                                     <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_tiffs">TIFF</paper-checkbox>
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_tiffs">Stiff_RGB</paper-checkbox>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="rgboptions"></iron-icon>
                                     </div>
                                     <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_pngs">PNG</paper-checkbox>
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_pngs">Lupton_RGB</paper-checkbox>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="rgboptions"></iron-icon>
                                     </div>
                                     <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_fits">FITS</paper-checkbox>
+                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_fits" on-change="fitsoptions"> Just FITS</paper-checkbox>
+		                        <iron-icon icon="icons:create" style="height: 15px; width: 15px; color: #666666;" on-click="fitsoptions"></iron-icon>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                        
-                        
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="picture-in-picture" slot="item-icon"></iron-icon>
-                                    "Any band" 3-color PNG (e.g., "i,r,g Y,z,r z,i,r")
-                                </paper-icon-item>
-                            </td>
-                            <td class="coadd-td">
-                                <div class="around-cell">
-                                    <div class="left">
-                                        <paper-checkbox style="font-size:16px; padding-top:15px;" id="bc_rgb">Make RGB</paper-checkbox>
-                                    </div>
-                                    <div class="right">
-                                        <paper-input always-float-label id="bc_rgb_values" name="rgbbands" label="RGB Bands" value=""></paper-input>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        
-                        <tr class="coadd-tr">
-                            <td class="coadd-td">
-                                <paper-icon-item>
-                                    <iron-icon icon="check" slot="item-icon"></iron-icon>
-                                    Color Bands (for FITS option above)
-                                </paper-icon-item>
-                            </td>
-                            <td class="coadd-td">
-                                <div class="around-cell">
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_gband">g</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_rband">r</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_iband">i</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_zband">z</paper-checkbox>
-                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_Yband">Y</paper-checkbox>
-                                    <paper-toggle-button style="font-size:16px; padding-top:15px;" id="bc_all_toggle">Select All</paper-toggle-button>
-                                </div>
-                            </td>
-                        </tr>
+
 
 
                         <tr class="coadd-tr">
@@ -383,21 +276,63 @@
                     </div>
                 </div>
             </des-card>
-            
+
             <des-positions-bc id="desPositionsBC"></des-positions-bc>
             <!--
             <des-positions-coadds-bc id="desPositionsCoaddsBC"></des-positions-coadds-bc>
             <des-positions-coords-bc id="desPositionsCoordsBC"></des-positions-coords-bc>
             -->
 
-            <paper-toast class="toast-position" id="bc_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
-            <paper-toast class="toast-position" id="bc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
-            <paper-toast class="toast-position" id="bc_toast3coadd" text="Form is incomplete for selected options!" duration="5000"> </paper-toast>
+            <paper-toast class="toast-position toast-success" id="bc_toast1coadd" text="Job has been submitted!" duration="6000"> </paper-toast>
+            <paper-toast class="toast-position toast-error" id="bc_toast2coadd" text="ERROR!. There was an error. Please try again" duration="6000"> </paper-toast>
+            <paper-toast class="toast-position toast-error" id="bc_toast3coadd" text="Form is incomplete for selected options!" duration="6000"> </paper-toast>
 
             <paper-dialog class="size-position2" id="bc_emaildialog" with-backdrop on-iron-overlay-opened="patchOverlay">
                 <paper-card elevation="0">
                     <div class="card-content">
                         Please verify email address
+                    </div>
+                </paper-card>
+            </paper-dialog>
+            <paper-dialog id="bc_rgbbandsDialog" with-backdrop on-iron-overlay-opened="patchOverlay">
+                <paper-card elevation="0">
+                    <div class="card-content">
+                        Please enter RGB Bands to create color cutouts, e.g.: i,r,g
+                          <div class="right">
+                              <paper-input always-float-label id="bc_rgb_values" name="rgbbands" label="RGB Bands" value="i,r,g"></paper-input>
+                          </div>
+                      <div class="card-actions">
+                        <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
+                    </div>
+                    </div>
+                </paper-card>
+            </paper-dialog>
+            <paper-dialog style="width: 40%;" id="bc_fitsOptionsDialog" with-backdrop on-iron-overlay-opened="patchOverlay" >
+                <paper-card heading= "Select bands" elevation="0" >
+                    <div class="card-content">
+                                <div class="around-cell">
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_gband">g</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_rband">r</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_iband">i</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_zband">z</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-checkbox class="bandbox" style="font-size:16px; padding-top:15px;" id="bc_Yband">Y</paper-checkbox>
+                                    &nbsp;
+                                    &nbsp;
+                                    <paper-toggle-button style="font-size:16px; padding-top:15px;" id="bc_all_toggle" on-change="toggle_all_bands">Select All</paper-toggle-button>
+                                    &nbsp;
+                                    <br />
+                    </div>
+                                    <br />
+                    <div class="card-actions">
+                        <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
                     </div>
                 </paper-card>
             </paper-dialog>
@@ -452,7 +387,20 @@
                 }
             }
         },
-        
+        toggle_all_bands: function () {
+            var band_rads = document.querySelectorAll('.bandbox');
+            if (this.$.bc_all_toggle.checked) {
+                for (var j=0; j<5; j++) {
+                    band_rads[j].checked=true;
+                }
+            }
+            else {
+                for (var i=0; i<5; i++) {
+                    band_rads[i].checked=false;
+                }
+            }
+        },
+
         get filesAB(){
             return this.$.filesAB.files[0];
         },
@@ -475,72 +423,45 @@
                 document.getElementById("bc_validemail").value='';
             }
         },
+        fitsoptions: function (e) {
+            e.preventDefault();
+            if (document.getElementById("bc_fits").checked) {
+            document.getElementById('bc_fitsOptionsDialog').open();
+            }
+        },
+        rgboptions: function (e) {
+            e.preventDefault();
+            document.getElementById('bc_rgbbandsDialog').open();
+        },
         _fileChange: function () {
             this.file_name = this.filesAB.name;
             console.log('File to read: ' + this.file_name);
             document.getElementById("bc_submitJobButton").disabled=false;
             document.getElementById("bc_enterManually").disabled=true;
             document.getElementById("bc_uploadicon").icon = "done";
-            
+
             this.submit_type = 'csvfileAB';
         },
-        /*
-        _fileChange1: function(){
-            this.file_name = this.file1.name;
-            console.log('File to read : ' + this.file_name );
-            document.getElementById("bc_submitJobButton").disabled=false;
-            document.getElementById("bc_enterCoadds").disabled=true;
-            document.getElementById("bc_enterCoords").disabled=true;
-//            document.getElementById("bc_uploadicon").style.display='none';
-            document.getElementById("bc_uploadiconcoadd").icon = "done";
-            document.getElementById("bc_uploadFileCoord").disabled=true;
-
-            this.submit_type = 'coaddfile';
-//            document.getElementById("filename").value = this.file_name;
-        },
-        _fileChange2: function(){
-            this.file_name = this.file2.name;
-            console.log('File to read : ' + this.file_name );
-            document.getElementById("bc_submitJobButton").disabled=false;
-            document.getElementById("bc_enterCoadds").disabled=true;
-            document.getElementById("bc_enterCoords").disabled=true;
-//            document.getElementById("bc_uploadicon").style.display='none';
-            document.getElementById("bc_uploadiconcoord").icon = "done";
-            document.getElementById("bc_uploadFileCoadd").disabled=true;
-
-            this.submit_type = 'coordfile';
-//            document.getElementById("filename").value = this.file_name;
-        },
-        */
         clear: function () {
             document.getElementById("bc_submitJobButton").disabled=true;
             document.getElementById("bc_enterManually").disabled=false;
             document.getElementById("bc_uploadFile").disabled=false;
             document.getElementById("bc_keyboardicon").style.display="inline-block";
-            /*
-            document.getElementById("bc_enterCoadds").disabled=false;
-            document.getElementById("bc_enterCoords").disabled=false;
-            document.getElementById("bc_uploadFileCoadd").disabled=false;
-            document.getElementById("bc_uploadFileCoord").disabled=false;
-            document.getElementById("bc_keyboardiconcoadd").style.display='inline-block';
-            document.getElementById("bc_keyboardiconcoord").style.display='inline-block';
-            */
             document.getElementById("bc_tiffs").checked=false;
             document.getElementById("bc_pngs").checked=false;
             document.getElementById("bc_fits").checked=false;
-            document.getElementById("bc_rgb").checked=false;
             document.getElementById("bc_xsizeSlider").value="1.0";
             document.getElementById("bc_ysizeSlider").value="1.0";
             document.getElementById("bc_xsizeLabel").innerHTML="1.0";
             document.getElementById("bc_ysizeLabel").innerHTML="1.0";
             document.getElementById("bc_all_toggle").checked=false;
-            
+
             var band_rads = document.querySelectorAll('.bandbox');
             for (var j=0; j<5; j++) {
                 band_rads[j].checked=false;
                 band_rads[j].disabled=false;
             }
-            
+
             document.getElementById("bc_gband").checked=false;
             document.getElementById("bc_rband").checked=false;
             document.getElementById("bc_iband").checked=false;
@@ -549,21 +470,11 @@
             document.getElementById("bc_sendemail").checked=false;
             document.getElementById("bc_returnList").checked=false;
             document.getElementById("desPositionsBC").clear();
-            /*
-            document.getElementById("desPositionsCoaddsBC").clear();
-            document.getElementById("desPositionsCoordsBC").clear();
-            */
-            document.getElementById("bc_rgb_values").value='';
+            document.getElementById("bc_rgb_values").value='i,r,g';
             document.getElementById("bc_validemail").value='';
             document.getElementById("bc_validname").value='';
             document.getElementById("bc_uploadicon").icon = "backup";
             document.getElementById("bc_keyboardicon").icon = "hardware:keyboard";
-            /*
-            document.getElementById("bc_uploadiconcoadd").icon = "backup";
-            document.getElementById("bc_uploadiconcoord").icon = "backup";
-            document.getElementById("bc_keyboardiconcoadd").icon = "hardware:keyboard";
-            document.getElementById("bc_keyboardiconcoord").icon = "hardware:keyboard";
-            */
             this.file_name = "Upload File";
             this.job_comment = "";
 
@@ -587,37 +498,24 @@
             console.log(coords);
         },
         */
-        
+
         _bc_openManualEntry: function () {
             var inputDialog = document.getElementById("bc_inputDialog");
             inputDialog.open();
             this.submit_type = 'manualAB';
         },
-        /*
-        _bc_openCoadds: function(){
-            var inputCoaddDialog = document.getElementById("bc_inputCoaddsDialog");
-            inputCoaddDialog.open();
-            this.submit_type = 'manualCoadds';
-        },
-        _bc_openCoords: function(){
-            var inputCoordDialog = document.getElementById("bc_inputCoordsDialog");
-            inputCoordDialog.open();
-            this.submit_type = 'manualCoords';
-        },
-        */
         completeHandler: function () {
-            console.log('YESSSSS');
             document.getElementById('desBulkCutouts').clear();
             document.querySelector('#bc_toast1coadd').show();
             document.getElementById("getMyJobs").generateRequest();
         },
-        errorHandler: function () {
-            console.log('NOOOO');
-            document.getElementById('desBulkCutouts').clear();
+        errorHandler: function (data) {
+            var response = data.responseJSON;
+            // document.getElementById('desBulkCutouts').clear();
+            document.querySelector('#bc_toast2coadd').text = response.msg;
             document.querySelector('#bc_toast2coadd').show();
         },
         errorHandler2: function () {
-            console.log('NOOOO');
             document.querySelector('#bc_toast3coadd').show();
         },
         _submitJob: function (event) {
@@ -627,39 +525,33 @@
             formdata.append('csvfile1', this.$.file1.files[0]);
             formdata.append('csvfile2', this.$.file2.files[0]);
             */
-            
+
             formdata.append('make_tiffs', document.getElementById("bc_tiffs").checked);
             formdata.append('make_pngs', document.getElementById("bc_pngs").checked);
             formdata.append('make_fits', document.getElementById("bc_fits").checked);
-            formdata.append('make_rgb', document.getElementById("bc_rgb").checked);
             formdata.append('rgb_values', document.getElementById("bc_rgb_values").value);
-            
+
             formdata.append('bc_xsize', document.getElementById("bc_xsizeSlider").value);
             formdata.append('bc_ysize', document.getElementById("bc_ysizeSlider").value);
-            
+
             formdata.append('bc_gband', document.getElementById("bc_gband").checked);
             formdata.append('bc_rband', document.getElementById("bc_rband").checked);
             formdata.append('bc_iband', document.getElementById("bc_iband").checked);
             formdata.append('bc_zband', document.getElementById("bc_zband").checked);
             formdata.append('bc_Yband', document.getElementById("bc_Yband").checked);
             formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
-            
+
             formdata.append('bc_returnList', document.getElementById("bc_returnList").checked);
             formdata.append('bc_send_email', document.getElementById("bc_sendemail").checked);
             formdata.append('bc_email', document.getElementById("bc_validemail").value);
             formdata.append('bc_name', document.getElementById("bc_validname").value);
             formdata.append('bc_submit_type', this.submit_type);
-            
+
             formdata.append('bc_positions',document.getElementById("bc_enteredPositions").value);
-            /*
-            formdata.append('bc_coadds',document.getElementById("bc_enteredCoadds").value);
-            formdata.append('bc_coords',document.getElementById("bc_enteredCoords").value);
-            */
 
             var tiffs = document.getElementById("bc_tiffs").checked;
             var pngs = document.getElementById("bc_pngs").checked;
             var fits = document.getElementById("bc_fits").checked;
-            var rgbs = document.getElementById("bc_rgb").checked;
             var rgb_val = document.getElementById("bc_rgb_values").value;
             var g = document.getElementById("bc_gband").checked;
             var r = document.getElementById("bc_rband").checked;
@@ -667,13 +559,12 @@
             var z = document.getElementById("bc_zband").checked;
             var y = document.getElementById("bc_Yband").checked;
             var allbands = document.getElementById("bc_all_toggle").checked;
-            if (tiffs == false && pngs == false && fits == false && rgbs == false) {
+            fits = true;
+            g = true;
+            if (tiffs == false && pngs == false && fits == false) {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else if (fits == true && (g == false && r == false && i == false && z == false && y == false && allbands == false)) {
-                document.getElementById('desBulkCutouts').errorHandler2();
-            }
-            else if (rgbs == true && rgb_val === "") {
                 document.getElementById('desBulkCutouts').errorHandler2();
             }
             else {

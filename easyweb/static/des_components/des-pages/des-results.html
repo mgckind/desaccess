@@ -18,8 +18,8 @@
                last-response="{{jsondata}}"
                on-response="_getTilesResponse">
     </iron-ajax>
-    
-    
+
+
 
     <iron-ajax id="getLogHelp"
                url="/easyweb/mylogs/"
@@ -50,11 +50,12 @@
     </paper-dialog>
 
 
-    <des-card heading="Job1 : [[jobid]] ( [[jsondata.length]] objects)">
+    <des-card heading="Job [ [[jobname]] ]: [[jobid]] ( [[jsondata.length]] images)">
         <!--<br>-->
         <!--<b>Comment:</b> {{jobcomment}}-->
         <paper-button class="custom indigo" on-tap="_seeLog"> See Log</paper-button>
-        <paper-button class="custom indigo" on-tap="_getAll"> Download All</paper-button>
+        <paper-button class="custom indigo" on-tap="_getAll"> Download All(tar file)</paper-button>
+        <paper-button class="custom indigo" on-tap="_getList"> See Files</paper-button>
         <paper-button class="custom indigo" on-tap="_closedialog"> Close</paper-button>
         <hr class="des-hr">
     <!--<div class="card-content" style="height: 70%; overflow-y: scroll;">-->
@@ -68,7 +69,7 @@
         </template>
     </template>
     </template>
-    
+
     <template is="dom-if" if="{{_actionIsDA(jobtype)}}" restamp>
     <template is="dom-if" if="{{jsondata}}">
         <template is="dom-repeat" items="{{jsondata}}">
@@ -123,9 +124,9 @@
     <template is="dom-if" if="{{!jsondata}}">
          <h3> There are no outputs for this job. Check logfile for details.</h3>
     </template>
-    
-    <paper-toast class="toast-position" id="da_toastresults" text="No archive file was created for this job." duration="5000"> </paper-toast>
-    
+
+    <paper-toast class="toast-position toast-error" id="da_toastresults" text="No archive file was created for this job." duration="5000"> </paper-toast>
+
     </des-card>
     <!--<paper-fab icon="help" on-tap="_seeHelp" style="float: right;"></paper-fab>-->
 
@@ -148,6 +149,11 @@
                 type : String,
                 notify: true,
             },
+            jobname: {
+                value : '',
+                type : String,
+                notify: true,
+            },
             username:{
                 type: String,
                 value: '',
@@ -158,7 +164,7 @@
                 notify: true,
             },
         },
-        
+
         _actionIsFC: function(job_type) {
             if (job_type == "finding chart") {
                 console.log("Finding Chart!")
@@ -192,6 +198,12 @@
             };
             logform.generateRequest();
             document.getElementById('logDialogHelp').open();
+        },
+        _getList: function(){
+            var siid = this.jobid;
+            var user = this.username;
+            var url = "/easyweb/static/workdir/"+user+"/"+siid+"/list_all.txt"
+            window.open(url,'_blank');
         },
         _getAll: function(){
             var link = document.createElement('a');

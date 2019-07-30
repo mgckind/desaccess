@@ -36,9 +36,9 @@
     if (appr.data.view == 'deslabs') sel_page = "5";
     if (appr.data.view == 'finding-chart') sel_page = "6";
     if (appr.data.view == 'footprint') sel_page = "7";
-    if (appr.data.view == 'data-analysis') sel_page = "8";
-    if (appr.data.view == 'my-jobs') sel_page = "9";
-    if (appr.data.view == 'help-form') sel_page = "10";
+    // if (appr.data.view == 'data-analysis') sel_page = "8";
+    if (appr.data.view == 'my-jobs') sel_page = "8";
+    if (appr.data.view == 'help-form') sel_page = "9";
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
@@ -58,9 +58,9 @@
     if (appr.data.view == 'deslabs') sel_page = "5";
     if (appr.data.view == 'finding-chart') sel_page = "6";
     if (appr.data.view == 'footprint') sel_page = "7";
-    if (appr.data.view == 'data-analysis') sel_page = "8";
-    if (appr.data.view == 'my-jobs') sel_page = "9";
-    if (appr.data.view == 'help-form') sel_page = "10";
+    // if (appr.data.view == 'data-analysis') sel_page = "8";
+    if (appr.data.view == 'my-jobs') sel_page = "8";
+    if (appr.data.view == 'help-form') sel_page = "9";
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
@@ -84,14 +84,14 @@
             mode: 'text/x-plsql',
             autofocus: true,
         });
-        app.editor.setValue('-- Insert Query --\n');
+        app.editor.setValue('-- Insert Query --\n\n\n');
         app.editor.focus();
         app.editor.execCommand('goLineDown');
         myJobQuery = document.getElementById("jobQueryBox");
         app.jobquerybox = CodeMirror.fromTextArea(myJobQuery, {
             lineNumbers: false,
             mode: 'text/x-plsql',
-            readOnly: true,
+            readOnly: 'nocursor',
             autofocus: true,
         });
         app.jobquerybox.setValue('\n\n\n\n\n\n\n\n\n\n');
@@ -100,7 +100,7 @@
         app.examplequerybox = CodeMirror.fromTextArea(myExampleQuery, {
             lineNumbers: false,
             mode: 'text/x-plsql',
-            readOnly: true,
+            readOnly: 'nocursor',
             autofocus: true,
             viewportMargin: 50,
         });

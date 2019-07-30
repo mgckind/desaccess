@@ -18,6 +18,65 @@
       @apply --layout-horizontal;
         }
 
+
+        paper-button.y3 {
+      background-color: #4C72B0;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #4C72B0 !important;
+        color: white !important;
+      };
+    }
+        paper-button.y6 {
+      background-color: #8b008b;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #8b008b !important;
+        color: white !important;
+      };
+    }
+        paper-button.y1 {
+      background-color: #55A868;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #55A868 !important;
+        color: white !important;
+      };
+    }
+        paper-button.y5 {
+      background-color: #e59400;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #e59400 !important;
+        color: white !important;
+      };
+    }
+        paper-button.sv {
+      background-color: #C44E52;
+      color: white;
+      width: 50px;
+      text-transform: none;
+      --paper-button-raised-keyboard-focus: {
+        background-color: #C44E52 !important;
+        color: white !important;
+      };
+    }
+
+    paper-button[disabled] {
+        background: #eaeaea;
+        color: #a8a8a8;
+        cursor: auto;
+        pointer-events: none;
+    }
+
         paper-checkbox.dr1 {
 
                 --paper-checkbox-checked-color: #4C72B0;
@@ -41,6 +100,25 @@
         --paper-checkbox-unchecked-color: #55A868;
         --paper-checkbox-unchecked-ink-color: #55A868;
         --paper-checkbox-label-color: #55A868;
+
+    }
+
+        paper-checkbox.y5a1 {
+
+        --paper-checkbox-checked-color: #e59400;
+        --paper-checkbox-checked-ink-color: #e59400;
+        --paper-checkbox-unchecked-color: #e59400;
+        --paper-checkbox-unchecked-ink-color: #e59400;
+        --paper-checkbox-label-color: #e59400;
+
+    }
+        paper-checkbox.y6a1 {
+
+        --paper-checkbox-checked-color: #8b008b;
+        --paper-checkbox-checked-ink-color:#8b008b;
+        --paper-checkbox-unchecked-color: #8b008b;
+        --paper-checkbox-unchecked-ink-color: #8b008b;
+        --paper-checkbox-label-color: #8b008b;
 
     }
 
@@ -86,8 +164,35 @@
     debounce-duration="300">
     </iron-ajax>
 
+    <iron-ajax id="getFilesTileSV"
+    method="POST"
+    url="/easyweb/gettilesv/"
+    params='{{_getTilename(tilename)}}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getFilesTileY5"
+    method="POST"
+    url="/easyweb/gettiley5/"
+    params='{{_getTilename(tilename)}}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getFilesTileY6"
+    method="POST"
+    url="/easyweb/gettiley6/"
+    params='{{_getTilename(tilename)}}'
+    handle-as="json"
+    on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
     <paper-dialog class="dialog-position" id="GetTiles" with-backdrop on-iron-overlay-opened="patchOverlay">
-              <h2>TILE: {{tilename}}</h2>
+              <h2>TILE: {{tilename}} in {{release}}</h2>
               <div class="insideDialog">
         <vaadin-grid id="material" items="{{data}}">
 
@@ -207,9 +312,11 @@
 
                     <div class=" flex">
                 <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
-                <paper-checkbox class="dr1" style="margin-left: 20px; margin-top: 20px;"  id="check_dr1" checked on-change="display_dr1">Y3A2 TILES</paper-checkbox>
-                <paper-checkbox class="y1a1" style="margin-left: 20px; margin-top: 20px;"  id="check_y1a1"  on-change="display_y1a1">Y1A1 TILES</paper-checkbox>
-                <paper-checkbox class="sva1" style="margin-left: 20px; margin-top: 20px;"  id="check_sva1"  on-change="display_sva1">SVA1 TILES</paper-checkbox>
+                <paper-checkbox class="dr1" style="margin-left: 20px; margin-top: 20px;"  id="check_dr1" checked on-change="display_dr1">Y3A2</paper-checkbox>
+                <paper-checkbox class="y6a1" style="margin-left: 20px; margin-top: 20px;" id="check_y6a1" on-change="display_y6a1">Y6A1 </paper-checkbox>
+                <paper-checkbox class="y5a1" style="margin-left: 20px; margin-top: 20px;" id="check_y5a1" on-change="display_y5a1">Y5A1 </paper-checkbox>
+                <paper-checkbox class="y1a1" style="margin-left: 20px; margin-top: 20px;"  id="check_y1a1"  on-change="display_y1a1">Y1A1 </paper-checkbox>
+                <paper-checkbox class="sva1" style="margin-left: 20px; margin-top: 20px;"  id="check_sva1"  on-change="display_sva1">SVA1 </paper-checkbox>
                 <!--<paper-checkbox style="margin-left: 20px; margin-top: 20px;"  id="check_h32" on-change="display_h32">HPIX nside=32</paper-checkbox>-->
             </div>
                     <div class="card-content">
@@ -218,7 +325,7 @@
                                 <table id="tileTable" class="localTable">
                                 <tr><td>Name</td><td>:</td></tr>
                                 <tr><td>Tile Center</td><td>:</td></tr>
-                                <tr><td>No Objects</td><td>:</td></tr>
+                                <tr><td>No Objects (Y3)</td><td>:</td></tr>
                                 <tr><td>RA Corners</td><td>:</td></tr>
                                 <tr><td>DEC Corners</td><td>:</td></tr>
                                 </table>
@@ -226,9 +333,13 @@
                         </div>
                             <div class="card-content">
                                 <br />
-                            <paper-button class="indigo" disabled raised on-tap="_getTiles" id ="downloadTile"> Get Y3A2 Tile Files</paper-button> <br /> <br />
-                            <paper-button class="indigo" disabled raised on-tap="_getTilesY1" id ="downloadTileY1"> Get Y1A1 Tile Files</paper-button> <br /> <br />
-                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all Y3A2 tiles
+                            <span> Click below to get the files for this tile (if avaialble)</span><br />
+                            <paper-button class="y3" disabled raised on-tap="_getTiles" id ="downloadTile"> Y3A2</paper-button>
+                            <paper-button class="y6" disabled raised on-tap="_getTilesY6" id ="downloadTileY6">Y6A1</paper-button>
+                            <paper-button class="y5" disabled raised on-tap="_getTilesY5" id ="downloadTileY5">Y5A1</paper-button>
+                            <paper-button class="y1" disabled raised on-tap="_getTilesY1" id ="downloadTileY1">Y1A1</paper-button>
+                            <paper-button class="sv" disabled raised on-tap="_getTilesSV" id ="downloadTileSV">SVA1</paper-button> <br /><br />
+                            Click <a href="https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/multiepoch/" target="_blank"> here </a> to get access to all campaign tiles
                             </div>
 
                         </div>
@@ -296,6 +407,10 @@
                     value: {},
                 },
                 tilename: {
+                    type: String,
+                    value: 'test'
+                },
+                release: {
                     type: String,
                     value: 'test'
                 },
@@ -369,10 +484,27 @@
              },
              _getTiles: function(e){
                  document.getElementById('getFilesTile').generateRequest();
+                 this.release = 'Y3A2';
                  document.getElementById('GetTiles').open();
              },
              _getTilesY1: function(e){
                  document.getElementById('getFilesTileY1').generateRequest();
+                 this.release = 'Y1A1';
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesSV: function(e){
+                 document.getElementById('getFilesTileSV').generateRequest();
+                 this.release = 'SVA1';
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesY5: function(e){
+                 document.getElementById('getFilesTileY5').generateRequest();
+                 this.release = 'Y5A1';
+                 document.getElementById('GetTiles').open();
+             },
+             _getTilesY6: function(e){
+                 document.getElementById('getFilesTileY6').generateRequest();
+                 this.release = 'Y6A1';
                  document.getElementById('GetTiles').open();
              },
               _handleResponse: function(e){
@@ -586,6 +718,34 @@
                         globe.addLayer(vectorLayer);
                         window.y1a1_tiles = vectorLayer;
                     });
+                    loadTiles('/easyweb/static/tiles/y5a1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : [0.8,0.517647059,0,1.],
+                                strokeWidth: 1.0,
+                                fill: false,
+                                zIndex: 80,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.y5a1_tiles = vectorLayer;
+                    });
+                    loadTiles('/easyweb/static/tiles/y6a1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
+                        var vectorLayer = new GlobWeb.VectorLayer({
+                            style : new GlobWeb.FeatureStyle({
+                                strokeColor : [0.52,0.,0.52,1.],
+                                strokeWidth: 1.0,
+                                fill: false,
+                                zIndex: 70,
+                            })
+                        });
+                        vectorLayer.addFeatureCollection(JSON.parse(response));
+                        vectorLayer.visible(false);
+                        globe.addLayer(vectorLayer);
+                        window.y6a1_tiles = vectorLayer;
+                    });
                     loadTiles('/easyweb/static/tiles/sva1_tiles.json',[0.0,1.0,1.0,1.0],function(mycolor,response){
                         var vectorLayer = new GlobWeb.VectorLayer({
                             style : new GlobWeb.FeatureStyle({
@@ -692,6 +852,9 @@
                              //document.getElementById('downloadTile').style.visibility = 'visible';
                              document.getElementById('downloadTile').disabled = false;
                              document.getElementById('downloadTileY1').disabled = false;
+                             document.getElementById('downloadTileSV').disabled = false;
+                             document.getElementById('downloadTileY5').disabled = false;
+                             document.getElementById('downloadTileY6').disabled = false;
 
 
                     };
@@ -749,6 +912,9 @@
                                  //document.getElementById('downloadTile').style.visibility = 'visible';
                                  document.getElementById('downloadTile').disabled=false;
                                  document.getElementById('downloadTileY1').disabled=false;
+                                 document.getElementById('downloadTileSV').disabled=false;
+                                 document.getElementById('downloadTileY5').disabled=false;
+                                 document.getElementById('downloadTileY6').disabled=false;
                                 if (window.tempLayer === undefined){
                                     var ju = 0;
                                 }
@@ -819,6 +985,26 @@
                 }
                 else{
                     y1a1_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_y5a1: function(){
+            var checky5a1 = document.getElementById("check_y5a1");
+                if (checky5a1.checked) {
+                    y5a1_tiles._visible = true;
+                }
+                else{
+                    y5a1_tiles._visible = false;
+                }
+                globe.refresh();
+            },
+            display_y6a1: function(){
+            var checky6a1 = document.getElementById("check_y6a1");
+                if (checky6a1.checked) {
+                    y6a1_tiles._visible = true;
+                }
+                else{
+                    y6a1_tiles._visible = false;
                 }
                 globe.refresh();
             },

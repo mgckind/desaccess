@@ -1,5 +1,6 @@
 __pycache__
 *.pyc
+.ipynb_checkpoints/
 static/workdir/*
 easyweb/static/workdir/*
 easyweb/static/internal/emails/*
@@ -17,3 +18,12 @@ venv/
 dump.rdb
 setup.sh
 .access
+*.ipynb
+chart/
+deploy/
+kubernetes/
+*.sql
+easyweb/static/des_components/des-pages/des-my-tables-old.html
+easyweb/static/files/
+easyweb/static/internal/stats/
+

@@ -191,102 +191,30 @@
 
             <des-card heading="Help">
                 <div class="card-content">
-                    <paper-carousel id="query-crs" items="1" dotText="false" controls="true">
-                        <div class="carousel-item">
-                            <table class="crs-table">
-                                <tr class="crs-tr">
-                                    <th class="crs-th">Button</th>
-                                    <th class="crs-th">Description</th>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised>Submit Job</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Submit a job on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised>Clear</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Clear the form on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised>Check</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Check valid input on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised>Quick</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        Quick peek of the query result on click
-                                    </td>
-                                </tr>
-
-                                <tr class="crs-tr">
-                                    <td class="crs-td">
-                                        <paper-button class="indigo" raised>Example Query</paper-button>
-                                    </td>
-                                    <td class="crs-td">
-                                        See example queries on click
-                                    </td>
-                                </tr>
-                            </table>
+                    <paper-carousel id="query-crs" items="1" dotText="false" controls="true" "">
+                        <div class="carousel-item" >
+                          <paper-card>
+                            <div clas="card-content">
+                            <img src="/easyweb/static/images/help/public_queries_0.gif" width="60%">
+                            <br />
+                              Type your query into the box. Queries are used to communicate with the database and are written in standard SQL format. From here, you can hit one of
+the blue buttons below the query box to do different things with your results.
+                        </div>
+                          </paper-card>
                         </div>
 
                         <div class="carousel-item">
-                            <!--<div class="col">-->
-                            <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                            <div class="desc">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-
-                            <!--</div>-->
+                          <paper-card>
+                            <div clas="card-content">
+                            <img src="/easyweb/static/images/help/public_queries_0.gif" width="60%">
+                        </div>
+                            <div clas="card-content">
+                              Type your query into the box. Queries are used to communicate with the database and are written in standard SQL format. From here, you can hit one of
+the blue buttons below the query box to do different things with your results.
+                        </div>
+                          </paper-card>
                         </div>
 
-                        <div class="carousel-item">
-                            <div class="row">
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-
-                                <div class="left">
-                                    <img src="/easyweb/static/images/demo1.gif">
-                                </div>
-                            </div>
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </div>
-                        </div>
-
-                        <div class="carousel-item">
-                            <img src="/easyweb/static/images/demo1.gif">
-                            <div class="desc">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            </div>
-                        </div>
 
                     </paper-carousel>
                 </div>
@@ -454,10 +382,10 @@
 
             <div id="response2" >
 
-                <paper-toast class="toast-position" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
-                <paper-toast class="toast-position" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
+                <paper-toast class="toast-position toast-success" id="toast1" text="Job has been submitted!" duration="5000"> </paper-toast>
+                <paper-toast class="toast-position toast-error" id="toast2" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
 
-                <paper-fab disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+                <paper-fab  disabled class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
 
             </div>
         </des-card>

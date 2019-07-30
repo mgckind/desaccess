@@ -23,6 +23,13 @@
     }
     .green {background: var(--paper-green-500);}
     .red {background: var(--paper-red-500);}
+
+    .labs {
+        --paper-card {
+            width: 500px;
+        }
+    }
+
         </style>
 
     <iron-ajax id="deployLabReq"
@@ -54,6 +61,14 @@
     params='{"part":"fff"}'
     handle-as="json"
     on-response="_handleResponse"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="getTokenReq"
+    url="/easyweb/deslabs/token"
+    params='{"part":"fff"}'
+    handle-as="json"
+    on-response="_handleResponseToken"
     debounce-duration="300">
     </iron-ajax>
 
@@ -123,11 +138,20 @@
             </des-card>
         </paper-dialog>
 
-        <des-card  heading="DES Jupyter Labs (Beta)">
+
+            <paper-dialog style="width: 420px; cursor: text ;" id="labTokenDialog" with-backdrop on-iron-overlay-opened="patchOverlay">
+                <paper-card elevation="0" style="width: 390px; cursor: text;">
+                    <div class="card-content" style="cursor: text;" >
+                        <span style="cursor: text;"> Token: {{token}} </span>
+                    </div>
+                </paper-card>
+            </paper-dialog>
+
+        <des-card  heading="DES Jupyter Labs (Beta)" >
             <div class="card-content">
-                This feature is experimental only. Please use with caution. <br />
-                You can launch, access and delete your Jupyter Notebook.
-                This Notebook will run with 1 CPU and 2GB of RAM.
+                This feature is still under development. Please use with caution. <br />
+                You can launch, access and delete your Jupyter Lab from here. <br />
+                This Lab will run with 1 CPU and 2GB of RAM.
             </div>
             <hr>
 
@@ -138,7 +162,7 @@
             <br />
             </div>
             <div class="card-content">
-            <paper-card heading="Status">
+            <paper-card style="width: 80%; max-width:400px;" heading="Lab status" >
                 <div class="card-content">
 
 
@@ -161,6 +185,7 @@
                 </div>
             <div class="card-actions">
             <paper-button class="indigo"  raised disabled on-tap="_gotoLab" id ="GotoLab"> Go To Lab &nbsp; &nbsp; <i class="fa fa-arrow-circle-right"></i></paper-button>
+            <paper-button class="indigo"  raised disabled on-tap="_getToken" id ="GetToken"> See Token &nbsp; &nbsp; <i class="fa fa-key"></i></paper-button>
 
             </div>
         </paper-card><br />
@@ -187,6 +212,10 @@
                 status: {
                     type: String,
                     value: 'Lab Not Ready'
+                },
+                token: {
+                    type: String,
+                    value: ''
                 },
                 stop: {
                     type: Boolean,
@@ -238,6 +267,7 @@
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            document.getElementById('GetToken').disabled=true;
             var _self = this
             _self.statusv = 0;
             var i;
@@ -257,10 +287,22 @@
                 window.open('/easyweb/deslabs/goto','_blank');
                 //document.getElementById("gotoLabReq").generateRequest();
             },
+            _getToken: function(e){
+                var _=0;
+
+                //window.open('/easyweb/deslabs/goto','_blank');
+                document.getElementById("getTokenReq").generateRequest();
+                document.getElementById("labTokenDialog").open();
+            },
           _handleResponse: function(e){
             var _self = this;
             var data = e.detail.response;
             _self.status = data.status;
+        },
+          _handleResponseToken: function(e){
+            var _self = this;
+            var data = e.detail.response;
+            _self.token = data.token;
         },
           _handleResponseStatus: function(e){
             var _self = this;
@@ -274,6 +316,7 @@
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=false;
             document.getElementById('GotoLab').disabled=false;
+            document.getElementById('GetToken').disabled=false;
             }
             else if (_self.ready == 2){
             _self.stop = false;
@@ -282,6 +325,7 @@
             document.getElementById('DeployLab').disabled=true;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            document.getElementById('GetToken').disabled=true;
             }
             else {
             _self.stop = true;
@@ -290,6 +334,7 @@
             document.getElementById('DeployLab').disabled=false;
             document.getElementById('DeleteLab').disabled=true;
             document.getElementById('GotoLab').disabled=true;
+            document.getElementById('GetToken').disabled=true;
             }
         },
             _seeHelp: function(e){
