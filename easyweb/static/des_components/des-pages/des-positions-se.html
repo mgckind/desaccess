@@ -1,0 +1,63 @@
+<dom-module id="des-positions-se">
+<template>
+    <style include="shared-styles">
+    </style>
+
+    <paper-dialog id="se_inputDialog"   with-backdrop on-iron-overlay-opened="patchOverlay" >
+        <paper-card heading="Enter RA,DEC below" elevation="0">
+            <div class="card-content">
+               <iron-autogrow-textarea id="se_enteredPositions" max-rows="15" rows=12 placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
+            </div>
+            <div class="card-actions">
+                <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
+                <paper-button on-tap="_se_submitPositions" raised class="indigo">Accept</paper-button>
+            </div>
+        </paper-card>
+    </paper-dialog>
+</template>
+
+<script>
+    Polymer({
+      is: "des-positions-se",
+      properties : {
+        place_holder: {
+            type: String,
+            value: "RA,DEC\n"
+        },
+      },
+      _se_submitPositions: function(){
+            document.getElementById("se_inputValuesDialog").close();
+            document.getElementById("se_submitJobButton").disabled=false;
+            document.getElementById("se_uploadFile").disabled=true;
+            document.getElementById("se_keyboardicon").icon = "done";
+            document.getElementById("desS2SECutouts").enter_values = "Values Entered";
+
+      },
+      clear: function(){
+            document.getElementById("se_enteredPositions").value=this.place_holder;
+      },
+      patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+      },
+
+      _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpPositionsSE').open();
+      },
+
+      _nextPage: function() {
+            var crs = document.getElementById("position-crs");
+            crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("position-crs");
+          crs.goToPrevPage();
+      }
+    });
+
+
+</script>
+</dom-module>
