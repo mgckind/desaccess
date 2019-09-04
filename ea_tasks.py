@@ -1184,3 +1184,99 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     with open(jsonfile, 'w') as fp:
         json.dump(response, fp)
     return response
+
+@app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
+def epochtasks(input_csv, uu, pp, jobid, outdir, db, airmass, psffwhm, colors, xsize, ysize, return_list, send_email, email):
+    response = {}
+    response['user'] = uu
+    response['elapsed'] = 0
+    response['jobid'] = jobid
+    response['files'] = None
+    response['sizes'] = None
+    response['email'] = 'no'
+    if send_email:
+        response['email'] = email
+
+    t1 = time.time()
+
+    cipher = AES.new(Settings.SKEY, AES.MODE_ECB)
+    dlp = cipher.decrypt(base64.b64decode(pp)).strip()
+    pp = dlp.decode()
+
+    user_folder = Settings.WORKDIR + uu + '/'
+    jsonfile = user_folder + jobid + '.json'
+    mypath = user_folder + jobid + '/'
+
+    args = 'python s2se.py'
+    args += ' --csv {}'.format(input_csv)
+    args += ' --make_fits --colors {}'.format(colors)
+    args += ' --xsize {} --ysize {}'.format(xsize, ysize)
+    args += ' --airmass {}'.format(airmass)
+    args += ' --psffwhm {}'.format(airmass)
+    if return_list:
+        args += ' --return_list'
+    args += ' --usernm {} --passwd {}'.format(uu, pp)
+    args += ' --jobid {}'.format(jobid)
+    args += ' --outdir {}'.format(outdir)
+
+    try:
+        oo = subprocess.check_output([args], shell=True)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+
+    # Creates list.json
+    # File will be empty since single epoch only makes FITS files currently
+    # but des-results.html still looks for list.json
+    tiles = glob.glob(mypath + '**/*.png')
+    titles = []
+    Ntiles = len(tiles)
+    for i in tiles:
+        title = i.split('/')[-1]
+        titles.append(title)
+    for i in range(Ntiles):
+        tiles[i] = tiles[i][tiles[i].find('/easyweb'):]
+    if os.path.exists(mypath + "list.json"):
+        os.remove(mypath( + "list.json"))
+    with open(mypath + "list.json", "w") as outfile:
+        json.dump([dict(name=tiles[i], title=titles[i], size=Ntiles) for i in range(len(tiles))], outfile, indent=4)
+
+    # Creates list_all.json
+    alltiles = glob.glob(mypath + '**/*.tiff') + glob.glob(mypath + '**/*.fits')
+    alltitles = []
+    allNtiles = len(alltiles)
+    for i in alltiles:
+        title = i.split('/')[-1]
+        alltitles.append(title)
+    for i in range(allNtiles):
+        alltiles[i] = alltiles[i][alltiles[i].find('/easyweb'):]
+    alltiles = tiles + alltiles
+    alltitles = titles + alltitles
+    allNtiles = Ntiles + allNtiles
+    if os.path.exists(mypath + "list_all.json"):
+        os.remove(mypath + "list_all.json")
+    with open(mypath + "list_all.json", "w") as outfile:
+        json.dump([dict(name=alltiles[i], title=alltitles[i], size=allNtiles) for i in range(len(alltiles))], outfile, indent=4)
+
+    # Creates the tarball
+    os.chdir(user_folder)
+    os.system("tar -zcf {0}/{0}.tar.gz {0}/".format(jobid))
+    os.chdir(os.path.dirname(__file__))
+
+    # Writing files for wget
+    # Creates list_all.txt
+    allfiles = glob.glob(mypath + '*.*') + glob.glob(mypath + '**/*.*')
+    response['files'] = [os.path.basename(i) for i in allfiles]
+    response['sizes'] = [get_filesize(i) for i in allfiles]
+    Fall = open(mypath + 'list_all.txt', 'w')
+    prefix = Settings.URLPATH
+    for ff in allfiles:
+        if (ff.find(jobid+'.tar.gz') == -1 & ff.find('list.json') == -1):
+            Fall.write(prefix+ff.split('static')[-1]+'\n')
+    Fall.close()
+
+    response['status'] = 'ok'
+    t2 = time.time()
+    response['elapsed'] = t2-t1
+    with open(jsonfile, 'w') as fp:
+        json.dump(response, fp)
+    return response
