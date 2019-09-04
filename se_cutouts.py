@@ -15,7 +15,9 @@ import datetime as dt
 import MySQLdb as mydb
 import yaml
 import ea_tasks
-import pandas as pd
+#import pandas as pd
+from datetime import timedelta
+from Settings import app_log
 
 
 def dt_t(entry):
@@ -41,7 +43,6 @@ class FileHandler(BaseHandler):
 
         airmass = float(self.get_argument("se_airmass"))
         psffwhm = float(self.get_argument("se_psffwhm"))
-        blacklist = self.get_argument("se_blacklist") == 'true'
 
         gband = self.get_argument("se_gband") == 'true'
         rband = self.get_argument("se_rband") == 'true'
@@ -78,18 +79,19 @@ class FileHandler(BaseHandler):
             colors = (',').join((colors, 'y'))
         colors = colors.strip(',')
 
-        print('**************')
-        print(airmass, 'airmass')
-        print(psffwhm, 'psf_fwhm')
-        print(gband, rband, iband, zband, yband, 'bands')
-        print(xsize, ysize, 'sizes')
-        print(return_list, 'return list of tiles with objects')
-        print(send_email, 'send_email')
-        print(email, 'email')
-        print(name, 'name')
-        print(stype, 'type')
-
         jobid = str(uuid.uuid4()).replace("-", "_")
+
+        app_log.info('***** JOB *****')
+        app_log.info('SE Cutouts Job: {} by {}'.format(jobid, loc_user))
+        app_log.info('{} {} {} {} {} bands'.format(gband, rband, iband, zband, yband))
+        app_log.info('{} {} sizes'.format(xsize, ysize))
+        app_log.info('airmass limit: {}'.format(airmass))
+        app_log.info('fwhm limit: {}'.format(psffwhm))
+        app_log.info('type: {}'.format(stype))
+        app_log.info('return list of CCDs with objects: {}'.format(return_list))
+        app_log.info('send_email: {}'.format(send_email))
+        app_log.info('email: {}'.format(email))
+        app_log.info('name: {}'.format(name))
 
         if xsize == 0.0:
             xsize = 1.0
@@ -106,26 +108,39 @@ class FileHandler(BaseHandler):
             F = open(filename, 'w')
             F.write(values)
             F.close()
-        print('**************')
+        app_log.info('**************')
 
         folder2 = user_folder + jobid + '/'
         os.system('mkdir -p ' + folder2)
         now = datetime.datetime.now()
         input_csv = user_folder + jobid + '.csv'
 
-        run = ea_tasks.epochtasks.apply_async(args=[input_csv, loc_user, lp.decode(),
-            jobid, folder2, db, airmass, psffwhm, blacklist, colors, xsize, ysize, return_list,
-            send_email, email], retry=True, task_id=jobid)
+        run = ea_tasks.epochtasks.apply_async(args=[input_csv, 
+                                                    loc_user, 
+                                                    lp.decode(),
+                                                    jobid, 
+                                                    folder2, 
+                                                    db, 
+                                                    airmass, 
+                                                    psffwhm, 
+                                                    colors, 
+                                                    xsize, 
+                                                    ysize, 
+                                                    return_list,
+                                                    send_email, 
+                                                    email], 
+                                              retry=True, 
+                                              task_id=jobid)
 
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['mysql']
         con = mydb.connect(**conf)
 
-        tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'), 'single epoch', '', '', '', -1])
+        tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'), 'epoch', '', '', '', -1])
 
-        with con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Hobs VALUES{0}".format(tup))
+        cur = con.cursor()
+        cur.execute("INSERT INTO Hobs VALUES{0}".format(tup))
+        con.commit()
         con.close()
         self.set_status(200)
         self.flush()
