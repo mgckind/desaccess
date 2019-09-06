@@ -135,6 +135,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/deslabs/delete", jlab.LabDeleteHandler),
             (r"/easyweb/deslabs/goto", jlab.LabGotoHandler),
             (r"/easyweb/deslabs/token", jlab.LabGetTokenHandler),
+            (r"/easyweb/deslabs/user", jlab.LabGetUserHandler),
             (r"/easyweb/dcount/", count.CountHandler),
             (r"/easyweb/files/dr1/(.*)", MyStaticFileHandler,
              {'path': '/des004/despublic/dr1_tiles/'}),
