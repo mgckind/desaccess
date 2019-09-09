@@ -34,6 +34,7 @@
 
     <iron-ajax id="deployLabReq"
     url="/easyweb/deslabs/deploy"
+    method="post"
     params='{"part":"fff"}'
     handle-as="json"
     on-response="_handleResponse"
@@ -260,7 +261,10 @@
                 }
             },
             _deployLab: function(e){
-            document.getElementById("deployLabReq").generateRequest();
+            deployreq = document.getElementById("deployLabReq");
+            gpubox = document.getElementById("gpuBox");
+            deployreq.params={"gpu": gpubox.checked};
+            deployreq.generateRequest();
             var _self = this
             _self.statusv = 0;
             document.getElementById('DeployLab').disabled=true;

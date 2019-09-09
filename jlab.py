@@ -14,15 +14,21 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class LabLaunchHandler(BaseHandler):
     @tornado.web.authenticated
-    def get(self):
+    def post(self):
+        gpu_lab = self.get_argument("gpu", "") == 'true'
+        print(gpu_lab)
         with open('config/desaccess.yaml', 'r') as cfile:
             conf = yaml.load(cfile)['jlab']
         url = 'http://{host}:{port}'.format(**conf)
         user = self.get_secure_cookie("usera").decode('ascii').replace('\"', '')
         passwd = self.get_secure_cookie("userb").decode('ascii').replace('\"', '')
+        # TODO: Check user for gpu
         print(user)
         print('deploying Lab')
-        r = requests.post(url + '/labs/api/v1/deploy', data={'user': user, 'passwd': passwd})
+        r = requests.post(url + '/labs/api/v1/deploy',
+                          data={'gpu': gpu_lab,
+                                'user': user,
+                                'passwd': passwd})
         print(r.json()['token'])
         temp = json.dumps({'status': 'deploying'}, indent=4)
         self.write(temp)

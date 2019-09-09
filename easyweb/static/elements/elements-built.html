@@ -47765,7 +47765,7 @@ This program is available under Apache License Version 2.0, available at https:/
 
         </style>
 
-    <iron-ajax id="deployLabReq" url="/easyweb/deslabs/deploy" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
+    <iron-ajax id="deployLabReq" url="/easyweb/deslabs/deploy" method="post" params="{&quot;part&quot;:&quot;fff&quot;}" handle-as="json" on-response="_handleResponse" debounce-duration="300">
     </iron-ajax>
 
     <iron-ajax id="statusLabReq" auto="" url="/easyweb/deslabs/status" handle-as="json" on-response="_handleResponseStatus" debounce-duration="300">
@@ -47963,7 +47963,10 @@ This program is available under Apache License Version 2.0, available at https:/
                 }
             },
             _deployLab: function(e){
-            document.getElementById("deployLabReq").generateRequest();
+            deployreq = document.getElementById("deployLabReq");
+            gpubox = document.getElementById("gpuBox");
+            deployreq.params={"gpu": gpubox.checked};
+            deployreq.generateRequest();
             var _self = this
             _self.statusv = 0;
             document.getElementById('DeployLab').disabled=true;
