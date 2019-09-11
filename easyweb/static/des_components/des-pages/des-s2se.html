@@ -296,7 +296,7 @@
                 </div>
             </des-card>
 
-            <des-positions-bc id="desPositionsSE"></des-positions-bc>
+            <des-positions-se id="desPositionsSE"></des-positions-se>
 
             <paper-toast class="toast-position toast-success" id="se_toast1coadd" text="Job has been submitted!" duration="6000"> </paper-toast>
             <paper-toast class="toast-position toast-error" id="se_toast2coadd" text="ERROR!. There was an error. Please try again" duration="6000"> </paper-toast>
@@ -423,7 +423,6 @@
             document.getElementById("se_sendemail").checked=false;
             document.getElementById("se_returnList").checked=false;
             document.getElementById("desPositionsSE").clear();
-            document.getElementById("se_rgb_values").value='i,r,g';
             document.getElementById("se_validemail").value='';
             document.getElementById("se_validname").value='';
             
@@ -433,12 +432,12 @@
             var upIcon = document.getElementById("se_uploadicon").style.display="inline-block";
             
             this.enter_values = "Enter Values";
-            this.$.filesAB.value = "";
+            this.$.se_filesAB.value = "";
             
         },
 
         _se_openManualEntry: function () {
-            var inputDialog = document.getElementById("se_inputDialog");
+            var inputDialog = document.getElementById("se_inputValuesDialog");
             inputDialog.open();
             this.submit_type = 'manualAB';
         },
@@ -460,7 +459,7 @@
         },
         _submitJob: function (event) {
             var formdata = new FormData();
-            formdata.append('csvfile', this.$.filesAB.files[0]);
+            formdata.append('csvfile', this.$.se_filesAB.files[0]);
             
             formdata.append('se_xsize', document.getElementById("se_xsizeSlider").value);
             formdata.append('se_ysize', document.getElementById("se_ysizeSlider").value);
