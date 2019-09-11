@@ -139,7 +139,7 @@ class FileHandler(BaseHandler):
         tup = tuple([loc_user, jobid, name, 'PENDING', now.strftime('%Y-%m-%d %H:%M:%S'), 'epoch', '', '', '', -1])
 
         cur = con.cursor()
-        cur.execute("INSERT INTO Hobs VALUES{0}".format(tup))
+        cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
         con.commit()
         con.close()
         self.set_status(200)
