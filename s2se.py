@@ -8,6 +8,7 @@ description: command line tools for making single epoch cutouts from the Dark En
 import os, sys
 import argparse
 import datetime
+import easyaccess as ea
 import logging
 import logging.config
 import glob
@@ -444,7 +445,7 @@ if __name__ == '__main__':
         conf = yaml.load(cfile)
     
     CCDS_FOLDER = conf['directories']['ccds'] + '/'
-    CLIENT = conf['mongoclient']['db']
+    CLIENT = conf['mongoclient']['host']
     PORT = int(conf['mongoclient']['port'])
     
     if args.outdir:
