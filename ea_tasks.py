@@ -853,7 +853,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         bulkthumbscolors.append('i')
         colors = 'i'
     #bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
-    bulkthumbscom = "python3 bulkthumbs2.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --release {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "DESSCI", "Y3A2", jobid, uu, pp, outputs
+    bulkthumbscom = "python3 bulkthumbs2.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --release {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "DESSCI", "Y3A2", jobid, uu, pp, outputs)
     try:
         #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
         oo = subprocess.check_output([bulkthumbscom], shell=True)
