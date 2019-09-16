@@ -218,6 +218,26 @@
                                 <paper-slider id="bc_ysizeSlider" pin  max="12" max-markers="10" step="0.1" value="1.0" expand editable></paper-slider>
                             </td>
                         </tr>
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Release Tag:
+                                        <span id="bc_releaseLabel" class="caption">Y6A1</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-dropdown-menu id="bc_releaseSelector" >
+                                  <paper-listbox id="bc_releaseItem" slot="dropdown-content" class="dropdown-content" selected="0">
+                                  <paper-item>Y6A1</paper-item>
+                                  <paper-item>Y3A2</paper-item>
+                                  <paper-item>Y1A1</paper-item>
+                                  <paper-item>SVA1</paper-item>
+                                </paper-listbox>
+
+                                </paper-dropdown-menu>
+                            </td>
+                        </tr>
 
                         <tr class="coadd-tr">
                             <td class="coadd-td">
@@ -455,6 +475,7 @@
             document.getElementById("bc_xsizeLabel").innerHTML="1.0";
             document.getElementById("bc_ysizeLabel").innerHTML="1.0";
             document.getElementById("bc_all_toggle").checked=false;
+            document.getElementById("bc_releaseItem").selected=0;
 
             var band_rads = document.querySelectorAll('.bandbox');
             for (var j=0; j<5; j++) {
@@ -540,6 +561,7 @@
             formdata.append('bc_zband', document.getElementById("bc_zband").checked);
             formdata.append('bc_Yband', document.getElementById("bc_Yband").checked);
             formdata.append('bc_all_toggle', document.getElementById("bc_all_toggle").checked);
+            formdata.append('bc_release_label', document.getElementById("bc_releaseSelector").selectedItemLabel);
 
             formdata.append('bc_returnList', document.getElementById("bc_returnList").checked);
             formdata.append('bc_send_email', document.getElementById("bc_sendemail").checked);
