@@ -34,6 +34,7 @@
 
     <iron-ajax id="deployLabReq"
     url="/easyweb/deslabs/deploy"
+    method="post"
     params='{"part":"fff"}'
     handle-as="json"
     on-response="_handleResponse"
@@ -45,6 +46,14 @@
     url="/easyweb/deslabs/status"
     handle-as="json"
     on-response="_handleResponseStatus"
+    debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="specialUser"
+    auto
+    url="/easyweb/deslabs/user"
+    handle-as="json"
+    on-response="_handleResponseUser"
     debounce-duration="300">
     </iron-ajax>
 
@@ -151,7 +160,10 @@
             <div class="card-content">
                 This feature is still under development. Please use with caution. <br />
                 You can launch, access and delete your Jupyter Lab from here. <br />
-                This Lab will run with 1 CPU and 2GB of RAM.
+                This Lab will run with 1 CPU and 2GB of RAM. <br />
+            <template is="dom-if" if="{{gpu}}">
+                <span id="gpudesc"> GPU Labs are only allowed for 24 hours</span>
+                </template>
             </div>
             <hr>
 
@@ -159,10 +171,14 @@
             <paper-button class="indigo"  raised on-tap="_deployLab" id ="DeployLab"> Deploy Lab &nbsp; &nbsp; <i class="fa fa-plus"></i></paper-button>
 
             <paper-button class="indigo"  raised disabled on-tap="_deleteLab" id ="DeleteLab"> Delete Lab &nbsp; &nbsp; <i class="fa fa-trash"></i></paper-button>
+            <template is="dom-if" if="{{gpu}}">
+            <paper-checkbox id="gpuBox" on-change="_selectGpu"> GPU</paper-checkbox>
+            </template>
+
             <br />
             </div>
             <div class="card-content">
-            <paper-card style="width: 80%; max-width:400px;" heading="Lab status" >
+            <paper-card id="labStatus" style="width: 80%; max-width:400px;" heading="Lab status" >
                 <div class="card-content">
 
 
@@ -178,7 +194,8 @@
                   <div class="status green" item-icon style="display: inline-block;"></div> <span style=" position: absolute; margin-top: 2px;"> &nbsp; Ready </span><br />
               </template>
                   <span>Status: </span>
-                  <span>{{status}}</span>
+                  <span>{{status}}</span><br /><br />
+                  <span id="gpuStatus">&nbsp;</span>
 
 
 
@@ -229,6 +246,10 @@
                     type: Boolean,
                     value: false,
                 },
+                gpu: {
+                    type: Boolean,
+                    value: false,
+                },
                 ready: {
                     type: Number,
                     value: 3,
@@ -240,7 +261,10 @@
                 }
             },
             _deployLab: function(e){
-            document.getElementById("deployLabReq").generateRequest();
+            deployreq = document.getElementById("deployLabReq");
+            gpubox = document.getElementById("gpuBox");
+            deployreq.params={"gpu": gpubox.checked};
+            deployreq.generateRequest();
             var _self = this
             _self.statusv = 0;
             document.getElementById('DeployLab').disabled=true;
@@ -261,6 +285,7 @@
             },
             _refreshStatus: function(e){
             document.getElementById("statusLabReq").generateRequest();
+            document.getElementById("specialUser").generateRequest();
             },
             _deleteLab: function(e){
             document.getElementById("deleteLabReq").generateRequest();
@@ -303,6 +328,11 @@
             var _self = this;
             var data = e.detail.response;
             _self.token = data.token;
+        },
+          _handleResponseUser: function(e){
+            var _self = this;
+            var data = e.detail.response;
+            _self.gpu = data.gpu;
         },
           _handleResponseStatus: function(e){
             var _self = this;
@@ -348,6 +378,21 @@
             _prevPage: function() {
                 var crs = document.getElementById("labs-crs");
                 crs.goToPrevPage();
+            },
+            _selectGpu: function(){
+               gpubox = document.getElementById("gpuBox");
+               labstatus = document.getElementById("labStatus");
+               gpustatus = document.getElementById('gpuStatus');
+               gpudesc = document.getElementById('gpudesc');
+               if (gpubox.checked) {
+                 labstatus.heading= "Lab status (gpu)";
+                 gpustatus.innerHTML = "Time: ";
+               }
+               else {
+                 labstatus.heading= "Lab status"
+                 gpustatus.innerHTML = "&nbsp;";
+               }
+
             }
         });
     </script>
