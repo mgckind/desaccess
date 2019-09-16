@@ -61,6 +61,7 @@ class FileHandler(BaseHandler):
             return
         xsize = float(self.get_argument("bc_xsize"))
         ysize = float(self.get_argument("bc_ysize"))
+        release_table = self.get_argument("bc_release_label")
         return_list = self.get_argument("bc_returnList") == 'true'
         send_email = self.get_argument("bc_send_email") == 'true'
         email = self.get_argument("bc_email")
@@ -83,6 +84,7 @@ class FileHandler(BaseHandler):
         jobid = str(uuid.uuid4()).replace("-", "_")
         app_log.info('***** JOB *****')
         app_log.info('Cutouts Job: {} by {}'.format(jobid, loc_user))
+        app_log.info('{} Release'.format(release_table))
         app_log.info('{} make tiff'.format(tiffs))
         app_log.info('{} make png'.format(pngs))
         app_log.info('{} make fits'.format(fits))
@@ -155,6 +157,7 @@ class FileHandler(BaseHandler):
                                                    jobid,
                                                    folder2,
                                                    db,
+                                                   release_table,
                                                    tiffs,
                                                    pngs,
                                                    fits,

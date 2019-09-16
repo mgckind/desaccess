@@ -853,7 +853,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
         bulkthumbscolors.append('i')
         colors = 'i'
     #bulkthumbscolors = (',').join([str(x) for x in bulkthumbscolors])
-    bulkthumbscom = "python3 bulkthumbs2.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "Y3A2", jobid, uu, pp, outputs)
+    bulkthumbscom = "python3 bulkthumbs2.py --ra {} --dec {} --xsize {} --ysize {} --make_fits --colors {} --db {} --release {} --jobid {} --usernm {} --passwd {} --outdir {} --return_list".format(ralst, declst, xs, ys, colors, "DESSCI", "Y3A2", jobid, uu, pp, outputs
     try:
         #oo = subprocess.run([bulkthumbscom], check=True, shell=True)
         oo = subprocess.check_output([bulkthumbscom], shell=True)
@@ -1046,7 +1046,7 @@ def make_chart(inputs, uu, pp, outputs, db, xs, ys, jobid, return_cut, send_emai
 
 
 @app.task(base=CustomTask, soft_time_limit=3600*46, time_limit=3600*48)
-def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, pngs, fits, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
+def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, release, tiffs, pngs, fits, rgbvalues, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -1054,6 +1054,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     response['files'] = None
     response['sizes'] = None
     response['email'] = 'no'
+    response['release'] = release
     if send_email:
         response['email'] = email
     t1 = time.time()
@@ -1115,9 +1116,10 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     if return_list:
         args += ' --return_list'
     if db == 'dessci' or db == 'desoper':
-        args += ' --db Y3A2'
+        args += ' --db DESSCI'
     else:
         args += ' --db DR1'
+    args += ' --release {}'.format(release)
     args += ' --usernm {} --passwd {}'.format(uu, pp)
     args += ' --jobid {}'.format(jobid)
     args += ' --outdir {}'.format(outdir)
