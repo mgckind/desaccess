@@ -674,7 +674,7 @@ def run(args):
 
     tilenm = df['TILENAME'].unique()
     conn_temp = ea.connect('dessci', user=args.usernm, passwd=args.passwd)
-    qtemplate = "select FITS_CATALOG from {} where tilename = '{}' and band = 'i'"
+    qtemplate = "select FITS_IMAGES from {} where tilename = '{}' and band = 'i'"
     table_path = "MCARRAS2.{}_TILE_PATH_INFO".format(args.release)
     for i in tilenm:
         # tiledir = TILES_FOLDER + i + '/'
