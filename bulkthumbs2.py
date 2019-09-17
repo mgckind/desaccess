@@ -679,7 +679,7 @@ def run(args):
     for i in tilenm:
         # tiledir = TILES_FOLDER + i + '/'
         dftile = conn_temp.query_to_pandas(qtemplate.format(table_path, i))
-        tiledir = os.path.dirname(dftile.FITS_CATALOG.iloc[0])
+        tiledir = os.path.dirname(dftile.FITS_IMAGES.iloc[0])
         if args.release in ('Y6A1', 'Y3A2'):
             tiledir = tiledir.replace('https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/', '/des003/desarchive/') + '/'
         if args.release in ('SVA1', 'Y1A1'):
