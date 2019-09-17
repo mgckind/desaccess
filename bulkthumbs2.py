@@ -34,7 +34,7 @@ from PIL import Image
 
 Image.MAX_IMAGE_PIXELS = 144000000        # allows Pillow to not freak out at a large filesize
 ARCMIN_TO_DEG = 0.0166667        # deg per arcmin
-dbs = ['DR1','Y3A2']
+dbs = ['DR1','DESSCI']
 
 TILES_FOLDER = ''
 OUTDIR = ''
@@ -305,13 +305,14 @@ def MakeFitsCut(tiledir, outdir, size, positions, colors, df):
 
             # Iterate over all HDUs in the tile
             for i in range(len(hdul)):
+                old_header = 0
                 if hdul[i].name == 'PRIMARY':
                     continue
 
                 h = hdul[i].header
                 data = hdul[i].data
                 header = h.copy()
-                w=WCS(header)
+                w = WCS(header)
 
                 cutout = Cutout2D(data, positions[p], usize, wcs=w, mode='trim')
                 crpix1, crpix2 = cutout.position_cutout
@@ -329,7 +330,14 @@ def MakeFitsCut(tiledir, outdir, size, positions, colors, df):
                     newhdu = fits.PrimaryHDU(data=cutout.data, header=header)
                     pixelscale = utils.proj_plane_pixel_scales(w)
                 else:
-                    newhdu = fits.ImageHDU(data=cutout.data, header=header, name=h['EXTNAME'])
+                    try:
+                        newhdu = fits.ImageHDU(data=cutout.data, header=header, name=h['EXTNAME'])
+                    except KeyError:
+                        if old_header == 0:
+                            newhdu = fits.ImageHDU(data=cutout.data, header=header, name='SCI')
+                            old_header += 1
+                        else:
+                            newhdu = fits.ImageHDU(data=cutout.data, header=header, name='WGT')
                 newhdul.append(newhdu)
 
             if pixelscale is not None:
@@ -481,7 +489,7 @@ def run(args):
             uu = DR1_UU
             pp = DR1_PP
             conn = ea.connect(db, user=uu, passwd=pp)
-        elif args.db == 'Y3A2':
+        elif args.db == 'DESSCI':
             db = 'dessci'
             conn = ea.connect(db, user=args.usernm, passwd=args.passwd)
 
@@ -598,7 +606,7 @@ def run(args):
                 query += ", temp.XSIZE"
             if 'YSIZE' in userdf:
                 query += ", temp.YSIZE"
-            if args.db == 'Y3A2':
+            if args.db == 'DESSCI':
                 catalog = 'Y3A2_COADDTILE_GEOM'
             elif args.db == 'DR1':
                 catalog = 'DR1_Tile_INFO'
@@ -630,7 +638,7 @@ def run(args):
                 query += ", temp.XSIZE"
             if 'YSIZE' in userdf:
                 query += ", temp.YSIZE"
-            if args.db == 'Y3A2':
+            if args.db == 'DESSCI':
                 catalog = 'Y3A2_COADD_OBJECT_SUMMARY'
             elif args.db == 'DR1':
                 catalog = 'DR1_MAIN'
@@ -673,9 +681,21 @@ def run(args):
     df = comm.scatter(df, root=0)
 
     tilenm = df['TILENAME'].unique()
+    conn_temp = ea.connect('dessci', user=args.usernm, passwd=args.passwd)
+    qtemplate = "select FITS_IMAGES from {} where tilename = '{}' and band = 'i'"
+    table_path = "MCARRAS2.{}_TILE_PATH_INFO".format(args.release)
     for i in tilenm:
-        tiledir = TILES_FOLDER + i + '/'
-        udf = df[ df.TILENAME == i ]
+        # tiledir = TILES_FOLDER + i + '/'
+        dftile = conn_temp.query_to_pandas(qtemplate.format(table_path, i))
+        tiledir = os.path.dirname(dftile.FITS_IMAGES.iloc[0])
+        if args.release in ('Y6A1', 'Y3A2'):
+            tiledir = tiledir.replace('https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/', '/des003/desarchive/') + '/'
+        if args.release in ('SVA1', 'Y1A1'):
+            tiledir = tiledir.replace('https://desar2.cosmology.illinois.edu/DESFiles/desardata/OPS/coadd/', '/des004/coadd/') + '/'
+        if args.release in ('TEST'):
+            tiledir = tiledir.replace('http://server/', '/') + '/'
+        logger.info('Using DB and table {} to determine paths...'.format(table_path))
+        udf = df[df.TILENAME == i]
         udf = udf.reset_index()
 
         size = u.Quantity((ys, xs), u.arcmin)
@@ -694,7 +714,7 @@ def run(args):
             # Working by tilename
             var = [tiledir, outdir+i+'/', size, positions, args.colors_stiff, udf]
             MakeStiffRGB(var)
-
+    conn_temp.close()
     comm.Barrier()
 
     if rank == 0:
@@ -758,7 +778,8 @@ if __name__ == '__main__':
     parser.add_argument('--rgb_stretch', default=50.0, help='The linear stretch of the image. Default 50.0.')
     parser.add_argument('--rgb_asinh', default=10.0, help='The asinh softening parameter. Default 10.0')
 
-    parser.add_argument('--db', default='Y3A2', type=str.upper, required=False, help='Which database to use. Default: Y3A2, Options: DR1, Y3A2.')
+    parser.add_argument('--db', default='DESSCI', type=str.upper, required=False, help='Which database to use. Default: dessci, Options: DR1, dessci.')
+    parser.add_argument('--release', default='Y6A1', type=str.upper, required=False, help='Which release to use. Default: Y6A1')
     parser.add_argument('--jobid', required=False, help='Option to manually specify a jobid for this job.')
     parser.add_argument('--usernm', required=False, help='Username for database; otherwise uses values from desservices file.')
     parser.add_argument('--passwd', required=False, help='Password for database; otherwise uses values from desservices file.')

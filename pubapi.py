@@ -371,6 +371,10 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         os.system('mkdir -p ' + folder2)
 
         db = 'dessci'
+        if 'release' in arguments:
+            release = arguments['release'].upper()
+        else:
+            release = 'Y6A1'
         tiffs = True if 'make_stiff_rgb' in arguments and arguments['make_stiff_rgb'].upper() == 'TRUE' else False
         pngs = True if 'make_lupton_rgb' in arguments and arguments['make_lupton_rgb'].upper() == 'TRUE' else False
         fits = True if 'make_fits' in arguments and arguments['make_fits'].upper() == 'TRUE' else False
@@ -392,7 +396,7 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
 
         return_list = True if 'return_list' in arguments and arguments['return_list'].upper() == 'TRUE' else False
 
-        run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, user, lp, jobid, folder2, db, tiffs, pngs, fits, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
+        run = ea_tasks.bulktasks.apply_async(args=[job_size, nprocs, input_csv, user, lp, jobid, folder2, db, release, tiffs, pngs, fits, rgb_values, colors, xsize, ysize, return_list, send_email, email], retry=True, task_id=jobid, queue='bulk-queue')
 
         app_log.info('Job Cutouts {} submitted'.format(run))
 

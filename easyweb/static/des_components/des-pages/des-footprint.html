@@ -312,8 +312,8 @@
 
                     <div class=" flex">
                 <paper-checkbox style="margin-left: 20px; margin-top: 20px;" id="check_coord" checked on-change="display_coord">Coordinates</paper-checkbox>
-                <paper-checkbox class="dr1" style="margin-left: 20px; margin-top: 20px;"  id="check_dr1" checked on-change="display_dr1">Y3A2</paper-checkbox>
-                <paper-checkbox class="y6a1" style="margin-left: 20px; margin-top: 20px;" id="check_y6a1" on-change="display_y6a1">Y6A1 </paper-checkbox>
+                <paper-checkbox class="y6a1" style="margin-left: 20px; margin-top: 20px;" id="check_y6a1" checked on-change="display_y6a1">Y6A1 </paper-checkbox>
+                <paper-checkbox class="dr1" style="margin-left: 20px; margin-top: 20px;"  id="check_dr1"  on-change="display_dr1">Y3A2</paper-checkbox>
                 <paper-checkbox class="y5a1" style="margin-left: 20px; margin-top: 20px;" id="check_y5a1" on-change="display_y5a1">Y5A1 </paper-checkbox>
                 <paper-checkbox class="y1a1" style="margin-left: 20px; margin-top: 20px;"  id="check_y1a1"  on-change="display_y1a1">Y1A1 </paper-checkbox>
                 <paper-checkbox class="sva1" style="margin-left: 20px; margin-top: 20px;"  id="check_sva1"  on-change="display_sva1">SVA1 </paper-checkbox>
@@ -333,7 +333,7 @@
                         </div>
                             <div class="card-content">
                                 <br />
-                            <span> Click below to get the files for this tile (if avaialble)</span><br />
+                            <span> Click below to get the files for this tile (if available)</span><br />
                             <paper-button class="y3" disabled raised on-tap="_getTiles" id ="downloadTile"> Y3A2</paper-button>
                             <paper-button class="y6" disabled raised on-tap="_getTilesY6" id ="downloadTileY6">Y6A1</paper-button>
                             <paper-button class="y5" disabled raised on-tap="_getTilesY5" id ="downloadTileY5">Y5A1</paper-button>
@@ -700,7 +700,7 @@
                             })
                         });
                         vectorLayer.addFeatureCollection(JSON.parse(response));
-                        vectorLayer.visible(true);
+                        vectorLayer.visible(false);
                         globe.addLayer(vectorLayer);
                         window.dr1_tiles = vectorLayer;
                     });
@@ -742,7 +742,7 @@
                             })
                         });
                         vectorLayer.addFeatureCollection(JSON.parse(response));
-                        vectorLayer.visible(false);
+                        vectorLayer.visible(true);
                         globe.addLayer(vectorLayer);
                         window.y6a1_tiles = vectorLayer;
                     });
