@@ -11,23 +11,32 @@
        tail="{{subroute}}"></app-route>
 
       <div style="height: 85%; overflow: auto;">
-    <iron-pages  id="mainPages" selected=[[selection]]>
-        <des-home  name={{name}} db={{db}}></des-home>
-        <des-query name="query-box" id="desQuery" username={{username}} db={{db}} email={{email}}></des-query>
-        <des-schema name="schema" choice="0"></des-schema>
+    <iron-pages  id="mainPages" selected=[[selection]] attr-for-selected="page-name">
+        <des-home page-name="des-home" name={{name}} db={{db}} analysis={{analysis}} jlab={{jlab}} fchart={{fchart}}></des-home>
+        <des-query page-name="des-query" name="query-box" id="desQuery" username={{username}} db={{db}} email={{email}}></des-query>
+        <des-schema page-name="des-schema" name="schema" choice="0"></des-schema>
         <!--<des-all-tables name="schema"></des-all-tables>-->
-        <des-example-query></des-example-query>
+        <des-example-query page-name="des-example-query"></des-example-query>
         <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
         <!--
         <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
          -->
-        <des-bulk-cutouts id="desBulkCutouts" email={{email}} choice="0"></des-bulk-cutouts>
-        <des-jlabs username={{username}}></des-jlabs>
-        <des-finding-chart id="desFindingChart" email={{email}}></des-finding-chart>
-        <des-footprint id="FootprintPage"></des-footprint>
-        <!-- <des-data-analysis id="desDataAnalysis" email={{email}}></des-data-analysis> -->
-        <des-my-jobs></des-my-jobs>
-        <des-help></des-help>
+        <des-bulk-cutouts page-name="des-bulk-cutouts" id="desBulkCutouts" email={{email}} choice="0"></des-bulk-cutouts>
+
+        <template is="dom-if" if="{{jlab}}">
+        <des-jlabs page-name="des-jlabs" username={{username}}></des-jlabs>
+        </template>
+        <template is="dom-if" if="{{fchart}}">
+        <des-finding-chart page-name="des-finding-chart" id="desFindingChart" email={{email}}></des-finding-chart>
+        </template>
+        <des-footprint page-name="des-footprint" id="FootprintPage"></des-footprint>
+
+        <template is="dom-if" if="{{analysis}}">
+        <des-data-analysis page-name="des-data-analysis" id="desDataAnalysis" email={{email}}></des-data-analysis>
+        </template>
+
+        <des-my-jobs page-name="des-my-jobs"></des-my-jobs>
+        <des-help page-name="des-help"></des-help>
 
     </iron-pages>
 </div>
@@ -53,6 +62,18 @@
         email: {
             type: String,
             value:''
+        },
+        analysis: {
+          type: Boolean,
+          value: false
+        },
+        jlab: {
+          type: Boolean,
+          value: false
+        },
+        fchart: {
+          type: Boolean,
+          value: false
         },
         username:{
             type:String,

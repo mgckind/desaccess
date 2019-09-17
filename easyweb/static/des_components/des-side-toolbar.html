@@ -63,25 +63,25 @@
                     <div class="email">{{email}}</div>
                 </div>
 
-    <paper-menu id="bigmenu"  selected="[[selection]]" key-event-target="null">
+    <paper-menu id="bigmenu"  selected="[[selection]]" key-event-target="null" attr-for-selected="page-name">
 
         <!-- Order is important, it needs to match des-mainpages -->
-        <paper-item>
+        <paper-item page-name="des-home">
         <a class="ahidden" href="/easyweb/" >
             <span style=" position: absolute; top:12px;">Home</span>
         </a>
         </paper-item>
-        <paper-item  >
+        <paper-item page-name="des-query" >
         <a class="ahidden" href="/easyweb/db-access" >
             <span style=" position: absolute; top:12px;">DB access</span>
         </a>
         </paper-item>
-        <paper-item>
+        <paper-item page-name="des-schema">
         <a  class="ahidden" href="/easyweb/db-schema" >
             <span style=" position: absolute; top:12px;">DES Table Schema</span>
         </a>
         </paper-item>
-        <paper-item>
+        <paper-item page-name="des-example-query">
         <a  class="ahidden" href="/easyweb/db-examples" >
             <span style=" position: absolute; top:12px;">Example Queries</span>
         </a>
@@ -94,39 +94,48 @@
         </a>
         </paper-item>
         -->
-        <paper-item>
+        <paper-item page-name="des-bulk-cutouts"">
         <a  class="ahidden" href="/easyweb/bulk-cutouts" >
             <span style=" position: absolute; top:12px;">Cutouts Service</span>
         </a>
         </paper-item>
 
-        <paper-item>
+        <template is="dom-if" if="{{jlab}}">
+        <paper-item page-name="des-jlabs" >
             <a  class="ahidden" href="/easyweb/deslabs" >
                 <span style=" position: absolute; top:12px;">DES JupyterLab</span>
             </a>
         </paper-item>
+        </template>
 
-        <paper-item>
+        <template is="dom-if" if="{{fchart}}">
+        <paper-item page-name="des-finding-chart" >
         <a  class="ahidden" href="/easyweb/finding-chart" >
 			<span style=" position: absolute; top:12px;">Finding Chart</span>
         </a>
         </paper-item>
-        <paper-item>
+        </template>
+
+        <paper-item page-name="des-footprint" >
         <a  class="ahidden" href="/easyweb/footprint" >
             <span style=" position: absolute; top:12px;">DES Footprint</span>
         </a>
         </paper-item>
-        <!-- <paper-item>
-		<a  class="ahidden" href="/easyweb/data-analysis" >
+
+      <template is="dom-if" if="{{analysis}}">
+        <paper-item page-name="des-data-analysis" >
+		  <a  class="ahidden" href="/easyweb/data-analysis" >
 			<span style=" position: absolute; top:12px;">Data Analysis</span>
-		</a>
-		</paper-item> -->
-        <paper-item>
+		  </a>
+		</paper-item>
+      </template>
+
+        <paper-item page-name="des-my-jobs">
         <a  class="ahidden" href="/easyweb/my-jobs" >
             <span style=" position: absolute; top:12px;">My Jobs</span>
         </a>
         </paper-item>
-        <paper-item>
+        <paper-item page-name="des-help">
         <a  class="ahidden" href="/easyweb/help-form" >
             <span style=" position: absolute; top:12px;">Help</span>
         </a>
@@ -146,6 +155,18 @@
                 type: String,
                 value:''
             },
+          analysis: {
+            type: Boolean,
+            value: false
+          },
+          jlab: {
+            type: Boolean,
+            value: false
+          },
+          fchart: {
+            type: Boolean,
+            value: false
+          },
           email : {
                 type: String,
                 value:''

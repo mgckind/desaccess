@@ -40513,25 +40513,25 @@ the blue buttons below the query box to do different things with your results.
                     <div class="email">{{email}}</div>
                 </div>
 
-    <paper-menu id="bigmenu" selected="[[selection]]" key-event-target="null">
+    <paper-menu id="bigmenu" selected="[[selection]]" key-event-target="null" attr-for-selected="page-name">
 
         <!-- Order is important, it needs to match des-mainpages -->
-        <paper-item>
+        <paper-item page-name="des-home">
         <a class="ahidden" href="/easyweb/">
             <span style=" position: absolute; top:12px;">Home</span>
         </a>
         </paper-item>
-        <paper-item>
+        <paper-item page-name="des-query">
         <a class="ahidden" href="/easyweb/db-access">
             <span style=" position: absolute; top:12px;">DB access</span>
         </a>
         </paper-item>
-        <paper-item>
+        <paper-item page-name="des-schema">
         <a class="ahidden" href="/easyweb/db-schema">
             <span style=" position: absolute; top:12px;">DES Table Schema</span>
         </a>
         </paper-item>
-        <paper-item>
+        <paper-item page-name="des-example-query">
         <a class="ahidden" href="/easyweb/db-examples">
             <span style=" position: absolute; top:12px;">Example Queries</span>
         </a>
@@ -40544,39 +40544,48 @@ the blue buttons below the query box to do different things with your results.
         </a>
         </paper-item>
         -->
-        <paper-item>
+        <paper-item page-name="des-bulk-cutouts" "="">
         <a class="ahidden" href="/easyweb/bulk-cutouts">
             <span style=" position: absolute; top:12px;">Cutouts Service</span>
         </a>
         </paper-item>
 
-        <paper-item>
+        <template is="dom-if" if="{{jlab}}">
+        <paper-item page-name="des-jlabs">
             <a class="ahidden" href="/easyweb/deslabs">
                 <span style=" position: absolute; top:12px;">DES JupyterLab</span>
             </a>
         </paper-item>
+        </template>
 
-        <paper-item>
+        <template is="dom-if" if="{{fchart}}">
+        <paper-item page-name="des-finding-chart">
         <a class="ahidden" href="/easyweb/finding-chart">
 			<span style=" position: absolute; top:12px;">Finding Chart</span>
         </a>
         </paper-item>
-        <paper-item>
+        </template>
+
+        <paper-item page-name="des-footprint">
         <a class="ahidden" href="/easyweb/footprint">
             <span style=" position: absolute; top:12px;">DES Footprint</span>
         </a>
         </paper-item>
-        <!-- <paper-item>
-		<a  class="ahidden" href="/easyweb/data-analysis" >
+
+      <template is="dom-if" if="{{analysis}}">
+        <paper-item page-name="des-data-analysis">
+		  <a class="ahidden" href="/easyweb/data-analysis">
 			<span style=" position: absolute; top:12px;">Data Analysis</span>
-		</a>
-		</paper-item> -->
-        <paper-item>
+		  </a>
+		</paper-item>
+      </template>
+
+        <paper-item page-name="des-my-jobs">
         <a class="ahidden" href="/easyweb/my-jobs">
             <span style=" position: absolute; top:12px;">My Jobs</span>
         </a>
         </paper-item>
-        <paper-item>
+        <paper-item page-name="des-help">
         <a class="ahidden" href="/easyweb/help-form">
             <span style=" position: absolute; top:12px;">Help</span>
         </a>
@@ -40596,6 +40605,18 @@ the blue buttons below the query box to do different things with your results.
                 type: String,
                 value:''
             },
+          analysis: {
+            type: Boolean,
+            value: false
+          },
+          jlab: {
+            type: Boolean,
+            value: false
+          },
+          fchart: {
+            type: Boolean,
+            value: false
+          },
           email : {
                 type: String,
                 value:''
@@ -40614,23 +40635,32 @@ the blue buttons below the query box to do different things with your results.
    <app-route id="approute" route="{{route}}" pattern="/easyweb/:view" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
       <div style="height: 85%; overflow: auto;">
-    <iron-pages id="mainPages" selected="[[selection]]">
-        <des-home name="{{name}}" db="{{db}}"></des-home>
-        <des-query name="query-box" id="desQuery" username="{{username}}" db="{{db}}" email="{{email}}"></des-query>
-        <des-schema name="schema" choice="0"></des-schema>
+    <iron-pages id="mainPages" selected="[[selection]]" attr-for-selected="page-name">
+        <des-home page-name="des-home" name="{{name}}" db="{{db}}" analysis="{{analysis}}" jlab="{{jlab}}" fchart="{{fchart}}"></des-home>
+        <des-query page-name="des-query" name="query-box" id="desQuery" username="{{username}}" db="{{db}}" email="{{email}}"></des-query>
+        <des-schema page-name="des-schema" name="schema" choice="0"></des-schema>
         <!--<des-all-tables name="schema"></des-all-tables>-->
-        <des-example-query></des-example-query>
+        <des-example-query page-name="des-example-query"></des-example-query>
         <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
         <!--
         <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
          -->
-        <des-bulk-cutouts id="desBulkCutouts" email="{{email}}" choice="0"></des-bulk-cutouts>
-        <des-jlabs username="{{username}}"></des-jlabs>
-        <des-finding-chart id="desFindingChart" email="{{email}}"></des-finding-chart>
-        <des-footprint id="FootprintPage"></des-footprint>
-        <!-- <des-data-analysis id="desDataAnalysis" email={{email}}></des-data-analysis> -->
-        <des-my-jobs></des-my-jobs>
-        <des-help></des-help>
+        <des-bulk-cutouts page-name="des-bulk-cutouts" id="desBulkCutouts" email="{{email}}" choice="0"></des-bulk-cutouts>
+
+        <template is="dom-if" if="{{jlab}}">
+        <des-jlabs page-name="des-jlabs" username="{{username}}"></des-jlabs>
+        </template>
+        <template is="dom-if" if="{{fchart}}">
+        <des-finding-chart page-name="des-finding-chart" id="desFindingChart" email="{{email}}"></des-finding-chart>
+        </template>
+        <des-footprint page-name="des-footprint" id="FootprintPage"></des-footprint>
+
+        <template is="dom-if" if="{{analysis}}">
+        <des-data-analysis page-name="des-data-analysis" id="desDataAnalysis" email="{{email}}"></des-data-analysis>
+        </template>
+
+        <des-my-jobs page-name="des-my-jobs"></des-my-jobs>
+        <des-help page-name="des-help"></des-help>
 
     </iron-pages>
 </div>
@@ -40656,6 +40686,18 @@ the blue buttons below the query box to do different things with your results.
         email: {
             type: String,
             value:''
+        },
+        analysis: {
+          type: Boolean,
+          value: false
+        },
+        jlab: {
+          type: Boolean,
+          value: false
+        },
+        fchart: {
+          type: Boolean,
+          value: false
         },
         username:{
             type:String,
@@ -50179,22 +50221,29 @@ function keysrt(key,desc) {
                 <des-card-welcome heading="CUTOUTS SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Bulk Cutout Service" desc="Generate cutouts for positions or ids" name="bulkcoadd"></des-card-welcome>
                 </a>
 
+                <template is="dom-if" if="{{jlab}}">
                 <a style="text-transform: none; color:black;" href="/easyweb/deslabs" tabindex="-1">
                 <des-card-welcome heading="DES JupyterLabs" image="/easyweb/static/images/home-deslabs.jpg" alt="deslabs" desc="(Beta) Jupyter Labs" name="deslabs"></des-card-welcome>
                 </a>
+                </template>
 
+                <template is="dom-if" if="{{fchart}}">
                 <a style="text-transform: none; color:black;" href="/easyweb/finding-chart" tabindex="-1">
                 <!--<des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/home-footprint-old.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>-->
                 <des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/DESJ004034.0-620158.6_I.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>
                 </a>
+                </template>
+                
                 <a style="text-transform: none; color:black;" href="/easyweb/footprint" tabindex="-1">
                 <des-card-welcome heading="DES FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint"></des-card-welcome>
                 </a>
 
-                <!-- <a style = "text-transform: none; color:black;" href="/easyweb/data-analysis" tabindex="-1"> -->
-                <!--<des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/home-footprint-old.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome>-->
-                <!-- <des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/DESJ001952.9-485955.6_magnitude.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome> -->
-                <!-- </a> -->
+                <template is="dom-if" if="{{analysis}}">
+                <a style="text-transform: none; color:black;" href="/easyweb/data-analysis" tabindex="-1">
+                <!--<des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/home-footprint-old.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome> -->
+                <des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/DESJ001952.9-485955.6_magnitude.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome>
+                </a>
+                </template>
 
                 <a style="text-transform: none; color:black;" href="/easyweb/my-jobs" tabindex="-1">
                 <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs"></des-card-welcome>
@@ -50228,6 +50277,18 @@ function keysrt(key,desc) {
                 type: String,
                 value:''
             },
+           analysis: {
+             type: Boolean,
+             value: false
+           },
+           jlab: {
+             type: Boolean,
+             value: false
+           },
+           fchart: {
+             type: Boolean,
+             value: false
+           }
         },
 
 //        change: function(e){

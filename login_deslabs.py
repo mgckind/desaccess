@@ -103,11 +103,16 @@ class MainHandler(BaseHandler):
                                 'upper(username) = \'%s\'' % loc_user.upper()).fetchone()
         except:
             cc = ('', '', '')
+        try:
+            ee = cursor.execute('select apps from MCARRAS2.USER_APPS where '
+                                'upper(username) = \'%s\'' % loc_user.upper()).fetchone()
+        except:
+            ee = ('jlab fchart analysis')
         cursor.close()
         dbh.close()
         try:
             self.render("main-public.html", name=cc[0], lastname=cc[1],
-                        email=cc[2], username=loc_user, version=__version__, db=loc_db)
+                        email=cc[2], username=loc_user, version=__version__, db=loc_db, eapps=ee[0])
         except:
             self.render("login-public.html", errormessage='',
                         version=__version__, update='no', toast='no', db='', next='')
