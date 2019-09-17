@@ -305,13 +305,14 @@ def MakeFitsCut(tiledir, outdir, size, positions, colors, df):
 
             # Iterate over all HDUs in the tile
             for i in range(len(hdul)):
+                old_header = 0
                 if hdul[i].name == 'PRIMARY':
                     continue
 
                 h = hdul[i].header
                 data = hdul[i].data
                 header = h.copy()
-                w=WCS(header)
+                w = WCS(header)
 
                 cutout = Cutout2D(data, positions[p], usize, wcs=w, mode='trim')
                 crpix1, crpix2 = cutout.position_cutout
@@ -329,7 +330,14 @@ def MakeFitsCut(tiledir, outdir, size, positions, colors, df):
                     newhdu = fits.PrimaryHDU(data=cutout.data, header=header)
                     pixelscale = utils.proj_plane_pixel_scales(w)
                 else:
-                    newhdu = fits.ImageHDU(data=cutout.data, header=header, name=h['EXTNAME'])
+                    try:
+                        newhdu = fits.ImageHDU(data=cutout.data, header=header, name=h['EXTNAME'])
+                    except KeyError:
+                        if old_header == 0:
+                            newhdu = fits.ImageHDU(data=cutout.data, header=header, name='SCI')
+                            old_header += 1
+                        else:
+                            newhdu = fits.ImageHDU(data=cutout.data, header=header, name='WGT')
                 newhdul.append(newhdu)
 
             if pixelscale is not None:
@@ -684,6 +692,8 @@ def run(args):
             tiledir = tiledir.replace('https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/', '/des003/desarchive/') + '/'
         if args.release in ('SVA1', 'Y1A1'):
             tiledir = tiledir.replace('https://desar2.cosmology.illinois.edu/DESFiles/desardata/OPS/coadd/', '/des004/coadd/') + '/'
+        if args.release in ('TEST'):
+            tiledir = tiledir.replace('http://server/', '/') + '/'
         logger.info('Using DB and table {} to determine paths...'.format(table_path))
         udf = df[df.TILENAME == i]
         udf = udf.reset_index()
