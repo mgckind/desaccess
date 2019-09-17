@@ -680,7 +680,10 @@ def run(args):
         # tiledir = TILES_FOLDER + i + '/'
         dftile = conn_temp.query_to_pandas(qtemplate.format(table_path, i))
         tiledir = os.path.dirname(dftile.FITS_CATALOG.iloc[0])
-        tiledir = tiledir.replace('http://', '/') + '/'
+        if args.release in ('Y6A1', 'Y3A2'):
+            tiledir = tiledir.replace('https://desar2.cosmology.illinois.edu/DESFiles/desarchive/OPS/', '/des003/desarchive/') + '/'
+        if args.release in ('SVA1', 'Y1A1'):
+            tiledir = tiledir.replace('https://desar2.cosmology.illinois.edu/DESFiles/desardata/OPS/coadd/', '/des004/coadd/') + '/'
         logger.info('Using DB and table {} to determine paths...'.format(table_path))
         udf = df[df.TILENAME == i]
         udf = udf.reset_index()
