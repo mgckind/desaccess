@@ -104,14 +104,19 @@ class MainHandler(BaseHandler):
         except:
             cc = ('', '', '')
         try:
+            ee_default = cursor.execute('select apps from MCARRAS2.USER_APPS where '
+                                'upper(username) = \'DEFAULT_USER\'').fetchone()
+            if ee_default is None:
+                ee_default = ('jlab fchart ',)
+        except:
+            ee_default = ('jlab fchart ',)
+        try:
             ee = cursor.execute('select apps from MCARRAS2.USER_APPS where '
                                 'upper(username) = \'%s\'' % loc_user.upper()).fetchone()
+            if ee is None:
+                ee = ee_default
         except:
-            try:
-                ee = cursor.execute('select apps from MCARRAS2.USER_APPS where '
-                                    'upper(username) = \'DEFAULT_USER\'').fetchone()
-            except:
-                ee = ('jlab fchart ')
+            ee = ee_default
         cursor.close()
         dbh.close()
         try:
