@@ -217,7 +217,11 @@
                                 </paper-icon-item>
                             </td>
                             <td class="coadd-td">
-                                <paper-slider id="se_airmassSlider" pin max="10" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
+                                <div class="around-cell">
+                                    <paper-toggle-button class="queryButton" id="se_inputAirmassCheck" noink on-tap="_enableSEOptionSlider" style="margin-top: -10px">
+                                    </paper-toggle-button>
+                                    <paper-slider id="se_airmassSlider" disabled pin max="10" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
+                                </div>
                             </td>
                         </tr>
 
@@ -231,7 +235,11 @@
                                 </paper-icon-item>
                             </td>
                             <td class="coadd-td">
-                                <paper-slider id="se_psffwhmSlider" pin max="10" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
+                                <div class="around-cell">
+                                    <paper-toggle-button class="queryButton" id="se_inputFWHMCheck" noink on-tap="_enableSEOptionSlider" style="margin-top: -10px">
+                                    </paper-toggle-button>
+                                    <paper-slider id="se_psffwhmSlider" disabled pin max="10" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
+                                </div>
                             </td>
                         </tr>
 
@@ -376,6 +384,22 @@
                 document.getElementById("se_validemail").value='';
             }
         },
+
+        _enableSEOptionSlider: function(){
+            if (document.getElementById('se_inputAirmassCheck').checked) {
+                document.getElementById('se_airmassSlider').disabled=false;
+            }
+            else {
+                document.getElementById('se_airmassSlider').disabled=true;
+            }
+
+            if (document.getElementById('se_inputFWHMCheck').checked) {
+                document.getElementById('se_psffwhmSlider').disabled=false;
+            }
+            else {
+                document.getElementById('se_psffwhmSlider').disabled=true;
+            }
+        },
         
         _fileChange: function () {
             this.file_name = this.se_filesAB.name;
@@ -416,9 +440,11 @@
 
             document.getElementById("se_airmassLabel").innerHTML="2.0";
             document.getElementById("se_airmassSlider").value="2.0";
+            document.getElementById("se_inputAirmassCheck").checked=false;
             
             document.getElementById("se_psffwhmLabel").innerHTML="2.0";
             document.getElementById("se_psffwhmSlider").value="2.0";
+            document.getElementById("se_inputFWHMCheck").checked=false;
 
             document.getElementById("se_sendemail").checked=false;
             document.getElementById("se_returnList").checked=false;
@@ -472,8 +498,10 @@
             formdata.append('se_all_toggle', document.getElementById("se_all_toggle").checked);
 
             formdata.append('se_airmass', document.getElementById("se_airmassSlider").value);
+            formdata.append('se_airmass_check', document.getElementById("se_inputAirmassCheck").checked);
 
             formdata.append('se_psffwhm', document.getElementById("se_psffwhmSlider").value);
+            formdata.append('se_psffwhm_check', document.getElementById("se_inputFWHMCheck").checked);
 
             formdata.append('se_returnList', document.getElementById("se_returnList").checked);
             formdata.append('se_send_email', document.getElementById("se_sendemail").checked);

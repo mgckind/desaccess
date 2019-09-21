@@ -44,6 +44,9 @@ class FileHandler(BaseHandler):
         airmass = float(self.get_argument("se_airmass"))
         psffwhm = float(self.get_argument("se_psffwhm"))
 
+        airmasscheck = self.get_argument("se_airmass_check") == 'true'
+        psffwhmcheck = self.get_argument("se_psffwhm_check") == 'true'
+
         gband = self.get_argument("se_gband") == 'true'
         rband = self.get_argument("se_rband") == 'true'
         iband = self.get_argument("se_iband") == 'true'
@@ -59,6 +62,12 @@ class FileHandler(BaseHandler):
         email = self.get_argument("se_email")
         name = self.get_argument("se_name")
         stype = self.get_argument("se_submit_type")
+
+        data_options = {'airmass':None, 'psffwhm':None}
+        if airmasscheck:
+            data_options['airmass'] = airmass
+        if psffwhmcheck:
+            data_options['psffwhm'] = psffwhm
 
         if allbands:
             gband = True
@@ -121,8 +130,7 @@ class FileHandler(BaseHandler):
                                                     jobid, 
                                                     folder2, 
                                                     db, 
-                                                    airmass, 
-                                                    psffwhm, 
+                                                    data_options, 
                                                     colors, 
                                                     xsize, 
                                                     ysize, 

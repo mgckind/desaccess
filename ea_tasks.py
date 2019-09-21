@@ -1186,7 +1186,7 @@ def bulktasks(job_size, nprocs, input_csv, uu, pp, jobid, outdir, db, tiffs, png
     return response
 
 @app.task(base=CustomTask, soft_time_limit=3600*23, time_limit=3600*24)
-def epochtasks(input_csv, uu, pp, jobid, outdir, db, airmass, psffwhm, colors, xsize, ysize, return_list, send_email, email):
+def epochtasks(input_csv, uu, pp, jobid, outdir, db, data_options, colors, xsize, ysize, return_list, send_email, email):
     response = {}
     response['user'] = uu
     response['elapsed'] = 0
@@ -1211,8 +1211,10 @@ def epochtasks(input_csv, uu, pp, jobid, outdir, db, airmass, psffwhm, colors, x
     args += ' --csv {}'.format(input_csv)
     args += ' --make_fits --colors {}'.format(colors)
     args += ' --xsize {} --ysize {}'.format(xsize, ysize)
-    args += ' --airmass {}'.format(airmass)
-    args += ' --psffwhm {}'.format(airmass)
+    if data_options['airmass']:
+        args += ' --airmass {}'.format(data_options['airmass'])
+    if data_options['psffwhm']:
+        args += ' --psffwhm {}'.format(data_options['psffwhm'])
     if return_list:
         args += ' --return_list'
     args += ' --usernm {} --passwd {}'.format(uu, pp)
