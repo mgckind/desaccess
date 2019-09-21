@@ -39,6 +39,7 @@ CCDS_FOLDER = ''
 OUTDIR = ''
 CLIENT = ''
 PORT = ''
+DBNAME = ''
 
 def getPathSize(path):
     dirsize = 0
@@ -170,9 +171,8 @@ def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
 
 def run(args):
     ### Connect to the local MongoDB database and get the collections.
-    dbname = args.mdb
     client = MongoClient(CLIENT, PORT)
-    db = client[ dbname ]
+    db = client[ DBNAME ]
     collections = db.list_collection_names()
 
     conn = ea.connect(user=args.usernm, passwd=args.passwd)
@@ -418,7 +418,7 @@ def run(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Dark Energy Survey Single Epoch Cutout Service")
 
-    parser.add_argument('--mdb', type=str, required=False, default='AllCellIds_Sample', help='Specify Mongo DB to use.')
+    parser.add_argument('--mdb', type=str, required=False, help='Specify Mongo DB to use.')
     parser.add_argument('--csv', type=str, required=False, help='A CSV with columns \'RA,DEC\'')
     parser.add_argument('--ra', nargs='*', type=float, required=False, help='RA (decimal degrees)')
     parser.add_argument('--dec', nargs='*', type=float, required=False, help='DEC (decimal degrees)')
@@ -427,7 +427,7 @@ if __name__ == '__main__':
     parser.add_argument('--xsize', type=float, required=False, default=1.0, help='Size in arcminutes of the cutout x-axis. Default: 1.0')
     parser.add_argument('--ysize', type=float, required=False, default=1.0, help='Size in arcminutes of the cutout y-axis. Default: 1.0')
     parser.add_argument('--colors', type=str.upper, default='G,R,I,Z,Y', help='Color bands for the fits cutout. Enter comma-separated list. Not case sensitive. Default: g,r,i,z,y')
-    parser.add_argument('--blacklist', action='store_true', help='Include blacklisted CCDs. Default: False (no blacklisted CCDs)')
+    #parser.add_argument('--blacklist', action='store_true', help='Include blacklisted CCDs. Default: False (no blacklisted CCDs)')
     parser.add_argument('--airmass', required=False, type=float, help='Upper limit of air mass.')
     parser.add_argument('--psffwhm', required=False, type=float, help='Upper limit of FWHM, PSF-based.')
     parser.add_argument('--jobid', type=str, required=False, help='Option to manually specify a jobid for this job.')
@@ -452,6 +452,11 @@ if __name__ == '__main__':
         OUTDIR = args.outdir
     else:
         OUTDIR = conf['directories']['outdir'] + '/'
+    
+    if args.mdb:
+        DBNAME = args.mdb
+    else:
+        DBNAME = conf['mongoclient']['db']
 
     if not args.csv and not (args.ra and args.dec):
         print('Please include either RA/DEC coordinates or Coadd IDs.')
