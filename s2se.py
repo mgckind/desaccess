@@ -322,7 +322,7 @@ def run(args):
             query['AIRMASS'] = { '$lte' : args.airmass }
         if args.fwhm:
             query['FWHM'] = { '$lte' : args.fwhm }
-        logger.info('DB query: ' + query)
+        logger.info('DB query: ' + str(query))
         #print(query)
         #print()
 
