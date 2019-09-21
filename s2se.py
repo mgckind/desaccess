@@ -36,6 +36,7 @@ ARCMIN_TO_DEG = 0.0166667       # deg per arcmin
 LEVELS = [7,8,9,10] # Should not be set by user unless we have multiple databases to choose from that use different levels.
 SURVEYS = ['Y1A1_FINALCUT','Y3A1_FINALCUT']
 CCDS_FOLDER = ''
+CCDS_PREFIX = ''
 OUTDIR = ''
 CLIENT = ''
 PORT = ''
@@ -92,7 +93,8 @@ def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
     os.makedirs(outdir, exist_ok=True)
 
     # Get the name of the CCD's FITS file and open it.
-    path = CCDS_FOLDER + ccd['FILENAME'] + ccd['COMPRESSION'] #ccd['FULL_PATH']
+    #path = CCDS_FOLDER + ccd['FILENAME'] + ccd['COMPRESSION'] #ccd['FULL_PATH']
+    path = CCDS_PREFIX + ccd['FULL_PATH'] + ccd['COMPRESSION']
     print(path)
     hdul = None
     try:
@@ -449,6 +451,7 @@ if __name__ == '__main__':
         conf = yaml.load(cfile)
     
     CCDS_FOLDER = conf['directories']['ccds'] + '/'
+    CCDS_PREFIX = conf['directories']['ccds_prefix'] + '/'
     CLIENT = conf['mongoclient']['host']
     PORT = int(conf['mongoclient']['port'])
     
