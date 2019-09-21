@@ -90,22 +90,24 @@ def _getColorList(colors):
 
 
 def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
+    logger = logging.getLogger(__name__)
     os.makedirs(outdir, exist_ok=True)
 
     # Get the name of the CCD's FITS file and open it.
     #path = CCDS_FOLDER + ccd['FILENAME'] + ccd['COMPRESSION'] #ccd['FULL_PATH']
     path = CCDS_PREFIX + ccd['FULL_PATH'] + ccd['COMPRESSION']
-    print(path)
+    #print(path)
+    
     hdul = None
     try:
         hdul = fits.open(path)
     except FileNotFoundError as e:
-        print('No FITS file for CCD {} found. Will not create cutout for this CCD.'.format(rect_id))
+        logger.info('No FITS file for CCD {} found. Will not create cutout for this CCD.'.format(rect_id))
         return
 
     # Create a file name for the new fits file.
     filenm = outdir + 'DESJ' + _DecConverter(df['RA'][p], df['DEC'][p]) + '_{}.fits'.format(rect_id)
-    print('FILENM: {}'.format(filenm))
+    #print('FILENM: {}'.format(filenm))
 
     # Start new fits file and define the pixel scale.
     newhdul = fits.HDUList()
@@ -139,7 +141,7 @@ def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
             cutout = Cutout2D(data, positions[p], usize, wcs=w, mode='trim')
         except ValueError as e:
             #print('MakeFitsCut - File: {} - EXTNAME: \'{}\', Error: {}'.format(ccd['FILENAME'], header['EXTNAME'], e))
-            print('MakeFitsCut - HDU \"{}\" in CCD {} does not contain WCS element. Cutout will not contain this HDU.'.format(header['EXTNAME'], rect_id))
+            logger.info('MakeFitsCut - HDU \"{}\" in CCD {} does not contain WCS element. Cutout will not contain this HDU.'.format(header['EXTNAME'], rect_id))
             pass
         else:
             crpix1, crpix2 = cutout.position_cutout
@@ -164,11 +166,11 @@ def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
         dx = int(usize[1] * ARCMIN_TO_DEG / pixelscale[0] / units.arcmin) # pixelscale is in degrees (CUNIT)
         dy = int(usize[0] * ARCMIN_TO_DEG / pixelscale[1] / units.arcmin)
         if newhdul[0].header['NAXIS1'] < dx or newhdul[0].header['NAXIS2'] < dy:
-            print('MakeFitsCut - {} is smaller than user requested. This is likely because the object/coordinate was in close proximity to the edge of a tile.'.format(('/').join(filenm.split('/')[-2:])))
+            logger.info('MakeFitsCut - {} is smaller than user requested. This is likely because the object/coordinate was in close proximity to the edge of a tile.'.format(('/').join(filenm.split('/')[-2:])))
 
     newhdul.writeto(filenm, output_verify='exception', overwrite=True, checksum=False)
     newhdul.close()
-    print('MakeFitsCut - CCD {} complete.'.format(rect_id))
+    logger.info('MakeFitsCut - CCD {} complete.'.format(rect_id))
 
 
 def run(args):
@@ -268,8 +270,8 @@ def run(args):
                 # Check if the cellid exists at this level. If not found at last level, set it to null.
                 if cellid_at_level in collections:
                     S2ID.append(cellid_at_level)
-                    print(userdf['RA'][i], userdf['DEC'][i], lvl, cellid_at_level)
-                    print()
+                    #print(userdf['RA'][i], userdf['DEC'][i], lvl, cellid_at_level)
+                    #print()
                     break
                 elif lvl == LEVELS[-1]:
                     S2ID.append(np.nan)
@@ -284,10 +286,8 @@ def run(args):
         
         logger.info('Unmatched coordinates: \n{0}\n{1}'.format(unmatched_coords['RA'], unmatched_coords['DEC']))
         summary['Unmatched_Coords'] = unmatched_coords
-        print('Unmatched coordinates: \n{0}\n{1}'.format(unmatched_coords['RA'], unmatched_coords['DEC']))
-        #print('Number of unmatched RAs: {}'.format(len(unmatched_coords['RA'])))
-        #print('Number of unmatched DECs: {}'.format(len(unmatched_coords['DEC'])))
-        print()
+        #print('Unmatched coordinates: \n{0}\n{1}'.format(unmatched_coords['RA'], unmatched_coords['DEC']))
+        #print()
 
     userdf = userdf.sort_values(by=['S2ID'])
     userdf = userdf.drop_duplicates(['RA','DEC'], keep='first')
@@ -302,8 +302,8 @@ def run(args):
         udf = userdf[ userdf.S2ID == i ]
         udf = udf.reset_index()
 
-        print(udf.head())
-        print()
+        #print(udf.head())
+        #print()
         
         collection = db[ i ]
 
@@ -322,8 +322,9 @@ def run(args):
             query['AIRMASS'] = { '$lte' : args.airmass }
         if args.fwhm:
             query['FWHM'] = { '$lte' : args.fwhm }
-        print(query)
-        print()
+        logger.info('DB query: ' + query)
+        #print(query)
+        #print()
 
         startq = time.time()
 
@@ -357,13 +358,14 @@ def run(args):
             ccddict[dictname]['FILENAME'] = []
             ccddict[dictname]['FULL_PATH'] = []
 
-            print('CCDs which contain RA: {} DEC: {}'.format(udf['RA'][u], udf['DEC'][u]))
-            print()
+            logger.info('CCDs which contain RA: {} DEC: {}'.format(udf['RA'][u], udf['DEC'][u]))
+            #print('CCDs which contain RA: {} DEC: {}'.format(udf['RA'][u], udf['DEC'][u]))
+            #print()
 
             # This checks if the current coordinates exist within any ccd rectangles
             for r in range(len(crects)):
                 if s2.S2LatLngRect.Contains(crects[r], udf['S2LL'][u]):
-                    print(collection.find_one({'_id':cids[r]})['FILENAME'] + collection.find_one({'_id':cids[r]})['COMPRESSION'])
+                    #print(collection.find_one({'_id':cids[r]})['FILENAME'] + collection.find_one({'_id':cids[r]})['COMPRESSION'])
                     ccd = collection.find_one({'_id':cids[r]})
 
                     ccddict[dictname]['FILENAME'].append('{}{}'.format(ccd['FILENAME'], ccd['COMPRESSION']))
@@ -371,22 +373,22 @@ def run(args):
                     
                     if args.make_fits:
                         MakeFitsCut(ccd, outdir+i+'/', size, positions, cids[r], udf, u)
-                    print()
-            print()
+                    #print()
+            #print()
         endp = time.time()
         process_time.append(endp-startp)
 
     qtime = '{0:.2f}'.format(np.sum(query_time))
     ptime = '{0:.2f}'.format(np.sum(process_time))
-    print('Queryring took (s): ' + qtime)
-    print('Processing took (s): ' + ptime)
+    #print('Queryring took (s): ' + qtime)
+    #print('Processing took (s): ' + ptime)
     logger.info('Querying took (s): ' + qtime)
     logger.info('Prcoessing took (s): ' + ptime)
     summary['query_time'] = qtime
     summary['prcoessing_time'] = ptime
 
     if args.return_list:
-        print(ccddict)
+        #print(ccddict)
         os.makedirs(outdir, exist_ok=True)
         listname = 'SE_' + jobid.upper().replace("-","_") + '.json'
         with open(outdir+listname, 'w') as outfile:
