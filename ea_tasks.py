@@ -1214,7 +1214,7 @@ def epochtasks(input_csv, uu, pp, jobid, outdir, db, data_options, colors, xsize
     if data_options['airmass']:
         args += ' --airmass {}'.format(data_options['airmass'])
     if data_options['psffwhm']:
-        args += ' --psffwhm {}'.format(data_options['psffwhm'])
+        args += ' --fwhm {}'.format(data_options['psffwhm'])
     if return_list:
         args += ' --return_list'
     args += ' --usernm {} --passwd {}'.format(uu, pp)

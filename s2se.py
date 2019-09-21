@@ -233,6 +233,10 @@ def run(args):
     logger.info('    Y size: '+str(args.ysize))
     logger.info('    Make FITS? '+str(args.make_fits))
     logger.info('    Bands: '+args.colors)
+    if args.airmass:
+        logger.info('    Airmass (upper limit): '+str(args.airmass))
+    if args.fwhm:
+        logger.info('    FWHM (upper limit, arcseconds): '+str(args.fwhm))
     logger.info('User: ' + usernm)
     logger.info('JobID: ' + str(jobid))
     summary['xsize'] = str(args.xsize)
@@ -314,8 +318,8 @@ def run(args):
             query['BAND'] = { '$in' : colors }
         if args.airmass:
             query['AIRMASS'] = { '$lte' : args.airmass }
-        if args.psffwhm:
-            query['FWHM'] = { '$lte' : args.psffwhm }
+        if args.fwhm:
+            query['FWHM'] = { '$lte' : args.fwhm }
         print(query)
         print()
 
@@ -429,7 +433,7 @@ if __name__ == '__main__':
     parser.add_argument('--colors', type=str.upper, default='G,R,I,Z,Y', help='Color bands for the fits cutout. Enter comma-separated list. Not case sensitive. Default: g,r,i,z,y')
     #parser.add_argument('--blacklist', action='store_true', help='Include blacklisted CCDs. Default: False (no blacklisted CCDs)')
     parser.add_argument('--airmass', required=False, type=float, help='Upper limit of air mass.')
-    parser.add_argument('--psffwhm', required=False, type=float, help='Upper limit of FWHM, PSF-based.')
+    parser.add_argument('--fwhm', required=False, type=float, help='Upper limit of FWHM, PSF-based.')
     parser.add_argument('--jobid', type=str, required=False, help='Option to manually specify a jobid for this job.')
     parser.add_argument('--usernm', required=False, help='Username for database; otherwise uses values from desservices file.')
     parser.add_argument('--passwd', required=False, help='Password for database; otherwise uses values from desservices file.')
