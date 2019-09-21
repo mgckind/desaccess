@@ -213,11 +213,11 @@
                                 <paper-icon-item>
                                     <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
                                     <div>Airmass (max limit):
-                                        <span id="se_airmassLabel" class="caption">1.0</span></div>
+                                        <span id="se_airmassLabel" class="caption">2.0</span></div>
                                 </paper-icon-item>
                             </td>
                             <td class="coadd-td">
-                                <paper-slider id="se_airmassSlider" pin max="12" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
+                                <paper-slider id="se_airmassSlider" pin max="10" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
                             </td>
                         </tr>
 
@@ -226,12 +226,12 @@
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-                                    <div>FWHM (max limit):
-                                        <span id="se_psffwhmLabel" class="caption">1.0</span></div>
+                                    <div>FWHM (max limit; arcseconds):
+                                        <span id="se_psffwhmLabel" class="caption">2.0</span></div>
                                 </paper-icon-item>
                             </td>
                             <td class="coadd-td">
-                                <paper-slider id="se_psffwhmSlider" pin max="12" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
+                                <paper-slider id="se_psffwhmSlider" pin max="10" max-markers="10" step="0.1" value="2.0" expand editable></paper-slider>
                             </td>
                         </tr>
 
@@ -414,11 +414,11 @@
             document.getElementById("se_zband").checked=false;
             document.getElementById("se_Yband").checked=false;
 
-            document.getElementById("se_airmassLabel").innerHTML="1.0";
-            document.getElementById("se_airmassSlider").value="1.0";
+            document.getElementById("se_airmassLabel").innerHTML="2.0";
+            document.getElementById("se_airmassSlider").value="2.0";
             
-            document.getElementById("se_psffwhmLabel").innerHTML="1.0";
-            document.getElementById("se_psffwhmSlider").value="1.0";
+            document.getElementById("se_psffwhmLabel").innerHTML="2.0";
+            document.getElementById("se_psffwhmSlider").value="2.0";
 
             document.getElementById("se_sendemail").checked=false;
             document.getElementById("se_returnList").checked=false;
