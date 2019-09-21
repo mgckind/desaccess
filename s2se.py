@@ -445,7 +445,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    with open('config/singleepochconfig.yaml','r') as cfile:
+    with open('config/desaccess.yaml','r') as cfile:
         conf = yaml.load(cfile)
     
     CCDS_FOLDER = conf['directories']['ccds'] + '/'
