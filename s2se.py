@@ -94,8 +94,8 @@ def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
     os.makedirs(outdir, exist_ok=True)
 
     # Get the name of the CCD's FITS file and open it.
-    #path = CCDS_FOLDER + ccd['FILENAME'] + ccd['COMPRESSION'] #ccd['FULL_PATH']
-    path = CCDS_PREFIX + ccd['FULL_PATH'] + ccd['COMPRESSION']
+    path = CCDS_FOLDER + ccd['FILENAME'] + ccd['COMPRESSION'] #ccd['FULL_PATH']
+    #path = CCDS_PREFIX + ccd['FULL_PATH'] + ccd['COMPRESSION']
     #print(path)
     
     hdul = None
