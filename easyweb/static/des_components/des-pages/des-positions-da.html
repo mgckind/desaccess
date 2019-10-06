@@ -1,0 +1,73 @@
+<dom-module id="des-positions-da">
+<template>
+    <style include="shared-styles">
+
+    paper-toggle-button.pink {
+      --paper-toggle-button-checked-bar-color:  var(--paper-pink-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-pink-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-pink-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-indigo-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-indigo-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-indigo-900);
+    }
+
+    </style>
+
+    <paper-dialog id="da_inputValuesDialog" with-backdrop on-iron-overlay-opened="patchOverlay" >
+        <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC" elevation="0">
+            <div class="card-content">
+                <paper-toggle-button class="pink" id="da_coords_id" noink on-tap="_switchInput" > Switch between positions and ids (Header is needed)</paper-toggle-button>
+                <br />
+                <iron-autogrow-textarea id="da_enteredPositions" max-rows="15" rows=12 placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
+            </div>
+            <div class="card-actions">
+                <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
+                <paper-button on-tap="_da_submitPositions" raised class="indigo"> Accept</paper-button>
+            </div>
+        </paper-card>
+    </paper-dialog>
+</template>
+
+<script>
+    Polymer({
+        is: "des-positions-da",
+        properties : {
+            place_holder: {
+                type: String,
+                value: "RA,DEC\n"
+            },
+            input_box: {
+                type: String,
+                value: "coords"
+            },
+        },
+        _da_submitPositions: function(){
+            document.getElementById("da_inputValuesDialog").close();
+            document.getElementById("da_submitJobButton").disabled=false;
+            document.getElementById("da_uploadFile").disabled=true;
+            document.getElementById("da_keyboardicon").icon = "done";
+            document.getElementById("desDataAnalysis").enter_values = "Values Entered";
+        },
+        clear: function(){
+            document.getElementById("da_enteredPositions").value=this.place_holder;
+            document.getElementById("da_coords_id").checked = false;
+        },
+        _switchInput: function(){
+            var tempBox = document.getElementById("da_enteredPositions");
+            if (this.input_box == 'coords') {
+                tempBox.value = 'COADD_OBJECT_ID\n';
+                this.input_box = 'id';}
+            else {
+                tempBox.value = 'RA,DEC\n';
+                this.input_box = 'coords';
+            }
+            console.log(this.input_box);
+        },
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        }
+    });
+</script>
+</dom-module>
