@@ -12,6 +12,8 @@
 <!-- App Elements -->
 <!-- Iron Elements -->
 <!-- DES Elements -->
+<!--<link rel="import" href="../des_components/des-pages/des-positions-coadds-da.html">-->
+<!--<link rel="import" href="../des_components/des-pages/des-positions-coords-da.html">-->
 <!--<link rel="import" href="../des_components/des-pages/des-positions-coadds-bc.html">-->
 <!--<link rel="import" href="../des_components/des-pages/des-positions-coords-bc.html">-->
 <!--<link rel="import" href="../des_components/des-card-help.html">-->
@@ -40455,142 +40457,147 @@ the blue buttons below the query box to do different things with your results.
 </dom-module>
 <dom-module id="des-side-toolbar" assetpath="../des_components/">
 <template>
-   <style include="shared-styles">
+    <style include="shared-styles">
 
-   .info-container {
-               position: relative;
-               border: 2px solid #ccc;
-               border-radius: 50%;
-               height: 90px;
-               padding: 2px;
-               width: 90px;
-               margin: 20px auto;
-           }
-           .info-container .image {
-               background-image: url("/easyweb/static/images/user.png");
-               background-size: contain;
-               border-radius: 50%;
-               height: 100%;
-               width: 100%;
-               background-repeat: no-repeat;
-               background-position: center;
-           }
-           .self-info {
-               margin: 0 20px;
-               padding-bottom: 20px;
-               border-bottom: 1px solid #CCC;
-               text-align: center;
-           }
-           .self-info .name {
-               font-weight: bold;
-           }
-           .self-info .email {
-               color: #999;
-           }
-       paper-item{
-           font-size: 18px;
-       }
-       .ahidden {
-           color: black;
-           text-decoration: none;
-           width: 100%;
-           height: 48px;
-       }
+        .info-container {
+            position: relative;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            height: 90px;
+            padding: 2px;
+            width: 90px;
+            margin: 20px auto;
+        }
+        .info-container .image {
+            background-image: url("/easyweb/static/images/user.png");
+            background-size: contain;
+            border-radius: 50%;
+            height: 100%;
+            width: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .self-info {
+            margin: 0 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #CCC;
+            text-align: center;
+        }
+        .self-info .name {
+            font-weight: bold;
+        }
+        .self-info .email {
+            color: #999;
+        }
+        paper-item{
+            font-size: 18px;
+        }
+        .ahidden {
+            color: black;
+            text-decoration: none;
+            width: 100%;
+            height: 48px;
+        }
 
-   </style>
-  <app-header>
-    <app-toolbar id="drawerToolbar" class="black">
+    </style>
+    <app-header>
+        <app-toolbar id="drawerToolbar" class="black">
 
-        <iron-image style="width:60px; height:60px;" sizing="cover" src="/easyweb/static/images/DESDM_logo.png"></iron-image>
-    </app-toolbar>
-      <div style="height: 100%; overflow: auto;">
+            <iron-image style="width:60px; height:60px;" sizing="cover" src="/easyweb/static/images/DESDM_logo.png"></iron-image>
+        </app-toolbar>
+        <div style="height: 100%; overflow: auto;">
+            <div class="info-container">
+                <div class="image"></div>
+            </div>
+            <div class="self-info">
+                <div class="name">{{name}}</div>
+                <div class="email">{{email}}</div>
+            </div>
 
-                <div class="info-container">
-                    <div class="image"></div>
-                </div>
-                <div class="self-info">
-                    <div class="name">{{name}}</div>
-                    <div class="email">{{email}}</div>
-                </div>
+            <paper-menu id="bigmenu" selected="[[selection]]" key-event-target="null">
 
-    <paper-menu id="bigmenu" selected="[[selection]]" key-event-target="null">
+                <!-- Order is important, it needs to match des-mainpages -->
+                <paper-item>
+                <a class="ahidden" href="/easyweb/">
+                    <span style=" position: absolute; top:12px;">Home</span>
+                </a>
+                </paper-item>
+                
+                <paper-item>
+                <a class="ahidden" href="/easyweb/db-access">
+                    <span style=" position: absolute; top:12px;">DB access</span>
+                </a>
+                </paper-item>
+                
+                <paper-item>
+                <a class="ahidden" href="/easyweb/db-schema">
+                    <span style=" position: absolute; top:12px;">DES Table Schema</span>
+                </a>
+                </paper-item>
+                
+                <paper-item>
+                <a class="ahidden" href="/easyweb/db-examples">
+                    <span style=" position: absolute; top:12px;">Example Queries</span>
+                </a>
+                </paper-item>
 
-        <!-- Order is important, it needs to match des-mainpages -->
-        <paper-item>
-        <a class="ahidden" href="/easyweb/">
-            <span style=" position: absolute; top:12px;">Home</span>
-        </a>
-        </paper-item>
-        <paper-item>
-        <a class="ahidden" href="/easyweb/db-access">
-            <span style=" position: absolute; top:12px;">DB access</span>
-        </a>
-        </paper-item>
-        <paper-item>
-        <a class="ahidden" href="/easyweb/db-schema">
-            <span style=" position: absolute; top:12px;">DES Table Schema</span>
-        </a>
-        </paper-item>
-        <paper-item>
-        <a class="ahidden" href="/easyweb/db-examples">
-            <span style=" position: absolute; top:12px;">Example Queries</span>
-        </a>
-        </paper-item>
+                <!-- OLD cutouts
+                <paper-item>
+                <a  class="ahidden" href="/easyweb/cutouts" >
+                    <span style=" position: absolute; top:12px;">Cutout Service</span>
+                </a>
+                </paper-item>
+                -->
+                
+                <paper-item>
+                <a class="ahidden" href="/easyweb/bulk-cutouts">
+                    <span style=" position: absolute; top:12px;">Cutouts Service</span>
+                </a>
+                </paper-item>
 
-        <!-- OLD cutouts
-        <paper-item>
-        <a  class="ahidden" href="/easyweb/cutouts" >
-            <span style=" position: absolute; top:12px;">Cutout Service</span>
-        </a>
-        </paper-item>
-        -->
-        <paper-item>
-        <a class="ahidden" href="/easyweb/bulk-cutouts">
-            <span style=" position: absolute; top:12px;">Cutouts Service</span>
-        </a>
-        </paper-item>
+                <paper-item>
+                <a class="ahidden" href="/easyweb/s2se-cutouts">
+                    <span style=" position: absolute; top:12px;">Single Epoch Cutouts</span>
+                </a>
+                </paper-item>
 
-        <paper-item>
-        <a class="ahidden" href="/easyweb/s2se-cutouts">
-            <span style=" position: absolute; top:12px;">Single Epoch Cutouts</span>
-        </a>
-        </paper-item>
+                <paper-item>
+                <a class="ahidden" href="/easyweb/deslabs">
+                    <span style=" position: absolute; top:12px;">DES JupyterLab</span>
+                </a>
+                </paper-item>
 
-        <paper-item>
-            <a class="ahidden" href="/easyweb/deslabs">
-                <span style=" position: absolute; top:12px;">DES JupyterLab</span>
-            </a>
-        </paper-item>
+                <paper-item>
+                <a class="ahidden" href="/easyweb/finding-chart">
+                    <span style=" position: absolute; top:12px;">Finding Chart</span>
+                </a>
+                </paper-item>
+                
+                <paper-item>
+                <a class="ahidden" href="/easyweb/footprint">
+                    <span style=" position: absolute; top:12px;">DES Footprint</span>
+                </a>
+                </paper-item>
+                
+                <paper-item>
+                <a class="ahidden" href="/easyweb/data-analysis">
+                    <span style=" position: absolute; top:12px;">Data Analysis</span>
+                </a>
+                </paper-item>
+                <paper-item>
+                <a class="ahidden" href="/easyweb/my-jobs">
+                    <span style=" position: absolute; top:12px;">My Jobs</span>
+                </a>
+                </paper-item>
+                <paper-item>
+                <a class="ahidden" href="/easyweb/help-form">
+                    <span style=" position: absolute; top:12px;">Help</span>
+                </a>
+                </paper-item>
 
-        <paper-item>
-        <a class="ahidden" href="/easyweb/finding-chart">
-			<span style=" position: absolute; top:12px;">Finding Chart</span>
-        </a>
-        </paper-item>
-        <paper-item>
-        <a class="ahidden" href="/easyweb/footprint">
-            <span style=" position: absolute; top:12px;">DES Footprint</span>
-        </a>
-        </paper-item>
-        <!-- <paper-item>
-		<a  class="ahidden" href="/easyweb/data-analysis" >
-			<span style=" position: absolute; top:12px;">Data Analysis</span>
-		</a>
-		</paper-item> -->
-        <paper-item>
-        <a class="ahidden" href="/easyweb/my-jobs">
-            <span style=" position: absolute; top:12px;">My Jobs</span>
-        </a>
-        </paper-item>
-        <paper-item>
-        <a class="ahidden" href="/easyweb/help-form">
-            <span style=" position: absolute; top:12px;">Help</span>
-        </a>
-        </paper-item>
-
-    </paper-menu>
-      </div>
-</app-header>
+            </paper-menu>
+        </div>
+    </app-header>
 
 </template>
 
@@ -40614,33 +40621,34 @@ the blue buttons below the query box to do different things with your results.
 </dom-module>
 <dom-module id="des-mainpages" assetpath="../des_components/">
 <template>
-   <style include="shared-styles"></style>
+    <style include="shared-styles"></style>
 
-   <app-location route="{{route}}"></app-location>
-   <app-route id="approute" route="{{route}}" pattern="/easyweb/:view" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <app-location route="{{route}}"></app-location>
+    <app-route id="approute" route="{{route}}" pattern="/easyweb/:view" data="{{routeData}}" tail="{{subroute}}">
+    </app-route>
 
-      <div style="height: 85%; overflow: auto;">
-    <iron-pages id="mainPages" selected="[[selection]]">
-        <des-home name="{{name}}" db="{{db}}"></des-home>
-        <des-query name="query-box" id="desQuery" username="{{username}}" db="{{db}}" email="{{email}}"></des-query>
-        <des-schema name="schema" choice="0"></des-schema>
-        <!--<des-all-tables name="schema"></des-all-tables>-->
-        <des-example-query></des-example-query>
-        <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
-        <!--
-        <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
-         -->
-        <des-bulk-cutouts id="desBulkCutouts" email="{{email}}" choice="0"></des-bulk-cutouts>
-        <des-s2se-cutouts id="desS2SECutouts" email="{{email}}" choice="0"></des-s2se-cutouts>
-        <des-jlabs username="{{username}}"></des-jlabs>
-        <des-finding-chart id="desFindingChart" email="{{email}}"></des-finding-chart>
-        <des-footprint id="FootprintPage"></des-footprint>
-        <!-- <des-data-analysis id="desDataAnalysis" email={{email}}></des-data-analysis> -->
-        <des-my-jobs></des-my-jobs>
-        <des-help></des-help>
+    <div style="height: 85%; overflow: auto;">
+        <iron-pages id="mainPages" selected="[[selection]]">
+            <des-home name="{{name}}" db="{{db}}"></des-home>
+            <des-query name="query-box" id="desQuery" username="{{username}}" db="{{db}}" email="{{email}}"></des-query>
+            <des-schema name="schema" choice="0"></des-schema>
+            <!--<des-all-tables name="schema"></des-all-tables>-->
+            <des-example-query></des-example-query>
+            <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
+            <!--
+            <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
+             -->
+            <des-bulk-cutouts id="desBulkCutouts" email="{{email}}" choice="0"></des-bulk-cutouts>
+            <des-s2se-cutouts id="desS2SECutouts" email="{{email}}" choice="0"></des-s2se-cutouts>
+            <des-jlabs username="{{username}}"></des-jlabs>
+            <des-finding-chart id="desFindingChart" email="{{email}}"></des-finding-chart>
+            <des-footprint id="FootprintPage"></des-footprint>
+            <des-data-analysis id="desDataAnalysis" email="{{email}}"></des-data-analysis>
+            <des-my-jobs></des-my-jobs>
+            <des-help></des-help>
 
-    </iron-pages>
-</div>
+        </iron-pages>
+    </div>
 
 </template>
 
@@ -50132,17 +50140,21 @@ function keysrt(key,desc) {
                 <a style="text-transform: none; color:black;" href="/easyweb/db-access" tabindex="-1">
                 <des-card-welcome heading="DB ACCESS" image="/easyweb/static/images/home-query.png" alt="Query" desc="Oracle SQL web- client" name="query"></des-card-welcome>
                 </a>
+
                 <a style="text-transform: none; color:black;" href="/easyweb/db-schema">
                 <des-card-welcome heading="DES TABLE SCHEMA" image="/easyweb/static/images/home-tables.png" alt="DR1 Table Schema" desc="Browse all tables" name="allTables"></des-card-welcome>
                 </a>
+                
                 <a style="text-transform: none; color:black;" href="/easyweb/db-examples" tabindex="-1">
                 <des-card-welcome heading="EXAMPLE QUERIES" image="/easyweb/static/images/home-example.png" alt="Example Queries" desc="See some example queries as a start" name="example"></des-card-welcome>
                 </a>
+                
                 <!-- old cutouts
                 <a style = "text-transform: none; color:black;" href="/easyweb/cutouts" tabindex="-1">
                 <des-card-welcome heading="CUTOUT SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Cutout Service" desc="Retrieve cutouts from specific area" name="coadd" ></des-card-welcome>
                 </a>
                 -->
+                
                 <a style="text-transform: none; color:black;" href="/easyweb/bulk-cutouts" tabindex="-1">
                 <des-card-welcome heading="CUTOUTS SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Bulk Cutout Service" desc="Generate cutouts for positions or ids" name="coadd"></des-card-welcome>
                 </a>
@@ -50159,18 +50171,20 @@ function keysrt(key,desc) {
                 <!--<des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/home-footprint-old.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>-->
                 <des-card-welcome heading="FINDING CHART" image="/easyweb/static/images/DESJ004034.0-620158.6_I.png" alt="Finding Chart" desc="Find your object" name="chart"></des-card-welcome>
                 </a>
+                
                 <a style="text-transform: none; color:black;" href="/easyweb/footprint" tabindex="-1">
                 <des-card-welcome heading="DES FOOTPRINT" image="/easyweb/static/images/home-footprint.png" alt="Footprint" desc="Interactive globe" name="footprint"></des-card-welcome>
                 </a>
 
-                <!-- <a style = "text-transform: none; color:black;" href="/easyweb/data-analysis" tabindex="-1"> -->
+                <a style="text-transform: none; color:black;" href="/easyweb/data-analysis" tabindex="-1">
                 <!--<des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/home-footprint-old.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome>-->
-                <!-- <des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/DESJ001952.9-485955.6_magnitude.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome> -->
-                <!-- </a> -->
+                <des-card-welcome heading="DATA ANALYSIS" image="/easyweb/static/images/DESJ001952.9-485955.6_magnitude.png" alt="Data Analysis" desc="SEDs and color-color diagrams" name="analysis"></des-card-welcome>
+                </a>
 
                 <a style="text-transform: none; color:black;" href="/easyweb/my-jobs" tabindex="-1">
                 <des-card-welcome heading="MY JOBS" image="/easyweb/static/images/home-jobs.png" alt="My Jobs" desc="List of submitted jobs" name="desjobs"></des-card-welcome>
                 </a>
+                
                 <a style="text-transform: none; color:black;" href="/easyweb/help-form" tabindex="-1">
                 <des-card-welcome heading="HELP" image="/easyweb/static/images/home-help.jpg" alt="Help" desc="Help form" name="help"></des-card-welcome>
                 </a>
@@ -51460,10 +51474,9 @@ function keysrt(key,desc) {
     <paper-dialog id="bc_inputDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
         <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC" elevation="0">
             <div class="card-content">
-                 <paper-toggle-button class="pink" id="coords_id" noink="" on-tap="_switchInput"> Switch between positions and ids (Header is needed)
-            </paper-toggle-button>
-            <br>
-               <iron-autogrow-textarea id="bc_enteredPositions" max-rows="15" rows="12" placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
+                <paper-toggle-button class="pink" id="coords_id" noink="" on-tap="_switchInput"> Switch between positions and ids (Header is needed)</paper-toggle-button>
+                <br>
+                <iron-autogrow-textarea id="bc_enteredPositions" max-rows="15" rows="12" placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
             </div>
             <div class="card-actions">
                 <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
@@ -51645,282 +51658,77 @@ function keysrt(key,desc) {
 
 </script>
 </dom-module>
-<dom-module id="des-positions-coadds-da" assetpath="../des_components/des-pages/">
+<dom-module id="des-positions-da" assetpath="../des_components/des-pages/">
 <template>
     <style include="shared-styles">
 
+    paper-toggle-button.pink {
+      --paper-toggle-button-checked-bar-color:  var(--paper-pink-500);
+      --paper-toggle-button-checked-button-color:  var(--paper-pink-500);
+      --paper-toggle-button-checked-ink-color: var(--paper-pink-500);
+      --paper-toggle-button-unchecked-bar-color:  var(--paper-indigo-900);
+      --paper-toggle-button-unchecked-button-color:  var(--paper-indigo-900);
+      --paper-toggle-button-unchecked-ink-color: var(--paper-indigo-900);
+    }
+
     </style>
-    
-    <paper-dialog id="da_inputCoaddsDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <paper-card heading="Enter coadd ID's below" elevation="0">
+
+    <paper-dialog id="da_inputValuesDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC" elevation="0">
             <div class="card-content">
-               <iron-autogrow-textarea id="da_enteredCoadds" max-rows="10" rows="8" placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
+                <paper-toggle-button class="pink" id="da_coords_id" noink="" on-tap="_switchInput"> Switch between positions and ids (Header is needed)</paper-toggle-button>
+                <br>
+                <iron-autogrow-textarea id="da_enteredPositions" max-rows="15" rows="12" placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
             </div>
             <div class="card-actions">
                 <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
-                <paper-button on-tap="_da_submitCoadds" raised="" class="indigo"> Accept</paper-button>
+                <paper-button on-tap="_da_submitPositions" raised="" class="indigo"> Accept</paper-button>
             </div>
         </paper-card>
     </paper-dialog>
-    
-    <paper-dialog class="dialog-position" id="jobHelpCoaddsDA" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-card heading="Help">
-            <div class="card-content">
-                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif" width="500px">
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
-                </paper-carousel>
-            </div>
-            <div class="row">
-                <paper-button class="prev" on-tap="_prevPage">
-                    <iron-icon icon="image:navigate-before"></iron-icon>
-                    Prev
-                </paper-button>
-
-                <paper-button class="next" on-tap="_nextPage">
-                    Next
-                    <iron-icon icon="image:navigate-next"></iron-icon>
-                </paper-button>
-            </div>
-        </des-card>
-    </paper-dialog>
-
 </template>
 
 <script>
     Polymer({
-      is: "des-positions-coadds-da",
-      properties : {
-        place_holder: {
-            type: String,
-            value: "COADDID \nCOADDID\n... , ..."
+        is: "des-positions-da",
+        properties : {
+            place_holder: {
+                type: String,
+                value: "RA,DEC\n"
+            },
+            input_box: {
+                type: String,
+                value: "coords"
+            },
         },
-      },
-      _da_submitCoadds: function(){
-            document.getElementById("da_inputCoaddsDialog").close();
+        _da_submitPositions: function(){
+            document.getElementById("da_inputValuesDialog").close();
             document.getElementById("da_submitJobButton").disabled=false;
-            document.getElementById("da_uploadFileCoadd").disabled=true;
-			document.getElementById("da_uploadFileCoord").disabled=true;
-            document.getElementById("da_keyboardiconcoadd").icon = "done";
-			document.getElementById("da_enterCoords").disabled=true;
+            document.getElementById("da_uploadFile").disabled=true;
+            document.getElementById("da_keyboardicon").icon = "done";
             document.getElementById("desDataAnalysis").enter_values = "Values Entered";
-
-      },
-      clear: function(){
-            document.getElementById("da_enteredCoadds").value="";
-      },
-      patchOverlay: function (e) {
+        },
+        clear: function(){
+            document.getElementById("da_enteredPositions").value=this.place_holder;
+            document.getElementById("da_coords_id").checked = false;
+        },
+        _switchInput: function(){
+            var tempBox = document.getElementById("da_enteredPositions");
+            if (this.input_box == 'coords') {
+                tempBox.value = 'COADD_OBJECT_ID\n';
+                this.input_box = 'id';}
+            else {
+                tempBox.value = 'RA,DEC\n';
+                this.input_box = 'coords';
+            }
+            console.log(this.input_box);
+        },
+        patchOverlay: function (e) {
             if (e.target.withBackdrop) {
                 e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
             }
-      },
-
-      _seeHelp: function(e){
-            e.preventDefault();
-            document.getElementById('jobHelpCoaddsDA').open();
-      },
-
-      _nextPage: function() {
-            var crs = document.getElementById("position-crs");
-            crs.goToNextPage();
-      },
-
-      _prevPage: function() {
-          var crs = document.getElementById("position-crs");
-          crs.goToPrevPage();
-      }
+        }
     });
-
-
-</script>
-</dom-module>
-<dom-module id="des-positions-coords-da" assetpath="../des_components/des-pages/">
-<template>
-    <style include="shared-styles">
-
-    </style>
-    
-    <paper-dialog id="da_inputCoordsDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <paper-card heading="Enter positions below" elevation="0">
-            <div class="card-content">
-               <iron-autogrow-textarea id="da_enteredCoords" max-rows="10" rows="8" placeholder="[[place_holder]]" value=""></iron-autogrow-textarea>
-            </div>
-            <div class="card-actions">
-                <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
-                <paper-button on-tap="_da_submitCoords" raised="" class="indigo"> Accept</paper-button>
-            </div>
-        </paper-card>
-    </paper-dialog>
-    
-    <paper-dialog class="dialog-position" id="jobHelpCoordsDA" with-backdrop="" on-iron-overlay-opened="patchOverlay">
-        <des-card heading="Help">
-            <div class="card-content">
-                <paper-carousel id="position-crs" items="1" dottext="false" controls="true">
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif" width="500px">
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!--<div class="col">-->
-                        <img src="/easyweb/static/images/demo1.gif" width="400px">
-
-                        <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-
-                        <!--</div>-->
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-
-                            <div class="left">
-                                <img src="/easyweb/static/images/demo1.gif">
-                            </div>
-                        </div>
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <img src="/easyweb/static/images/demo1.gif">
-                        <div class="desc">
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        </div>
-                    </div>
-
-                </paper-carousel>
-            </div>
-            <div class="row">
-                <paper-button class="prev" on-tap="_prevPage">
-                    <iron-icon icon="image:navigate-before"></iron-icon>
-                    Prev
-                </paper-button>
-
-                <paper-button class="next" on-tap="_nextPage">
-                    Next
-                    <iron-icon icon="image:navigate-next"></iron-icon>
-                </paper-button>
-            </div>
-        </des-card>
-    </paper-dialog>
-
-</template>
-
-<script>
-    Polymer({
-      is: "des-positions-coords-da",
-      properties : {
-        place_holder: {
-            type: String,
-            value: "RA , DEC \nRA , DEC\n... , ..."
-        },
-      },
-      _da_submitCoords: function(){
-            document.getElementById("da_inputCoordsDialog").close();
-            document.getElementById("da_submitJobButton").disabled=false;
-			document.getElementById("da_uploadFileCoadd").disabled=true;
-            document.getElementById("da_uploadFileCoord").disabled=true;
-			document.getElementById("da_enterCoadds").disabled=true;
-            document.getElementById("da_keyboardiconcoord").icon = "done";
-            document.getElementById("desDataAnalysis").enter_values = "Values Entered";
-
-      },
-      clear: function(){
-            document.getElementById("da_enteredCoords").value="";
-      },
-      patchOverlay: function (e) {
-            if (e.target.withBackdrop) {
-                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-            }
-      },
-
-      _seeHelp: function(e){
-            e.preventDefault();
-            document.getElementById('jobHelpCoordsDA').open();
-      },
-
-      _nextPage: function() {
-            var crs = document.getElementById("position-crs");
-            crs.goToNextPage();
-      },
-
-      _prevPage: function() {
-          var crs = document.getElementById("position-crs");
-          crs.goToPrevPage();
-      }
-    });
-
-
 </script>
 </dom-module>
 <dom-module id="des-results" assetpath="../des_components/des-pages/">
@@ -53423,15 +53231,34 @@ function keysrt(key,desc) {
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
                                     <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                    Upload File (csv, with COADDID or RA,DEC as uncommented header)
-                                    </span>
-                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                                    Upload csv file (with header). <br>Or enter values manually (with header).</span>
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
-								<div class="around-cell">
-	                                <paper-button raised="" class="indigo" id="da_uploadFileCoadd">
+                                <div class="around-cell">
+                                    <paper-button raised="" class="indigo" id="da_uploadFile">
+                                        <div id="da_uploadicon" style="display: inline-block;">
+                                            <i class="fa fa-cloud-upload"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                            [[file_name]]
+                                        </span>
+                                        <input type="file" class="upload" id="filesDA" on-change="_fileChange">
+                                    </paper-button>
+                                    <paper-button raised="" class="indigo" id="da_enterManually" on-tap="_da_openManualEntry">
+                                        <div id="da_keyboardicon" style="display: inline-block;">
+                                            <i class="fa fa-keyboard-o"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span>[[enter_values]]</span>
+                                    </paper-button>
+                                </div>
+                                <!--
+                                <div class="around-cell">
+	                                <paper-button raised class="indigo" id="da_uploadFileCoadd">
 	                                    <div id="da_uploadiconcoadd" style="display: inline-block;">
 	                                        <i class="fa fa-cloud-upload"></i>
 	                                        &nbsp;  &nbsp;
@@ -53440,9 +53267,9 @@ function keysrt(key,desc) {
 	                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
 											[[file_name]]
 										</span>
-	                                    <input type="file" class="upload" id="file1" on-change="_fileChange1">
+	                                    <input type="file" class="upload" id="file1" on-change="_fileChange1" />
 	                                </paper-button>
-	                                <paper-button raised="" class="indigo" id="da_uploadFileCoord">
+	                                <paper-button raised class="indigo" id="da_uploadFileCoord">
 	                                    <div id="da_uploadiconcoord" style="display: inline-block;">
 	                                        <i class="fa fa-cloud-upload"></i>
 	                                        &nbsp;  &nbsp;
@@ -53451,11 +53278,13 @@ function keysrt(key,desc) {
 	                                    <span style="overflow-x: auto; overflow-wrap: break-word;">
 											[[file_name]]
 										</span>
-	                                    <input type="file" class="upload" id="file2" on-change="_fileChange2">
+	                                    <input type="file" class="upload" id="file2" on-change="_fileChange2" />
 	                                </paper-button>
                                 </div>
+                                -->
                             </td>
                         </tr>
+                        <!--
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -53465,15 +53294,15 @@ function keysrt(key,desc) {
                             </td>
                             <td class="btcell">
                                 <div class="around-cell">
-									<paper-button raised="" class="indigo" id="da_enterCoadds" on-tap="_da_openCoadds">
-	                                    <div id="da_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+									<paper-button raised class="indigo" id="da_enterCoadds" on-tap="_da_openCoadds">
+	                                    <div id ="da_keyboardiconcoadd" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
 	                                        &nbsp;  &nbsp;
 	                                        Coadd ID: &nbsp;
 	                                    </div>
 	                                    <span>[[enter_values]]</span>
 	                                </paper-button>
-									<paper-button raised="" class="indigo" id="da_enterCoords" on-tap="_da_openCoords">
-	                                    <div id="da_keyboardiconcoord" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
+									<paper-button raised class="indigo" id="da_enterCoords" on-tap="_da_openCoords">
+	                                    <div id ="da_keyboardiconcoord" style="display: inline-block;"> <i class="fa fa-keyboard-o"></i>
 	                                        &nbsp;  &nbsp;
 	                                        RA/DEC: &nbsp;
 	                                    </div>
@@ -53482,6 +53311,7 @@ function keysrt(key,desc) {
 								</div>
                             </td>
                         </tr>
+                        -->
                         <!--<tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -53608,8 +53438,11 @@ function keysrt(key,desc) {
                 </div>
             </des-card>
 
+            <des-positions-da id="desPositionsDA"></des-positions-da>
+            <!--
             <des-positions-coadds-da id="desPositionsCoaddsDA"></des-positions-coadds-da>
             <des-positions-coords-da id="desPositionsCoordsDA"></des-positions-coords-da>
+            -->
 
             <paper-toast class="toast-position" id="da_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
             <paper-toast class="toast-position" id="da_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
@@ -53656,12 +53489,17 @@ function keysrt(key,desc) {
                 value : ""
             }
         },
+        get filesDA(){
+            return this.$.filesDA.files[0];
+        },
+        /**
         get file1(){
             return this.$.file1.files[0];
         },
         get file2(){
             return this.$.file2.files[0];
         },
+        **/
         emailcheck: function(){
             var emailbox = document.getElementById("da_sendemail");
             var edialog = document.getElementById("da_emaildialog");
@@ -53674,6 +53512,16 @@ function keysrt(key,desc) {
                 document.getElementById("da_validemail").value='';
             }
         },
+        _fileChange: function () {
+            this.file_name = this.filesDA.name;
+            console.log('File to read: ' + this.file_name);
+            document.getElementById("da_submitJobButton").disabled=false;
+            document.getElementById("da_enterManually").disabled=true;
+            document.getElementById("da_uploadicon").icon = "done";
+
+            this.submit_type = 'csvfileDA';
+        },
+        /**
         _fileChange1: function(){
             this.file_name = this.file1.name;
             console.log('File to read : ' + this.file_name );
@@ -53700,14 +53548,20 @@ function keysrt(key,desc) {
             this.submit_type = 'coordfile';
 //            document.getElementById("filename").value = this.file_name;
         },
+        **/
         clear: function(){
             document.getElementById("da_submitJobButton").disabled=true;
-            document.getElementById("da_enterCoadds").disabled=false;
-            document.getElementById("da_enterCoords").disabled=false;
-            document.getElementById("da_uploadFileCoadd").disabled=false;
-            document.getElementById("da_uploadFileCoord").disabled=false;
-            document.getElementById("da_keyboardiconcoadd").style.display='inline-block';
-            document.getElementById("da_keyboardiconcoord").style.display='inline-block';
+            //document.getElementById("da_enterCoadds").disabled=false;
+            //document.getElementById("da_enterCoords").disabled=false;
+            //document.getElementById("da_uploadFileCoadd").disabled=false;
+            //document.getElementById("da_uploadFileCoord").disabled=false;
+            //document.getElementById("da_keyboardiconcoadd").style.display='inline-block';
+            //document.getElementById("da_keyboardiconcoord").style.display='inline-block';
+            
+            document.getElementById("da_enterManually").disabled=false;
+            document.getElementById("da_uploadFile").disabled=false;
+            document.getElementById("da_keyboardicon").style.display="inline-block";
+
             document.getElementById("da_radiusSlider").value="4.0";
             document.getElementById("da_radiusLabel").innerHTML="4.0";
             document.getElementById("da_wise").checked=false;
@@ -53718,32 +53572,46 @@ function keysrt(key,desc) {
             document.getElementById("da_gzzw1").checked=false;
             document.getElementById("da_spreadmag").checked=false;
             document.getElementById("da_sendemail").checked=false;
-            document.getElementById("desPositionsCoaddsDA").clear();
-            document.getElementById("desPositionsCoordsDA").clear();
+            //document.getElementById("desPositionsCoaddsDA").clear();
+            //document.getElementById("desPositionsCoordsDA").clear();
+            document.getElementById("desPositionsDA").clear();
             document.getElementById("da_validemail").value='';
             document.getElementById("da_validname").value='';
-            document.getElementById("da_uploadiconcoadd").icon = "backup";
-            document.getElementById("da_uploadiconcoord").icon = "backup";
-            document.getElementById("da_keyboardiconcoadd").icon = "hardware:keyboard";
-			document.getElementById("da_keyboardiconcoord").icon = "hardware:keyboard";
+            //document.getElementById("da_uploadiconcoadd").icon = "backup";
+            //document.getElementById("da_uploadiconcoord").icon = "backup";
+            //document.getElementById("da_keyboardiconcoadd").icon = "hardware:keyboard";
+			//document.getElementById("da_keyboardiconcoord").icon = "hardware:keyboard";
 //            document.getElementById("coaddTag").selected="0";
+            document.getElementById("da_uploadicon").icon = "backup";
+            document.getElementById("da_keyboardicon").icon = "hardware:keyboard";
             this.file_name = "Upload File";
             this.job_comment = "";
 //            document.getElementById("jobcommentcoadds").value="";
+            
+            var upIcon = document.getElementById("da_uploadicon").style.display="inline-block";
 
-            var upIcon1 = document.getElementById("da_uploadiconcoadd").style.display='inline-block';
-            var upIcon2 = document.getElementById("da_uploadiconcoord").style.display='inline-block';
+            //var upIcon1 = document.getElementById("da_uploadiconcoadd").style.display='inline-block';
+            //var upIcon2 = document.getElementById("da_uploadiconcoord").style.display='inline-block';
             this.enter_values = "Enter Values";
+            this.$.filesDA.value = "";
             //$('#dothis')[0].checked=false;
-            this.$.file1.value = "";
-            this.$.file2.value = "";
+            //this.$.file1.value = "";
+            //this.$.file2.value = "";
         },
+        /**
 		_countCoadds: function(coadds) {
 			console.log(coadds);
 		},
         _countCoords: function(coords) {
             console.log(coords);
         },
+        **/
+        _da_openManualEntry: function () {
+            var inputDialog = document.getElementById("da_inputValuesDialog");
+            inputDialog.open();
+            this.submit_type = 'manualDA';
+        },
+        /**
 		_da_openCoadds: function(){
             var inputCoaddDialog = document.getElementById("da_inputCoaddsDialog");
             inputCoaddDialog.open();
@@ -53754,6 +53622,7 @@ function keysrt(key,desc) {
             inputCoordDialog.open();
             this.submit_type = 'manualCoords';
         },
+        **/
         completeHandler: function(){
             console.log('YESSSSS');
             document.getElementById('desDataAnalysis').clear();
@@ -53771,8 +53640,11 @@ function keysrt(key,desc) {
         },
         _submitJob: function(event){
             var formdata = new FormData();
-            formdata.append('csvfile1', this.$.file1.files[0]);
-            formdata.append('csvfile2', this.$.file2.files[0]);
+            //formdata.append('csvfile1', this.$.file1.files[0]);
+            //formdata.append('csvfile2', this.$.file2.files[0]);
+            
+            formdata.append('csvfile', this.$.filesDA.files[0]);
+
             formdata.append('da_radius', document.getElementById("da_radiusSlider").value);
 
             formdata.append('da_wise', document.getElementById("da_wise").checked);
@@ -53788,8 +53660,9 @@ function keysrt(key,desc) {
             formdata.append('da_email', document.getElementById("da_validemail").value);
             formdata.append('da_name', document.getElementById("da_validname").value);
             formdata.append('da_submit_type', this.submit_type);
-            formdata.append('da_coadds',document.getElementById("da_enteredCoadds").value);
-            formdata.append('da_coords',document.getElementById("da_enteredCoords").value);
+            //formdata.append('da_coadds',document.getElementById("da_enteredCoadds").value);
+            //formdata.append('da_coords',document.getElementById("da_enteredCoords").value);
+            formdata.append('da_positions',document.getElementById("da_enteredPositions").value);
 
             var fluxwav = document.getElementById("da_fluxwav").checked;
             var magwav = document.getElementById("da_magwav").checked;
@@ -53799,7 +53672,7 @@ function keysrt(key,desc) {
             if (fluxwav == false && magwav == false && grri == false && gzzw1 == false && spread == false){
                 document.getElementById('desDataAnalysis').errorHandler2();
             }
-            else{
+            else {
                 $.ajax({
                     url: '/easyweb/dr1_vistools/',
                     type: 'POST',
