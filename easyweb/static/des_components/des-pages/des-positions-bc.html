@@ -16,10 +16,9 @@
     <paper-dialog id="bc_inputDialog" with-backdrop on-iron-overlay-opened="patchOverlay" >
         <paper-card heading="Enter COADD_OBJECT_ID or RA,DEC" elevation="0">
             <div class="card-content">
-                 <paper-toggle-button class="pink" id="coords_id" noink on-tap="_switchInput" > Switch between positions and ids (Header is needed)
-            </paper-toggle-button>
-            <br />
-               <iron-autogrow-textarea id="bc_enteredPositions" max-rows="15" rows=12 placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
+                <paper-toggle-button class="pink" id="coords_id" noink on-tap="_switchInput" > Switch between positions and ids (Header is needed)</paper-toggle-button>
+                <br />
+                <iron-autogrow-textarea id="bc_enteredPositions" max-rows="15" rows=12 placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
             </div>
             <div class="card-actions">
                 <paper-button dialog-dismiss autofocus raised class="indigo">Close</paper-button>
