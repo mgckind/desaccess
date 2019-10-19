@@ -1,37 +1,38 @@
 <link rel="import" href="../styles/shared-styles.html">
 <dom-module id="des-mainpages">
 <template>
-   <style include="shared-styles"></style>
+    <style include="shared-styles"></style>
 
-   <app-location route="{{route}}"></app-location>
-   <app-route id="approute"
-       route="{{route}}"
-       pattern="/easyweb/:view"
-       data="{{routeData}}"
-       tail="{{subroute}}"></app-route>
+    <app-location route="{{route}}"></app-location>
+    <app-route id="approute"
+        route="{{route}}"
+        pattern="/easyweb/:view"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
 
-      <div style="height: 85%; overflow: auto;">
-    <iron-pages  id="mainPages" selected=[[selection]]>
-        <des-home  name={{name}} db={{db}}></des-home>
-        <des-query name="query-box" id="desQuery" username={{username}} db={{db}} email={{email}}></des-query>
-        <des-schema name="schema" choice="0"></des-schema>
-        <!--<des-all-tables name="schema"></des-all-tables>-->
-        <des-example-query></des-example-query>
-        <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
-        <!--
-        <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
-         -->
-        <des-bulk-cutouts id="desBulkCutouts" email={{email}} choice="0"></des-bulk-cutouts>
-        <des-s2se-cutouts id="desS2SECutouts" email={{email}} choice="0"></des-s2se-cutouts>
-        <des-jlabs username={{username}}></des-jlabs>
-        <des-finding-chart id="desFindingChart" email={{email}}></des-finding-chart>
-        <des-footprint id="FootprintPage"></des-footprint>
-        <!-- <des-data-analysis id="desDataAnalysis" email={{email}}></des-data-analysis> -->
-        <des-my-jobs></des-my-jobs>
-        <des-help></des-help>
+    <div style="height: 85%; overflow: auto;">
+        <iron-pages  id="mainPages" selected=[[selection]]>
+            <des-home  name={{name}} db={{db}}></des-home>
+            <des-query name="query-box" id="desQuery" username={{username}} db={{db}} email={{email}}></des-query>
+            <des-schema name="schema" choice="0"></des-schema>
+            <!--<des-all-tables name="schema"></des-all-tables>-->
+            <des-example-query></des-example-query>
+            <!--<des-coadds id="desCoadds" email={{email}}></des-coadds>-->
+            <!--
+            <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
+             -->
+            <des-bulk-cutouts id="desBulkCutouts" email={{email}} choice="0"></des-bulk-cutouts>
+            <des-s2se-cutouts id="desS2SECutouts" email={{email}} choice="0"></des-s2se-cutouts>
+            <des-jlabs username={{username}}></des-jlabs>
+            <des-finding-chart id="desFindingChart" email={{email}}></des-finding-chart>
+            <des-footprint id="FootprintPage"></des-footprint>
+            <des-data-analysis id="desDataAnalysis" email={{email}}></des-data-analysis>
+            <des-my-jobs></des-my-jobs>
+            <des-help></des-help>
 
-    </iron-pages>
-</div>
+        </iron-pages>
+    </div>
 
 </template>
 

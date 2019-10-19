@@ -37,9 +37,9 @@
     if (appr.data.view == 'deslabs') sel_page = "6";
     if (appr.data.view == 'finding-chart') sel_page = "7";
     if (appr.data.view == 'footprint') sel_page = "8";
-    // if (appr.data.view == 'data-analysis') sel_page = "9";
-    if (appr.data.view == 'my-jobs') sel_page = "9";
-    if (appr.data.view == 'help-form') sel_page = "10";
+    if (appr.data.view == 'data-analysis') sel_page = "9";
+    if (appr.data.view == 'my-jobs') sel_page = "10";
+    if (appr.data.view == 'help-form') sel_page = "11";
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
@@ -60,9 +60,9 @@
     if (appr.data.view == 'deslabs') sel_page = "6";
     if (appr.data.view == 'finding-chart') sel_page = "7";
     if (appr.data.view == 'footprint') sel_page = "8";
-    // if (appr.data.view == 'data-analysis') sel_page = "9";
-    if (appr.data.view == 'my-jobs') sel_page = "9";
-    if (appr.data.view == 'help-form') sel_page = "10";
+    if (appr.data.view == 'data-analysis') sel_page = "9";
+    if (appr.data.view == 'my-jobs') sel_page = "10";
+    if (appr.data.view == 'help-form') sel_page = "11";
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
@@ -109,23 +109,26 @@
         app.examplequerybox.setValue('\n\n\n\n\n\n\n\n\n\n\n');
         app.examplequerybox.focus();
 
+
         var xsize = document.getElementById("xsizeSlider");
         xsize.addEventListener('value-change', function() {
-           document.getElementById("xsizeLabel").textContent = xsize.value;
+            document.getElementById("xsizeLabel").textContent = xsize.value;
         });
         var ysize = document.getElementById("ysizeSlider");
         ysize.addEventListener('value-change', function() {
-           document.getElementById("ysizeLabel").textContent = ysize.value;
+            document.getElementById("ysizeLabel").textContent = ysize.value;
         });
+
 
         var xsizeS = document.getElementById("xsizeSliderS");
         xsizeS.addEventListener('value-change', function() {
-           document.getElementById("xsizeLabelS").textContent = xsizeS.value;
+            document.getElementById("xsizeLabelS").textContent = xsizeS.value;
         });
         var ysizeS = document.getElementById("ysizeSliderS");
         ysizeS.addEventListener('value-change', function() {
-           document.getElementById("ysizeLabelS").textContent = ysizeS.value;
+            document.getElementById("ysizeLabelS").textContent = ysizeS.value;
         });
+
 
         var fc_xsize = document.getElementById("fc_xsizeSlider");
         fc_xsize.addEventListener('value-change', function() {
@@ -136,15 +139,17 @@
             document.getElementById("fc_ysizeLabel").textContent = fc_ysize.value;
         });
         var fc_mag = document.getElementById("fc_magSlider");
-		    fc_mag.addEventListener('value-change', function() {
-		        document.getElementById("fc_magLabel").textContent = fc_mag.value;
-	      });
+        fc_mag.addEventListener('value-change', function() {
+                document.getElementById("fc_magLabel").textContent = fc_mag.value;
+        });
         
-	      var da_radius = document.getElementById("da_radiusSlider");
+
+        var da_radius = document.getElementById("da_radiusSlider");
         da_radius.addEventListener('value-change', function() {
             document.getElementById("da_radiusLabel").textContent = da_radius.value;
         });
 
+        
         var bc_xsize = document.getElementById("bc_xsizeSlider");
         bc_xsize.addEventListener('value-change', function() {
            document.getElementById("bc_xsizeLabel").textContent = bc_xsize.value;
@@ -154,6 +159,7 @@
            document.getElementById("bc_ysizeLabel").textContent = bc_ysize.value;
         });
 
+        
         var se_xsize = document.getElementById("se_xsizeSlider");
         se_xsize.addEventListener('value-change', function() {
             document.getElementById("se_xsizeLabel").textContent = se_xsize.value;
@@ -170,6 +176,7 @@
         se_psffwhm.addEventListener('value-change', function() {
             document.getElementById("se_psffwhmLabel").textContent = se_psffwhm.value;
         });
+
 
       // var res = document.getElementById("response");
       // res.style.marginTop = $("#queryBox").height() + $("#query-table").height() + 35;

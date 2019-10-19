@@ -181,14 +181,33 @@
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
                                     <span style="overflow-x: auto; overflow-wrap: break-word;">
-                                    Upload File (csv, with COADDID or RA,DEC as uncommented header)
-                                    </span>
-                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
+                                    Upload csv file (with header). <br />Or enter values manually (with header).</span>
                                 </paper-icon-item>
                             </td>
                             <td class="btcell">
-								<div class="around-cell">
+                                <div class="around-cell">
+                                    <paper-button raised class="indigo" id="da_uploadFile">
+                                        <div id="da_uploadicon" style="display: inline-block;">
+                                            <i class="fa fa-cloud-upload"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                            [[file_name]]
+                                        </span>
+                                        <input type="file" class="upload" id="filesDA" on-change="_fileChange" />
+                                    </paper-button>
+                                    <paper-button raised class="indigo" id="da_enterManually" on-tap="_da_openManualEntry">
+                                        <div id ="da_keyboardicon" style="display: inline-block;">
+                                            <i class="fa fa-keyboard-o"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span>[[enter_values]]</span>
+                                    </paper-button>
+                                </div>
+                                <!--
+                                <div class="around-cell">
 	                                <paper-button raised class="indigo" id="da_uploadFileCoadd">
 	                                    <div id="da_uploadiconcoadd" style="display: inline-block;">
 	                                        <i class="fa fa-cloud-upload"></i>
@@ -212,8 +231,10 @@
 	                                    <input type="file" class="upload" id="file2" on-change="_fileChange2" />
 	                                </paper-button>
                                 </div>
+                                -->
                             </td>
                         </tr>
+                        <!--
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -240,6 +261,7 @@
 								</div>
                             </td>
                         </tr>
+                        -->
                         <!--<tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -366,8 +388,11 @@
                 </div>
             </des-card>
 
+            <des-positions-da id="desPositionsDA"></des-positions-da>
+            <!--
             <des-positions-coadds-da id="desPositionsCoaddsDA"></des-positions-coadds-da>
             <des-positions-coords-da id="desPositionsCoordsDA"></des-positions-coords-da>
+            -->
 
             <paper-toast class="toast-position" id="da_toast1coadd" text="Job has been submitted!" duration="5000"> </paper-toast>
             <paper-toast class="toast-position" id="da_toast2coadd" text="ERROR!. There was an error. Please try again" duration="5000"> </paper-toast>
@@ -414,12 +439,17 @@
                 value : ""
             }
         },
+        get filesDA(){
+            return this.$.filesDA.files[0];
+        },
+        /**
         get file1(){
             return this.$.file1.files[0];
         },
         get file2(){
             return this.$.file2.files[0];
         },
+        **/
         emailcheck: function(){
             var emailbox = document.getElementById("da_sendemail");
             var edialog = document.getElementById("da_emaildialog");
@@ -432,6 +462,16 @@
                 document.getElementById("da_validemail").value='';
             }
         },
+        _fileChange: function () {
+            this.file_name = this.filesDA.name;
+            console.log('File to read: ' + this.file_name);
+            document.getElementById("da_submitJobButton").disabled=false;
+            document.getElementById("da_enterManually").disabled=true;
+            document.getElementById("da_uploadicon").icon = "done";
+
+            this.submit_type = 'csvfileDA';
+        },
+        /**
         _fileChange1: function(){
             this.file_name = this.file1.name;
             console.log('File to read : ' + this.file_name );
@@ -458,14 +498,20 @@
             this.submit_type = 'coordfile';
 //            document.getElementById("filename").value = this.file_name;
         },
+        **/
         clear: function(){
             document.getElementById("da_submitJobButton").disabled=true;
-            document.getElementById("da_enterCoadds").disabled=false;
-            document.getElementById("da_enterCoords").disabled=false;
-            document.getElementById("da_uploadFileCoadd").disabled=false;
-            document.getElementById("da_uploadFileCoord").disabled=false;
-            document.getElementById("da_keyboardiconcoadd").style.display='inline-block';
-            document.getElementById("da_keyboardiconcoord").style.display='inline-block';
+            //document.getElementById("da_enterCoadds").disabled=false;
+            //document.getElementById("da_enterCoords").disabled=false;
+            //document.getElementById("da_uploadFileCoadd").disabled=false;
+            //document.getElementById("da_uploadFileCoord").disabled=false;
+            //document.getElementById("da_keyboardiconcoadd").style.display='inline-block';
+            //document.getElementById("da_keyboardiconcoord").style.display='inline-block';
+            
+            document.getElementById("da_enterManually").disabled=false;
+            document.getElementById("da_uploadFile").disabled=false;
+            document.getElementById("da_keyboardicon").style.display="inline-block";
+
             document.getElementById("da_radiusSlider").value="4.0";
             document.getElementById("da_radiusLabel").innerHTML="4.0";
             document.getElementById("da_wise").checked=false;
@@ -476,32 +522,46 @@
             document.getElementById("da_gzzw1").checked=false;
             document.getElementById("da_spreadmag").checked=false;
             document.getElementById("da_sendemail").checked=false;
-            document.getElementById("desPositionsCoaddsDA").clear();
-            document.getElementById("desPositionsCoordsDA").clear();
+            //document.getElementById("desPositionsCoaddsDA").clear();
+            //document.getElementById("desPositionsCoordsDA").clear();
+            document.getElementById("desPositionsDA").clear();
             document.getElementById("da_validemail").value='';
             document.getElementById("da_validname").value='';
-            document.getElementById("da_uploadiconcoadd").icon = "backup";
-            document.getElementById("da_uploadiconcoord").icon = "backup";
-            document.getElementById("da_keyboardiconcoadd").icon = "hardware:keyboard";
-			document.getElementById("da_keyboardiconcoord").icon = "hardware:keyboard";
+            //document.getElementById("da_uploadiconcoadd").icon = "backup";
+            //document.getElementById("da_uploadiconcoord").icon = "backup";
+            //document.getElementById("da_keyboardiconcoadd").icon = "hardware:keyboard";
+			//document.getElementById("da_keyboardiconcoord").icon = "hardware:keyboard";
 //            document.getElementById("coaddTag").selected="0";
+            document.getElementById("da_uploadicon").icon = "backup";
+            document.getElementById("da_keyboardicon").icon = "hardware:keyboard";
             this.file_name = "Upload File";
             this.job_comment = "";
 //            document.getElementById("jobcommentcoadds").value="";
+            
+            var upIcon = document.getElementById("da_uploadicon").style.display="inline-block";
 
-            var upIcon1 = document.getElementById("da_uploadiconcoadd").style.display='inline-block';
-            var upIcon2 = document.getElementById("da_uploadiconcoord").style.display='inline-block';
+            //var upIcon1 = document.getElementById("da_uploadiconcoadd").style.display='inline-block';
+            //var upIcon2 = document.getElementById("da_uploadiconcoord").style.display='inline-block';
             this.enter_values = "Enter Values";
+            this.$.filesDA.value = "";
             //$('#dothis')[0].checked=false;
-            this.$.file1.value = "";
-            this.$.file2.value = "";
+            //this.$.file1.value = "";
+            //this.$.file2.value = "";
         },
+        /**
 		_countCoadds: function(coadds) {
 			console.log(coadds);
 		},
         _countCoords: function(coords) {
             console.log(coords);
         },
+        **/
+        _da_openManualEntry: function () {
+            var inputDialog = document.getElementById("da_inputValuesDialog");
+            inputDialog.open();
+            this.submit_type = 'manualDA';
+        },
+        /**
 		_da_openCoadds: function(){
             var inputCoaddDialog = document.getElementById("da_inputCoaddsDialog");
             inputCoaddDialog.open();
@@ -512,6 +572,7 @@
             inputCoordDialog.open();
             this.submit_type = 'manualCoords';
         },
+        **/
         completeHandler: function(){
             console.log('YESSSSS');
             document.getElementById('desDataAnalysis').clear();
@@ -529,8 +590,11 @@
         },
         _submitJob: function(event){
             var formdata = new FormData();
-            formdata.append('csvfile1', this.$.file1.files[0]);
-            formdata.append('csvfile2', this.$.file2.files[0]);
+            //formdata.append('csvfile1', this.$.file1.files[0]);
+            //formdata.append('csvfile2', this.$.file2.files[0]);
+            
+            formdata.append('csvfile', this.$.filesDA.files[0]);
+
             formdata.append('da_radius', document.getElementById("da_radiusSlider").value);
 
             formdata.append('da_wise', document.getElementById("da_wise").checked);
@@ -546,8 +610,9 @@
             formdata.append('da_email', document.getElementById("da_validemail").value);
             formdata.append('da_name', document.getElementById("da_validname").value);
             formdata.append('da_submit_type', this.submit_type);
-            formdata.append('da_coadds',document.getElementById("da_enteredCoadds").value);
-            formdata.append('da_coords',document.getElementById("da_enteredCoords").value);
+            //formdata.append('da_coadds',document.getElementById("da_enteredCoadds").value);
+            //formdata.append('da_coords',document.getElementById("da_enteredCoords").value);
+            formdata.append('da_positions',document.getElementById("da_enteredPositions").value);
 
             var fluxwav = document.getElementById("da_fluxwav").checked;
             var magwav = document.getElementById("da_magwav").checked;
@@ -557,7 +622,7 @@
             if (fluxwav == false && magwav == false && grri == false && gzzw1 == false && spread == false){
                 document.getElementById('desDataAnalysis').errorHandler2();
             }
-            else{
+            else {
                 $.ajax({
                     url: '/easyweb/dr1_vistools/',
                     type: 'POST',
