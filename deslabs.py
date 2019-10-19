@@ -17,6 +17,7 @@ import backup
 import cutout
 import dr1_chart
 import dr1_vistools
+import se_cutouts
 import bulk_cutout
 import count
 import jlab
@@ -85,6 +86,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/finding-chart/?", login.MainHandler),
             (r"/easyweb/data-analysis/?", login.MainHandler),
             (r"/easyweb/bulk-cutouts/?", login.MainHandler),
+            (r"/easyweb/s2se-cutouts/?", login.MainHandler),
             (r"/easyweb/footprint/?", login.MainHandler),
             (r"/easyweb/my-jobs/?", login.MainHandler),
             (r"/easyweb/deslabs/?", login.MainHandler),
@@ -106,6 +108,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/download/fc/object/", download.DownloadCoaddObjectHandler),
             (r"/easyweb/download/da/object/", download.DownloadCoaddObjectHandler),
             (r"/easyweb/download/bc/object/", download.DownloadCoaddObjectHandler),
+            (r"/easyweb/download/se/object/", download.DownloadCoaddObjectHandler),
             (r'/easyweb/websocket/?', pusher.WebSocketHandler),
             (r'/easyweb/pusher/?', pusher.PusherHandler),
             (r"/easyweb/query/?", queries.QueryHandler),
@@ -117,6 +120,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/dr1_chart/", dr1_chart.FileHandler),
             (r"/easyweb/dr1_vistools/", dr1_vistools.FileHandler),
             (r"/easyweb/bulk_cutout/", bulk_cutout.FileHandler),
+            (r"/easyweb/se_cutout/", se_cutouts.FileHandler),
             (r"/easyweb/delete/", api.DeleteHandler),
             (r"/easyweb/change/?", api.ChangeHandler),
             (r"/easyweb/gettile/?", api.GetTileHandler),
@@ -128,6 +132,7 @@ class Application(tornado.web.Application):
             (r"/easyweb/api/v1/token/?", pubapi.ApiTokenHandler),
             (r"/easyweb/api/v1/cutout/", pubapi.ApiCutoutHandler),
             (r"/easyweb/api/v1/chart/", pubapi.ApiChartHandler),
+            (r"/easyweb/api/v1/secutout/", pubapi.ApiEpochHandler),
             (r"/easyweb/api/v1/query/", pubapi.ApiQueryHandler),
             (r"/easyweb/api/v1/jobs/", pubapi.ApiJobHandler),
             (r"/easyweb/deslabs/deploy", jlab.LabLaunchHandler),

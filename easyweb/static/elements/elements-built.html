@@ -40551,6 +40551,12 @@ the blue buttons below the query box to do different things with your results.
         </paper-item>
 
         <paper-item>
+        <a class="ahidden" href="/easyweb/s2se-cutouts">
+            <span style=" position: absolute; top:12px;">Single Epoch Cutouts</span>
+        </a>
+        </paper-item>
+
+        <paper-item>
             <a class="ahidden" href="/easyweb/deslabs">
                 <span style=" position: absolute; top:12px;">DES JupyterLab</span>
             </a>
@@ -40625,6 +40631,7 @@ the blue buttons below the query box to do different things with your results.
         <des-cutouts id="desCutouts" email={{email}} choice="0"></des-cutouts>
          -->
         <des-bulk-cutouts id="desBulkCutouts" email="{{email}}" choice="0"></des-bulk-cutouts>
+        <des-s2se-cutouts id="desS2SECutouts" email="{{email}}" choice="0"></des-s2se-cutouts>
         <des-jlabs username="{{username}}"></des-jlabs>
         <des-finding-chart id="desFindingChart" email="{{email}}"></des-finding-chart>
         <des-footprint id="FootprintPage"></des-footprint>
@@ -50176,9 +50183,13 @@ function keysrt(key,desc) {
                 </a>
                 -->
                 <a style="text-transform: none; color:black;" href="/easyweb/bulk-cutouts" tabindex="-1">
-                <des-card-welcome heading="CUTOUTS SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Bulk Cutout Service" desc="Generate cutouts for positions or ids" name="bulkcoadd"></des-card-welcome>
+                <des-card-welcome heading="CUTOUTS SERVICE" image="/easyweb/static/images/home-coadd.png" alt="Bulk Cutout Service" desc="Generate cutouts for positions or ids" name="coadd"></des-card-welcome>
                 </a>
 
+                <a style="text-transform: none; color:black;" href="/easyweb/s2se-cutouts" tabindex="-1">
+                <des-card-welcome heading="SINGLE EPOCH CUTOUTS" image="/easyweb/static/images/home-coadd.png" alt="Single Epoch Cutout Service" desc="Generate single epoch cutouts for coordinates" name="epoch"></des-card-welcome>
+                </a>
+                
                 <a style="text-transform: none; color:black;" href="/easyweb/deslabs" tabindex="-1">
                 <des-card-welcome heading="DES JupyterLabs" image="/easyweb/static/images/home-deslabs.jpg" alt="deslabs" desc="(Beta) Jupyter Labs" name="deslabs"></des-card-welcome>
                 </a>
@@ -51542,6 +51553,69 @@ function keysrt(key,desc) {
             }
         }
     });
+</script>
+</dom-module>
+<dom-module id="des-positions-se" assetpath="../des_components/des-pages/">
+<template>
+    <style include="shared-styles">
+    </style>
+
+    <paper-dialog id="se_inputValuesDialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+        <paper-card heading="Enter RA,DEC below" elevation="0">
+            <div class="card-content">
+               <iron-autogrow-textarea id="se_enteredPositions" max-rows="15" rows="12" placeholder="[[place_holder]]" value="[[place_holder]]"></iron-autogrow-textarea>
+            </div>
+            <div class="card-actions">
+                <paper-button dialog-dismiss="" autofocus="" raised="" class="indigo">Close</paper-button>
+                <paper-button on-tap="_se_submitPositions" raised="" class="indigo">Accept</paper-button>
+            </div>
+        </paper-card>
+    </paper-dialog>
+</template>
+
+<script>
+    Polymer({
+      is: "des-positions-se",
+      properties : {
+        place_holder: {
+            type: String,
+            value: "RA,DEC\n"
+        },
+      },
+      _se_submitPositions: function(){
+            document.getElementById("se_inputValuesDialog").close();
+            document.getElementById("se_submitJobButton").disabled=false;
+            document.getElementById("se_uploadFile").disabled=true;
+            document.getElementById("se_keyboardicon").icon = "done";
+            document.getElementById("desS2SECutouts").enter_values = "Values Entered";
+
+      },
+      clear: function(){
+            document.getElementById("se_enteredPositions").value=this.place_holder;
+      },
+      patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+      },
+
+      _seeHelp: function(e){
+            e.preventDefault();
+            document.getElementById('jobHelpPositionsSE').open();
+      },
+
+      _nextPage: function() {
+            var crs = document.getElementById("position-crs");
+            crs.goToNextPage();
+      },
+
+      _prevPage: function() {
+          var crs = document.getElementById("position-crs");
+          crs.goToPrevPage();
+      }
+    });
+
+
 </script>
 </dom-module>
 <dom-module id="des-positions-fc" assetpath="../des_components/des-pages/">
@@ -54000,8 +54074,8 @@ function keysrt(key,desc) {
                                     <span style="overflow-x: auto; overflow-wrap: break-word;">
                                     Upload File (csv, with RA,DEC as uncommented header)
                                     </span>
-                                    <!--<input type="file" class="upload" id="file" on-change="_fileChange"/>-->
-                                
+                                    <- <input type="file" class="upload" id="file" on-change="_fileChange"/> ->
+                                </paper-icon-item>-->
                             </td>
                             <td class="btcell">
                                 <div class="around-cell">
@@ -54072,7 +54146,7 @@ function keysrt(key,desc) {
 							<td class="coadd-td">
 								<paper-icon-item>
 									<iron-icon icon="image:tune" slot="item-icon"></iron-icon>
-									Filter Band &nbsp; &nbsp; <span style="color:red"> required</span>
+									Filter Band &nbsp; &nbsp; <span style="color:red"> (required)</span>
 
 								</paper-icon-item>
 							</td>
@@ -54569,7 +54643,7 @@ function keysrt(key,desc) {
                             <td class="coadd-td">
                                 <paper-icon-item>
                                     <iron-icon icon="check" slot="item-icon"></iron-icon>
-                                    Generate color png or  just FITS cutouts &nbsp; <span style="color:red"> required</span>
+                                    Generate color png or just FITS cutouts &nbsp; <span style="color:red"> (required)</span>
                                 </paper-icon-item>
                             </td>
                             <td class="coadd-td">
@@ -54590,8 +54664,6 @@ function keysrt(key,desc) {
                             </td>
                         </tr>
 
-
-
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -54604,6 +54676,7 @@ function keysrt(key,desc) {
                                 <paper-slider id="bc_xsizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
                             </td>
                         </tr>
+
                         <tr class="coadd-tr">
                             <td class="coadd-td">
                                 <paper-icon-item>
@@ -55014,6 +55087,572 @@ function keysrt(key,desc) {
         _seeHelp: function (e) {
             e.preventDefault();
             document.getElementById('jobHelpBulkCutouts').open();
+        },
+
+
+        _nextPage: function () {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToNextPage();
+        },
+
+        _prevPage: function () {
+            var crs = document.getElementById("coadd-crs");
+            crs.goToPrevPage();
+        },
+
+    });
+</script>
+<dom-module id="des-s2se-cutouts" assetpath="../des_components/des-pages/">
+    <style include="shared-styles">
+        .caption {
+            padding-left: 15px;
+            color: #a0a0a0;
+        }
+        .upload{
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            /*border: 2px dotted #8da6ce;*/
+            /*border-style: outset;*/
+        }
+        .card-content {
+            @apply(--layout-vertical);
+        }
+        .coadd-container {
+            margin-top: 10px;
+            @apply(--layout-horizontal);
+        }
+        .container2 {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-justified);
+        }
+        .container3 {
+            @apply(--layout-horizontal);
+            @apply(--layout-around-justified);
+        }
+
+        .left {
+            @apply(--layout-flex);
+        }
+        .left2 {
+            @apply(--layout-flex);
+            text-align: center;
+
+        }
+        .right {
+            @apply(--layout-flex);
+        }
+        .right2 {
+            @apply(--layout-flex-2);
+            text-align: center;
+
+        }
+
+        .mid {
+            @apply(--layout-flex);
+        }
+        .flex3child {
+            @apply(--layout-flex-3);
+        }
+        .flex4child {
+            @apply(--layout-flex-4);
+        }
+
+        paper-slider {
+            width: 100%;
+        }
+
+        hr {
+            display: block;
+            border: 1px solid gray;
+            opacity: 0.2;
+
+        }
+
+        paper-icon-item {
+            /*background: linear-gradient(to right, #efeaf4, white);*/
+        }
+
+        .buttonLook{
+            border: 4px solid #ccc;
+            border-style: outset;
+            border-radius: 10px;
+        }
+        .btcell {
+            text-align: center;
+        }
+
+        .around-cell {
+            @apply(--layout-horizontal);
+            @apply(--layout-around-justified);
+        }
+
+        .around-cell2 {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-justified);
+        }
+
+
+    </style>
+    <template>
+        <paper-dialog class="dialog-position" id="jobHelpS2SE" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+            <des-card heading="Help: Single Epoch Cutouts Form">
+                <div class="card-content">
+                    <paper-carousel id="coadd-crs" items="1" dottext="false" controls="true">
+                        <div style="text-align: left;">
+                            <p>This form allows you to generate single epoch cutouts.</p>
+                            <p>You can upload a CSV file with RA/DEC positions or you can enter a list manually. Use "RA/DEC" as header.</p>
+                            <p>Use the "xsize" and "ysize" sliders to define the field of view (in arcminutes) around these positions. The field is centered on the RA/DEC coordinates you enter.</p>
+                            <p>The program will generate an 8-bit FITS file for your cutout.</p>
+                            <p>You can specify a name for this job under "Job Name."</p>
+                            <p>You can have the server email-notify you when your job has been completed.</p>
+                            <p>Under "Return Options" you have the option to retrieve the table of the coordinates you enter with a list of CCD exposures that contain those coordinates.</p>
+                            <p>Check the <b>My Jobs</b> tab to see the status of your jobs.</p>s
+                        </div>
+                    </paper-carousel>
+                </div>
+                <!--<div class="row">
+                    <paper-button class="prev" on-tap="_prevPage">
+                        <iron-icon icon="image:navigate-before"></iron-icon>
+                        Prev
+                    </paper-button>
+
+                    <paper-button class="next" on-tap="_nextPage">
+                        Next
+                        <iron-icon icon="image:navigate-next"></iron-icon>
+                    </paper-button>
+                </div>-->
+
+            </des-card>
+        </paper-dialog>
+        <section>
+            <des-card heading="Single Epoch Cutouts Form">
+                <div class="card-content">
+                    <table id="coadd-table" style="width:100%">
+                        <tbody><tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="backup" slot="item-icon"></iron-icon>
+                                    <iron-icon icon="hardware:keyboard" slot="item-icon"></iron-icon>
+                                    <span style="overflow-x:auto; overflow-wrap:break-word;">Upload csv file (with header). <br>Or enter values manually (with header).</span>
+                                </paper-icon-item>
+                            </td>
+                            <td class="btcell">
+                                <div class="around-cell">
+                                    <paper-button raised="" class="indigo" id="se_uploadFile">
+                                        <div id="se_uploadicon" style="display: inline-block;">
+                                            <i class="fa fa-cloud-upload"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span style="overflow-x: auto; overflow-wrap: break-word;">
+                                            [[file_name]]
+                                        </span>
+                                        <input type="file" class="upload" id="se_filesAB" on-change="_fileChange">
+                                    </paper-button>
+                                    <paper-button raised="" class="indigo" id="se_enterManually" on-tap="_se_openManualEntry">
+                                        <div id="se_keyboardicon" style="display: inline-block;">
+                                            <i class="fa fa-keyboard-o"></i>
+                                            &nbsp;  &nbsp;
+                                        </div>
+                                        <span>[[enter_values]]</span>
+                                    </paper-button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Choose the band for FITS -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="check" slot="item-icon"></iron-icon>
+                                    Filter Bands &nbsp; &nbsp; <span style="color:red"> (required)</span>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <paper-checkbox class="se_bandbox" style="font-size:16px; padding-top:15px;" id="se_gband">g</paper-checkbox>
+                                    <paper-checkbox class="se_bandbox" style="font-size:16px; padding-top:15px;" id="se_rband">r</paper-checkbox>
+                                    <paper-checkbox class="se_bandbox" style="font-size:16px; padding-top:15px;" id="se_iband">i</paper-checkbox>
+                                    <paper-checkbox class="se_bandbox" style="font-size:16px; padding-top:15px;" id="se_zband">z</paper-checkbox>
+                                    <paper-checkbox class="se_bandbox" style="font-size:16px; padding-top:15px;" id="se_Yband">Y</paper-checkbox>
+                                    <paper-toggle-button style="font-size:16px; padding-top:15px;" id="se_all_toggle">Select All</paper-toggle-button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Get the X size -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Xsize (in arcminutes):
+                                        <span id="se_xsizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="se_xsizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
+                            </td>
+                        </tr>
+                        
+                        <!-- Get the Y size -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Ysize (in arcminutes):
+                                        <span id="se_ysizeLabel" class="caption">1.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-slider id="se_ysizeSlider" pin="" max="12" max-markers="10" step="0.1" value="1.0" expand="" editable=""></paper-slider>
+                            </td>
+                        </tr>
+
+                        <!-- Airmass -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>Airmass (max limit):
+                                        <span id="se_airmassLabel" class="caption">2.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <paper-toggle-button class="queryButton" id="se_inputAirmassCheck" noink="" on-tap="_enableSEOptionSlider" style="margin-top: -10px">
+                                    </paper-toggle-button>
+                                    <paper-slider id="se_airmassSlider" disabled="" pin="" max="10" max-markers="10" step="0.1" value="2.0" expand="" editable=""></paper-slider>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- FWHM -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="image:tune" slot="item-icon"></iron-icon>
+                                    <div>FWHM (max limit; arcseconds):
+                                        <span id="se_psffwhmLabel" class="caption">2.0</span></div>
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <paper-toggle-button class="queryButton" id="se_inputFWHMCheck" noink="" on-tap="_enableSEOptionSlider" style="margin-top: -10px">
+                                    </paper-toggle-button>
+                                    <paper-slider id="se_psffwhmSlider" disabled="" pin="" max="10" max-markers="10" step="0.1" value="2.0" expand="" editable=""></paper-slider>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Job Name -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="create" slot="item-icon"></iron-icon>
+                                    Job Name
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-input always-float-label="" id="se_validname" name="name" label="Job Name" value="" style="max-width: 500px;"></paper-input>
+                            </td>
+                        </tr>
+
+                        <!-- Email Option -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="mail" slot="item-icon"></iron-icon>
+                                    Email Options
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <div class="around-cell">
+                                    <div class="left">
+                                        <paper-checkbox style="font-size:16px; padding-top:25px;" id="se_sendemail" on-change="emailcheck">Send email on completion</paper-checkbox>
+                                    </div>
+                                    <div class="right">
+                                        <paper-input always-float-label="" id="se_validemail" name="email" label="Email" value=""></paper-input>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Return Option -->
+                        <tr class="coadd-tr">
+                            <td class="coadd-td">
+                                <paper-icon-item>
+                                    <iron-icon icon="save" slot="item-icon"></iron-icon>
+                                    Return Options
+                                </paper-icon-item>
+                            </td>
+                            <td class="coadd-td">
+                                <paper-checkbox style="font-size:16px;" id="se_returnList">Include CSV of tiles matched to objects</paper-checkbox>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <div class="coadd-container">
+                        <div class="left">
+                            <paper-button raised="" class="indigo" id="clearFormButton" on-tap="_clearForm">
+                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Clear Form
+                            </paper-button>
+                            </div>
+                        <div class="right">
+                            <paper-button raised="" class="indigo" id="se_submitJobButton" disabled="" on-tap="_submitJob">
+                            <i class="fa fa-cogs"></i> &nbsp;  &nbsp;Submit Job
+                            </paper-button>
+                        </div>
+                    </div>
+                </div>
+            </des-card>
+
+            <des-positions-se id="desPositionsSE"></des-positions-se>
+
+            <paper-toast class="toast-position toast-success" id="se_toast1coadd" text="Job has been submitted!" duration="6000"> </paper-toast>
+            <paper-toast class="toast-position toast-error" id="se_toast2coadd" text="ERROR!. There was an error. Please try again" duration="6000"> </paper-toast>
+            <paper-toast class="toast-position toast-error" id="se_toast3coadd" text="Form is incomplete for selected options!" duration="6000"> </paper-toast>
+
+            <paper-dialog class="size-position2" id="se_emaildialog" with-backdrop="" on-iron-overlay-opened="patchOverlay">
+                <paper-card elevation="0">
+                    <div class="card-content">
+                        Please verify email address
+                    </div>
+                </paper-card>
+            </paper-dialog>
+        </section>
+        <paper-fab class="fabHelp" icon="help" title="Help" on-tap="_seeHelp" style="float: right;"></paper-fab>
+
+    </template>
+
+</dom-module>
+
+<script>
+    Polymer({
+        is: "des-s2se-cutouts",
+        properties: {
+            file_name: {
+                type : String,
+                value : "Upload File"
+            },
+            enter_values: {
+                type : String,
+                value : "Enter Values"
+            },
+            submit_type: {
+                type: String,
+                value: "csvfile"
+            },
+            email: {
+                type: String,
+                values: ""
+            },
+            job_comment: {
+                type : String,
+                value : ""
+            }
+        },
+        ready: function () {
+            var se_all_toggle = this.$.se_all_toggle;
+            se_all_toggle.addEventListener('change', function () {
+                document.getElementById('desS2SECutouts').toggle_bands();
+            });
+        },
+        toggle_bands: function () {
+            var band_rads = document.querySelectorAll('.se_bandbox');
+            if (this.$.se_all_toggle.checked) {
+                for (var j=0; j<5; j++) {
+                    band_rads[j].disabled=true;
+                }
+            }
+            else {
+                for (var i=0; i<5; i++) {
+                    band_rads[i].disabled=false;
+                }
+            }
+        },
+
+        get se_filesAB(){
+            return this.$.se_filesAB.files[0];
+        },
+        
+        emailcheck: function () {
+            var emailbox = document.getElementById("se_sendemail");
+            var edialog = document.getElementById("se_emaildialog");
+            document.getElementById("se_validemail").value=this.email;
+            if (emailbox.checked == true) {
+                //edialog.open();
+            }
+            else {
+                document.getElementById("se_validemail").value='';
+            }
+        },
+
+        _enableSEOptionSlider: function(){
+            if (document.getElementById('se_inputAirmassCheck').checked) {
+                document.getElementById('se_airmassSlider').disabled=false;
+            }
+            else {
+                document.getElementById('se_airmassSlider').disabled=true;
+            }
+
+            if (document.getElementById('se_inputFWHMCheck').checked) {
+                document.getElementById('se_psffwhmSlider').disabled=false;
+            }
+            else {
+                document.getElementById('se_psffwhmSlider').disabled=true;
+            }
+        },
+        
+        _fileChange: function () {
+            this.file_name = this.se_filesAB.name;
+            console.log('File to read: ' + this.file_name);
+            document.getElementById("se_submitJobButton").disabled=false;
+            document.getElementById("se_enterManually").disabled=true;
+            document.getElementById("se_uploadicon").icon = "done";
+
+            this.submit_type = 'csvfileAB';
+        },
+        clear: function () {
+            document.getElementById("se_submitJobButton").disabled=true;
+            
+            document.getElementById("se_uploadFile").disabled=false;
+            document.getElementById("se_enterManually").disabled=false;
+            
+            document.getElementById("se_uploadicon").icon = "backup";
+            document.getElementById("se_keyboardicon").style.display="inline-block";
+            document.getElementById("se_keyboardicon").icon = "hardware:keyboard";
+
+            document.getElementById("se_xsizeSlider").value="1.0";
+            document.getElementById("se_ysizeSlider").value="1.0";
+            document.getElementById("se_xsizeLabel").innerHTML="1.0";
+            document.getElementById("se_ysizeLabel").innerHTML="1.0";
+            
+            document.getElementById("se_all_toggle").checked=false;
+            var band_rads = document.querySelectorAll('.se_bandbox');
+            for (var j=0; j<5; j++) {
+                band_rads[j].checked=false;
+                band_rads[j].disabled=false;
+            }
+
+            document.getElementById("se_gband").checked=false;
+            document.getElementById("se_rband").checked=false;
+            document.getElementById("se_iband").checked=false;
+            document.getElementById("se_zband").checked=false;
+            document.getElementById("se_Yband").checked=false;
+
+            document.getElementById("se_airmassLabel").innerHTML="2.0";
+            document.getElementById("se_airmassSlider").value="2.0";
+            document.getElementById("se_inputAirmassCheck").checked=false;
+            document.getElementById("se_airmassSlider").disabled=true;
+            
+            document.getElementById("se_psffwhmLabel").innerHTML="2.0";
+            document.getElementById("se_psffwhmSlider").value="2.0";
+            document.getElementById("se_inputFWHMCheck").checked=false;
+            document.getElementById("se_psffwhmSlider").disabled=true;
+
+            document.getElementById("se_sendemail").checked=false;
+            document.getElementById("se_returnList").checked=false;
+            document.getElementById("desPositionsSE").clear();
+            document.getElementById("se_validemail").value='';
+            document.getElementById("se_validname").value='';
+            
+            this.file_name = "Upload File";
+            this.job_comment = "";
+
+            var upIcon = document.getElementById("se_uploadicon").style.display="inline-block";
+            
+            this.enter_values = "Enter Values";
+            this.$.se_filesAB.value = "";
+            
+        },
+
+        _se_openManualEntry: function () {
+            var inputDialog = document.getElementById("se_inputValuesDialog");
+            inputDialog.open();
+            this.submit_type = 'manualAB';
+        },
+
+        completeHandler: function () {
+            document.getElementById('desS2SECutouts').clear();
+            document.querySelector('#se_toast1coadd').show();
+            document.getElementById("getMyJobs").generateRequest();
+        },
+
+        errorHandler: function (data) {
+            var response = data.responseJSON;
+            // document.getElementById('desS2SECutouts').clear()
+            document.querySelector('#se_toast2coadd').text = response.msg;
+            document.querySelector('#se_toast2coadd').show();
+        },
+        errorHandler2: function () {
+            document.querySelector('#se_toast3coadd').show();
+        },
+        _submitJob: function (event) {
+            var formdata = new FormData();
+            formdata.append('csvfile', this.$.se_filesAB.files[0]);
+            
+            formdata.append('se_xsize', document.getElementById("se_xsizeSlider").value);
+            formdata.append('se_ysize', document.getElementById("se_ysizeSlider").value);
+
+            formdata.append('se_gband', document.getElementById("se_gband").checked);
+            formdata.append('se_rband', document.getElementById("se_rband").checked);
+            formdata.append('se_iband', document.getElementById("se_iband").checked);
+            formdata.append('se_zband', document.getElementById("se_zband").checked);
+            formdata.append('se_Yband', document.getElementById("se_Yband").checked);
+            formdata.append('se_all_toggle', document.getElementById("se_all_toggle").checked);
+
+            formdata.append('se_airmass', document.getElementById("se_airmassSlider").value);
+            formdata.append('se_airmass_check', document.getElementById("se_inputAirmassCheck").checked);
+
+            formdata.append('se_psffwhm', document.getElementById("se_psffwhmSlider").value);
+            formdata.append('se_psffwhm_check', document.getElementById("se_inputFWHMCheck").checked);
+
+            formdata.append('se_returnList', document.getElementById("se_returnList").checked);
+            formdata.append('se_send_email', document.getElementById("se_sendemail").checked);
+            formdata.append('se_email', document.getElementById("se_validemail").value);
+            formdata.append('se_name', document.getElementById("se_validname").value);
+            formdata.append('se_submit_type', this.submit_type);
+
+            formdata.append('se_positions',document.getElementById("se_enteredPositions").value);
+
+            var g = document.getElementById("se_gband").checked;
+            var r = document.getElementById("se_rband").checked;
+            var i = document.getElementById("se_iband").checked;
+            var z = document.getElementById("se_zband").checked;
+            var y = document.getElementById("se_Yband").checked;
+            var allbands = document.getElementById("se_all_toggle").checked;
+            if (g == false && r == false && i == false && z == false && y == false && allbands == false) {
+                document.getElementById('desS2SECutouts').errorHandler2();
+            }
+            else {
+                $.ajax({
+                    url: '/easyweb/se_cutout/',
+                    type: 'POST',
+                    //beforeSend: this.beforeSendHandler,
+                    success: this.completeHandler,
+                    error: this.errorHandler,
+                    data: formdata,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
+        },
+        _clearForm: function () {
+            console.log('clear Form');
+            desBulkCutouts=document.getElementById('desS2SECutouts');
+            desBulkCutouts.clear();
+        },
+        patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        },
+        _seeHelp: function (e) {
+            e.preventDefault();
+            document.getElementById('jobHelpS2SE').open();
         },
 
 

@@ -420,6 +420,123 @@ class ApiCutoutHandler(tornado.web.RequestHandler):
         self.finish()
 
 
+class ApiEpochHandler(tornado.web.RequestHandler):
+    def missingargs(self, response, msg):
+        response['msg'] = msg
+        self.set_status(400)
+        app_log.warning(response['msg'])
+        self.write(response)
+        self.finish()
+
+    @tornado.web.asynchronous
+    def post(self):
+        response = {'status':'error'}
+
+        listargs = ['token','xsize','ysize','jobname','make_fits','colors'] # required
+        optargs = ['return_list','airmass','fwhm'] # optional
+
+        arguments = {k.lower(): self.get_argument(k, '') for k in self.request.arguments}
+        for l in listargs:
+            if l not in arguments:
+                msg = 'Missing{0}'.format(l)
+                return self.missingargs(response, msg)
+
+        if 'csvfile' in arguments:
+            fileinfo = self.request.files['csvfile'][0]
+            df = pd.DataFrame(pd.read_csv(io.BytesIO(fileinfo['body'])))
+        elif 'ra' in arguments and 'dec' in arguments:
+            ra = [float(i) for i in arguments['ra'].replace('[', '').replace(']', '').split(',')]
+            dec = [float(i) for i in arguments['dec'].replace('[', '').replace(']', '').split(',')]
+        else:
+            msg = 'Missing input data.'
+            return self.missingargs(response, msg)
+
+        # Check token status
+        token = arguments['token']
+        ttl, user, lp = check_token(token)
+        if ttl is None or ttl < 0:
+            response['msg'] = 'Token not valid or expired, create a new one.'
+            self.set_status(403)
+            self.write(response)
+            self.finish()
+
+        # Required arguments
+        xsize = float(arguments['xsize'])
+        ysize = float(arguments['ysize'])
+        colors = str(arguments['colors'])
+        jobname = arguments['jobname']
+        db = 'dessci'
+
+        # Optional arguments
+        return_list = True if 'return_list' in arguments and arguments['return_list'].upper() == 'TRUE' else False
+
+        data_options = {'airmass':None, 'psffwhm':None}
+        if 'airmass' in arguments:
+            data_options['airmass'] = float(arguments['airmass'])
+        if 'psffwhm' in arguments:
+            data_options['psffwhm'] = float(arguments['psffwhm'])
+
+        try:
+            email = arguments['email']
+        except:
+            email = ''
+            send_email = False
+        else:
+            send_email = True
+
+        # Next section
+        user_folder = os.path.join(Settings.WORKDIR, user)+'/'
+        response['user'] = user
+        response['elapsed'] = 0
+        jobid = str(uuid.uuid4()).replace("-", "_")
+
+        input_csv = user_folder + jobid + '.csv'
+        if 'ra' in arguments:
+            df = pd.DataFrame(np.array([ra, dec]).T, columns=['RA','DEC'])
+        df.to_csv(input_csv, sep=',', index=False)
+        del df
+
+        folder2 = user_folder + jobid + '/'
+        os.system('mkdir -p ' + folder2)
+
+        run = ea_tasks.epochtasks.apply_async(args=[input_csv,
+                                                    user,
+                                                    lp,
+                                                    jobid,
+                                                    folder2,
+                                                    db,
+                                                    data_options,
+                                                    colors,
+                                                    xsize,
+                                                    ysize,
+                                                    return_list,
+                                                    send_email,
+                                                    email], 
+                                              retyr=True,
+                                              task_id=jobid)
+
+        app_log.info('Job Single Epoch Cutouts {} submitted'.format(run))
+
+        with open('config/desaccess.yaml', 'r') as cfile:
+            conf = yaml.load(cfile)['mysql']
+        con = mydb.connect(**conf)
+
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        tup = tuple([user, jobid, jobname, 'PENDING', now, 'coadd', '', '', '', -1])
+
+        cur = con.cursor()
+        cur.execute("INSERT INTO Jobs VALUES{0}".format(tup))
+        con.commit()
+        con.close()
+        response['msg'] = 'Job {0} submitted'.format(jobid)
+        response['status'] = 'ok'
+        response['kind'] = 'cutout'
+        response['jobid'] = jobid
+        self.write(response)
+        self.flush()
+        self.finish()
+
+
 class ApiQueryHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def post(self):

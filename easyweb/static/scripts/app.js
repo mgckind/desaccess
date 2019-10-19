@@ -33,12 +33,13 @@
     if (appr.data.view == 'db-examples') sel_page = "3";
     //if (appr.data.view == 'cutouts') sel_page = "4";
     if (appr.data.view == 'bulk-cutouts') sel_page = "4";
-    if (appr.data.view == 'deslabs') sel_page = "5";
-    if (appr.data.view == 'finding-chart') sel_page = "6";
-    if (appr.data.view == 'footprint') sel_page = "7";
-    // if (appr.data.view == 'data-analysis') sel_page = "8";
-    if (appr.data.view == 'my-jobs') sel_page = "8";
-    if (appr.data.view == 'help-form') sel_page = "9";
+    if (appr.data.view == 's2se-cutouts') sel_page = "5";
+    if (appr.data.view == 'deslabs') sel_page = "6";
+    if (appr.data.view == 'finding-chart') sel_page = "7";
+    if (appr.data.view == 'footprint') sel_page = "8";
+    // if (appr.data.view == 'data-analysis') sel_page = "9";
+    if (appr.data.view == 'my-jobs') sel_page = "9";
+    if (appr.data.view == 'help-form') sel_page = "10";
     app.selection=sel_page;
     pages.select(sel_page);
     menu.select(sel_page);
@@ -55,12 +56,13 @@
     if (appr.data.view == 'db-examples') sel_page = "3";
     //if (appr.data.view == 'cutouts') sel_page = "4";
     if (appr.data.view == 'bulk-cutouts') sel_page = "4";
-    if (appr.data.view == 'deslabs') sel_page = "5";
-    if (appr.data.view == 'finding-chart') sel_page = "6";
-    if (appr.data.view == 'footprint') sel_page = "7";
-    // if (appr.data.view == 'data-analysis') sel_page = "8";
-    if (appr.data.view == 'my-jobs') sel_page = "8";
-    if (appr.data.view == 'help-form') sel_page = "9";
+    if (appr.data.view == 's2se-cutouts') sel_page = "5";
+    if (appr.data.view == 'deslabs') sel_page = "6";
+    if (appr.data.view == 'finding-chart') sel_page = "7";
+    if (appr.data.view == 'footprint') sel_page = "8";
+    // if (appr.data.view == 'data-analysis') sel_page = "9";
+    if (appr.data.view == 'my-jobs') sel_page = "9";
+    if (appr.data.view == 'help-form') sel_page = "10";
         app.selection=sel_page;
         pages.select(sel_page);
         menu.select(sel_page);
@@ -134,10 +136,11 @@
             document.getElementById("fc_ysizeLabel").textContent = fc_ysize.value;
         });
         var fc_mag = document.getElementById("fc_magSlider");
-		fc_mag.addEventListener('value-change', function() {
-		  document.getElementById("fc_magLabel").textContent = fc_mag.value;
-	    });
-	    var da_radius = document.getElementById("da_radiusSlider");
+		    fc_mag.addEventListener('value-change', function() {
+		        document.getElementById("fc_magLabel").textContent = fc_mag.value;
+	      });
+        
+	      var da_radius = document.getElementById("da_radiusSlider");
         da_radius.addEventListener('value-change', function() {
             document.getElementById("da_radiusLabel").textContent = da_radius.value;
         });
@@ -149,6 +152,23 @@
         var bc_ysize = document.getElementById("bc_ysizeSlider");
         bc_ysize.addEventListener('value-change', function() {
            document.getElementById("bc_ysizeLabel").textContent = bc_ysize.value;
+        });
+
+        var se_xsize = document.getElementById("se_xsizeSlider");
+        se_xsize.addEventListener('value-change', function() {
+            document.getElementById("se_xsizeLabel").textContent = se_xsize.value;
+        });
+        var se_ysize = document.getElementById("se_ysizeSlider");
+        se_ysize.addEventListener('value-change', function() {
+            document.getElementById("se_ysizeLabel").textContent = se_ysize.value;
+        });
+        var se_airmass = document.getElementById("se_airmassSlider");
+        se_airmass.addEventListener('value-change', function() {
+            document.getElementById("se_airmassLabel").textContent = se_airmass.value;
+        });
+        var se_psffwhm = document.getElementById("se_psffwhmSlider");
+        se_psffwhm.addEventListener('value-change', function() {
+            document.getElementById("se_psffwhmLabel").textContent = se_psffwhm.value;
         });
 
       // var res = document.getElementById("response");
