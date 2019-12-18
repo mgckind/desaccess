@@ -17,6 +17,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import PIL
 import pymongo
 import pywraps2 as s2
 import sys
@@ -30,6 +31,7 @@ from astropy.coordinates import SkyCoord
 from astropy.wcs import WCS
 from astropy.wcs import utils
 from pymongo import MongoClient
+from PIL import Image
 
 
 ARCMIN_TO_DEG = 0.0166667       # deg per arcmin
@@ -89,13 +91,20 @@ def _getColorList(colors):
     return c
 
 
+def MakePNGCut(data, outdir):
+    im = Image.fromarray(data)
+    im = im.convert('L')
+    im = im.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+    im.save(outdir, format='PNG')
+
+
 def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
     logger = logging.getLogger(__name__)
     os.makedirs(outdir, exist_ok=True)
 
     # Get the name of the CCD's FITS file and open it.
-    #path = CCDS_FOLDER + ccd['FILENAME'] + ccd['COMPRESSION'] #ccd['FULL_PATH']
-    path = CCDS_PREFIX + ccd['FULL_PATH'] + ccd['COMPRESSION']
+    #path = CCDS_FOLDER + ccd['FILENAME'] + ccd['COMPRESSION'] # Use this line for testing locally
+    path = CCDS_PREFIX + ccd['FULL_PATH'] + ccd['COMPRESSION'] # Use this line for deployment
     #print(path)
     
     hdul = None
@@ -161,6 +170,10 @@ def MakeFitsCut(ccd, outdir, size, positions, rect_id, df, p):
         else:
             newhdu = fits.ImageHDU(data=cutout.data, header=header, name=h['EXTNAME'])
         newhdul.append(newhdu)
+
+        if hdul[i].name == 'SCI':
+            pngname = filenm.replace(".fits",".png")
+            MakePNGCut(cutout.data, pngname)
 
     if pixelscale is not None:
         dx = int(usize[1] * ARCMIN_TO_DEG / pixelscale[0] / units.arcmin) # pixelscale is in degrees (CUNIT)
