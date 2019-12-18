@@ -110,6 +110,16 @@
     </template>
     </template>
 
+    <template is="dom-if" if="{{_actionIsSE(jobtype)}}" restamp>
+    <template is="dom-if" if="{{jsondata}}">
+        <template is="dom-repeat" items="{{jsondata}}">
+            <des-thumb imtitle={{item.title}} imdisplay={{item.name}} jobid="[[jobid]]">
+            </des-thumb>
+        </template>
+    </template>
+    </template>
+
+    <!--
     <template is="dom-if" if="{{_actionIsSE(jobtype)}}">
     <template id="inside" is="dom-if" if="{{jsondata}}">
         <template id="seRepeat" is="dom-repeat" items="{{jsondata}}">
@@ -117,6 +127,7 @@
         </template>
     </template>
     </template>
+    -->
 
     </div>
 
